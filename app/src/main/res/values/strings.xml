@@ -14,4 +14,12 @@
     <string name="events_list_header_title">Események</string>
     <string name="event_accept_button">Ott leszek!</string>
     <string name="pos_icon_desc">Pozíció jelző ikon</string>
+    <string name="event_picture_desc">Event picture</string>
+    <string name="event_desc_button">Esemény leírása</string>
+    <string name="event_label">#Címke</string>
+    <string name="event_another_date_button">Más időpont</string>
+    <string name="event_creator">Létrehozó:</string>
+    <string name="event_venue">Helyszín:</string>
+    <string name="event_date">Időpont:</string>
+    <string name="event_description">Leírás:</string>
 </resources>

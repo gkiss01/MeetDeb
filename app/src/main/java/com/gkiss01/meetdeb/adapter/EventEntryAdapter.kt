@@ -69,8 +69,22 @@ class EventEntryAdapter(val clickListener: EventClickListener): ListAdapter<Data
     class EntryViewHolder(private val binding: EventsListItemBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(item: EventEntry, clickListener: EventClickListener) {
             binding.event = item
-            binding.clickListener = clickListener
+            binding.descButton.setOnClickListener {
+                clickListener.onClick(this.layoutPosition)
+            }
+            binding.eventDetails.visibility = View.GONE
             binding.executePendingBindings()
+        }
+
+        fun showEventDetails() {
+            if (!showDetails) {
+                binding.eventDetails.visibility = View.VISIBLE
+                showDetails = true
+            }
+            else {
+                binding.eventDetails.visibility = View.GONE
+                showDetails = false
+            }
         }
 
         companion object {
@@ -79,6 +93,7 @@ class EventEntryAdapter(val clickListener: EventClickListener): ListAdapter<Data
                 val binding = EventsListItemBinding.inflate(layoutInflater, parent, false)
                 return EntryViewHolder(binding)
             }
+            var showDetails = false
         }
     }
 }
@@ -95,6 +110,6 @@ sealed class DataItem {
     }
 }
 
-class EventClickListener(val clickListener: (entryId: Int) -> Unit) {
-    fun onClick(event: EventEntry) = clickListener(event.entryId)
+class EventClickListener(val clickListener: (position: Int) -> Unit) {
+    fun onClick(position: Int) = clickListener(position)
 }

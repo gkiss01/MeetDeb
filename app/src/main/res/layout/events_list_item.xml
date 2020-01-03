@@ -7,119 +7,173 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
         <variable
             name="event"
             type="com.gkiss01.meetdeb.data.EventEntry" />
-        <variable
-            name="clickListener"
-            type="com.gkiss01.meetdeb.adapter.EventClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
         android:layout_marginTop="10dp"
-        android:padding="16dp"
         android:background="@drawable/event_item_background" >
 
         <ImageView
-            android:id="@+id/profileImage"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:contentDescription="@string/profile_picture_desc"
-            android:scaleType="fitCenter"
-            android:src="@drawable/profile_avatar"
+            android:id="@+id/eventImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/img_post"
+            android:contentDescription="@string/event_picture_desc" />
+
+        <TextView
+            android:id="@+id/eventLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/event_label"
+            android:textColor="#ffffff"
+            android:textSize="35sp"
+            android:background="#73808080"
+            app:layout_constraintBottom_toBottomOf="@id/eventImage"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/userName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@{event.userName}"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:layout_marginStart="16dp"
-            app:layout_constraintStart_toEndOf="@id/profileImage"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#a0a3a7"
-            android:textSize="13sp"
-            app:setDateFormat="@{event}"
-            app:layout_constraintStart_toStartOf="@id/userName"
-            app:layout_constraintTop_toBottomOf="@id/userName" />
-
-        <ImageView
-            android:id="@+id/posIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/pos_icon_desc"
-            android:src="@drawable/ic_location_green"
-            android:layout_marginTop="5dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/profileImage"
-            app:layout_constraintBottom_toBottomOf="@id/barrierTop" />
-
-        <TextView
-            android:id="@+id/venue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@{event.venue}"
-            android:textColor="#a0a3a7"
-            android:textSize="13sp"
-            app:layout_constraintStart_toEndOf="@id/posIcon"
-            app:layout_constraintTop_toTopOf="@id/posIcon"
-            app:layout_constraintBottom_toBottomOf="@id/barrierTop" />
-
-        <TextView
-            android:id="@+id/labels"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@{event.labels}"
-            android:layout_marginTop="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/posIcon" />
-
-        <TextView
-            android:id="@+id/participants"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/eventDetails"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_weight="1"
-            app:setParticipantsFormat="@{event}"
-            app:layout_constraintEnd_toStartOf="@id/acceptButton"
+            android:padding="16dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/acceptButton"
-            app:layout_constraintBottom_toBottomOf="@id/barrier" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@drawable/event_item_background"
+            android:visibility="gone" >
+
+            <TextView
+                android:id="@+id/userName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/event_creator"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/userNameValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{event.userName}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/userName" />
+
+            <TextView
+                android:id="@+id/venue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/event_venue"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/userNameValue" />
+
+            <TextView
+                android:id="@+id/venueValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{event.venue}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/venue" />
+
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/event_date"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/venueValue" />
+
+            <TextView
+                android:id="@+id/dateValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:setDateFormat="@{event}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/date" />
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/event_description"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/dateValue" />
+
+            <TextView
+                android:id="@+id/descriptionValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{event.labels}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/description" />
+
+            <TextView
+                android:id="@+id/participants"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:textStyle="bold"
+                app:setParticipantsFormat="@{event}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/descriptionValue" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <Button
-            android:id="@+id/acceptButton"
-            style="@style/setButtonStyle"
-            android:layout_width="100dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="8dp"
-            android:onClick="@{() -> clickListener.onClick(event)}"
-            android:text="@string/event_accept_button"
-            app:layout_constraintBottom_toBottomOf="@id/barrier"
+            android:id="@+id/descButton"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:textSize="12sp"
+            style="@style/fabStyle"
+            android:text="@string/event_desc_button"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/labels" />
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="2.0"
+            app:layout_constraintTop_toBottomOf="@id/barrier" >
+
+            <Button
+                android:id="@+id/anotherDateButton"
+                style="@style/eventButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/event_another_date_button" />
+
+            <Button
+                android:id="@+id/acceptButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="@style/eventButtonStyle"
+                android:text="@string/event_accept_button" />
+        </LinearLayout>
 
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/barrier"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="bottom"
-            app:constraint_referenced_ids="participants,acceptButton" />
-
-        <androidx.constraintlayout.widget.Barrier
-            android:id="@+id/barrierTop"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:barrierDirection="bottom"
-            app:constraint_referenced_ids="posIcon,venue" />
-
+            app:constraint_referenced_ids="eventImage,eventDetails" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

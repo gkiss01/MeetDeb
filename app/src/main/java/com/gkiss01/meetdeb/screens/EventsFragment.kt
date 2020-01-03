@@ -39,8 +39,9 @@ class EventsFragment : Fragment() {
             NavHostFragment.findNavController(this).navigate(action)
         }}
 
-        val viewAdapter = EventEntryAdapter(EventClickListener { eventId ->
-            viewModel.createParticipant(eventId)
+        val viewAdapter = EventEntryAdapter(EventClickListener { position ->
+            val view = binding.eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventEntryAdapter.EntryViewHolder
+            view.showEventDetails()
         })
 
         viewModel.eventEntries.observe(this, Observer { events ->
