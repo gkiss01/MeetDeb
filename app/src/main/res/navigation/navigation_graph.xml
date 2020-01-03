@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_graph"
+    app:startDestination="@id/menuFragment">
+
+    <fragment
+        android:id="@+id/menuFragment"
+        android:name="com.gkiss01.meetdeb.screens.MenuFragment"
+        android:label="MenuFragment"
+        tools:layout="@layout/menu_fragment">
+        <action
+            android:id="@+id/action_menuFragment_to_eventsFragment"
+            app:destination="@id/eventsFragment"
+            app:popUpTo="@+id/menuFragment" />
+        <action
+            android:id="@+id/action_menuFragment_to_webContentFragment"
+            app:destination="@id/webContentFragment"
+            app:popUpTo="@+id/menuFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/eventsFragment"
+        android:name="com.gkiss01.meetdeb.screens.EventsFragment"
+        android:label="EventsFragment"
+        tools:layout="@layout/events_fragment" >
+        <action
+            android:id="@+id/action_eventsFragment_to_createEventFragment"
+            app:destination="@id/createEventFragment"
+            app:popUpTo="@+id/eventsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createEventFragment"
+        android:name="com.gkiss01.meetdeb.screens.CreateEventFragment"
+        android:label="CreateEventFragment"
+        tools:layout="@layout/create_event_fragment" >
+        <action
+            android:id="@+id/action_createEventFragment_to_eventsFragment"
+            app:destination="@id/eventsFragment"
+            app:popUpTo="@+id/menuFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/webContentFragment"
+        android:name="com.gkiss01.meetdeb.screens.WebContentFragment"
+        android:label="WebContentFragment"
+        tools:layout="@layout/web_content_fragment" />
+</navigation>
