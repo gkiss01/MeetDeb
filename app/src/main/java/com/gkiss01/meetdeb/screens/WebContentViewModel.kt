@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gkiss01.meetdeb.network.data.AlbumProperty
 import com.gkiss01.meetdeb.network.WebApi
+import com.gkiss01.meetdeb.network.data.AlbumProperty
 import kotlinx.coroutines.launch
 
 class WebContentViewModel : ViewModel() {

@@ -1,13 +1,12 @@
 package com.gkiss01.meetdeb.screens
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
-
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.databinding.MenuFragmentBinding
 

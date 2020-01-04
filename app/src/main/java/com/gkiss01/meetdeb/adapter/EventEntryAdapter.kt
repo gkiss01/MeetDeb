@@ -2,7 +2,9 @@ package com.gkiss01.meetdeb.adapter
 
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewAnimationUtils
 import android.view.ViewGroup
+import androidx.core.animation.addListener
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.gkiss01.meetdeb.R
@@ -12,6 +14,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.math.hypot
+import kotlin.math.max
 
 private const val ITEM_VIEW_TYPE_HEADER = 0
 private const val ITEM_VIEW_TYPE_ITEM = 1
@@ -77,12 +81,26 @@ class EventEntryAdapter(val clickListener: EventClickListener): ListAdapter<Data
         }
 
         fun showEventDetails() {
+            val cx = binding.descButton.x + binding.descButton.width / 2
+            val cy = binding.descButton.y + binding.descButton.height / 2
+
             if (!showDetails) {
+                var finalRadius = hypot(binding.eventDetails.width.toDouble(), binding.eventDetails.height.toDouble()).toFloat()
+                if (finalRadius.equals(0f)) finalRadius = hypot(binding.eventImage.width.toDouble(), binding.eventImage.height.toDouble()).toFloat()
+                val anim = ViewAnimationUtils.createCircularReveal(binding.eventDetails, cx.toInt(), cy.toInt(), 0f, finalRadius)
                 binding.eventDetails.visibility = View.VISIBLE
+
+                anim.start()
                 showDetails = true
             }
             else {
-                binding.eventDetails.visibility = View.GONE
+                val initialRadius = max(binding.eventDetails.width.toDouble(), binding.eventDetails.height.toDouble()).toFloat()
+                val anim = ViewAnimationUtils.createCircularReveal(binding.eventDetails, cx.toInt(), cy.toInt(), initialRadius, 0f)
+                anim.addListener(onEnd = {
+                    binding.eventDetails.visibility = View.GONE
+                })
+
+                anim.start()
                 showDetails = false
             }
         }
