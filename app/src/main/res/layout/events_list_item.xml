@@ -160,13 +160,29 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
                 android:layout_weight="1"
                 android:text="@string/event_another_date_button" />
 
-            <Button
-                android:id="@+id/acceptButton"
+            <LinearLayout
+                android:id="@+id/acceptButtonContainer"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                style="@style/eventButtonStyle"
-                android:text="@string/event_accept_button" />
+                android:gravity="center" >
+
+                <Button
+                    android:id="@+id/acceptButton"
+                    style="@style/eventButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="0dp"
+                    android:text="@string/event_accept_button" />
+
+                <ImageView
+                    android:id="@+id/acceptCheck"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_check_black"
+                    android:visibility="gone"
+                    android:contentDescription="@string/accept_button_check" />
+            </LinearLayout>
         </LinearLayout>
 
         <androidx.constraintlayout.widget.Barrier

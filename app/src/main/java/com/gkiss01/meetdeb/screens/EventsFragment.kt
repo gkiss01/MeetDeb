@@ -41,6 +41,10 @@ class EventsFragment : Fragment() {
         val viewAdapter = EventEntryAdapter(EventClickListener { position ->
             val view = binding.eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventEntryAdapter.EntryViewHolder
             view.showEventDetails()
+        },EventClickListener { position ->
+            val view = binding.eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventEntryAdapter.EntryViewHolder
+            viewModel.createParticipant(view.eventId)
+            view.showEventJoin()
         })
 
         viewModel.eventEntries.observe(this, Observer { events ->

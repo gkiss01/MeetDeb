@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.animation.addListener
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.TransitionManager
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.EventEntry
 import com.gkiss01.meetdeb.databinding.EventsListItemBinding
@@ -20,7 +21,8 @@ import kotlin.math.max
 private const val ITEM_VIEW_TYPE_HEADER = 0
 private const val ITEM_VIEW_TYPE_ITEM = 1
 
-class EventEntryAdapter(val clickListener: EventClickListener): ListAdapter<DataItem, RecyclerView.ViewHolder>(EventEntryDiffCallback()) {
+class EventEntryAdapter(private val detailsClickListener: EventClickListener,
+                        private val joinClickListener: EventClickListener): ListAdapter<DataItem, RecyclerView.ViewHolder>(EventEntryDiffCallback()) {
 
     private val adapterScope = CoroutineScope(Dispatchers.Default)
 
@@ -43,7 +45,7 @@ class EventEntryAdapter(val clickListener: EventClickListener): ListAdapter<Data
         when (holder) {
             is EntryViewHolder -> {
                 val eventItem = getItem(position) as DataItem.EventItem
-                holder.bind(eventItem.eventEntry, clickListener)
+                holder.bind(eventItem.eventEntry, detailsClickListener, joinClickListener)
             }
         }
     }
@@ -71,12 +73,25 @@ class EventEntryAdapter(val clickListener: EventClickListener): ListAdapter<Data
     }
 
     class EntryViewHolder(private val binding: EventsListItemBinding): RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: EventEntry, clickListener: EventClickListener) {
+        var eventId = 0
+        private var showDetails = false
+        private var eventAccepted = false
+
+        fun bind(item: EventEntry, detailsClickListener: EventClickListener, joinClickListener: EventClickListener) {
             binding.event = item
             binding.descButton.setOnClickListener {
-                clickListener.onClick(this.layoutPosition)
+                detailsClickListener.onClick(this.layoutPosition)
             }
+            binding.acceptButton.setOnClickListener {
+                joinClickListener.onClick(this.layoutPosition)
+            }
+
             binding.eventDetails.visibility = View.GONE
+            binding.acceptCheck.visibility = View.GONE
+            showDetails = false
+            eventAccepted = false
+            eventId = item.entryId
+
             binding.executePendingBindings()
         }
 
@@ -88,6 +103,7 @@ class EventEntryAdapter(val clickListener: EventClickListener): ListAdapter<Data
                 var finalRadius = hypot(binding.eventDetails.width.toDouble(), binding.eventDetails.height.toDouble()).toFloat()
                 if (finalRadius.equals(0f)) finalRadius = hypot(binding.eventImage.width.toDouble(), binding.eventImage.height.toDouble()).toFloat()
                 val anim = ViewAnimationUtils.createCircularReveal(binding.eventDetails, cx.toInt(), cy.toInt(), 0f, finalRadius)
+                anim.duration = 400L
                 binding.eventDetails.visibility = View.VISIBLE
 
                 anim.start()
@@ -105,13 +121,18 @@ class EventEntryAdapter(val clickListener: EventClickListener): ListAdapter<Data
             }
         }
 
+        fun showEventJoin() {
+            eventAccepted = !eventAccepted
+            TransitionManager.beginDelayedTransition(binding.acceptButtonContainer)
+            binding.acceptCheck.visibility = if (eventAccepted) View.VISIBLE else View.GONE
+        }
+
         companion object {
             fun from(parent: ViewGroup): EntryViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
                 val binding = EventsListItemBinding.inflate(layoutInflater, parent, false)
                 return EntryViewHolder(binding)
             }
-            var showDetails = false
         }
     }
 }

@@ -22,4 +22,5 @@
     <string name="event_venue">Helyszín:</string>
     <string name="event_date">Időpont:</string>
     <string name="event_description">Leírás:</string>
+    <string name="accept_button_check">Accept button check</string>
 </resources>
