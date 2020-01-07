@@ -1,4 +1,4 @@
-package com.gkiss01.meetdeb.network.data
+package com.gkiss01.meetdeb.adapter
 
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.JsonQualifier

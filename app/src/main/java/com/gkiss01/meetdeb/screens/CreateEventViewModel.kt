@@ -4,17 +4,11 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
-import com.gkiss01.meetdeb.data.EventEntry
-import com.gkiss01.meetdeb.data.EventEntryDao
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.ZoneOffset
 import org.threeten.bp.format.DateTimeFormatter
 
-class CreateEventViewModel(private val databaseDao: EventEntryDao, application: Application): AndroidViewModel(application) {
+class CreateEventViewModel(application: Application): AndroidViewModel(application) {
     val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy, HH:mm")
 
     var year: Int
@@ -37,16 +31,7 @@ class CreateEventViewModel(private val databaseDao: EventEntryDao, application: 
     }
 
     fun createEvent() {
-        viewModelScope.launch {
-            val event = EventEntry(userName = "Anonymous", date = dateTime.value!!, venue = eventVenue, labels = eventLabels)
-            insert(event)
-        }
-    }
 
-    private suspend fun insert(eventEntry: EventEntry) {
-        withContext(Dispatchers.IO) {
-            databaseDao.insert(eventEntry)
-        }
     }
 
     init {

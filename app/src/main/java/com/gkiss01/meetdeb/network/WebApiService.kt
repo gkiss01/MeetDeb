@@ -1,7 +1,7 @@
 package com.gkiss01.meetdeb.network
 
-import com.gkiss01.meetdeb.network.data.GenericResponse
-import com.gkiss01.meetdeb.network.data.OffsetDateTimeAdapter
+import com.gkiss01.meetdeb.adapter.OffsetDateTimeAdapter
+import com.gkiss01.meetdeb.data.GenericResponse
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory

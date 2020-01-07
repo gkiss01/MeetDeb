@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.TransitionManager
 import com.gkiss01.meetdeb.R
-import com.gkiss01.meetdeb.data.EventEntry
+import com.gkiss01.meetdeb.data.Event
 import com.gkiss01.meetdeb.databinding.EventsListItemBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -45,12 +45,12 @@ class EventEntryAdapter(private val detailsClickListener: EventClickListener,
         when (holder) {
             is EntryViewHolder -> {
                 val eventItem = getItem(position) as DataItem.EventItem
-                holder.bind(eventItem.eventEntry, detailsClickListener, joinClickListener)
+                holder.bind(eventItem.event, detailsClickListener, joinClickListener)
             }
         }
     }
 
-    fun addHeaderAndSubmitList(list: List<EventEntry>?) {
+    fun addHeaderAndSubmitList(list: List<Event>?) {
         adapterScope.launch {
             val items = when (list) {
                 null -> listOf(DataItem.Header)
@@ -73,11 +73,11 @@ class EventEntryAdapter(private val detailsClickListener: EventClickListener,
     }
 
     class EntryViewHolder(private val binding: EventsListItemBinding): RecyclerView.ViewHolder(binding.root) {
-        var eventId = 0
+        var eventId = 0L
         private var showDetails = false
         private var eventAccepted = false
 
-        fun bind(item: EventEntry, detailsClickListener: EventClickListener, joinClickListener: EventClickListener) {
+        fun bind(item: Event, detailsClickListener: EventClickListener, joinClickListener: EventClickListener) {
             binding.event = item
             binding.descButton.setOnClickListener {
                 detailsClickListener.onClick(this.layoutPosition)
@@ -90,7 +90,7 @@ class EventEntryAdapter(private val detailsClickListener: EventClickListener,
             binding.acceptCheck.visibility = View.GONE
             showDetails = false
             eventAccepted = false
-            eventId = item.entryId
+            eventId = item.id
 
             binding.executePendingBindings()
         }
@@ -140,8 +140,8 @@ class EventEntryAdapter(private val detailsClickListener: EventClickListener,
 sealed class DataItem {
     abstract val id: Long
 
-    data class EventItem(val eventEntry: EventEntry): DataItem() {
-        override val id = eventEntry.entryId.toLong()
+    data class EventItem(val event: Event): DataItem() {
+        override val id = event.id
     }
 
     object Header: DataItem() {

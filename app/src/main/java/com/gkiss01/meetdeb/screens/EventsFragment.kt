@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.adapter.EventClickListener
 import com.gkiss01.meetdeb.adapter.EventEntryAdapter
-import com.gkiss01.meetdeb.data.EventDatabase
 import com.gkiss01.meetdeb.databinding.EventsFragmentBinding
 
 class EventsFragment : Fragment() {
@@ -28,9 +27,7 @@ class EventsFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.events_fragment, container, false)
 
         val application = requireNotNull(this.activity).application
-        val eventDataSource = EventDatabase.getInstance(application).eventEntryDao
-        val participantDataSource = EventDatabase.getInstance(application).participantEntryDao
-        val viewModelFactory = EventsViewModelFactory(eventDataSource, participantDataSource, application)
+        val viewModelFactory = EventsViewModelFactory(application)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(EventsViewModel::class.java)
 
         binding.addActionButton.setOnClickListener{ run {
@@ -43,11 +40,11 @@ class EventsFragment : Fragment() {
             view.showEventDetails()
         },EventClickListener { position ->
             val view = binding.eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventEntryAdapter.EntryViewHolder
-            viewModel.createParticipant(view.eventId)
+            //viewModel.createParticipant(view.eventId)
             view.showEventJoin()
         })
 
-        viewModel.eventEntries.observe(this, Observer { events ->
+        viewModel.events.observe(this, Observer { events ->
             events?.let { viewAdapter.addHeaderAndSubmitList(it) }
         })
 

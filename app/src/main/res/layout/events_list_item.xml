@@ -6,7 +6,7 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable
             name="event"
-            type="com.gkiss01.meetdeb.data.EventEntry" />
+            type="com.gkiss01.meetdeb.data.Event" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -65,7 +65,7 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
                 android:id="@+id/userNameValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{event.userName}"
+                android:text="@{event.username}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/userName" />
 

@@ -1,4 +1,4 @@
-package com.gkiss01.meetdeb.network.data
+package com.gkiss01.meetdeb.data
 
 import org.threeten.bp.OffsetDateTime
 
@@ -7,9 +7,11 @@ data class Event(
 
     var username: String,
 
-    @com.gkiss01.meetdeb.network.data.OffsetDateTime
+    @com.gkiss01.meetdeb.adapter.OffsetDateTime
     var date: OffsetDateTime,
 
     var venue: String,
 
-    var labels: String)
+    var labels: String,
+
+    var participants: Int?)

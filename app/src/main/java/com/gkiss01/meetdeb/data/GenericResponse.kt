@@ -1,4 +1,4 @@
-package com.gkiss01.meetdeb.network.data
+package com.gkiss01.meetdeb.data
 
 data class GenericResponse(
     val error: Boolean,

@@ -1,7 +1,6 @@
 package com.gkiss01.meetdeb.screens
 
 import android.app.DatePickerDialog
-import android.app.DatePickerDialog.OnDateSetListener
 import android.app.TimePickerDialog
 import android.content.Context
 import android.os.Bundle
@@ -16,7 +15,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.NavHostFragment
 import com.gkiss01.meetdeb.R
-import com.gkiss01.meetdeb.data.EventDatabase
 import com.gkiss01.meetdeb.databinding.CreateEventFragmentBinding
 import org.threeten.bp.OffsetDateTime
 
@@ -32,14 +30,13 @@ class CreateEventFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.create_event_fragment, container, false)
 
         val application = requireNotNull(this.activity).application
-        val dataSource = EventDatabase.getInstance(application).eventEntryDao
-        val viewModelFactory = CreateEventViewModelFactory(dataSource, application)
+        val viewModelFactory = CreateEventViewModelFactory(application)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(CreateEventViewModel::class.java)
 
         binding.viewmodel = viewModel
 
         binding.dateButton.setOnClickListener {
-            val datePickerDialog = DatePickerDialog(context!!, OnDateSetListener { _, year, month, dayOfMonth ->
+            val datePickerDialog = DatePickerDialog(context!!, DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
 
                 viewModel.year = year
                 viewModel.month = month + 1
