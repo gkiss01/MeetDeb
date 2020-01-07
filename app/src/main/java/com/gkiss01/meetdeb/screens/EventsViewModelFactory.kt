@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.gkiss01.meetdeb.data.EventEntryDao
 import com.gkiss01.meetdeb.data.ParticipantEntryDao
 
+@Suppress("UNCHECKED_CAST")
 class EventsViewModelFactory(
     private val eventDataSource: EventEntryDao,
     private val participantDataSource: ParticipantEntryDao,
