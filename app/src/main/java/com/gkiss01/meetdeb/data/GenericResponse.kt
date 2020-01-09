@@ -5,5 +5,7 @@ data class GenericResponse(
 
     val errors: List<String>?,
 
+    val event: Event?,
+
     val events: List<Event>?
 )

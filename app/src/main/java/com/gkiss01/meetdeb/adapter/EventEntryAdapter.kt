@@ -50,6 +50,16 @@ class EventEntryAdapter(private val detailsClickListener: EventClickListener,
         }
     }
 
+    fun updateDataSourceAtIndex(position: Int, event: Event) {
+        adapterScope.launch {
+            val submittedList = currentList.toMutableList()
+            submittedList[position] = DataItem.EventItem(event)
+            withContext(Dispatchers.Main) {
+                submitList(submittedList)
+            }
+        }
+    }
+
     fun addHeaderAndSubmitList(list: List<Event>?) {
         adapterScope.launch {
             val items = when (list) {
@@ -74,8 +84,8 @@ class EventEntryAdapter(private val detailsClickListener: EventClickListener,
 
     class EntryViewHolder(private val binding: EventsListItemBinding): RecyclerView.ViewHolder(binding.root) {
         var eventId = 0L
+        var eventAccepted = false
         private var showDetails = false
-        private var eventAccepted = false
 
         fun bind(item: Event, detailsClickListener: EventClickListener, joinClickListener: EventClickListener) {
             binding.event = item
@@ -87,10 +97,11 @@ class EventEntryAdapter(private val detailsClickListener: EventClickListener,
             }
 
             binding.eventDetails.visibility = View.GONE
-            binding.acceptCheck.visibility = View.GONE
-            showDetails = false
-            eventAccepted = false
+            binding.acceptCheck.visibility = if (item.accepted) View.VISIBLE else View.GONE
+
             eventId = item.id
+            eventAccepted = item.accepted
+            showDetails = false
 
             binding.executePendingBindings()
         }
@@ -121,11 +132,14 @@ class EventEntryAdapter(private val detailsClickListener: EventClickListener,
             }
         }
 
-        fun showEventJoin() {
-            eventAccepted = !eventAccepted
-            TransitionManager.beginDelayedTransition(binding.acceptButtonContainer)
-            binding.acceptCheck.visibility = if (eventAccepted) View.VISIBLE else View.GONE
-        }
+//        fun showEventJoin(accepted: Boolean) {
+//            eventAccepted = accepted
+//            binding.acceptButtonContainer.post {
+//                TransitionManager.beginDelayedTransition(binding.acceptButtonContainer)
+//                binding.acceptCheck.visibility = if (eventAccepted) View.VISIBLE else View.GONE
+//            }
+//
+//        }
 
         companion object {
             fun from(parent: ViewGroup): EntryViewHolder {
@@ -140,7 +154,7 @@ class EventEntryAdapter(private val detailsClickListener: EventClickListener,
 sealed class DataItem {
     abstract val id: Long
 
-    data class EventItem(val event: Event): DataItem() {
+    data class EventItem(var event: Event): DataItem() {
         override val id = event.id
     }
 

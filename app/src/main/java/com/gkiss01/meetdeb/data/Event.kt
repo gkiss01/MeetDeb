@@ -14,4 +14,6 @@ data class Event(
 
     var labels: String,
 
-    var participants: Int?)
+    var participants: Int,
+
+    val accepted: Boolean)

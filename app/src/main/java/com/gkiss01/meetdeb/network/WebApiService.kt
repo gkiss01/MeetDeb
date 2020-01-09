@@ -8,8 +8,7 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.Deferred
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import retrofit2.http.GET
-import retrofit2.http.Header
+import retrofit2.http.*
 
 private const val BASE_URL = "http://172.17.172.157:8080"
 
@@ -27,6 +26,12 @@ private val retrofit = Retrofit.Builder()
 interface WebApiService {
     @GET("events")
     fun getEventsAsync(@Header("Authorization") auth: String): Deferred<GenericResponse>
+
+    @POST("participants/{eventId}")
+    fun createParticipantAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): Deferred<GenericResponse>
+
+    @DELETE("participants/{eventId}")
+    fun deleteParticipantAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): Deferred<GenericResponse>
 }
 
 object WebApi {
