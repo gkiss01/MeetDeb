@@ -10,44 +10,34 @@ import androidx.lifecycle.viewModelScope
 import com.gkiss01.meetdeb.data.Event
 import com.gkiss01.meetdeb.data.GenericResponse
 import com.gkiss01.meetdeb.network.WebApi
-import com.gkiss01.meetdeb.utils.SingleLiveEvent
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.launch
 import okhttp3.Credentials
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 
+interface GenericResponseListener {
+    fun onEventReceive(event: Event)
+}
+
 enum class TargetVar {
-    VAR_GET_EVENTS, VAR_CREATE_PARTICIPANT, VAR_DELETE_PARTICIPANT, VAR_MESSAGE
+    VAR_GET_EVENTS, VAR_CREATE_PARTICIPANT, VAR_DELETE_PARTICIPANT
 }
 
 class EventsViewModel(application: Application): AndroidViewModel(application) {
 
     private val basic = Credentials.basic("gergokiss04@gmail.com", "asdasdasd")
-
-    private val _response = MutableLiveData<GenericResponse>()
-    val response: LiveData<GenericResponse>
-        get() = _response
-
-    private val _actualEvent = SingleLiveEvent<Int>()
-    val actualEvent: LiveData<Int>
-        get() = _actualEvent
-
-    private val _participationStatus = SingleLiveEvent<Boolean>()
-    val participationStatus: LiveData<Boolean>
-        get() = _participationStatus
+    val genericResponseListener = MutableLiveData<GenericResponseListener>()
 
     private val _events = MutableLiveData<List<Event>>()
     val events: LiveData<List<Event>>
         get() = _events
 
-    fun modifyParticipation(eventId: Long, eventAccepted: Boolean, position: Int) {
-        _actualEvent.value = position
+    fun modifyParticipation(eventId: Long, eventAccepted: Boolean) {
         if (eventAccepted)
             makeRequest(WebApi.retrofitService.deleteParticipantAsync(basic, eventId), TargetVar.VAR_DELETE_PARTICIPANT)
         else
             makeRequest(WebApi.retrofitService.createParticipantAsync(basic, eventId), TargetVar.VAR_CREATE_PARTICIPANT)
-        Log.d("EventsViewModel", "createParticipant $position")
     }
 
     private fun getEvents() {
@@ -59,13 +49,9 @@ class EventsViewModel(application: Application): AndroidViewModel(application) {
             try {
                 val listResult = target.await()
                 if (!listResult.error) {
-                    _response.value = listResult
-
                     when (targetVar) {
                         TargetVar.VAR_GET_EVENTS -> _events.value = listResult.events
-                        TargetVar.VAR_CREATE_PARTICIPANT -> _participationStatus.value = true
-                        TargetVar.VAR_DELETE_PARTICIPANT -> _participationStatus.value = false
-                        else -> println("TODO")
+                        TargetVar.VAR_CREATE_PARTICIPANT, TargetVar.VAR_DELETE_PARTICIPANT -> genericResponseListener.value!!.onEventReceive(listResult.event!!)
                     }
                 }
                 else handleResponseErrors(listResult.errors!!)

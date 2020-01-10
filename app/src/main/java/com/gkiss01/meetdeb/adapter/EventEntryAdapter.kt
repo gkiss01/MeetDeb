@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.core.animation.addListener
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import androidx.transition.TransitionManager
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.Event
 import com.gkiss01.meetdeb.databinding.EventsListItemBinding
@@ -50,10 +49,10 @@ class EventEntryAdapter(private val detailsClickListener: EventClickListener,
         }
     }
 
-    fun updateDataSourceAtIndex(position: Int, event: Event) {
+    fun updateDataSourceByEvent(event: Event) {
         adapterScope.launch {
-            val submittedList = currentList.toMutableList()
-            submittedList[position] = DataItem.EventItem(event)
+            val submittedList= currentList.map { if (it.id == event.id) DataItem.EventItem(event) else it }.toMutableList()
+
             withContext(Dispatchers.Main) {
                 submitList(submittedList)
             }
@@ -90,10 +89,10 @@ class EventEntryAdapter(private val detailsClickListener: EventClickListener,
         fun bind(item: Event, detailsClickListener: EventClickListener, joinClickListener: EventClickListener) {
             binding.event = item
             binding.descButton.setOnClickListener {
-                detailsClickListener.onClick(this.layoutPosition)
+                detailsClickListener.onClick(this.adapterPosition)
             }
             binding.acceptButton.setOnClickListener {
-                joinClickListener.onClick(this.layoutPosition)
+                joinClickListener.onClick(this.adapterPosition)
             }
 
             binding.eventDetails.visibility = View.GONE
@@ -138,7 +137,6 @@ class EventEntryAdapter(private val detailsClickListener: EventClickListener,
 //                TransitionManager.beginDelayedTransition(binding.acceptButtonContainer)
 //                binding.acceptCheck.visibility = if (eventAccepted) View.VISIBLE else View.GONE
 //            }
-//
 //        }
 
         companion object {
@@ -154,7 +152,7 @@ class EventEntryAdapter(private val detailsClickListener: EventClickListener,
 sealed class DataItem {
     abstract val id: Long
 
-    data class EventItem(var event: Event): DataItem() {
+    data class EventItem(val event: Event): DataItem() {
         override val id = event.id
     }
 

@@ -13,12 +13,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.adapter.EventClickListener
 import com.gkiss01.meetdeb.adapter.EventEntryAdapter
+import com.gkiss01.meetdeb.data.Event
 import com.gkiss01.meetdeb.databinding.EventsFragmentBinding
 
-class EventsFragment : Fragment() {
+class EventsFragment : Fragment(), GenericResponseListener {
 
     private lateinit var binding: EventsFragmentBinding
     private lateinit var viewModel: EventsViewModel
+    private lateinit var viewAdapter: EventEntryAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,12 +37,13 @@ class EventsFragment : Fragment() {
             NavHostFragment.findNavController(this).navigate(action)
         }}
 
-        val viewAdapter = EventEntryAdapter(EventClickListener { position ->
-            val view = binding.eventsRecyclerView.findViewHolderForLayoutPosition(position) as EventEntryAdapter.EntryViewHolder
+        viewModel.genericResponseListener.value = this
+        viewAdapter = EventEntryAdapter(EventClickListener { position ->
+            val view = binding.eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventEntryAdapter.EntryViewHolder
             view.showEventDetails()
         },EventClickListener { position ->
-            val view = binding.eventsRecyclerView.findViewHolderForLayoutPosition(position) as EventEntryAdapter.EntryViewHolder
-            viewModel.modifyParticipation(view.eventId, view.eventAccepted, position)
+            val view = binding.eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventEntryAdapter.EntryViewHolder
+            viewModel.modifyParticipation(view.eventId, view.eventAccepted)
             //view.showEventJoinAnimation()
         })
 
@@ -48,13 +51,13 @@ class EventsFragment : Fragment() {
             events?.let { viewAdapter.addHeaderAndSubmitList(it) }
         })
 
-        viewModel.participationStatus.observe(this, Observer {
-            viewAdapter.updateDataSourceAtIndex(viewModel.actualEvent.value!!, viewModel.response.value?.event!!)
-        })
-
         binding.eventsRecyclerView.adapter = viewAdapter
         binding.eventsRecyclerView.layoutManager = LinearLayoutManager(context)
 
         return binding.root
+    }
+
+    override fun onEventReceive(event: Event) {
+        viewAdapter.updateDataSourceByEvent(event)
     }
 }
