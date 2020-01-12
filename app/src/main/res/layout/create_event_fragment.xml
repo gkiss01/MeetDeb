@@ -9,86 +9,106 @@
             type="com.gkiss01.meetdeb.screens.CreateEventViewModel" />
     </data>
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="20dp" >
-
-        <EditText
-            android:id="@+id/eventName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/event_name_hint"
-            android:inputType="textPersonName"
-            android:importantForAutofill="no"
-            android:text="@={viewmodel.eventName}" />
-
-        <EditText
-            android:id="@+id/eventLabels"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/event_labels_hint"
-            android:inputType="textPersonName"
-            android:importantForAutofill="no"
-            android:layout_marginTop="10dp"
-            android:text="@={viewmodel.eventLabels}" />
-
-        <TextView
-            android:id="@+id/eventDateTime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:textSize="18sp"
-            android:padding="2dp"/>
+        android:layout_height="match_parent" >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="2dp" >
+            android:orientation="vertical"
+            android:padding="20dp" >
+
+            <EditText
+                android:id="@+id/eventName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/event_name_hint"
+                android:inputType="textPersonName"
+                android:importantForAutofill="no"
+                android:text="@={viewmodel.eventName}" />
+
+            <EditText
+                android:id="@+id/eventLabels"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/event_labels_hint"
+                android:inputType="textPersonName"
+                android:importantForAutofill="no"
+                android:layout_marginTop="10dp"
+                android:text="@={viewmodel.eventLabels}" />
+
+            <TextView
+                android:id="@+id/eventDateTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:textSize="18sp"
+                android:padding="2dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="2dp" >
+
+                <Button
+                    android:id="@+id/dateButton"
+                    style="@style/setButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:text="@string/event_date_set"
+                    android:layout_marginEnd="5dp" />
+
+                <Button
+                    android:id="@+id/timeButton"
+                    style="@style/setButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:text="@string/event_time_set"
+                    android:layout_marginStart="5dp" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/eventVenue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/event_venue_hint"
+                android:inputType="textPersonName"
+                android:importantForAutofill="no"
+                android:layout_marginTop="10dp"
+                android:text="@={viewmodel.eventVenue}" />
 
             <Button
-                android:id="@+id/dateButton"
+                android:id="@+id/imageButton"
                 style="@style/setButtonStyle"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="30dp"
-                android:layout_weight="1"
-                android:text="@string/event_date_set"
-                android:layout_marginEnd="5dp" />
+                android:layout_marginTop="10dp"
+                android:text="@string/event_image_select" />
+
+            <ImageView
+                android:id="@+id/imagePreview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/event_image"
+                android:adjustViewBounds="true"
+                android:layout_marginTop="10dp" />
 
             <Button
-                android:id="@+id/timeButton"
-                style="@style/setButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_weight="1"
-                android:text="@string/event_time_set"
-                android:layout_marginStart="5dp" />
+                android:id="@+id/createButton"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:text="@string/event_create_button"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="end"
+                style="@style/fabStyle" />
         </LinearLayout>
-
-        <EditText
-            android:id="@+id/eventVenue"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/event_venue_hint"
-            android:inputType="textPersonName"
-            android:importantForAutofill="no"
-            android:layout_marginTop="10dp"
-            android:text="@={viewmodel.eventVenue}" />
-
-        <Button
-            android:id="@+id/createButton"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:text="@string/event_create_button"
-            android:layout_marginTop="10dp"
-            android:layout_gravity="end"
-            style="@style/fabStyle" />
-
-    </LinearLayout>
+    </ScrollView>
 </layout>

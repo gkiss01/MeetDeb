@@ -1,14 +1,21 @@
 package com.gkiss01.meetdeb.screens
 
+import android.app.Activity.RESULT_OK
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -16,12 +23,21 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.NavHostFragment
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.databinding.CreateEventFragmentBinding
+import com.zhihu.matisse.Matisse
+import com.zhihu.matisse.MimeType
+import com.zhihu.matisse.engine.impl.GlideEngine
 import org.threeten.bp.OffsetDateTime
+
 
 class CreateEventFragment : Fragment() {
 
+    private val REQUEST_CODE_PICK_IMAGE = 1
+    private val PERMISSION_CODE_STORAGE = 2
+
     private lateinit var binding: CreateEventFragmentBinding
     private lateinit var viewModel: CreateEventViewModel
+
+    private lateinit var filePath: Uri
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -96,6 +112,55 @@ class CreateEventFragment : Fragment() {
             }
         }
 
+        binding.imageButton.setOnClickListener {
+            requestStoragePermissions()
+        }
+
         return binding.root
+    }
+
+    private fun requestStoragePermissions() {
+        val permissions = arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE,
+            android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+
+        if(hasPermissions(context!!, permissions.toList())) {
+            Matisse.from(this)
+                .choose(MimeType.ofImage())
+                .theme(R.style.Matisse_Dracula)
+                .countable(true)
+                .maxSelectable(1)
+                .gridExpectedSize(resources.getDimensionPixelSize(R.dimen.grid_expected_size))
+                .imageEngine(GlideEngine())
+                .autoHideToolbarOnSingleTap(true)
+                .forResult(REQUEST_CODE_PICK_IMAGE)
+        }
+        else ActivityCompat.requestPermissions(activity!!, permissions, PERMISSION_CODE_STORAGE)
+    }
+
+    private fun hasPermissions(context: Context, permissions: List<String>): Boolean {
+        for (permission in permissions) {
+            if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                return false
+            }
+        }
+        return true
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        if (requestCode == PERMISSION_CODE_STORAGE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                Toast.makeText(activity, "Permission granted!", Toast.LENGTH_SHORT).show()
+            else
+                Toast.makeText(activity, "Permission denied!", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_PICK_IMAGE && resultCode == RESULT_OK) {
+            filePath = Matisse.obtainResult(data)[0]
+            Log.d("CreateEventFragment", "Selected file: $filePath")
+            binding.imagePreview.setImageURI(filePath)
+        }
     }
 }
