@@ -9,7 +9,6 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,13 +20,15 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.NavHostFragment
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.databinding.CreateEventFragmentBinding
+import com.gkiss01.meetdeb.network.BASE_URL
+import com.gkiss01.meetdeb.network.GlideApp
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
 import com.zhihu.matisse.engine.impl.GlideEngine
 import org.threeten.bp.OffsetDateTime
-
 
 class CreateEventFragment : Fragment() {
 
@@ -116,6 +117,13 @@ class CreateEventFragment : Fragment() {
             requestStoragePermissions()
         }
 
+        GlideApp.with(this)
+            .load("$BASE_URL/images/10")
+            .placeholder(R.drawable.fab_label_background)
+            .error(R.drawable.fab_label_background)
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .into(binding.imagePreview)
+
         return binding.root
     }
 
@@ -159,7 +167,7 @@ class CreateEventFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_PICK_IMAGE && resultCode == RESULT_OK) {
             filePath = Matisse.obtainResult(data)[0]
-            Log.d("CreateEventFragment", "Selected file: $filePath")
+
             binding.imagePreview.setImageURI(filePath)
         }
     }

@@ -7,9 +7,13 @@ import android.view.ViewGroup
 import androidx.core.animation.addListener
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Priority
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.Event
 import com.gkiss01.meetdeb.databinding.EventsListItemBinding
+import com.gkiss01.meetdeb.network.BASE_URL
+import com.gkiss01.meetdeb.network.GlideApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -91,7 +95,7 @@ class EventEntryAdapter(private val detailsClickListener: EventClickListener,
             binding.descButton.setOnClickListener {
                 detailsClickListener.onClick(this.adapterPosition)
             }
-            binding.acceptButton.setOnClickListener {
+            binding.acceptButtonContainer.setOnClickListener {
                 joinClickListener.onClick(this.adapterPosition)
             }
 
@@ -101,6 +105,14 @@ class EventEntryAdapter(private val detailsClickListener: EventClickListener,
             eventId = item.id
             eventAccepted = item.accepted
             showDetails = false
+
+            GlideApp.with(this.itemView.context)
+                .load("$BASE_URL/images/$eventId")
+                .priority(Priority.IMMEDIATE)
+                .override(1080, 1080)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .placeholder(R.drawable.fab_label_background)
+                .into(binding.eventImage)
 
             binding.executePendingBindings()
         }

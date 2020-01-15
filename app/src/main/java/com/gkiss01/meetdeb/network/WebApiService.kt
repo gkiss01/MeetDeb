@@ -10,7 +10,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.*
 
-private const val BASE_URL = "http://172.17.172.157:8080"
+const val BASE_URL = "http://172.17.172.157:8080"
 
 private val moshi = Moshi.Builder()
     .add(OffsetDateTimeAdapter())
