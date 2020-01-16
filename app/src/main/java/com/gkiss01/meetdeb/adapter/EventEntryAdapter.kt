@@ -7,13 +7,12 @@ import android.view.ViewGroup
 import androidx.core.animation.addListener
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Priority
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.Event
 import com.gkiss01.meetdeb.databinding.EventsListItemBinding
 import com.gkiss01.meetdeb.network.BASE_URL
-import com.gkiss01.meetdeb.network.GlideApp
+import com.gkiss01.meetdeb.network.GlideRequests
+import jp.wasabeef.blurry.Blurry
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -24,7 +23,8 @@ import kotlin.math.max
 private const val ITEM_VIEW_TYPE_HEADER = 0
 private const val ITEM_VIEW_TYPE_ITEM = 1
 
-class EventEntryAdapter(private val detailsClickListener: EventClickListener,
+class EventEntryAdapter(val glide: GlideRequests,
+                        private val detailsClickListener: EventClickListener,
                         private val joinClickListener: EventClickListener): ListAdapter<DataItem, RecyclerView.ViewHolder>(EventEntryDiffCallback()) {
 
     private val adapterScope = CoroutineScope(Dispatchers.Default)
@@ -39,7 +39,7 @@ class EventEntryAdapter(private val detailsClickListener: EventClickListener,
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             ITEM_VIEW_TYPE_HEADER -> HeaderViewHolder.from(parent)
-            ITEM_VIEW_TYPE_ITEM -> EntryViewHolder.from(parent)
+            ITEM_VIEW_TYPE_ITEM -> EntryViewHolder.from(parent, glide)
             else -> throw ClassCastException("Unknown viewType $viewType")
         }
     }
@@ -85,7 +85,7 @@ class EventEntryAdapter(private val detailsClickListener: EventClickListener,
         }
     }
 
-    class EntryViewHolder(private val binding: EventsListItemBinding): RecyclerView.ViewHolder(binding.root) {
+    class EntryViewHolder(private val binding: EventsListItemBinding, private val glide: GlideRequests): RecyclerView.ViewHolder(binding.root) {
         var eventId = 0L
         var eventAccepted = false
         private var showDetails = false
@@ -100,18 +100,14 @@ class EventEntryAdapter(private val detailsClickListener: EventClickListener,
             }
 
             binding.eventDetails.visibility = View.GONE
+            binding.eventLabel.visibility = View.VISIBLE
             binding.acceptCheck.visibility = if (item.accepted) View.VISIBLE else View.GONE
 
             eventId = item.id
             eventAccepted = item.accepted
             showDetails = false
 
-            GlideApp.with(this.itemView.context)
-                .load("$BASE_URL/images/$eventId")
-                .priority(Priority.IMMEDIATE)
-                .override(1080, 1080)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .placeholder(R.drawable.fab_label_background)
+            glide.load("$BASE_URL/images/$eventId")
                 .into(binding.eventImage)
 
             binding.executePendingBindings()
@@ -123,10 +119,14 @@ class EventEntryAdapter(private val detailsClickListener: EventClickListener,
 
             if (!showDetails) {
                 var finalRadius = hypot(binding.eventDetails.width.toDouble(), binding.eventDetails.height.toDouble()).toFloat()
-                if (finalRadius.equals(0f)) finalRadius = hypot(binding.eventImage.width.toDouble(), binding.eventImage.height.toDouble()).toFloat()
+                if (finalRadius.equals(0f))
+                    finalRadius = hypot(binding.eventImage.width.toDouble(), binding.eventImage.height.toDouble()).toFloat()
+
                 val anim = ViewAnimationUtils.createCircularReveal(binding.eventDetails, cx.toInt(), cy.toInt(), 0f, finalRadius)
                 anim.duration = 400L
                 binding.eventDetails.visibility = View.VISIBLE
+                binding.eventLabel.visibility = View.INVISIBLE
+                Blurry.with(binding.eventImage.context).capture(binding.eventImage).into(binding.eventImage)
 
                 anim.start()
                 showDetails = true
@@ -136,6 +136,9 @@ class EventEntryAdapter(private val detailsClickListener: EventClickListener,
                 val anim = ViewAnimationUtils.createCircularReveal(binding.eventDetails, cx.toInt(), cy.toInt(), initialRadius, 0f)
                 anim.addListener(onEnd = {
                     binding.eventDetails.visibility = View.GONE
+                    binding.eventLabel.visibility = View.VISIBLE
+                    glide.load("$BASE_URL/images/$eventId")
+                        .into(binding.eventImage)
                 })
 
                 anim.start()
@@ -152,10 +155,10 @@ class EventEntryAdapter(private val detailsClickListener: EventClickListener,
 //        }
 
         companion object {
-            fun from(parent: ViewGroup): EntryViewHolder {
+            fun from(parent: ViewGroup, glide: GlideRequests): EntryViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
                 val binding = EventsListItemBinding.inflate(layoutInflater, parent, false)
-                return EntryViewHolder(binding)
+                return EntryViewHolder(binding, glide)
             }
         }
     }
