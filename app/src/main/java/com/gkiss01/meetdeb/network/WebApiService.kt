@@ -6,13 +6,16 @@ import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterF
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.Deferred
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.*
 
+
 const val BASE_URL = "http://172.17.172.157:8080"
 
-private val moshi = Moshi.Builder()
+val moshi = Moshi.Builder()
     .add(OffsetDateTimeAdapter())
     .add(KotlinJsonAdapterFactory())
     .build()
@@ -27,11 +30,20 @@ interface WebApiService {
     @GET("events")
     fun getEventsAsync(@Header("Authorization") auth: String): Deferred<GenericResponse>
 
+    @Multipart
+    @POST("events")
+    fun createEventAsync(@Header("Authorization") auth: String, @Part("event") event: RequestBody,
+                         @Part file: MultipartBody.Part?): Deferred<GenericResponse>
+
     @POST("participants/{eventId}")
     fun createParticipantAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): Deferred<GenericResponse>
 
     @DELETE("participants/{eventId}")
     fun deleteParticipantAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): Deferred<GenericResponse>
+
+//    @Multipart
+//    @POST("images/{eventId}")
+//    fun uploadImageAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long, @Part file: MultipartBody.Part): Deferred<GenericResponse>
 }
 
 object WebApi {

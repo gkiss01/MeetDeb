@@ -86,4 +86,7 @@ dependencies {
 
     //Blurry
     implementation 'jp.wasabeef:blurry:3.0.0'
+
+    //Compressor
+    implementation 'id.zelory:compressor:2.1.0'
 }
