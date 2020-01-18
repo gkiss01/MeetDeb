@@ -14,6 +14,7 @@ import com.bumptech.glide.ListPreloader.PreloadModelProvider
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
 import com.bumptech.glide.util.FixedPreloadSizeProvider
+import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.adapter.EventClickListener
 import com.gkiss01.meetdeb.adapter.EventEntryAdapter
@@ -22,32 +23,51 @@ import com.gkiss01.meetdeb.databinding.EventsFragmentBinding
 import com.gkiss01.meetdeb.network.BASE_URL
 import com.gkiss01.meetdeb.network.GlideApp
 import com.gkiss01.meetdeb.network.GlideRequests
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 
-class EventsFragment : Fragment(), GenericResponseListener {
+class EventsFragment : Fragment() {
 
     private lateinit var binding: EventsFragmentBinding
     private lateinit var viewModel: EventsViewModel
     private lateinit var viewAdapter: EventEntryAdapter
     private lateinit var glide: GlideRequests
 
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        EventBus.getDefault().unregister(this)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onEventsReceived(events: List<Event>) {
+        viewModel.events.value = events
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onEventReceived(event: Event) {
+        viewAdapter.updateDataSourceByEvent(event)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.events_fragment, container, false)
+        viewModel = ViewModelProviders.of(this).get(EventsViewModel::class.java)
         glide = GlideApp.with(activity!!)
-
-        val application = requireNotNull(this.activity).application
-        val viewModelFactory = EventsViewModelFactory(application)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(EventsViewModel::class.java)
 
         binding.addActionButton.setOnClickListener{ run {
             val action = EventsFragmentDirections.actionEventsFragmentToCreateEventFragment()
             NavHostFragment.findNavController(this).navigate(action)
         }}
 
-        viewModel.genericResponseListener.value = this
         viewAdapter = EventEntryAdapter(glide,
             EventClickListener { position ->
                 val view = binding.eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventEntryAdapter.EntryViewHolder
@@ -55,7 +75,7 @@ class EventsFragment : Fragment(), GenericResponseListener {
             },
             EventClickListener { position ->
             val view = binding.eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventEntryAdapter.EntryViewHolder
-            viewModel.modifyParticipation(view.eventId, view.eventAccepted)
+            MainActivity.instance.modifyParticipation(view.eventId, view.eventAccepted)
             //view.showEventJoinAnimation()
             })
 
@@ -72,10 +92,6 @@ class EventsFragment : Fragment(), GenericResponseListener {
         binding.eventsRecyclerView.layoutManager = LinearLayoutManager(context)
 
         return binding.root
-    }
-
-    override fun onEventReceive(event: Event) {
-        viewAdapter.updateDataSourceByEvent(event)
     }
 
     private inner class CustomPreloadModelProvider: PreloadModelProvider<String> {

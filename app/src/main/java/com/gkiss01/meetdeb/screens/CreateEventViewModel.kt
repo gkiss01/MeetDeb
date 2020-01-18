@@ -1,17 +1,13 @@
 package com.gkiss01.meetdeb.screens
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.data.request.EventRequest
-import com.gkiss01.meetdeb.network.WebApi
 import com.gkiss01.meetdeb.network.moshi
 import id.zelory.compressor.Compressor
-import kotlinx.coroutines.launch
-import okhttp3.Credentials
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -21,8 +17,6 @@ import org.threeten.bp.format.DateTimeFormatter
 import java.io.File
 
 class CreateEventViewModel(application: Application): AndroidViewModel(application) {
-
-    private val basic = Credentials.basic("gergokiss04@gmail.com", "asdasdasd")
     val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy, HH:mm")
 
     var year: Int
@@ -59,20 +53,7 @@ class CreateEventViewModel(application: Application): AndroidViewModel(applicati
         val json = moshi.adapter(EventRequest::class.java).toJson(eventRequest)
         val event: RequestBody = RequestBody.create(MediaType.parse("application/json"), json)
 
-        uploadEvent(event, body)
-    }
-
-    private fun uploadEvent(event: RequestBody, image: MultipartBody.Part?) {
-        viewModelScope.launch {
-            val createEventDeferred = WebApi.retrofitService.createEventAsync(basic, event, image)
-            try {
-                val listResult = createEventDeferred.await()
-                Log.d("CreateEvent", listResult.toString())
-            }
-            catch (e: Exception) {
-                Log.d("CreateEvent", "error: $e")
-            }
-        }
+        MainActivity.instance.uploadEvent(event, body)
     }
 
     init {

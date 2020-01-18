@@ -22,9 +22,13 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.NavHostFragment
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.databinding.CreateEventFragmentBinding
+import com.gkiss01.meetdeb.network.NavigationCode
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
 import com.zhihu.matisse.engine.impl.GlideEngine
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.threeten.bp.OffsetDateTime
 
 class CreateEventFragment : Fragment() {
@@ -36,6 +40,26 @@ class CreateEventFragment : Fragment() {
     private lateinit var viewModel: CreateEventViewModel
 
     private lateinit var filePath: Uri
+
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        EventBus.getDefault().unregister(this)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onNavigationReceived(navigationCode: NavigationCode) {
+        when (navigationCode) {
+            NavigationCode.NAVIGATE_TO_EVENTS_FRAGMENT -> {
+                val action = CreateEventFragmentDirections.actionCreateEventFragmentToEventsFragment()
+                NavHostFragment.findNavController(this).navigate(action)
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -104,9 +128,6 @@ class CreateEventFragment : Fragment() {
 
                 val inputMethodManager = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 inputMethodManager.hideSoftInputFromWindow(view!!.windowToken, 0)
-
-                val action = CreateEventFragmentDirections.actionCreateEventFragmentToEventsFragment()
-                NavHostFragment.findNavController(this).navigate(action)
             }
         }
 

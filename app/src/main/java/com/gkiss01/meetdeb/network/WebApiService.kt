@@ -12,8 +12,15 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.*
 
-
 const val BASE_URL = "http://172.17.172.157:8080"
+
+enum class TargetVar {
+    VAR_GET_EVENTS, VAR_CREATE_EVENT, VAR_CREATE_PARTICIPANT, VAR_DELETE_PARTICIPANT
+}
+
+enum class NavigationCode {
+    NAVIGATE_TO_EVENTS_FRAGMENT
+}
 
 val moshi = Moshi.Builder()
     .add(OffsetDateTimeAdapter())
