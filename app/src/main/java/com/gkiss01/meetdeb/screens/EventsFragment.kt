@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.ListPreloader.PreloadModelProvider
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
@@ -21,6 +22,7 @@ import com.gkiss01.meetdeb.adapter.EventEntryAdapter
 import com.gkiss01.meetdeb.data.Event
 import com.gkiss01.meetdeb.databinding.EventsFragmentBinding
 import com.gkiss01.meetdeb.network.BASE_URL
+import com.gkiss01.meetdeb.network.ErrorCode
 import com.gkiss01.meetdeb.network.GlideApp
 import com.gkiss01.meetdeb.network.GlideRequests
 import org.greenrobot.eventbus.EventBus
@@ -47,12 +49,22 @@ class EventsFragment : Fragment() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventsReceived(events: List<Event>) {
-        viewModel.events.value = events
+        viewModel.addEvents(events)
+        binding.swipeRefreshLayout.isRefreshing = false
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventReceived(event: Event) {
         viewAdapter.updateDataSourceByEvent(event)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onErrorReceived(errorCode: ErrorCode) {
+        when (errorCode) {
+            ErrorCode.ERROR_NO_EVENTS_FOUND -> {
+                viewModel.isLoading.value = false
+            }
+        }
     }
 
     override fun onCreateView(
@@ -68,6 +80,13 @@ class EventsFragment : Fragment() {
             NavHostFragment.findNavController(this).navigate(action)
         }}
 
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            if (!viewModel.isLoading.value!!)
+                viewModel.refreshEvents()
+            else
+                binding.swipeRefreshLayout.isRefreshing = false
+        }
+
         viewAdapter = EventEntryAdapter(glide,
             EventClickListener { position ->
                 val view = binding.eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventEntryAdapter.EntryViewHolder
@@ -77,19 +96,32 @@ class EventsFragment : Fragment() {
             val view = binding.eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventEntryAdapter.EntryViewHolder
             MainActivity.instance.modifyParticipation(view.eventId, view.eventAccepted)
             //view.showEventJoinAnimation()
-            })
+        })
 
         viewModel.events.observe(this, Observer { events ->
             events?.let { viewAdapter.addHeaderAndSubmitList(it) }
+            viewModel.isLoading.value = false
         })
 
         val sizeProvider = FixedPreloadSizeProvider<String>(1080, 1080)
         val modelProvider = CustomPreloadModelProvider()
         val recyclerViewPreloader: RecyclerViewPreloader<String> = RecyclerViewPreloader(glide, modelProvider, sizeProvider, 10)
 
-        binding.eventsRecyclerView.addOnScrollListener(recyclerViewPreloader)
+        val layoutManager = LinearLayoutManager(context)
+
         binding.eventsRecyclerView.adapter = viewAdapter
-        binding.eventsRecyclerView.layoutManager = LinearLayoutManager(context)
+        binding.eventsRecyclerView.layoutManager = layoutManager
+
+        binding.eventsRecyclerView.addOnScrollListener(recyclerViewPreloader)
+        binding.eventsRecyclerView.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                if (dy > 0 && !viewModel.isLoading.value!!)
+                    if (layoutManager.findLastVisibleItemPosition() == viewModel.events.value!!.size - 1)
+                        viewModel.loadMoreEvents()
+            }
+        })
 
         return binding.root
     }
@@ -105,4 +137,3 @@ class EventsFragment : Fragment() {
         }
     }
 }
-

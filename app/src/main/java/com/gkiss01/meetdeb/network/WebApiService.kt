@@ -22,6 +22,10 @@ enum class NavigationCode {
     NAVIGATE_TO_EVENTS_FRAGMENT
 }
 
+enum class ErrorCode {
+    ERROR_NO_EVENTS_FOUND
+}
+
 val moshi = Moshi.Builder()
     .add(OffsetDateTimeAdapter())
     .add(KotlinJsonAdapterFactory())
@@ -35,7 +39,7 @@ private val retrofit = Retrofit.Builder()
 
 interface WebApiService {
     @GET("events")
-    fun getEventsAsync(@Header("Authorization") auth: String): Deferred<GenericResponse>
+    fun getEventsAsync(@Header("Authorization") auth: String, @Query("page") page: Int): Deferred<GenericResponse>
 
     @Multipart
     @POST("events")

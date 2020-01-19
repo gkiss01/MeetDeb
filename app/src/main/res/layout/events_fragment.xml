@@ -15,11 +15,17 @@
         android:orientation="vertical"
         tools:context=".screens.EventsFragment">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/eventsRecyclerView"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:listitem="@layout/events_list_item" />
+            android:layout_height="match_parent" >
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/eventsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:listitem="@layout/events_list_item" />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <com.getbase.floatingactionbutton.FloatingActionsMenu
             android:layout_width="wrap_content"
@@ -40,7 +46,6 @@
                 app:fab_size="mini"
                 app:fab_icon="@drawable/ic_add_pink"
                 app:fab_title="@string/new_event_button" />
-
         </com.getbase.floatingactionbutton.FloatingActionsMenu>
     </RelativeLayout>
 </layout>

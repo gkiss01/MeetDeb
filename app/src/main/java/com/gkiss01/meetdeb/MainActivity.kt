@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.gkiss01.meetdeb.data.GenericResponse
+import com.gkiss01.meetdeb.network.ErrorCode
 import com.gkiss01.meetdeb.network.NavigationCode
 import com.gkiss01.meetdeb.network.TargetVar
 import com.gkiss01.meetdeb.network.WebApi
@@ -35,8 +36,8 @@ class MainActivity : AppCompatActivity() {
         instance = this
     }
 
-    fun getEvents() {
-        makeRequest(WebApi.retrofitService.getEventsAsync(basic), TargetVar.VAR_GET_EVENTS)
+    fun getEvents(page: Int = 1) {
+        makeRequest(WebApi.retrofitService.getEventsAsync(basic, page), TargetVar.VAR_GET_EVENTS)
     }
 
     fun uploadEvent(event: RequestBody, image: MultipartBody.Part?) {
@@ -61,7 +62,7 @@ class MainActivity : AppCompatActivity() {
                         TargetVar.VAR_CREATE_PARTICIPANT, TargetVar.VAR_DELETE_PARTICIPANT -> EventBus.getDefault().post(listResult.event)
                     }
                 }
-                else handleResponseErrors(listResult.errors!!)
+                else handleResponseErrors(listResult.errors!!, targetVar)
             }
             catch (e: Exception) {
                 handleErrors(e)
@@ -75,17 +76,19 @@ class MainActivity : AppCompatActivity() {
             is ConnectException -> "Connection error! (client)"
             else -> e.message
         }
-        Log.d("EventsViewModel", "Failure: $errors")
-        Log.d("EventsViewModel", "$e")
+        Log.d("MainActivityApiCall", "Failure: $errors")
+        Log.d("MainActivityApiCall", "$e")
         Toast.makeText(this, errors, Toast.LENGTH_LONG).show()
     }
 
-    private fun handleResponseErrors(errors: List<String>) {
+    private fun handleResponseErrors(errors: List<String>, targetVar: TargetVar) {
         var errorsMsg = ""
-        Log.d("EventsViewModel", "Failure: ${errors.size} errors:")
+        Log.d("MainActivityApiCall", "Failure: ${errors.size} errors:")
         errors.forEachIndexed { index, e  ->
             run {
-                Log.d("EventsViewModel", e)
+                if (e == "No events found!") EventBus.getDefault().post(ErrorCode.ERROR_NO_EVENTS_FOUND)
+
+                Log.d("MainActivityApiCall", e)
                 errorsMsg = errorsMsg.plus(if (index == 0) "" else "\n").plus(e)
             }
         }
