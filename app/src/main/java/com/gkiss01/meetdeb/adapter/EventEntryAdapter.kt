@@ -22,6 +22,7 @@ import kotlin.math.max
 
 private const val ITEM_VIEW_TYPE_HEADER = 0
 private const val ITEM_VIEW_TYPE_ITEM = 1
+private const val ITEM_VIEW_TYPE_LOADER = 2
 
 class EventEntryAdapter(val glide: GlideRequests,
                         private val detailsClickListener: EventClickListener,
@@ -33,6 +34,7 @@ class EventEntryAdapter(val glide: GlideRequests,
         return when (getItem(position)) {
             is DataItem.Header -> ITEM_VIEW_TYPE_HEADER
             is DataItem.EventItem -> ITEM_VIEW_TYPE_ITEM
+            is DataItem.Loader -> ITEM_VIEW_TYPE_LOADER
         }
     }
 
@@ -40,6 +42,7 @@ class EventEntryAdapter(val glide: GlideRequests,
         return when (viewType) {
             ITEM_VIEW_TYPE_HEADER -> HeaderViewHolder.from(parent)
             ITEM_VIEW_TYPE_ITEM -> EntryViewHolder.from(parent, glide)
+            ITEM_VIEW_TYPE_LOADER -> LoaderViewHolder.from(parent)
             else -> throw ClassCastException("Unknown viewType $viewType")
         }
     }
@@ -56,6 +59,28 @@ class EventEntryAdapter(val glide: GlideRequests,
     fun updateDataSourceByEvent(event: Event) {
         adapterScope.launch {
             val submittedList= currentList.map { if (it.id == event.id) DataItem.EventItem(event) else it }.toMutableList()
+
+            withContext(Dispatchers.Main) {
+                submitList(submittedList)
+            }
+        }
+    }
+
+    fun addLoaderToList() {
+        adapterScope.launch {
+            val submittedList= currentList.toMutableList()
+            submittedList.add(DataItem.Loader)
+
+            withContext(Dispatchers.Main) {
+                submitList(submittedList)
+            }
+        }
+    }
+
+    fun removeLoaderFromList() {
+        adapterScope.launch {
+            val submittedList= currentList.toMutableList()
+            submittedList.removeAt(currentList.size - 1)
 
             withContext(Dispatchers.Main) {
                 submitList(submittedList)
@@ -81,6 +106,16 @@ class EventEntryAdapter(val glide: GlideRequests,
                 val itemView = LayoutInflater.from(parent.context)
                     .inflate(R.layout.events_list_header, parent, false) as View
                 return HeaderViewHolder(itemView)
+            }
+        }
+    }
+
+    class LoaderViewHolder(view: View): RecyclerView.ViewHolder(view) {
+        companion object {
+            fun from(parent: ViewGroup): LoaderViewHolder {
+                val itemView = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.events_list_loader, parent, false) as View
+                return LoaderViewHolder(itemView)
             }
         }
     }
@@ -173,6 +208,10 @@ sealed class DataItem {
 
     object Header: DataItem() {
         override val id = Long.MIN_VALUE
+    }
+
+    object Loader: DataItem() {
+        override val id = Long.MAX_VALUE
     }
 }
 

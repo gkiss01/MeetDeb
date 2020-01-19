@@ -63,6 +63,7 @@ class EventsFragment : Fragment() {
         when (errorCode) {
             ErrorCode.ERROR_NO_EVENTS_FOUND -> {
                 viewModel.isLoading.value = false
+                viewAdapter.removeLoaderFromList()
             }
         }
     }
@@ -118,8 +119,10 @@ class EventsFragment : Fragment() {
                 super.onScrolled(recyclerView, dx, dy)
 
                 if (dy > 0 && !viewModel.isLoading.value!!)
-                    if (layoutManager.findLastVisibleItemPosition() == viewModel.events.value!!.size - 1)
+                    if (layoutManager.findLastVisibleItemPosition() == viewModel.events.value!!.size - 1) {
+                        viewAdapter.addLoaderToList()
                         viewModel.loadMoreEvents()
+                    }
             }
         })
 
