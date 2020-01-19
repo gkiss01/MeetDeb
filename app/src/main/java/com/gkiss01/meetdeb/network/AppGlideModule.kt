@@ -19,7 +19,7 @@ class CustomGlideModule : AppGlideModule() {
                 .priority(Priority.IMMEDIATE)
                 .override(1080, 1080)
                 .format(DecodeFormat.PREFER_ARGB_8888)
-                .placeholder(R.drawable.fab_label_background)
+                .placeholder(R.drawable.placeholder)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .signature(ObjectKey(System.currentTimeMillis() / (60 * 60 * 1000)))
         )

@@ -92,4 +92,7 @@ dependencies {
 
     //EventBus
     implementation 'org.greenrobot:eventbus:3.1.1'
+
+    //CircularProgressButton
+    implementation 'com.github.dmytrodanylyk.circular-progress-button:library:1.1.3'
 }

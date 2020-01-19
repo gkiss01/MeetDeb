@@ -4,9 +4,9 @@
     <string name="web_button">Webes tartalom</string>
     <string name="profile_picture_desc">Profile picture</string>
     <string name="new_event_button">Új esemény</string>
-    <string name="event_name_hint">Add meg az esemény nevét...</string>
-    <string name="event_labels_hint">Sorolj fel néhány címkét...</string>
-    <string name="event_date_hint">Válassz egy dátumot...</string>
+    <string name="event_name_hint">Add meg az esemény nevét…</string>
+    <string name="event_labels_hint">Miről szól az esemény?</string>
+    <string name="event_date_hint">Válassz egy dátumot…</string>
     <string name="event_venue_hint">Hol lesz az esemény?</string>
     <string name="event_create_button">Létrehozás</string>
     <string name="event_date_set">Dátum</string>

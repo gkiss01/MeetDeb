@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorPrimary">#445963</color>
+    <color name="colorPrimaryDark">#36464e</color>
+    <color name="colorAccent">#6b4c3e</color>
+
+    <color name="colorEventsBackground">#37474F</color>
+    <color name="colorFabNormal">#607D8B</color>
+    <color name="colorFabPressed">#546E7A</color>
+    <color name="colorFabMiniNormal">#fafafa</color>
+    <color name="colorFabMiniPressed">#f1f1f1</color>
+
+    <color name="colorCreateEventText">#ffffff</color>
+    <color name="colorCreateEventButton">#557771</color>
+    <color name="colorEventButtonText">#000000</color>
 </resources>

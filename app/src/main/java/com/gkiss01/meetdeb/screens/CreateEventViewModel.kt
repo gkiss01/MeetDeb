@@ -28,7 +28,7 @@ class CreateEventViewModel(application: Application): AndroidViewModel(applicati
 
     var eventName: String = ""
     var eventVenue: String = ""
-    var eventLabels: String = ""
+    var eventDescription: String = ""
 
     val imageUrl = MutableLiveData<String>()
     private val _dateTime = MutableLiveData<OffsetDateTime>()
@@ -49,7 +49,7 @@ class CreateEventViewModel(application: Application): AndroidViewModel(applicati
             body = MultipartBody.Part.createFormData("file", file.name, requestFile)
         }
 
-        val eventRequest = EventRequest(dateTime.value!!, eventVenue, eventLabels)
+        val eventRequest = EventRequest(dateTime.value!!, eventVenue, eventDescription)
         val json = moshi.adapter(EventRequest::class.java).toJson(eventRequest)
         val event: RequestBody = RequestBody.create(MediaType.parse("application/json"), json)
 

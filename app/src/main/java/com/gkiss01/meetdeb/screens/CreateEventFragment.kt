@@ -109,8 +109,8 @@ class CreateEventFragment : Fragment() {
                 error = true
             }
 
-            if (TextUtils.isEmpty(binding.eventLabels.text)) {
-                binding.eventLabels.error = "A mezőt kötelező kitölteni!"
+            if (TextUtils.isEmpty(binding.eventDescription.text)) {
+                binding.eventDescription.error = "A mezőt kötelező kitölteni!"
                 error = true
             }
             if (TextUtils.isEmpty(binding.eventVenue.text)) {

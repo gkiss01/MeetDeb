@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
-xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="event"
             type="com.gkiss01.meetdeb.data.Event" />
@@ -12,31 +12,34 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="7dp"
-        android:layout_marginRight="7dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="4dp"
-        android:background="@drawable/event_item_background" >
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/event_item_background">
 
         <ImageView
             android:id="@+id/eventImage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
+            android:contentDescription="@string/event_picture_desc"
             android:minHeight="250dp"
-            app:layout_constraintStart_toStartOf="parent"
+            android:paddingStart="1dp"
+            android:paddingTop="1dp"
+            android:paddingEnd="1dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="@string/event_picture_desc" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/eventLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="#73808080"
             android:text="@string/event_label"
             android:textColor="#ffffff"
             android:textSize="35sp"
-            android:background="#73808080"
             app:layout_constraintBottom_toBottomOf="@id/eventImage"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -46,12 +49,12 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
             android:id="@+id/eventDetails"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             android:background="@drawable/event_item_background"
-            android:visibility="gone" >
+            android:padding="16dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:id="@+id/userName"
@@ -102,9 +105,9 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
                 android:id="@+id/dateValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:setDateFormat="@{event}"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/date" />
+                app:layout_constraintTop_toBottomOf="@id/date"
+                app:setDateFormat="@{event}" />
 
             <TextView
                 android:id="@+id/description"
@@ -130,20 +133,20 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:textStyle="bold"
-                app:setParticipantsFormat="@{event}"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/descriptionValue" />
+                app:layout_constraintTop_toBottomOf="@id/descriptionValue"
+                app:setParticipantsFormat="@{event}" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <Button
             android:id="@+id/descButton"
+            style="@style/styleFabLabel"
             android:layout_width="wrap_content"
             android:layout_height="35dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            android:textSize="12sp"
-            style="@style/fabStyle"
             android:text="@string/event_desc_button"
+            android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -151,11 +154,11 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:weightSum="2.0"
-            app:layout_constraintTop_toBottomOf="@id/barrier" >
+            app:layout_constraintTop_toBottomOf="@id/barrier">
 
             <Button
                 android:id="@+id/anotherDateButton"
-                style="@style/eventButtonStyle"
+                style="@style/styleEventButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -166,11 +169,11 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center" >
+                android:gravity="center">
 
                 <Button
                     android:id="@+id/acceptButton"
-                    style="@style/eventButtonStyle"
+                    style="@style/styleEventButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:minWidth="0dp"
@@ -180,9 +183,9 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
                     android:id="@+id/acceptCheck"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@string/accept_button_check"
                     android:src="@drawable/ic_check_black"
-                    android:visibility="gone"
-                    android:contentDescription="@string/accept_button_check" />
+                    android:visibility="gone" />
             </LinearLayout>
         </LinearLayout>
 
