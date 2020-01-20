@@ -93,6 +93,6 @@ dependencies {
     //EventBus
     implementation 'org.greenrobot:eventbus:3.1.1'
 
-    //CircularProgressButton
-    implementation 'com.github.dmytrodanylyk.circular-progress-button:library:1.1.3'
+    //LoadingButton
+    implementation 'com.github.razir.progressbutton:progressbutton:1.0.3'
 }

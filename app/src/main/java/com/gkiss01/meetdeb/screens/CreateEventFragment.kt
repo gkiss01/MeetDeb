@@ -6,8 +6,11 @@ import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.os.CountDownTimer
+import android.os.Handler
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
@@ -20,6 +23,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.NavHostFragment
+import com.github.razir.progressbutton.attachTextChangeAnimator
+import com.github.razir.progressbutton.hideProgress
+import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.databinding.CreateEventFragmentBinding
 import com.gkiss01.meetdeb.network.NavigationCode
@@ -53,11 +59,12 @@ class CreateEventFragment : Fragment() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onNavigationReceived(navigationCode: NavigationCode) {
-        when (navigationCode) {
-            NavigationCode.NAVIGATE_TO_EVENTS_FRAGMENT -> {
+        if (navigationCode == NavigationCode.NAVIGATE_TO_EVENTS_FRAGMENT) {
+            binding.createButton.hideProgress(R.string.event_created)
+            Handler().postDelayed({
                 val action = CreateEventFragmentDirections.actionCreateEventFragmentToEventsFragment()
                 NavHostFragment.findNavController(this).navigate(action)
-            }
+            }, 500)
         }
     }
 
@@ -72,6 +79,7 @@ class CreateEventFragment : Fragment() {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(CreateEventViewModel::class.java)
 
         binding.viewmodel = viewModel
+        binding.createButton.attachTextChangeAnimator()
 
         binding.dateButton.setOnClickListener {
             val datePickerDialog = DatePickerDialog(context!!, DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
@@ -125,6 +133,10 @@ class CreateEventFragment : Fragment() {
 
             if (!error) {
                 viewModel.createEvent()
+                binding.createButton.showProgress {
+                    buttonTextRes = R.string.event_create_waiting
+                    progressColor = Color.WHITE
+                }
 
                 val inputMethodManager = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 inputMethodManager.hideSoftInputFromWindow(view!!.windowToken, 0)

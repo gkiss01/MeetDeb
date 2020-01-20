@@ -19,7 +19,7 @@ enum class TargetVar {
 }
 
 enum class NavigationCode {
-    NAVIGATE_TO_EVENTS_FRAGMENT
+    NAVIGATE_TO_EVENTS_FRAGMENT, LOAD_MORE_HAS_ENDED
 }
 
 enum class ErrorCode {

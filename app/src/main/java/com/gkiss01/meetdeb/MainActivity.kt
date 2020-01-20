@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
                         TargetVar.VAR_CREATE_PARTICIPANT, TargetVar.VAR_DELETE_PARTICIPANT -> EventBus.getDefault().post(listResult.event)
                     }
                 }
-                else handleResponseErrors(listResult.errors!!, targetVar)
+                else handleResponseErrors(listResult.errors!!)
             }
             catch (e: Exception) {
                 handleErrors(e)
@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this, errors, Toast.LENGTH_LONG).show()
     }
 
-    private fun handleResponseErrors(errors: List<String>, targetVar: TargetVar) {
+    private fun handleResponseErrors(errors: List<String>) {
         var errorsMsg = ""
         Log.d("MainActivityApiCall", "Failure: ${errors.size} errors:")
         errors.forEachIndexed { index, e  ->

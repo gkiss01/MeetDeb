@@ -1,22 +1,32 @@
 package com.gkiss01.meetdeb.adapter
 
+import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewAnimationUtils
 import android.view.ViewGroup
 import androidx.core.animation.addListener
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.github.razir.progressbutton.attachTextChangeAnimator
+import com.github.razir.progressbutton.hideProgress
+import com.github.razir.progressbutton.showDrawable
+import com.github.razir.progressbutton.showProgress
+import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.Event
 import com.gkiss01.meetdeb.databinding.EventsListItemBinding
 import com.gkiss01.meetdeb.network.BASE_URL
 import com.gkiss01.meetdeb.network.GlideRequests
+import com.gkiss01.meetdeb.network.NavigationCode
 import jp.wasabeef.blurry.Blurry
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.greenrobot.eventbus.EventBus
 import kotlin.math.hypot
 import kotlin.math.max
 
@@ -85,6 +95,7 @@ class EventEntryAdapter(val glide: GlideRequests,
             withContext(Dispatchers.Main) {
                 submitList(submittedList)
             }
+            EventBus.getDefault().post(NavigationCode.LOAD_MORE_HAS_ENDED)
         }
     }
 
@@ -130,13 +141,20 @@ class EventEntryAdapter(val glide: GlideRequests,
             binding.descButton.setOnClickListener {
                 detailsClickListener.onClick(this.adapterPosition)
             }
-            binding.acceptButtonContainer.setOnClickListener {
+            binding.acceptButton.setOnClickListener {
                 joinClickListener.onClick(this.adapterPosition)
             }
 
             binding.eventDetails.visibility = View.GONE
             binding.eventLabel.visibility = View.VISIBLE
-            binding.acceptCheck.visibility = if (item.accepted) View.VISIBLE else View.GONE
+            if (item.accepted) {
+                binding.acceptButton.hideProgress(R.string.event_accepted)
+                binding.acceptButton.setBackgroundResource(R.drawable.event_accepted_button_background)
+            }
+            else {
+                binding.acceptButton.hideProgress(R.string.event_not_accepted)
+                binding.acceptButton.setBackgroundResource(0)
+            }
 
             eventId = item.id
             eventAccepted = item.accepted
@@ -181,18 +199,18 @@ class EventEntryAdapter(val glide: GlideRequests,
             }
         }
 
-//        fun showEventJoin(accepted: Boolean) {
-//            eventAccepted = accepted
-//            binding.acceptButtonContainer.post {
-//                TransitionManager.beginDelayedTransition(binding.acceptButtonContainer)
-//                binding.acceptCheck.visibility = if (eventAccepted) View.VISIBLE else View.GONE
-//            }
-//        }
+        fun showEventJoinAnimation() {
+            binding.acceptButton.showProgress {
+                buttonTextRes = R.string.event_accept_waiting
+                progressColor = Color.parseColor("#485688")
+            }
+        }
 
         companion object {
             fun from(parent: ViewGroup, glide: GlideRequests): EntryViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
                 val binding = EventsListItemBinding.inflate(layoutInflater, parent, false)
+                binding.acceptButton.attachTextChangeAnimator()
                 return EntryViewHolder(binding, glide)
             }
         }

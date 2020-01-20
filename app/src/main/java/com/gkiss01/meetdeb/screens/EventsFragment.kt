@@ -1,6 +1,7 @@
 package com.gkiss01.meetdeb.screens
 
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,16 +16,14 @@ import com.bumptech.glide.ListPreloader.PreloadModelProvider
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
 import com.bumptech.glide.util.FixedPreloadSizeProvider
+import com.github.razir.progressbutton.hideProgress
 import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.adapter.EventClickListener
 import com.gkiss01.meetdeb.adapter.EventEntryAdapter
 import com.gkiss01.meetdeb.data.Event
 import com.gkiss01.meetdeb.databinding.EventsFragmentBinding
-import com.gkiss01.meetdeb.network.BASE_URL
-import com.gkiss01.meetdeb.network.ErrorCode
-import com.gkiss01.meetdeb.network.GlideApp
-import com.gkiss01.meetdeb.network.GlideRequests
+import com.gkiss01.meetdeb.network.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -62,9 +61,15 @@ class EventsFragment : Fragment() {
     fun onErrorReceived(errorCode: ErrorCode) {
         when (errorCode) {
             ErrorCode.ERROR_NO_EVENTS_FOUND -> {
-                viewModel.isLoading.value = false
                 viewAdapter.removeLoaderFromList()
             }
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onNavigationReceived(navigationCode: NavigationCode) {
+        if (navigationCode == NavigationCode.LOAD_MORE_HAS_ENDED) {
+            viewModel.isLoading.value = false
         }
     }
 
@@ -94,14 +99,13 @@ class EventsFragment : Fragment() {
                 view.showEventDetails()
             },
             EventClickListener { position ->
-            val view = binding.eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventEntryAdapter.EntryViewHolder
-            MainActivity.instance.modifyParticipation(view.eventId, view.eventAccepted)
-            //view.showEventJoinAnimation()
+                val view = binding.eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventEntryAdapter.EntryViewHolder
+                MainActivity.instance.modifyParticipation(view.eventId, view.eventAccepted)
+                view.showEventJoinAnimation()
         })
 
         viewModel.events.observe(this, Observer { events ->
             events?.let { viewAdapter.addHeaderAndSubmitList(it) }
-            viewModel.isLoading.value = false
         })
 
         val sizeProvider = FixedPreloadSizeProvider<String>(1080, 1080)
@@ -118,11 +122,13 @@ class EventsFragment : Fragment() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
 
-                if (dy > 0 && !viewModel.isLoading.value!!)
-                    if (layoutManager.findLastVisibleItemPosition() == viewModel.events.value!!.size - 1) {
-                        viewAdapter.addLoaderToList()
+                if (dy > 0 && !viewModel.isLoading.value!!) {
+//                    if (layoutManager.findLastVisibleItemPosition() == viewModel.events.value!!.size - 1)
+                    if (layoutManager.itemCount <= (layoutManager.findLastVisibleItemPosition() + 1)) {
                         viewModel.loadMoreEvents()
+                        viewAdapter.addLoaderToList()
                     }
+                }
             }
         })
 
