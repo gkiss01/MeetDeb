@@ -9,7 +9,6 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
-import android.os.CountDownTimer
 import android.os.Handler
 import android.text.TextUtils
 import android.view.LayoutInflater

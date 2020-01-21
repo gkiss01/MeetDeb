@@ -5,6 +5,8 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.gkiss01.meetdeb.data.DateList
+import com.gkiss01.meetdeb.data.EventList
 import com.gkiss01.meetdeb.data.GenericResponse
 import com.gkiss01.meetdeb.network.ErrorCode
 import com.gkiss01.meetdeb.network.NavigationCode
@@ -44,6 +46,10 @@ class MainActivity : AppCompatActivity() {
         makeRequest(WebApi.retrofitService.createEventAsync(basic, event, image), TargetVar.VAR_CREATE_EVENT)
     }
 
+    fun showDates(eventId: Long) {
+        makeRequest(WebApi.retrofitService.getDatesAsync(basic, eventId), TargetVar.VAR_GET_DATES)
+    }
+
     fun modifyParticipation(eventId: Long, eventAccepted: Boolean) {
         if (eventAccepted)
             makeRequest(WebApi.retrofitService.deleteParticipantAsync(basic, eventId), TargetVar.VAR_DELETE_PARTICIPANT)
@@ -57,9 +63,10 @@ class MainActivity : AppCompatActivity() {
                 val listResult = target.await()
                 if (!listResult.error) {
                     when (targetVar) {
-                        TargetVar.VAR_GET_EVENTS -> EventBus.getDefault().post(listResult.events)
+                        TargetVar.VAR_GET_EVENTS -> EventBus.getDefault().post(EventList(listResult.events!!))
                         TargetVar.VAR_CREATE_EVENT -> EventBus.getDefault().post(NavigationCode.NAVIGATE_TO_EVENTS_FRAGMENT)
                         TargetVar.VAR_CREATE_PARTICIPANT, TargetVar.VAR_DELETE_PARTICIPANT -> EventBus.getDefault().post(listResult.event)
+                        TargetVar.VAR_GET_DATES -> EventBus.getDefault().post(DateList(listResult.dates ?: emptyList()))
                     }
                 }
                 else handleResponseErrors(listResult.errors!!)

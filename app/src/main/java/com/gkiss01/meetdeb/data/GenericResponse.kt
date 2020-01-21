@@ -7,5 +7,7 @@ data class GenericResponse(
 
     val event: Event?,
 
-    val events: List<Event>?
+    val events: List<Event>?,
+
+    val dates: List<Date>?
 )

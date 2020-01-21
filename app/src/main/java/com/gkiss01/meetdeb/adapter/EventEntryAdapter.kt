@@ -1,20 +1,16 @@
 package com.gkiss01.meetdeb.adapter
 
 import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewAnimationUtils
 import android.view.ViewGroup
 import androidx.core.animation.addListener
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.hideProgress
-import com.github.razir.progressbutton.showDrawable
 import com.github.razir.progressbutton.showProgress
-import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.Event
 import com.gkiss01.meetdeb.databinding.EventsListItemBinding
@@ -36,7 +32,8 @@ private const val ITEM_VIEW_TYPE_LOADER = 2
 
 class EventEntryAdapter(val glide: GlideRequests,
                         private val detailsClickListener: EventClickListener,
-                        private val joinClickListener: EventClickListener): ListAdapter<DataItem, RecyclerView.ViewHolder>(EventEntryDiffCallback()) {
+                        private val joinClickListener: EventClickListener,
+                        private val anotherDateClickListener: EventClickListener): ListAdapter<DataItem, RecyclerView.ViewHolder>(EventEntryDiffCallback()) {
 
     private val adapterScope = CoroutineScope(Dispatchers.Default)
 
@@ -61,7 +58,7 @@ class EventEntryAdapter(val glide: GlideRequests,
         when (holder) {
             is EntryViewHolder -> {
                 val eventItem = getItem(position) as DataItem.EventItem
-                holder.bind(eventItem.event, detailsClickListener, joinClickListener)
+                holder.bind(eventItem.event, detailsClickListener, joinClickListener, anotherDateClickListener)
             }
         }
     }
@@ -136,13 +133,16 @@ class EventEntryAdapter(val glide: GlideRequests,
         var eventAccepted = false
         private var showDetails = false
 
-        fun bind(item: Event, detailsClickListener: EventClickListener, joinClickListener: EventClickListener) {
+        fun bind(item: Event, detailsClickListener: EventClickListener, joinClickListener: EventClickListener, anotherDateClickListener: EventClickListener) {
             binding.event = item
             binding.descButton.setOnClickListener {
                 detailsClickListener.onClick(this.adapterPosition)
             }
             binding.acceptButton.setOnClickListener {
                 joinClickListener.onClick(this.adapterPosition)
+            }
+            binding.anotherDateButton.setOnClickListener {
+                anotherDateClickListener.onClick(this.adapterPosition)
             }
 
             binding.eventDetails.visibility = View.GONE

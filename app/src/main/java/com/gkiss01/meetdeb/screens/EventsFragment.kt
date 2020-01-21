@@ -1,7 +1,6 @@
 package com.gkiss01.meetdeb.screens
 
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,12 +15,13 @@ import com.bumptech.glide.ListPreloader.PreloadModelProvider
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
 import com.bumptech.glide.util.FixedPreloadSizeProvider
-import com.github.razir.progressbutton.hideProgress
 import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.adapter.EventClickListener
 import com.gkiss01.meetdeb.adapter.EventEntryAdapter
+import com.gkiss01.meetdeb.data.DateList
 import com.gkiss01.meetdeb.data.Event
+import com.gkiss01.meetdeb.data.EventList
 import com.gkiss01.meetdeb.databinding.EventsFragmentBinding
 import com.gkiss01.meetdeb.network.*
 import org.greenrobot.eventbus.EventBus
@@ -47,14 +47,20 @@ class EventsFragment : Fragment() {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onEventsReceived(events: List<Event>) {
-        viewModel.addEvents(events)
+    fun onEventsReceived(events: EventList) {
+        viewModel.addEvents(events.events)
         binding.swipeRefreshLayout.isRefreshing = false
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventReceived(event: Event) {
         viewAdapter.updateDataSourceByEvent(event)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onDatesReceived(dates: DateList) {
+
+        viewModel.isLoading.value = false
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -69,7 +75,7 @@ class EventsFragment : Fragment() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onNavigationReceived(navigationCode: NavigationCode) {
         if (navigationCode == NavigationCode.LOAD_MORE_HAS_ENDED) {
-            viewModel.isLoading.value = false
+            viewModel.isMoreLoading.value = false
         }
     }
 
@@ -87,7 +93,7 @@ class EventsFragment : Fragment() {
         }}
 
         binding.swipeRefreshLayout.setOnRefreshListener {
-            if (!viewModel.isLoading.value!!)
+            if (!viewModel.isMoreLoading.value!!)
                 viewModel.refreshEvents()
             else
                 binding.swipeRefreshLayout.isRefreshing = false
@@ -102,6 +108,10 @@ class EventsFragment : Fragment() {
                 val view = binding.eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventEntryAdapter.EntryViewHolder
                 MainActivity.instance.modifyParticipation(view.eventId, view.eventAccepted)
                 view.showEventJoinAnimation()
+            },
+            EventClickListener { position ->
+                val view = binding.eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventEntryAdapter.EntryViewHolder
+                viewModel.getEventDates(view.eventId)
         })
 
         viewModel.events.observe(this, Observer { events ->
@@ -122,7 +132,7 @@ class EventsFragment : Fragment() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
 
-                if (dy > 0 && !viewModel.isLoading.value!!) {
+                if (dy > 0 && !viewModel.isMoreLoading.value!!) {
 //                    if (layoutManager.findLastVisibleItemPosition() == viewModel.events.value!!.size - 1)
                     if (layoutManager.itemCount <= (layoutManager.findLastVisibleItemPosition() + 1)) {
                         viewModel.loadMoreEvents()

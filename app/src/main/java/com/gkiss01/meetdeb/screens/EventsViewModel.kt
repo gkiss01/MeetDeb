@@ -8,12 +8,14 @@ import com.gkiss01.meetdeb.data.Event
 class EventsViewModel : ViewModel() {
     val events = MutableLiveData<List<Event>>()
     val isLoading = MutableLiveData<Boolean>()
+    val isMoreLoading = MutableLiveData<Boolean>()
     private val currentPage = MutableLiveData<Int>()
 
     init {
         MainActivity.instance.getEvents()
         currentPage.value = 1
         isLoading.value = false
+        isMoreLoading.value = false
     }
 
     fun refreshEvents() {
@@ -22,9 +24,15 @@ class EventsViewModel : ViewModel() {
     }
 
     fun loadMoreEvents() {
-        isLoading.value = true
+        isMoreLoading.value = true
         currentPage.value = currentPage.value!! + 1
         MainActivity.instance.getEvents(currentPage.value!!)
+    }
+
+    fun getEventDates(eventId: Long) {
+        if (isLoading.value!!) return
+        isLoading.value = true
+        MainActivity.instance.showDates(eventId)
     }
 
     fun addEvents(eventList: List<Event>) {
