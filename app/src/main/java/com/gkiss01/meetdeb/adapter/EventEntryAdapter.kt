@@ -1,42 +1,25 @@
 package com.gkiss01.meetdeb.adapter
 
 import android.view.ViewGroup
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.gkiss01.meetdeb.data.Event
 import com.gkiss01.meetdeb.network.GlideRequests
 import com.gkiss01.meetdeb.network.NavigationCode
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 
-private const val ITEM_VIEW_TYPE_HEADER = 0
-private const val ITEM_VIEW_TYPE_ITEM = 1
-private const val ITEM_VIEW_TYPE_LOADER = 2
-
 class EventEntryAdapter(val glide: GlideRequests,
                         private val detailsClickListener: AdapterClickListener,
                         private val joinClickListener: AdapterClickListener,
-                        private val anotherDateClickListener: AdapterClickListener): ListAdapter<DataItem, RecyclerView.ViewHolder>(AdapterDiffCallback()) {
-
-    private val adapterScope = CoroutineScope(Dispatchers.Default)
-
-    override fun getItemViewType(position: Int): Int {
-        return when (getItem(position)) {
-            is DataItem.Header -> ITEM_VIEW_TYPE_HEADER
-            is DataItem.EventItem -> ITEM_VIEW_TYPE_ITEM
-            is DataItem.Loader -> ITEM_VIEW_TYPE_LOADER
-            else -> TODO()
-        }
-    }
+                        private val anotherDateClickListener: AdapterClickListener): AdapterClass() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            ITEM_VIEW_TYPE_HEADER -> HeaderViewHolder.from(parent)
-            ITEM_VIEW_TYPE_ITEM -> EventViewHolder.from(parent, glide)
-            ITEM_VIEW_TYPE_LOADER -> LoaderViewHolder.from(parent)
+            ViewTypes.ITEM_VIEW_TYPE_EVENT.ordinal -> EventViewHolder.from(parent, glide)
+            ViewTypes.ITEM_VIEW_TYPE_HEADER.ordinal -> HeaderViewHolder.from(parent)
+            ViewTypes.ITEM_VIEW_TYPE_LOADER.ordinal -> LoaderViewHolder.from(parent)
             else -> throw ClassCastException("Unknown viewType $viewType")
         }
     }
