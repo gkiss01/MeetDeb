@@ -31,4 +31,6 @@
     <string name="event_create_waiting">Létrehozás…</string>
     <string name="event_created">Kész!</string>
     <string name="event_another_date_button">Más időpont</string>
+    <string name="event_add_date_button">Új időpont hozzáadása…</string>
+    <string name="date_add_button_desc">Plus sign on button</string>
 </resources>

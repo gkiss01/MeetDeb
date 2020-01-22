@@ -8,4 +8,6 @@ data class Date(
     var eventId: Long,
 
     @com.gkiss01.meetdeb.adapter.OffsetDateTime
-    var date: OffsetDateTime)
+    var date: OffsetDateTime,
+
+    var votes: Long?)

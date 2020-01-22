@@ -17,7 +17,7 @@ import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
 import com.bumptech.glide.util.FixedPreloadSizeProvider
 import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
-import com.gkiss01.meetdeb.adapter.EventClickListener
+import com.gkiss01.meetdeb.adapter.AdapterClickListener
 import com.gkiss01.meetdeb.adapter.EventEntryAdapter
 import com.gkiss01.meetdeb.data.DateList
 import com.gkiss01.meetdeb.data.Event
@@ -28,6 +28,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
+
 
 class EventsFragment : Fragment() {
 
@@ -59,6 +60,8 @@ class EventsFragment : Fragment() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onDatesReceived(dates: DateList) {
+        val datesDialogFragment = DatesDialogFragment.builder(dates.dates)
+        datesDialogFragment.show(requireFragmentManager(), "datesDialogFragment")
 
         viewModel.isLoading.value = false
     }
@@ -100,17 +103,17 @@ class EventsFragment : Fragment() {
         }
 
         viewAdapter = EventEntryAdapter(glide,
-            EventClickListener { position ->
-                val view = binding.eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventEntryAdapter.EntryViewHolder
+            AdapterClickListener { position ->
+                val view = binding.eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventEntryAdapter.EventViewHolder
                 view.showEventDetails()
             },
-            EventClickListener { position ->
-                val view = binding.eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventEntryAdapter.EntryViewHolder
+            AdapterClickListener { position ->
+                val view = binding.eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventEntryAdapter.EventViewHolder
                 MainActivity.instance.modifyParticipation(view.eventId, view.eventAccepted)
                 view.showEventJoinAnimation()
             },
-            EventClickListener { position ->
-                val view = binding.eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventEntryAdapter.EntryViewHolder
+            AdapterClickListener { position ->
+                val view = binding.eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventEntryAdapter.EventViewHolder
                 viewModel.getEventDates(view.eventId)
         })
 

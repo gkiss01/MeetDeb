@@ -31,9 +31,9 @@ private const val ITEM_VIEW_TYPE_ITEM = 1
 private const val ITEM_VIEW_TYPE_LOADER = 2
 
 class EventEntryAdapter(val glide: GlideRequests,
-                        private val detailsClickListener: EventClickListener,
-                        private val joinClickListener: EventClickListener,
-                        private val anotherDateClickListener: EventClickListener): ListAdapter<DataItem, RecyclerView.ViewHolder>(EventEntryDiffCallback()) {
+                        private val detailsClickListener: AdapterClickListener,
+                        private val joinClickListener: AdapterClickListener,
+                        private val anotherDateClickListener: AdapterClickListener): ListAdapter<DataItem, RecyclerView.ViewHolder>(AdapterDiffCallback()) {
 
     private val adapterScope = CoroutineScope(Dispatchers.Default)
 
@@ -42,13 +42,14 @@ class EventEntryAdapter(val glide: GlideRequests,
             is DataItem.Header -> ITEM_VIEW_TYPE_HEADER
             is DataItem.EventItem -> ITEM_VIEW_TYPE_ITEM
             is DataItem.Loader -> ITEM_VIEW_TYPE_LOADER
+            else -> TODO()
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             ITEM_VIEW_TYPE_HEADER -> HeaderViewHolder.from(parent)
-            ITEM_VIEW_TYPE_ITEM -> EntryViewHolder.from(parent, glide)
+            ITEM_VIEW_TYPE_ITEM -> EventViewHolder.from(parent, glide)
             ITEM_VIEW_TYPE_LOADER -> LoaderViewHolder.from(parent)
             else -> throw ClassCastException("Unknown viewType $viewType")
         }
@@ -56,7 +57,7 @@ class EventEntryAdapter(val glide: GlideRequests,
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is EntryViewHolder -> {
+            is EventViewHolder -> {
                 val eventItem = getItem(position) as DataItem.EventItem
                 holder.bind(eventItem.event, detailsClickListener, joinClickListener, anotherDateClickListener)
             }
@@ -128,12 +129,12 @@ class EventEntryAdapter(val glide: GlideRequests,
         }
     }
 
-    class EntryViewHolder(private val binding: EventsListItemBinding, private val glide: GlideRequests): RecyclerView.ViewHolder(binding.root) {
+    class EventViewHolder(private val binding: EventsListItemBinding, private val glide: GlideRequests): RecyclerView.ViewHolder(binding.root) {
         var eventId = 0L
         var eventAccepted = false
         private var showDetails = false
 
-        fun bind(item: Event, detailsClickListener: EventClickListener, joinClickListener: EventClickListener, anotherDateClickListener: EventClickListener) {
+        fun bind(item: Event, detailsClickListener: AdapterClickListener, joinClickListener: AdapterClickListener, anotherDateClickListener: AdapterClickListener) {
             binding.event = item
             binding.descButton.setOnClickListener {
                 detailsClickListener.onClick(this.adapterPosition)
@@ -207,32 +208,12 @@ class EventEntryAdapter(val glide: GlideRequests,
         }
 
         companion object {
-            fun from(parent: ViewGroup, glide: GlideRequests): EntryViewHolder {
+            fun from(parent: ViewGroup, glide: GlideRequests): EventViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
                 val binding = EventsListItemBinding.inflate(layoutInflater, parent, false)
                 binding.acceptButton.attachTextChangeAnimator()
-                return EntryViewHolder(binding, glide)
+                return EventViewHolder(binding, glide)
             }
         }
     }
-}
-
-sealed class DataItem {
-    abstract val id: Long
-
-    data class EventItem(val event: Event): DataItem() {
-        override val id = event.id
-    }
-
-    object Header: DataItem() {
-        override val id = Long.MIN_VALUE
-    }
-
-    object Loader: DataItem() {
-        override val id = Long.MAX_VALUE
-    }
-}
-
-class EventClickListener(val clickListener: (position: Int) -> Unit) {
-    fun onClick(position: Int) = clickListener(position)
 }
