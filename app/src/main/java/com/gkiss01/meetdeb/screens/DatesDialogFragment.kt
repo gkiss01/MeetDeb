@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.adapter.AdapterClickListener
 import com.gkiss01.meetdeb.adapter.DateEntryAdapter
+import com.gkiss01.meetdeb.adapter.DateViewHolder
 import com.gkiss01.meetdeb.data.DateList
 import com.gkiss01.meetdeb.databinding.DatesFragmentBinding
 import org.greenrobot.eventbus.EventBus
@@ -50,7 +51,7 @@ class DatesDialogFragment : DialogFragment() {
         viewModel = ViewModelProviders.of(this).get(DatesDialogViewModel::class.java)
 
         val viewAdapter = DateEntryAdapter(AdapterClickListener { position ->
-            val view = binding.datesRecyclerView.findViewHolderForAdapterPosition(position) as DateEntryAdapter.DateViewHolder
+            val view = binding.datesRecyclerView.findViewHolderForAdapterPosition(position) as DateViewHolder
             Log.d("DatesDialogFragment", "Clicked on date with ID ${view.dateId}")
         })
 

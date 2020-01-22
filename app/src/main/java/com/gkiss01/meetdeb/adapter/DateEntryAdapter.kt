@@ -1,13 +1,9 @@
 package com.gkiss01.meetdeb.adapter
 
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.Date
-import com.gkiss01.meetdeb.databinding.DatesListItemBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -34,7 +30,7 @@ class DateEntryAdapter(private val detailsClickListener: AdapterClickListener): 
         return when (viewType) {
             ITEM_VIEW_TYPE_ADDITION -> AdditionViewHolder.from(parent)
             ITEM_VIEW_TYPE_DATE -> DateViewHolder.from(parent)
-            ITEM_VIEW_TYPE_LOADER -> EventEntryAdapter.LoaderViewHolder.from(parent)
+            ITEM_VIEW_TYPE_LOADER -> LoaderViewHolder.from(parent)
             else -> throw ClassCastException("Unknown viewType $viewType")
         }
     }
@@ -64,39 +60,6 @@ class DateEntryAdapter(private val detailsClickListener: AdapterClickListener): 
 
             withContext(Dispatchers.Main) {
                 submitList(items)
-            }
-        }
-    }
-
-    class AdditionViewHolder(view: View): RecyclerView.ViewHolder(view) {
-        companion object {
-            fun from(parent: ViewGroup): AdditionViewHolder {
-                val itemView = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.dates_list_addition, parent, false) as View
-                return AdditionViewHolder(itemView)
-            }
-        }
-    }
-
-    class DateViewHolder(private val binding: DatesListItemBinding): RecyclerView.ViewHolder(binding.root) {
-        var dateId = 0L
-
-        fun bind(item: Date, dateClickListener: AdapterClickListener) {
-            binding.date = item
-            binding.voteButton.setOnClickListener {
-                dateClickListener.onClick(this.adapterPosition)
-            }
-
-            dateId = item.id
-
-            binding.executePendingBindings()
-        }
-
-        companion object {
-            fun from(parent: ViewGroup): DateViewHolder {
-                val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = DatesListItemBinding.inflate(layoutInflater, parent, false)
-                return DateViewHolder(binding)
             }
         }
     }

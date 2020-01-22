@@ -19,6 +19,7 @@ import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.adapter.AdapterClickListener
 import com.gkiss01.meetdeb.adapter.EventEntryAdapter
+import com.gkiss01.meetdeb.adapter.EventViewHolder
 import com.gkiss01.meetdeb.data.Event
 import com.gkiss01.meetdeb.data.EventList
 import com.gkiss01.meetdeb.databinding.EventsFragmentBinding
@@ -95,16 +96,16 @@ class EventsFragment : Fragment() {
 
         viewAdapter = EventEntryAdapter(glide,
             AdapterClickListener { position ->
-                val view = binding.eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventEntryAdapter.EventViewHolder
+                val view = binding.eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventViewHolder
                 view.showEventDetails()
             },
             AdapterClickListener { position ->
-                val view = binding.eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventEntryAdapter.EventViewHolder
+                val view = binding.eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventViewHolder
                 MainActivity.instance.modifyParticipation(view.eventId, view.eventAccepted)
                 view.showEventJoinAnimation()
             },
             AdapterClickListener { position ->
-                val view = binding.eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventEntryAdapter.EventViewHolder
+                val view = binding.eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventViewHolder
                 val datesDialogFragment = DatesDialogFragment()
                 datesDialogFragment.show(requireFragmentManager(), "datesDialogFragment")
                 MainActivity.instance.showDates(view.eventId)
@@ -129,7 +130,6 @@ class EventsFragment : Fragment() {
                 super.onScrolled(recyclerView, dx, dy)
 
                 if (dy > 0 && !viewModel.isMoreLoading.value!!) {
-//                    if (layoutManager.findLastVisibleItemPosition() == viewModel.events.value!!.size - 1)
                     if (layoutManager.itemCount <= (layoutManager.findLastVisibleItemPosition() + 1)) {
                         viewModel.loadMoreEvents()
                         viewAdapter.addLoaderToList()
