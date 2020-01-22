@@ -10,4 +10,6 @@ data class Date(
     @com.gkiss01.meetdeb.adapter.OffsetDateTime
     var date: OffsetDateTime,
 
-    var votes: Long?)
+    var votes: Int,
+
+    val accepted: Boolean)

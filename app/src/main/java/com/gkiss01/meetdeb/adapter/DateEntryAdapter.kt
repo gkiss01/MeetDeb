@@ -15,6 +15,7 @@ import kotlinx.coroutines.withContext
 
 private const val ITEM_VIEW_TYPE_DATE = 0
 private const val ITEM_VIEW_TYPE_ADDITION = 1
+private const val ITEM_VIEW_TYPE_LOADER = 2
 
 class DateEntryAdapter(private val detailsClickListener: AdapterClickListener): ListAdapter<DataItem, RecyclerView.ViewHolder>(AdapterDiffCallback()) {
 
@@ -24,6 +25,7 @@ class DateEntryAdapter(private val detailsClickListener: AdapterClickListener): 
         return when (getItem(position)) {
             is DataItem.Addition -> ITEM_VIEW_TYPE_ADDITION
             is DataItem.DateItem -> ITEM_VIEW_TYPE_DATE
+            is DataItem.Loader -> ITEM_VIEW_TYPE_LOADER
             else -> TODO()
         }
     }
@@ -32,6 +34,7 @@ class DateEntryAdapter(private val detailsClickListener: AdapterClickListener): 
         return when (viewType) {
             ITEM_VIEW_TYPE_ADDITION -> AdditionViewHolder.from(parent)
             ITEM_VIEW_TYPE_DATE -> DateViewHolder.from(parent)
+            ITEM_VIEW_TYPE_LOADER -> EventEntryAdapter.LoaderViewHolder.from(parent)
             else -> throw ClassCastException("Unknown viewType $viewType")
         }
     }
@@ -41,6 +44,16 @@ class DateEntryAdapter(private val detailsClickListener: AdapterClickListener): 
             is DateViewHolder -> {
                 val dateItem = getItem(position) as DataItem.DateItem
                 holder.bind(dateItem.date, detailsClickListener)
+            }
+        }
+    }
+
+    fun addLoadingAndAddition() {
+        adapterScope.launch {
+            val items = listOf(DataItem.Loader, DataItem.Addition)
+
+            withContext(Dispatchers.Main) {
+                submitList(items)
             }
         }
     }
@@ -66,11 +79,15 @@ class DateEntryAdapter(private val detailsClickListener: AdapterClickListener): 
     }
 
     class DateViewHolder(private val binding: DatesListItemBinding): RecyclerView.ViewHolder(binding.root) {
+        var dateId = 0L
+
         fun bind(item: Date, dateClickListener: AdapterClickListener) {
             binding.date = item
             binding.voteButton.setOnClickListener {
                 dateClickListener.onClick(this.adapterPosition)
             }
+
+            dateId = item.id
 
             binding.executePendingBindings()
         }

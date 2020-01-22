@@ -19,7 +19,6 @@ import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.adapter.AdapterClickListener
 import com.gkiss01.meetdeb.adapter.EventEntryAdapter
-import com.gkiss01.meetdeb.data.DateList
 import com.gkiss01.meetdeb.data.Event
 import com.gkiss01.meetdeb.data.EventList
 import com.gkiss01.meetdeb.databinding.EventsFragmentBinding
@@ -56,14 +55,6 @@ class EventsFragment : Fragment() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventReceived(event: Event) {
         viewAdapter.updateDataSourceByEvent(event)
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onDatesReceived(dates: DateList) {
-        val datesDialogFragment = DatesDialogFragment.builder(dates.dates)
-        datesDialogFragment.show(requireFragmentManager(), "datesDialogFragment")
-
-        viewModel.isLoading.value = false
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -114,7 +105,9 @@ class EventsFragment : Fragment() {
             },
             AdapterClickListener { position ->
                 val view = binding.eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventEntryAdapter.EventViewHolder
-                viewModel.getEventDates(view.eventId)
+                val datesDialogFragment = DatesDialogFragment()
+                datesDialogFragment.show(requireFragmentManager(), "datesDialogFragment")
+                MainActivity.instance.showDates(view.eventId)
         })
 
         viewModel.events.observe(this, Observer { events ->
