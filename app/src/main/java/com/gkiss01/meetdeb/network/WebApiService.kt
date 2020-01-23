@@ -15,11 +15,14 @@ import retrofit2.http.*
 const val BASE_URL = "http://172.17.172.157:8080"
 
 enum class TargetVar {
-    VAR_GET_EVENTS, VAR_CREATE_EVENT, VAR_CREATE_PARTICIPANT, VAR_DELETE_PARTICIPANT, VAR_GET_DATES
+    VAR_GET_EVENTS, VAR_CREATE_EVENT,
+    VAR_CREATE_PARTICIPANT, VAR_DELETE_PARTICIPANT,
+    VAR_GET_DATES,
+    VAR_CREATE_VOTE
 }
 
 enum class NavigationCode {
-    NAVIGATE_TO_EVENTS_FRAGMENT, LOAD_MORE_HAS_ENDED
+    NAVIGATE_TO_EVENTS_FRAGMENT, LOAD_MORE_HAS_ENDED, LOAD_VOTES_HAS_ENDED
 }
 
 enum class ErrorCode {
@@ -51,6 +54,9 @@ interface WebApiService {
 
     @POST("participants/{eventId}")
     fun createParticipantAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): Deferred<GenericResponse>
+
+    @POST("votes/{dateId}")
+    fun createVoteAsync(@Header("Authorization") auth: String, @Path("dateId") dateId: Long): Deferred<GenericResponse>
 
     @DELETE("participants/{eventId}")
     fun deleteParticipantAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): Deferred<GenericResponse>

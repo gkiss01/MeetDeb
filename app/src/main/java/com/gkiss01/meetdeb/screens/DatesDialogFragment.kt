@@ -13,12 +13,14 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.adapter.AdapterClickListener
 import com.gkiss01.meetdeb.adapter.DateEntryAdapter
 import com.gkiss01.meetdeb.adapter.DateViewHolder
 import com.gkiss01.meetdeb.data.DateList
 import com.gkiss01.meetdeb.databinding.DatesFragmentBinding
+import com.gkiss01.meetdeb.network.NavigationCode
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -43,6 +45,13 @@ class DatesDialogFragment : DialogFragment() {
         viewModel.dates.value = dates.dates
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onNavigationReceived(navigationCode: NavigationCode) {
+        if (navigationCode == NavigationCode.LOAD_VOTES_HAS_ENDED) {
+            viewModel.isLoading.value = false
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
@@ -52,7 +61,9 @@ class DatesDialogFragment : DialogFragment() {
 
         val viewAdapter = DateEntryAdapter(AdapterClickListener { position ->
             val view = binding.datesRecyclerView.findViewHolderForAdapterPosition(position) as DateViewHolder
-            Log.d("DatesDialogFragment", "Clicked on date with ID ${view.dateId}")
+            if (viewModel.isLoading.value!!) view.setRadioButtonUnchecked()
+            else view.showVoteCreateAnimation()
+            viewModel.addVote(view.dateId)
         })
 
         if (viewModel.dates.value == null || viewModel.dates.value!!.isEmpty())

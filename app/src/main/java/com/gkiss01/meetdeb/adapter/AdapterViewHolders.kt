@@ -57,12 +57,24 @@ class DateViewHolder(private val binding: DatesListItemBinding): RecyclerView.Vi
     fun bind(item: Date, dateClickListener: AdapterClickListener) {
         binding.date = item
         binding.voteButton.setOnClickListener {
-            dateClickListener.onClick(this.adapterPosition)
+            if (!item.accepted) dateClickListener.onClick(this.adapterPosition)
         }
+
+        binding.voteButton.hideProgress()
 
         dateId = item.id
 
         binding.executePendingBindings()
+    }
+
+    fun showVoteCreateAnimation() {
+        binding.voteButton.showProgress {
+            progressColor = Color.parseColor("#485688")
+        }
+    }
+
+    fun setRadioButtonUnchecked() {
+        binding.voteButton.isChecked = false
     }
 
     companion object {

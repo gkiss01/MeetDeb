@@ -3,9 +3,11 @@ package com.gkiss01.meetdeb.adapter
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.gkiss01.meetdeb.data.Date
+import com.gkiss01.meetdeb.network.NavigationCode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.greenrobot.eventbus.EventBus
 
 class DateEntryAdapter(private val detailsClickListener: AdapterClickListener): AdapterClass() {
 
@@ -43,6 +45,7 @@ class DateEntryAdapter(private val detailsClickListener: AdapterClickListener): 
             withContext(Dispatchers.Main) {
                 submitList(items)
             }
+            EventBus.getDefault().post(NavigationCode.LOAD_VOTES_HAS_ENDED)
         }
     }
 }
