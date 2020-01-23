@@ -16,4 +16,6 @@ data class Event(
 
     var participants: Int,
 
-    val accepted: Boolean)
+    val accepted: Boolean,
+
+    val voted: Boolean)

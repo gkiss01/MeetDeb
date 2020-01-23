@@ -18,7 +18,6 @@ import okhttp3.Credentials
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.greenrobot.eventbus.EventBus
-import org.threeten.bp.OffsetDateTime
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 
@@ -37,6 +36,10 @@ class MainActivity : AppCompatActivity() {
 
     init {
         instance = this
+    }
+
+    fun getEvent(eventId: Long) {
+        makeRequest(WebApi.retrofitService.getEventAsync(basic, eventId), TargetVar.VAR_GET_EVENT)
     }
 
     fun getEvents(page: Int = 1) {
@@ -70,7 +73,7 @@ class MainActivity : AppCompatActivity() {
                     when (targetVar) {
                         TargetVar.VAR_GET_EVENTS -> EventBus.getDefault().post(EventList(listResult.events!!))
                         TargetVar.VAR_CREATE_EVENT -> EventBus.getDefault().post(NavigationCode.NAVIGATE_TO_EVENTS_FRAGMENT)
-                        TargetVar.VAR_CREATE_PARTICIPANT, TargetVar.VAR_DELETE_PARTICIPANT -> EventBus.getDefault().post(listResult.event)
+                        TargetVar.VAR_CREATE_PARTICIPANT, TargetVar.VAR_DELETE_PARTICIPANT, TargetVar.VAR_GET_EVENT -> EventBus.getDefault().post(listResult.event)
                         TargetVar.VAR_GET_DATES, TargetVar.VAR_CREATE_VOTE -> EventBus.getDefault().post(DateList(listResult.dates ?: emptyList()))
                     }
                 }

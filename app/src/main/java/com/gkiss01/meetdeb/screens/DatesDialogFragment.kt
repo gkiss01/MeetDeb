@@ -1,8 +1,8 @@
 package com.gkiss01.meetdeb.screens
 
 import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -62,8 +62,10 @@ class DatesDialogFragment : DialogFragment() {
         val viewAdapter = DateEntryAdapter(AdapterClickListener { position ->
             val view = binding.datesRecyclerView.findViewHolderForAdapterPosition(position) as DateViewHolder
             if (viewModel.isLoading.value!!) view.setRadioButtonUnchecked()
-            else view.showVoteCreateAnimation()
-            viewModel.addVote(view.dateId)
+            else {
+                view.showVoteCreateAnimation()
+                viewModel.addVote(view.dateId)
+            }
         })
 
         if (viewModel.dates.value == null || viewModel.dates.value!!.isEmpty())
@@ -88,5 +90,11 @@ class DatesDialogFragment : DialogFragment() {
     override fun onResume() {
         dialog!!.window!!.setLayout((resources.displayMetrics.widthPixels * 0.9).toInt(), FrameLayout.LayoutParams.WRAP_CONTENT)
         super.onResume()
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        if (viewModel.votesChanged.value!! && viewModel.dates.value!!.isNotEmpty())
+            MainActivity.instance.getEvent(viewModel.dates.value!![0].eventId)
     }
 }

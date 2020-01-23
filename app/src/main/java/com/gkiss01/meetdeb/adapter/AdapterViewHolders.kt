@@ -114,6 +114,9 @@ class EventViewHolder(private val binding: EventsListItemBinding, private val gl
             binding.acceptButton.setBackgroundResource(0)
         }
 
+        binding.anotherDateButton.hideProgress(R.string.event_another_date_button)
+        binding.anotherDateButton.setBackgroundResource(if (item.voted) R.drawable.event_accepted_button_background else 0)
+
         eventId = item.id
         eventAccepted = item.accepted
         showDetails = false
@@ -169,6 +172,7 @@ class EventViewHolder(private val binding: EventsListItemBinding, private val gl
             val layoutInflater = LayoutInflater.from(parent.context)
             val binding = EventsListItemBinding.inflate(layoutInflater, parent, false)
             binding.acceptButton.attachTextChangeAnimator()
+            binding.anotherDateButton.attachTextChangeAnimator()
             return EventViewHolder(binding, glide)
         }
     }
