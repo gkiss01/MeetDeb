@@ -29,7 +29,6 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 
-
 class EventsFragment : Fragment() {
 
     private lateinit var binding: EventsFragmentBinding
@@ -71,6 +70,7 @@ class EventsFragment : Fragment() {
     fun onNavigationReceived(navigationCode: NavigationCode) {
         if (navigationCode == NavigationCode.LOAD_MORE_HAS_ENDED) {
             viewModel.isMoreLoading.value = false
+            binding.swipeRefreshLayout.isRefreshing = false
         }
     }
 

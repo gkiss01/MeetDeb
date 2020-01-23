@@ -13,7 +13,7 @@ class EventsViewModel : ViewModel() {
     init {
         MainActivity.instance.getEvents()
         currentPage.value = 1
-        isMoreLoading.value = false
+        isMoreLoading.value = true
     }
 
     fun refreshEvents() {
@@ -31,6 +31,6 @@ class EventsViewModel : ViewModel() {
         if (currentPage.value!! > 1)
             events.value = events.value?.union(eventList)?.toList()
         else
-            events.value = eventList.toMutableList()
+            events.value = eventList
     }
 }

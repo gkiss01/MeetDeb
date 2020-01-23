@@ -57,7 +57,7 @@ class EventEntryAdapter(val glide: GlideRequests,
     fun removeLoaderFromList() {
         adapterScope.launch {
             val submittedList= currentList.toMutableList()
-            submittedList.removeAt(currentList.size - 1)
+            if (submittedList.size > 0) submittedList.removeAt(currentList.size - 1)
 
             withContext(Dispatchers.Main) {
                 submitList(submittedList)
@@ -75,6 +75,7 @@ class EventEntryAdapter(val glide: GlideRequests,
             withContext(Dispatchers.Main) {
                 submitList(items)
             }
+            EventBus.getDefault().post(NavigationCode.LOAD_MORE_HAS_ENDED)
         }
     }
 }
