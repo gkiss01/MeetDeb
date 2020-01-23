@@ -34,8 +34,8 @@ class DatesDialogFragment : DialogFragment() {
     }
 
     override fun onStop() {
-        super.onStop()
         EventBus.getDefault().unregister(this)
+        super.onStop()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

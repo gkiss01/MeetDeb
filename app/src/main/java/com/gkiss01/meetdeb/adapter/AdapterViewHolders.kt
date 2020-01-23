@@ -17,7 +17,7 @@ import com.gkiss01.meetdeb.databinding.DatesListItemBinding
 import com.gkiss01.meetdeb.databinding.EventsListItemBinding
 import com.gkiss01.meetdeb.network.BASE_URL
 import com.gkiss01.meetdeb.network.GlideRequests
-import jp.wasabeef.blurry.Blurry
+import com.vansuita.gaussianblur.GaussianBlur
 import kotlin.math.hypot
 import kotlin.math.max
 
@@ -125,7 +125,7 @@ class EventViewHolder(private val binding: EventsListItemBinding, private val gl
             anim.duration = 400L
             binding.eventDetails.visibility = View.VISIBLE
             binding.eventLabel.visibility = View.INVISIBLE
-            Blurry.with(binding.eventImage.context).capture(binding.eventImage).into(binding.eventImage)
+            GaussianBlur.with(binding.eventImage.context).put(binding.eventImage.drawable, binding.eventImage)
 
             anim.start()
             showDetails = true

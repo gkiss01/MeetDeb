@@ -42,8 +42,8 @@ class EventsFragment : Fragment() {
     }
 
     override fun onStop() {
-        super.onStop()
         EventBus.getDefault().unregister(this)
+        super.onStop()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
