@@ -107,6 +107,7 @@ class MainActivity : AppCompatActivity() {
         errors.forEachIndexed { index, e  ->
             run {
                 if (e == "No events found!") EventBus.getDefault().post(ErrorCode.ERROR_NO_EVENTS_FOUND)
+                else if (e == "Date is already created!") EventBus.getDefault().post(ErrorCode.ERROR_DATE_CREATED)
 
                 Log.d("MainActivityApiCall", e)
                 errorsMsg = errorsMsg.plus(if (index == 0) "" else "\n").plus(e)

@@ -61,16 +61,16 @@ class EventsFragment : Fragment() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateRequestReceived(updateEventRequest: UpdateEventRequest) {
         val view = binding.eventsRecyclerView.findViewHolderForAdapterPosition(updateEventRequest.adapterPosition) as EventViewHolder
-        MainActivity.instance.getEvent(updateEventRequest.eventId)
-        view.showEventVoteAnimation()
+        if (!view.eventVoted) {
+            MainActivity.instance.getEvent(updateEventRequest.eventId)
+            view.showEventVoteAnimation()
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onErrorReceived(errorCode: ErrorCode) {
-        when (errorCode) {
-            ErrorCode.ERROR_NO_EVENTS_FOUND -> {
-                viewAdapter.removeLoaderFromList()
-            }
+        if (errorCode == ErrorCode.ERROR_NO_EVENTS_FOUND) {
+            viewAdapter.removeLoaderFromList()
         }
     }
 

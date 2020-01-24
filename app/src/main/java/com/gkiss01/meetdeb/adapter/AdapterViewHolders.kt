@@ -119,17 +119,20 @@ class AdditionViewHolder(private val binding: DatesListAdditionBinding, private 
         binding.eventDateTime.setDateFormat(OffsetDateTime.of(year, month, day, hour, minute, 0, 0, zoneOffset))
     }
 
-    fun clearData() {
+    fun clearData(deep: Boolean = false) {
         binding.createButton.hideProgress(R.string.date_create_button)
-        binding.addDateLayout.visibility = View.GONE
-        binding.downArrow.animate().setDuration(200).rotation(0F)
-        expanded = false
+        if (deep) {
+            binding.addDateLayout.visibility = View.GONE
+            binding.downArrow.animate().setDuration(200).rotation(0F)
+            expanded = false
+        }
     }
 
     companion object {
         fun from(parent: ViewGroup, eventId: Long): AdditionViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             val binding = DatesListAdditionBinding.inflate(layoutInflater, parent, false)
+            binding.createButton.attachTextChangeAnimator()
             return AdditionViewHolder(binding, eventId)
         }
     }
@@ -173,6 +176,7 @@ class DateViewHolder(private val binding: DatesListItemBinding): RecyclerView.Vi
 class EventViewHolder(private val binding: EventsListItemBinding, private val glide: GlideRequests): RecyclerView.ViewHolder(binding.root) {
     var eventId = 0L
     var eventAccepted = false
+    var eventVoted = false
     private var showDetails = false
 
     fun bind(item: Event, detailsClickListener: AdapterClickListener, joinClickListener: AdapterClickListener, anotherDateClickListener: AdapterClickListener) {
@@ -203,6 +207,7 @@ class EventViewHolder(private val binding: EventsListItemBinding, private val gl
 
         eventId = item.id
         eventAccepted = item.accepted
+        eventVoted = item.voted
         showDetails = false
 
         glide.load("$BASE_URL/images/$eventId")

@@ -27,7 +27,7 @@ enum class NavigationCode {
 }
 
 enum class ErrorCode {
-    ERROR_NO_EVENTS_FOUND
+    ERROR_NO_EVENTS_FOUND, ERROR_DATE_CREATED
 }
 
 val moshi = Moshi.Builder()
