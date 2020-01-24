@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewAnimationUtils
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.core.animation.addListener
 import androidx.recyclerview.widget.RecyclerView
 import com.github.razir.progressbutton.attachTextChangeAnimator
@@ -14,12 +13,11 @@ import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.Date
 import com.gkiss01.meetdeb.data.Event
+import com.gkiss01.meetdeb.databinding.DatesListAdditionBinding
 import com.gkiss01.meetdeb.databinding.DatesListItemBinding
 import com.gkiss01.meetdeb.databinding.EventsListItemBinding
 import com.gkiss01.meetdeb.network.BASE_URL
 import com.gkiss01.meetdeb.network.GlideRequests
-import com.skydoves.expandablelayout.ExpandableLayout
-import com.skydoves.expandablelayout.expandableLayout
 import com.vansuita.gaussianblur.GaussianBlur
 import org.threeten.bp.OffsetDateTime
 import kotlin.math.hypot
@@ -45,22 +43,24 @@ class LoaderViewHolder(view: View): RecyclerView.ViewHolder(view) {
     }
 }
 
-class AdditionViewHolder(private val view: View): RecyclerView.ViewHolder(view) {
+class AdditionViewHolder(private val binding: DatesListAdditionBinding): RecyclerView.ViewHolder(binding.root) {
+    private var expanded = false
+
     fun bind() {
-        val expandableLayout = view.findViewById<ExpandableLayout>(R.id.expandableLayout)
-        expandableLayout.parentLayout.setOnClickListener {
-            if (expandableLayout.isExpanded) expandableLayout.collapse()
-            else expandableLayout.expand()
+        binding.addLayout.setOnClickListener {
+            binding.addDateLayout.visibility = if (expanded) View.GONE else View.VISIBLE
+            binding.downArrow.animate().setDuration(200).rotation(if (expanded) 0F else 180F)
+            expanded = !expanded
         }
 
-        expandableLayout.secondLayout.findViewById<TextView>(R.id.eventDateTime).setDateFormat(OffsetDateTime.now())
+        binding.eventDateTime.setDateFormat(OffsetDateTime.now())
     }
 
     companion object {
         fun from(parent: ViewGroup): AdditionViewHolder {
-            val itemView = LayoutInflater.from(parent.context)
-                .inflate(R.layout.dates_list_addition, parent, false) as View
-            return AdditionViewHolder(itemView)
+            val layoutInflater = LayoutInflater.from(parent.context)
+            val binding = DatesListAdditionBinding.inflate(layoutInflater, parent, false)
+            return AdditionViewHolder(binding)
         }
     }
 }
