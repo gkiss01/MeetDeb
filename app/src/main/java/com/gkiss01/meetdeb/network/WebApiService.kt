@@ -8,6 +8,7 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.Deferred
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import org.threeten.bp.OffsetDateTime
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.*
@@ -17,7 +18,7 @@ const val BASE_URL = "http://172.17.172.157:8080"
 enum class TargetVar {
     VAR_GET_EVENTS, VAR_GET_EVENT, VAR_CREATE_EVENT,
     VAR_CREATE_PARTICIPANT, VAR_DELETE_PARTICIPANT,
-    VAR_GET_DATES,
+    VAR_GET_DATES, VAR_CREATE_DATE,
     VAR_CREATE_VOTE
 }
 
@@ -60,6 +61,9 @@ interface WebApiService {
 
     @POST("votes/{dateId}")
     fun createVoteAsync(@Header("Authorization") auth: String, @Path("dateId") dateId: Long): Deferred<GenericResponse>
+
+    @POST("dates/{eventId}")
+    fun createDateAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long, @Query("date") date: OffsetDateTime): Deferred<GenericResponse>
 
     @DELETE("participants/{eventId}")
     fun deleteParticipantAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): Deferred<GenericResponse>

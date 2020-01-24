@@ -18,6 +18,7 @@ import okhttp3.Credentials
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.greenrobot.eventbus.EventBus
+import org.threeten.bp.OffsetDateTime
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 
@@ -54,6 +55,10 @@ class MainActivity : AppCompatActivity() {
         makeRequest(WebApi.retrofitService.getDatesAsync(basic, eventId), TargetVar.VAR_GET_DATES)
     }
 
+    fun createDate(eventId: Long, date: OffsetDateTime) {
+        makeRequest(WebApi.retrofitService.createDateAsync(basic, eventId, date), TargetVar.VAR_CREATE_DATE)
+    }
+
     fun addVote(dateId: Long) {
         makeRequest(WebApi.retrofitService.createVoteAsync(basic, dateId), TargetVar.VAR_CREATE_VOTE)
     }
@@ -74,7 +79,7 @@ class MainActivity : AppCompatActivity() {
                         TargetVar.VAR_GET_EVENTS -> EventBus.getDefault().post(EventList(listResult.events!!))
                         TargetVar.VAR_CREATE_EVENT -> EventBus.getDefault().post(NavigationCode.NAVIGATE_TO_EVENTS_FRAGMENT)
                         TargetVar.VAR_CREATE_PARTICIPANT, TargetVar.VAR_DELETE_PARTICIPANT, TargetVar.VAR_GET_EVENT -> EventBus.getDefault().post(listResult.event)
-                        TargetVar.VAR_GET_DATES, TargetVar.VAR_CREATE_VOTE -> EventBus.getDefault().post(DateList(listResult.dates ?: emptyList()))
+                        TargetVar.VAR_GET_DATES, TargetVar.VAR_CREATE_DATE, TargetVar.VAR_CREATE_VOTE -> EventBus.getDefault().post(DateList(listResult.dates ?: emptyList()))
                     }
                 }
                 else handleResponseErrors(listResult.errors!!)

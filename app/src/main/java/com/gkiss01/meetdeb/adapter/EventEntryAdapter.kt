@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 
-class EventEntryAdapter(val glide: GlideRequests,
+class EventEntryAdapter(private val glide: GlideRequests,
                         private val detailsClickListener: AdapterClickListener,
                         private val joinClickListener: AdapterClickListener,
                         private val anotherDateClickListener: AdapterClickListener): AdapterClass() {

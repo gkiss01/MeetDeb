@@ -13,8 +13,10 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.adapter.AdapterClickListener
+import com.gkiss01.meetdeb.adapter.AdditionViewHolder
 import com.gkiss01.meetdeb.adapter.DateEntryAdapter
 import com.gkiss01.meetdeb.adapter.DateViewHolder
 import com.gkiss01.meetdeb.data.DateList
@@ -52,6 +54,8 @@ class DatesDialogFragment : DialogFragment() {
     fun onNavigationReceived(navigationCode: NavigationCode) {
         if (navigationCode == NavigationCode.LOAD_VOTES_HAS_ENDED) {
             viewModel.isLoading.value = false
+            val view = binding.datesRecyclerView.findViewHolderForAdapterPosition(viewModel.dates.value!!.size) as AdditionViewHolder
+            view.clearData()
         }
     }
 
@@ -65,7 +69,7 @@ class DatesDialogFragment : DialogFragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.dates_fragment, container, false)
         viewModel = ViewModelProviders.of(this).get(DatesDialogViewModel::class.java)
 
-        val viewAdapter = DateEntryAdapter(AdapterClickListener { position ->
+        val viewAdapter = DateEntryAdapter(eventId, AdapterClickListener { position ->
             val view = binding.datesRecyclerView.findViewHolderForAdapterPosition(position) as DateViewHolder
             if (viewModel.isLoading.value!!) view.setRadioButtonUnchecked()
             else {
@@ -81,6 +85,7 @@ class DatesDialogFragment : DialogFragment() {
             viewAdapter.addAdditionAndSubmitList(it)
         })
 
+        (binding.datesRecyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         binding.datesRecyclerView.adapter = viewAdapter
         binding.datesRecyclerView.layoutManager = LinearLayoutManager(context)
 

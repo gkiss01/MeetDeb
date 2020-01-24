@@ -83,7 +83,7 @@
                 android:id="@+id/createButton"
                 style="@style/styleFabLabel"
                 android:layout_width="180dp"
-                android:layout_height="30dp"
+                android:layout_height="35dp"
                 android:layout_gravity="end"
                 android:layout_marginTop="10dp"
                 android:text="@string/date_create_button" />

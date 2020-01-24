@@ -1,5 +1,7 @@
 package com.gkiss01.meetdeb.adapter
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
+import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.Date
 import com.gkiss01.meetdeb.data.Event
@@ -20,6 +23,7 @@ import com.gkiss01.meetdeb.network.BASE_URL
 import com.gkiss01.meetdeb.network.GlideRequests
 import com.vansuita.gaussianblur.GaussianBlur
 import org.threeten.bp.OffsetDateTime
+import org.threeten.bp.ZoneOffset
 import kotlin.math.hypot
 import kotlin.math.max
 
@@ -43,24 +47,90 @@ class LoaderViewHolder(view: View): RecyclerView.ViewHolder(view) {
     }
 }
 
-class AdditionViewHolder(private val binding: DatesListAdditionBinding): RecyclerView.ViewHolder(binding.root) {
+class AdditionViewHolder(private val binding: DatesListAdditionBinding, private val eventId: Long): RecyclerView.ViewHolder(binding.root) {
     private var expanded = false
+    private var year: Int = -1
+    private var month: Int = -1
+    private var day: Int = -1
+    private var hour: Int = -1
+    private var minute: Int = -1
+    private var zoneOffset: ZoneOffset = ZoneOffset.UTC
 
     fun bind() {
+        if (year == -1) {
+            val date = OffsetDateTime.now()
+
+            year = date.year
+            month = date.monthValue
+            day = date.dayOfMonth
+            hour = date.hour
+            minute = date.minute
+            zoneOffset = date.offset
+        }
+
+        binding.addDateLayout.visibility = View.GONE
+        expanded = false
+
         binding.addLayout.setOnClickListener {
             binding.addDateLayout.visibility = if (expanded) View.GONE else View.VISIBLE
             binding.downArrow.animate().setDuration(200).rotation(if (expanded) 0F else 180F)
             expanded = !expanded
         }
 
-        binding.eventDateTime.setDateFormat(OffsetDateTime.now())
+        binding.dateButton.setOnClickListener {
+            val datePickerDialog = DatePickerDialog(binding.dateButton.context, DatePickerDialog.OnDateSetListener { _, selectedYear, selectedMonth, dayOfMonth ->
+
+                year = selectedYear
+                month = selectedMonth + 1
+                day = dayOfMonth
+                binding.eventDateTime.setDateFormat(OffsetDateTime.of(year, month, day, hour, minute, 0, 0, zoneOffset))
+
+            }, year, month - 1, day)
+            datePickerDialog.show()
+        }
+
+        val is24HourFormat = android.text.format.DateFormat.is24HourFormat(binding.timeButton.context)
+        binding.timeButton.setOnClickListener {
+            val timePickerDialog = TimePickerDialog(binding.dateButton.context, TimePickerDialog.OnTimeSetListener { _, hourOfDay, selectedMinute ->
+
+                hour = hourOfDay
+                minute = selectedMinute
+                binding.eventDateTime.setDateFormat(OffsetDateTime.of(year, month, day, hour, minute, 0, 0, zoneOffset))
+
+            }, hour, minute, is24HourFormat)
+            timePickerDialog.show()
+        }
+
+        binding.createButton.setOnClickListener {
+            val date = OffsetDateTime.of(year, month, day, hour, minute, 0, 0, zoneOffset)
+            if (date.isBefore(OffsetDateTime.now())) {
+                binding.eventDateTime.error = "Jövőbeli dátumot adj meg!"
+            }
+            else {
+                binding.eventDateTime.error = null
+                binding.createButton.showProgress {
+                    buttonTextRes = R.string.date_create_waiting
+                    progressColor = Color.WHITE
+                }
+                MainActivity.instance.createDate(eventId, date)
+            }
+        }
+
+        binding.eventDateTime.setDateFormat(OffsetDateTime.of(year, month, day, hour, minute, 0, 0, zoneOffset))
+    }
+
+    fun clearData() {
+        binding.createButton.hideProgress(R.string.date_create_button)
+        binding.addDateLayout.visibility = View.GONE
+        binding.downArrow.animate().setDuration(200).rotation(0F)
+        expanded = false
     }
 
     companion object {
-        fun from(parent: ViewGroup): AdditionViewHolder {
+        fun from(parent: ViewGroup, eventId: Long): AdditionViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             val binding = DatesListAdditionBinding.inflate(layoutInflater, parent, false)
-            return AdditionViewHolder(binding)
+            return AdditionViewHolder(binding, eventId)
         }
     }
 }

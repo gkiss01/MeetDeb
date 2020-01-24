@@ -9,13 +9,13 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 
-class DateEntryAdapter(private val detailsClickListener: AdapterClickListener): AdapterClass() {
+class DateEntryAdapter(private val eventId: Long, private val detailsClickListener: AdapterClickListener): AdapterClass() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             ViewTypes.ITEM_VIEW_TYPE_DATE.ordinal -> DateViewHolder.from(parent)
             ViewTypes.ITEM_VIEW_TYPE_LOADER.ordinal -> LoaderViewHolder.from(parent)
-            ViewTypes.ITEM_VIEW_TYPE_ADDITION.ordinal -> AdditionViewHolder.from(parent)
+            ViewTypes.ITEM_VIEW_TYPE_ADDITION.ordinal -> AdditionViewHolder.from(parent, eventId)
             else -> throw ClassCastException("Unknown viewType $viewType")
         }
     }
@@ -28,6 +28,11 @@ class DateEntryAdapter(private val detailsClickListener: AdapterClickListener): 
             }
             is AdditionViewHolder -> holder.bind()
         }
+    }
+
+    override fun onCurrentListChanged(previousList: MutableList<DataItem>, currentList: MutableList<DataItem>) {
+        super.onCurrentListChanged(previousList, currentList)
+        if (previousList.isNotEmpty()) EventBus.getDefault().post(NavigationCode.LOAD_VOTES_HAS_ENDED)
     }
 
     fun addLoadingAndAddition() {
@@ -47,7 +52,6 @@ class DateEntryAdapter(private val detailsClickListener: AdapterClickListener): 
             withContext(Dispatchers.Main) {
                 submitList(items)
             }
-            EventBus.getDefault().post(NavigationCode.LOAD_VOTES_HAS_ENDED)
         }
     }
 }
