@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewAnimationUtils
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.animation.addListener
 import androidx.recyclerview.widget.RecyclerView
 import com.github.razir.progressbutton.attachTextChangeAnimator
@@ -17,7 +18,10 @@ import com.gkiss01.meetdeb.databinding.DatesListItemBinding
 import com.gkiss01.meetdeb.databinding.EventsListItemBinding
 import com.gkiss01.meetdeb.network.BASE_URL
 import com.gkiss01.meetdeb.network.GlideRequests
+import com.skydoves.expandablelayout.ExpandableLayout
+import com.skydoves.expandablelayout.expandableLayout
 import com.vansuita.gaussianblur.GaussianBlur
+import org.threeten.bp.OffsetDateTime
 import kotlin.math.hypot
 import kotlin.math.max
 
@@ -41,7 +45,17 @@ class LoaderViewHolder(view: View): RecyclerView.ViewHolder(view) {
     }
 }
 
-class AdditionViewHolder(view: View): RecyclerView.ViewHolder(view) {
+class AdditionViewHolder(private val view: View): RecyclerView.ViewHolder(view) {
+    fun bind() {
+        val expandableLayout = view.findViewById<ExpandableLayout>(R.id.expandableLayout)
+        expandableLayout.parentLayout.setOnClickListener {
+            if (expandableLayout.isExpanded) expandableLayout.collapse()
+            else expandableLayout.expand()
+        }
+
+        expandableLayout.secondLayout.findViewById<TextView>(R.id.eventDateTime).setDateFormat(OffsetDateTime.now())
+    }
+
     companion object {
         fun from(parent: ViewGroup): AdditionViewHolder {
             val itemView = LayoutInflater.from(parent.context)
@@ -162,6 +176,13 @@ class EventViewHolder(private val binding: EventsListItemBinding, private val gl
 
     fun showEventJoinAnimation() {
         binding.acceptButton.showProgress {
+            buttonTextRes = R.string.event_accept_waiting
+            progressColor = Color.parseColor("#485688")
+        }
+    }
+
+    fun showEventVoteAnimation() {
+        binding.anotherDateButton.showProgress {
             buttonTextRes = R.string.event_accept_waiting
             progressColor = Color.parseColor("#485688")
         }

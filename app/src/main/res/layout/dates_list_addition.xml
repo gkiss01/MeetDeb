@@ -1,27 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.skydoves.expandablelayout.ExpandableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/expandableLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center"
-    android:padding="13dp" >
-
-    <ImageView
-        android:id="@+id/plusSign"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:contentDescription="@string/date_add_button_desc"
-        android:src="@drawable/ic_add_pink" />
-
-    <TextView
-        android:id="@+id/addButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_marginStart="16dp"
-        android:layout_toEndOf="@id/plusSign"
-        android:fontFamily="sans-serif-condensed-medium"
-        android:text="@string/event_add_date_button"
-        android:textColor="#000000"
-        android:textSize="18sp" />
-</RelativeLayout>
-
+    app:expandable_duration="300"
+    app:expandable_parentLayout="@layout/dates_list_addition_collapsed"
+    app:expandable_secondLayout="@layout/dates_list_addition_expanded"
+    app:expandable_showSpinner="true"
+    app:expandable_spinner="@drawable/ic_arrow_down"
+    app:expandable_spinner_animate="true"
+    app:expandable_spinner_margin="14dp"
+    app:expandable_spinner_size="32dp" />

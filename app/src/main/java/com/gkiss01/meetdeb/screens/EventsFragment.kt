@@ -22,6 +22,7 @@ import com.gkiss01.meetdeb.adapter.EventEntryAdapter
 import com.gkiss01.meetdeb.adapter.EventViewHolder
 import com.gkiss01.meetdeb.data.Event
 import com.gkiss01.meetdeb.data.EventList
+import com.gkiss01.meetdeb.data.UpdateEventRequest
 import com.gkiss01.meetdeb.databinding.EventsFragmentBinding
 import com.gkiss01.meetdeb.network.*
 import org.greenrobot.eventbus.EventBus
@@ -55,6 +56,13 @@ class EventsFragment : Fragment() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventReceived(event: Event) {
         viewAdapter.updateDataSourceByEvent(event)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onUpdateRequestReceived(updateEventRequest: UpdateEventRequest) {
+        val view = binding.eventsRecyclerView.findViewHolderForAdapterPosition(updateEventRequest.adapterPosition) as EventViewHolder
+        MainActivity.instance.getEvent(updateEventRequest.eventId)
+        view.showEventVoteAnimation()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -106,7 +114,7 @@ class EventsFragment : Fragment() {
             },
             AdapterClickListener { position ->
                 val view = binding.eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventViewHolder
-                val datesDialogFragment = DatesDialogFragment()
+                val datesDialogFragment = DatesDialogFragment.newInstance(view.eventId, position)
                 datesDialogFragment.show(requireFragmentManager(), "datesDialogFragment")
                 MainActivity.instance.showDates(view.eventId)
         })

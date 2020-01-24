@@ -19,12 +19,14 @@ class DateEntryAdapter(private val detailsClickListener: AdapterClickListener): 
             else -> throw ClassCastException("Unknown viewType $viewType")
         }
     }
+
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is DateViewHolder -> {
                 val dateItem = getItem(position) as DataItem.DateItem
                 holder.bind(dateItem.date, detailsClickListener)
             }
+            is AdditionViewHolder -> holder.bind()
         }
     }
 

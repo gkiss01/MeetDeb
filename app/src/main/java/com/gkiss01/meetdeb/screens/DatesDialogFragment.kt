@@ -13,12 +13,12 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.adapter.AdapterClickListener
 import com.gkiss01.meetdeb.adapter.DateEntryAdapter
 import com.gkiss01.meetdeb.adapter.DateViewHolder
 import com.gkiss01.meetdeb.data.DateList
+import com.gkiss01.meetdeb.data.UpdateEventRequest
 import com.gkiss01.meetdeb.databinding.DatesFragmentBinding
 import com.gkiss01.meetdeb.network.NavigationCode
 import org.greenrobot.eventbus.EventBus
@@ -29,6 +29,9 @@ class DatesDialogFragment : DialogFragment() {
 
     private lateinit var binding: DatesFragmentBinding
     private lateinit var viewModel: DatesDialogViewModel
+
+    private var eventId: Long = -1L
+    private var adapterPosition: Int = -1
 
     override fun onStart() {
         super.onStart()
@@ -55,6 +58,9 @@ class DatesDialogFragment : DialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
+
+        eventId = arguments!!.getLong(EXTRA_EVENT_ID)
+        adapterPosition = arguments!!.getInt(EXTRA_ADAPTER_POSITION)
 
         binding = DataBindingUtil.inflate(inflater, R.layout.dates_fragment, container, false)
         viewModel = ViewModelProviders.of(this).get(DatesDialogViewModel::class.java)
@@ -95,6 +101,21 @@ class DatesDialogFragment : DialogFragment() {
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         if (viewModel.votesChanged.value!! && viewModel.dates.value!!.isNotEmpty())
-            MainActivity.instance.getEvent(viewModel.dates.value!![0].eventId)
+            EventBus.getDefault().post(UpdateEventRequest(eventId, adapterPosition))
+    }
+
+    companion object {
+        private const val EXTRA_EVENT_ID = "eid"
+        private const val EXTRA_ADAPTER_POSITION = "aps"
+
+        fun newInstance(eventId: Long, adapterPosition: Int): DatesDialogFragment {
+            val dialogFragment = DatesDialogFragment()
+            val args = Bundle().apply {
+                putLong(EXTRA_EVENT_ID, eventId)
+                putInt(EXTRA_ADAPTER_POSITION, adapterPosition)
+            }
+            dialogFragment.arguments = args
+            return dialogFragment
+        }
     }
 }
