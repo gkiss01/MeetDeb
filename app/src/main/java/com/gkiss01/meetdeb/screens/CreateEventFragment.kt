@@ -115,6 +115,10 @@ class CreateEventFragment : Fragment() {
                 binding.eventName.error = "A mezőt kötelező kitölteni!"
                 error = true
             }
+            else if (binding.eventName.text.length > 40) {
+                binding.eventName.error = "A név max. 40 karakter lehet!"
+                error = true
+            }
 
             if (TextUtils.isEmpty(binding.eventDescription.text)) {
                 binding.eventDescription.error = "A mezőt kötelező kitölteni!"

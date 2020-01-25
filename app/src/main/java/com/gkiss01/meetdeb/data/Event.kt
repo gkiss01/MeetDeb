@@ -7,6 +7,8 @@ data class Event(
 
     var username: String,
 
+    var name: String,
+
     @com.gkiss01.meetdeb.adapter.OffsetDateTime
     var date: OffsetDateTime,
 
