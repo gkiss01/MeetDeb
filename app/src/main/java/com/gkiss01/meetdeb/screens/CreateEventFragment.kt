@@ -27,6 +27,7 @@ import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.databinding.CreateEventFragmentBinding
+import com.gkiss01.meetdeb.network.CustomPicassoEngine
 import com.gkiss01.meetdeb.network.NavigationCode
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
@@ -164,7 +165,7 @@ class CreateEventFragment : Fragment() {
                 .countable(true)
                 .maxSelectable(1)
                 .gridExpectedSize(resources.getDimensionPixelSize(R.dimen.grid_expected_size))
-                .imageEngine(PicassoEngine())
+                .imageEngine(CustomPicassoEngine())
                 .autoHideToolbarOnSingleTap(true)
                 .forResult(REQUEST_CODE_PICK_IMAGE)
         }
