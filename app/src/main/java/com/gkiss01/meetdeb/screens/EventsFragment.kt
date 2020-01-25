@@ -11,10 +11,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.ListPreloader.PreloadModelProvider
-import com.bumptech.glide.RequestBuilder
-import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
-import com.bumptech.glide.util.FixedPreloadSizeProvider
 import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.adapter.AdapterClickListener
@@ -28,14 +24,12 @@ import com.gkiss01.meetdeb.network.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.util.*
 
 class EventsFragment : Fragment() {
 
     private lateinit var binding: EventsFragmentBinding
     private lateinit var viewModel: EventsViewModel
     private lateinit var viewAdapter: EventEntryAdapter
-    private lateinit var glide: GlideRequests
 
     override fun onStart() {
         super.onStart()
@@ -88,7 +82,6 @@ class EventsFragment : Fragment() {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.events_fragment, container, false)
         viewModel = ViewModelProviders.of(this).get(EventsViewModel::class.java)
-        glide = GlideApp.with(activity!!)
 
         binding.addActionButton.setOnClickListener{ run {
             val action = EventsFragmentDirections.actionEventsFragmentToCreateEventFragment()
@@ -102,8 +95,7 @@ class EventsFragment : Fragment() {
                 binding.swipeRefreshLayout.isRefreshing = false
         }
 
-        viewAdapter = EventEntryAdapter(glide,
-            AdapterClickListener { position ->
+        viewAdapter = EventEntryAdapter(AdapterClickListener { position ->
                 val view = binding.eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventViewHolder
                 view.showEventDetails()
             },
@@ -123,16 +115,11 @@ class EventsFragment : Fragment() {
             events?.let { viewAdapter.addHeaderAndSubmitList(it) }
         })
 
-        val sizeProvider = FixedPreloadSizeProvider<String>(1080, 1080)
-        val modelProvider = CustomPreloadModelProvider()
-        val recyclerViewPreloader: RecyclerViewPreloader<String> = RecyclerViewPreloader(glide, modelProvider, sizeProvider, 10)
-
         val layoutManager = LinearLayoutManager(context)
 
         binding.eventsRecyclerView.adapter = viewAdapter
         binding.eventsRecyclerView.layoutManager = layoutManager
 
-        binding.eventsRecyclerView.addOnScrollListener(recyclerViewPreloader)
         binding.eventsRecyclerView.addOnScrollListener(object: RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
@@ -147,16 +134,5 @@ class EventsFragment : Fragment() {
         })
 
         return binding.root
-    }
-
-    private inner class CustomPreloadModelProvider: PreloadModelProvider<String> {
-        override fun getPreloadItems(position: Int): MutableList<String> {
-            if (position >= viewModel.events.value!!.size) return Collections.emptyList()
-            return Collections.singletonList("${BASE_URL}/images/${viewModel.events.value!![position].id}")
-        }
-
-        override fun getPreloadRequestBuilder(item: String): RequestBuilder<*> {
-            return glide.load(item)
-        }
     }
 }

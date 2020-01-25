@@ -20,7 +20,7 @@ import com.gkiss01.meetdeb.databinding.DatesListAdditionBinding
 import com.gkiss01.meetdeb.databinding.DatesListItemBinding
 import com.gkiss01.meetdeb.databinding.EventsListItemBinding
 import com.gkiss01.meetdeb.network.BASE_URL
-import com.gkiss01.meetdeb.network.GlideRequests
+import com.squareup.picasso.Picasso
 import com.vansuita.gaussianblur.GaussianBlur
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.ZoneOffset
@@ -173,7 +173,7 @@ class DateViewHolder(private val binding: DatesListItemBinding): RecyclerView.Vi
     }
 }
 
-class EventViewHolder(private val binding: EventsListItemBinding, private val glide: GlideRequests): RecyclerView.ViewHolder(binding.root) {
+class EventViewHolder(private val binding: EventsListItemBinding): RecyclerView.ViewHolder(binding.root) {
     var eventId = 0L
     var eventAccepted = false
     var eventVoted = false
@@ -210,7 +210,9 @@ class EventViewHolder(private val binding: EventsListItemBinding, private val gl
         eventVoted = item.voted
         showDetails = false
 
-        glide.load("$BASE_URL/images/$eventId")
+        Picasso.get()
+            .load("$BASE_URL/images/$eventId")
+            .placeholder(R.drawable.placeholder)
             .into(binding.eventImage)
 
         binding.executePendingBindings()
@@ -240,7 +242,9 @@ class EventViewHolder(private val binding: EventsListItemBinding, private val gl
             anim.addListener(onEnd = {
                 binding.eventDetails.visibility = View.GONE
                 binding.eventLabel.visibility = View.VISIBLE
-                glide.load("$BASE_URL/images/$eventId")
+                Picasso.get()
+                    .load("$BASE_URL/images/$eventId")
+                    .placeholder(R.drawable.placeholder)
                     .into(binding.eventImage)
             })
 
@@ -264,12 +268,12 @@ class EventViewHolder(private val binding: EventsListItemBinding, private val gl
     }
 
     companion object {
-        fun from(parent: ViewGroup, glide: GlideRequests): EventViewHolder {
+        fun from(parent: ViewGroup): EventViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             val binding = EventsListItemBinding.inflate(layoutInflater, parent, false)
             binding.acceptButton.attachTextChangeAnimator()
             binding.anotherDateButton.attachTextChangeAnimator()
-            return EventViewHolder(binding, glide)
+            return EventViewHolder(binding)
         }
     }
 }

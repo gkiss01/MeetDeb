@@ -30,7 +30,7 @@ import com.gkiss01.meetdeb.databinding.CreateEventFragmentBinding
 import com.gkiss01.meetdeb.network.NavigationCode
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
-import com.zhihu.matisse.engine.impl.GlideEngine
+import com.zhihu.matisse.engine.impl.PicassoEngine
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -164,7 +164,7 @@ class CreateEventFragment : Fragment() {
                 .countable(true)
                 .maxSelectable(1)
                 .gridExpectedSize(resources.getDimensionPixelSize(R.dimen.grid_expected_size))
-                .imageEngine(GlideEngine())
+                .imageEngine(PicassoEngine())
                 .autoHideToolbarOnSingleTap(true)
                 .forResult(REQUEST_CODE_PICK_IMAGE)
         }

@@ -3,21 +3,19 @@ package com.gkiss01.meetdeb.adapter
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.gkiss01.meetdeb.data.Event
-import com.gkiss01.meetdeb.network.GlideRequests
 import com.gkiss01.meetdeb.network.NavigationCode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 
-class EventEntryAdapter(private val glide: GlideRequests,
-                        private val detailsClickListener: AdapterClickListener,
+class EventEntryAdapter(private val detailsClickListener: AdapterClickListener,
                         private val joinClickListener: AdapterClickListener,
                         private val anotherDateClickListener: AdapterClickListener): AdapterClass() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            ViewTypes.ITEM_VIEW_TYPE_EVENT.ordinal -> EventViewHolder.from(parent, glide)
+            ViewTypes.ITEM_VIEW_TYPE_EVENT.ordinal -> EventViewHolder.from(parent)
             ViewTypes.ITEM_VIEW_TYPE_HEADER.ordinal -> HeaderViewHolder.from(parent)
             ViewTypes.ITEM_VIEW_TYPE_LOADER.ordinal -> LoaderViewHolder.from(parent)
             else -> throw ClassCastException("Unknown viewType $viewType")
