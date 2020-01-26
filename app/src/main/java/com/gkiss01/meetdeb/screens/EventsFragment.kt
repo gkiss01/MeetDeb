@@ -20,7 +20,8 @@ import com.gkiss01.meetdeb.data.Event
 import com.gkiss01.meetdeb.data.EventList
 import com.gkiss01.meetdeb.data.UpdateEventRequest
 import com.gkiss01.meetdeb.databinding.EventsFragmentBinding
-import com.gkiss01.meetdeb.network.*
+import com.gkiss01.meetdeb.network.ErrorCode
+import com.gkiss01.meetdeb.network.NavigationCode
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode

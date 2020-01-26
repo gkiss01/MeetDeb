@@ -31,7 +31,6 @@ import com.gkiss01.meetdeb.network.CustomPicassoEngine
 import com.gkiss01.meetdeb.network.NavigationCode
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
-import com.zhihu.matisse.engine.impl.PicassoEngine
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode

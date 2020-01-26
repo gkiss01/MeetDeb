@@ -11,6 +11,15 @@ apply plugin: "androidx.navigation.safeargs.kotlin"
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     defaultConfig {
         applicationId "com.gkiss01.meetdeb"
         minSdkVersion 24
@@ -69,6 +78,9 @@ dependencies {
 
     //FloatingActionButton
     implementation 'com.getbase:floatingactionbutton:1.10.1'
+
+    //OkHttp3 (OkHttp4)
+    implementation "com.squareup.okhttp3:okhttp:4.3.1"
 
     //Retrofit
     implementation "com.squareup.retrofit2:retrofit:2.6.2"

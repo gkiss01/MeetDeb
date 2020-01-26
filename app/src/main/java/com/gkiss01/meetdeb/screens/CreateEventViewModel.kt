@@ -8,9 +8,11 @@ import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.data.request.EventRequest
 import com.gkiss01.meetdeb.network.moshi
 import id.zelory.compressor.Compressor
-import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.ZoneOffset
 import org.threeten.bp.format.DateTimeFormatter
@@ -45,13 +47,13 @@ class CreateEventViewModel(application: Application): AndroidViewModel(applicati
 
         if (file.exists()) {
             val compressedFile = Compressor(getApplication()).compressToFile(file)
-            val requestFile = RequestBody.create(MediaType.parse("image/*"), compressedFile)
+            val requestFile = compressedFile.asRequestBody("image/jpeg".toMediaTypeOrNull())
             body = MultipartBody.Part.createFormData("file", file.name, requestFile)
         }
 
         val eventRequest = EventRequest(eventName, dateTime.value!!, eventVenue, eventDescription)
         val json = moshi.adapter(EventRequest::class.java).toJson(eventRequest)
-        val event: RequestBody = RequestBody.create(MediaType.parse("application/json"), json)
+        val event: RequestBody = json.toRequestBody("application/json".toMediaTypeOrNull())
 
         MainActivity.instance.uploadEvent(event, body)
     }
