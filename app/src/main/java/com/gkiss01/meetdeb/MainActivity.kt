@@ -70,6 +70,10 @@ class MainActivity : AppCompatActivity() {
             makeRequest(WebApi.retrofitService.createParticipantAsync(basic, eventId), TargetVar.VAR_CREATE_PARTICIPANT)
     }
 
+    fun uploadUser(user: RequestBody) {
+        makeRequest(WebApi.retrofitService.createUserAsync(user), TargetVar.VAR_CREATE_USER)
+    }
+
     private fun makeRequest(target: Deferred<GenericResponse>, targetVar: TargetVar) {
         lifecycleScope.launch {
             try {
@@ -80,6 +84,7 @@ class MainActivity : AppCompatActivity() {
                         TargetVar.VAR_CREATE_EVENT -> EventBus.getDefault().post(NavigationCode.NAVIGATE_TO_EVENTS_FRAGMENT)
                         TargetVar.VAR_CREATE_PARTICIPANT, TargetVar.VAR_DELETE_PARTICIPANT, TargetVar.VAR_GET_EVENT -> EventBus.getDefault().post(listResult.event)
                         TargetVar.VAR_GET_DATES, TargetVar.VAR_CREATE_DATE, TargetVar.VAR_CREATE_VOTE -> EventBus.getDefault().post(DateList(listResult.dates ?: emptyList()))
+                        TargetVar.VAR_CREATE_USER -> EventBus.getDefault().post(listResult.user!!)
                     }
                 }
                 else handleResponseErrors(listResult.errors!!)

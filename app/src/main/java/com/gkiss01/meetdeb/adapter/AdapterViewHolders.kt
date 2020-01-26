@@ -202,7 +202,7 @@ class EventViewHolder(private val binding: EventsListItemBinding): RecyclerView.
             binding.acceptButton.setBackgroundResource(0)
         }
 
-        binding.anotherDateButton.hideProgress(R.string.event_another_date_button)
+        binding.anotherDateButton.hideProgress(R.string.event_date_add)
         binding.anotherDateButton.setBackgroundResource(if (item.voted) R.drawable.event_accepted_button_background else 0)
 
         eventId = item.id

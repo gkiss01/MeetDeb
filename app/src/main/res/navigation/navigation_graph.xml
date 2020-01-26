@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_graph"
-    app:startDestination="@id/eventsFragment">
+    app:startDestination="@id/registerFragment">
 
     <fragment
         android:id="@+id/eventsFragment"
@@ -25,4 +25,9 @@
             app:destination="@id/eventsFragment"
             app:popUpTo="@+id/eventsFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.gkiss01.meetdeb.screens.RegisterFragment"
+        android:label="RegisterFragment"
+        tools:layout="@layout/register_fragment" />
 </navigation>

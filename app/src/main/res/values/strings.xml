@@ -1,39 +1,44 @@
 <resources>
     <string name="app_name">MeetDeb</string>
-    <string name="events_button">Események</string>
-    <string name="web_button">Webes tartalom</string>
-    <string name="profile_picture_desc">Profile picture</string>
-    <string name="new_event_button">Új esemény</string>
-    <string name="event_name_hint">Add meg az esemény nevét…</string>
-    <string name="event_labels_hint">Miről szól az esemény?</string>
-    <string name="event_date_hint">Válassz egy dátumot…</string>
-    <string name="event_venue_hint">Hol lesz az esemény?</string>
-    <string name="event_create_button">Létrehozás</string>
-    <string name="date_create_button">Hozzáadás</string>
-    <string name="event_date_set">Dátum</string>
-    <string name="event_time_set">Időpont</string>
-    <string name="events_list_header_title">Események</string>
 
-    <string name="pos_icon_desc">Pozíció jelző ikon</string>
-    <string name="event_picture_desc">Event picture</string>
-    <string name="event_desc_button">Esemény leírása</string>
-    <string name="event_label">#Címke</string>
+    <string name="events_list_header">Események</string>
 
     <string name="event_creator">Létrehozó:</string>
     <string name="event_venue">Helyszín:</string>
     <string name="event_date">Időpont:</string>
     <string name="event_description">Leírás:</string>
-    <string name="accept_button_check">Accept button check</string>
+    <string name="event_desc_button">Esemény leírása</string>
+    <string name="event_image_desc">Event image</string>
+
+    <string name="event_add_button">Új esemény</string>
+    <string name="event_name_hint">Add meg az esemény nevét…</string>
+    <string name="event_desc_hint">Miről szól az esemény?</string>
+    <string name="event_date_hint">Válassz egy dátumot…</string>
+    <string name="event_venue_hint">Hol lesz az esemény?</string>
+    <string name="event_date_set">Dátum</string>
+    <string name="event_time_set">Időpont</string>
     <string name="event_image_select">Kép kiválasztása…</string>
-    <string name="event_image">Event image</string>
+    <string name="event_create_button">Létrehozás</string>
+    <string name="event_create_waiting">Létrehozás…</string>
+    <string name="event_created">Kész!</string>
+
+    <string name="event_date_add">Más időpont</string>
+
     <string name="event_accepted">Elfogadva!</string>
     <string name="event_not_accepted">Ott leszek!</string>
     <string name="event_accept_waiting">Várj</string>
-    <string name="event_create_waiting">Létrehozás…</string>
-    <string name="date_create_waiting">Hozzáadás…</string>
-    <string name="event_created">Kész!</string>
-    <string name="event_another_date_button">Más időpont</string>
-    <string name="event_add_date_button">Új időpont</string>
+
+    <string name="date_add_button">Új időpont</string>
     <string name="date_add_button_desc">Plus sign on add date button</string>
     <string name="date_add_button_arrow_desc">Down arrow on add date button</string>
+    <string name="date_create_button">Hozzáadás</string>
+    <string name="date_create_waiting">Hozzáadás…</string>
+
+    <string name="register_title">Regisztráció</string>
+    <string name="register_email_hint">Email cím</string>
+    <string name="register_password_hint">Jelszó</string>
+    <string name="register_name_hint">Név</string>
+    <string name="register_already_registered">Már regisztráltál?\nKattints a belépéshez</string>
+    <string name="register_create_waiting">Létrehozás…</string>
+    <string name="register_created">Kész!</string>
 </resources>

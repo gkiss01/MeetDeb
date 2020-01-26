@@ -20,7 +20,8 @@ enum class TargetVar {
     VAR_GET_EVENTS, VAR_GET_EVENT, VAR_CREATE_EVENT,
     VAR_CREATE_PARTICIPANT, VAR_DELETE_PARTICIPANT,
     VAR_GET_DATES, VAR_CREATE_DATE,
-    VAR_CREATE_VOTE
+    VAR_CREATE_VOTE,
+    VAR_CREATE_USER
 }
 
 enum class NavigationCode {
@@ -54,6 +55,9 @@ interface WebApiService {
 
     @GET("dates/{eventId}")
     fun getDatesAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): Deferred<GenericResponse>
+
+    @POST("users")
+    fun createUserAsync(@Body user: RequestBody): Deferred<GenericResponse>
 
     @Multipart
     @POST("events")

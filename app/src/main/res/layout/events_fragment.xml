@@ -47,7 +47,7 @@
                 app:fab_colorPressed="@color/colorFabMiniPressed"
                 app:fab_icon="@drawable/ic_add_pink"
                 app:fab_size="mini"
-                app:fab_title="@string/new_event_button" />
+                app:fab_title="@string/event_add_button" />
         </com.getbase.floatingactionbutton.FloatingActionsMenu>
     </RelativeLayout>
 </layout>

@@ -35,7 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:hint="@string/event_labels_hint"
+                android:hint="@string/event_desc_hint"
                 android:importantForAutofill="no"
                 android:inputType="textMultiLine"
                 android:maxLines="15"
@@ -103,7 +103,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:adjustViewBounds="true"
-                android:contentDescription="@string/event_image"
+                android:contentDescription="@string/event_image_desc"
                 android:src="@drawable/placeholder" />
 
             <Button
