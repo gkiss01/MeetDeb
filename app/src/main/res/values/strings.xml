@@ -41,4 +41,11 @@
     <string name="register_already_registered">Már regisztráltál?\nKattints a belépéshez</string>
     <string name="register_create_waiting">Létrehozás…</string>
     <string name="register_created">Kész!</string>
+
+    <string name="login_title">Bejelentkezés</string>
+    <string name="login_not_registered">Még nem regisztráltál?\nKattints a regisztráláshoz</string>
+    <string name="login_waiting">Belépés…</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

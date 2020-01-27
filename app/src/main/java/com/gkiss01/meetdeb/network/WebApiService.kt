@@ -21,15 +21,47 @@ enum class TargetVar {
     VAR_CREATE_PARTICIPANT, VAR_DELETE_PARTICIPANT,
     VAR_GET_DATES, VAR_CREATE_DATE,
     VAR_CREATE_VOTE,
-    VAR_CREATE_USER
+    VAR_CREATE_USER, VAR_CHECK_USER
 }
 
 enum class NavigationCode {
-    NAVIGATE_TO_EVENTS_FRAGMENT, LOAD_MORE_HAS_ENDED, LOAD_VOTES_HAS_ENDED
+    NAVIGATE_TO_EVENTS_FRAGMENT,
+    NAVIGATE_TO_LOGIN_FRAGMENT,
+    LOAD_MORE_HAS_ENDED,
+    LOAD_VOTES_HAS_ENDED
 }
 
-enum class ErrorCode {
-    ERROR_NO_EVENTS_FOUND, ERROR_DATE_CREATED
+enum class ErrorCodes {
+    USER_DISABLED_OR_NOT_VALID,
+    ACCESS_DENIED,
+    BAD_REQUEST_FORMAT,
+    UNKNOWN,
+
+    USER_NOT_FOUND,
+    NO_USERS_FOUND,
+    CONFIRMATION_TOKEN_NOT_FOUND,
+    USER_ALREADY_VERIFIED,
+    EMAIL_ALREADY_IN_USE,
+
+    EVENT_NOT_FOUND,
+    NO_EVENTS_FOUND,
+    PARTICIPANT_NOT_FOUND,
+    NO_PARTICIPANTS_FOUND,
+
+    PARTICIPANT_ALREADY_CREATED,
+    DATE_NOT_FOUND,
+    NO_DATES_FOUND,
+    DATE_ALREADY_CREATED,
+
+    VOTE_NOT_FOUND,
+    VOTE_ALREADY_CREATED,
+
+    FILE_NOT_FOUND,
+    FILENAME_INVALID,
+    COULD_NOT_CONVERT_IMAGE,
+    FILE_SIZE_LIMIT_EXCEEDED,
+    UPLOAD_FAILED,
+    COULD_NOT_CREATE_DIRECTORY;
 }
 
 val moshi = Moshi.Builder()
@@ -47,6 +79,9 @@ private val retrofit = Retrofit.Builder()
     .build()
 
 interface WebApiService {
+    @GET("users/check")
+    fun checkUserAsync(@Header("Authorization") auth: String): Deferred<GenericResponse>
+
     @GET("events/{eventId}")
     fun getEventAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): Deferred<GenericResponse>
 

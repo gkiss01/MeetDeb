@@ -1,5 +1,6 @@
 package com.gkiss01.meetdeb
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -8,7 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import com.gkiss01.meetdeb.data.DateList
 import com.gkiss01.meetdeb.data.EventList
 import com.gkiss01.meetdeb.data.GenericResponse
-import com.gkiss01.meetdeb.network.ErrorCode
+import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.NavigationCode
 import com.gkiss01.meetdeb.network.TargetVar
 import com.gkiss01.meetdeb.network.WebApi
@@ -24,11 +25,15 @@ import java.net.SocketTimeoutException
 
 class MainActivity : AppCompatActivity() {
 
-    private val basic = Credentials.basic("gergokiss04@gmail.com", "asdasdasd")
+    private lateinit var basic: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val sharedPref = this.getSharedPreferences("BASIC_AUTH_PREFS", Context.MODE_PRIVATE)
+        basic = Credentials.basic(sharedPref.getString("OPTION_EMAIL", "unknown")!!, sharedPref.getString("OPTION_PASSWORD", "unknown")!!)
+        checkUser(basic)
     }
 
     companion object {
@@ -37,6 +42,16 @@ class MainActivity : AppCompatActivity() {
 
     init {
         instance = this
+    }
+
+    fun updatePrefs(email: String, password: String) {
+        val sharedPref = this.getSharedPreferences("BASIC_AUTH_PREFS", Context.MODE_PRIVATE)
+        sharedPref.edit().putString("OPTION_EMAIL", email).putString("OPTION_PASSWORD", password).apply()
+        basic = Credentials.basic(email, password)
+    }
+
+    fun checkUser(basic: String) {
+        makeRequest(WebApi.retrofitService.checkUserAsync(basic), TargetVar.VAR_CHECK_USER)
     }
 
     fun getEvent(eventId: Long) {
@@ -81,13 +96,13 @@ class MainActivity : AppCompatActivity() {
                 if (!listResult.error) {
                     when (targetVar) {
                         TargetVar.VAR_GET_EVENTS -> EventBus.getDefault().post(EventList(listResult.events!!))
-                        TargetVar.VAR_CREATE_EVENT -> EventBus.getDefault().post(NavigationCode.NAVIGATE_TO_EVENTS_FRAGMENT)
+                        TargetVar.VAR_CREATE_EVENT, TargetVar.VAR_CHECK_USER -> EventBus.getDefault().post(NavigationCode.NAVIGATE_TO_EVENTS_FRAGMENT)
                         TargetVar.VAR_CREATE_PARTICIPANT, TargetVar.VAR_DELETE_PARTICIPANT, TargetVar.VAR_GET_EVENT -> EventBus.getDefault().post(listResult.event)
                         TargetVar.VAR_GET_DATES, TargetVar.VAR_CREATE_DATE, TargetVar.VAR_CREATE_VOTE -> EventBus.getDefault().post(DateList(listResult.dates ?: emptyList()))
-                        TargetVar.VAR_CREATE_USER -> EventBus.getDefault().post(listResult.user!!)
+                        TargetVar.VAR_CREATE_USER -> EventBus.getDefault().post(NavigationCode.NAVIGATE_TO_LOGIN_FRAGMENT)
                     }
                 }
-                else handleResponseErrors(listResult.errors!!)
+                else handleResponseErrors(listResult.errorCode!!, listResult.errors!!)
             }
             catch (e: Exception) {
                 handleErrors(e)
@@ -106,14 +121,13 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this, errors, Toast.LENGTH_LONG).show()
     }
 
-    private fun handleResponseErrors(errors: List<String>) {
+    private fun handleResponseErrors(errorCode: ErrorCodes, errors: List<String>) {
         var errorsMsg = ""
         Log.d("MainActivityApiCall", "Failure: ${errors.size} errors:")
+
+        EventBus.getDefault().post(errorCode)
         errors.forEachIndexed { index, e  ->
             run {
-                if (e == "No events found!") EventBus.getDefault().post(ErrorCode.ERROR_NO_EVENTS_FOUND)
-                else if (e == "Date is already created!") EventBus.getDefault().post(ErrorCode.ERROR_DATE_CREATED)
-
                 Log.d("MainActivityApiCall", e)
                 errorsMsg = errorsMsg.plus(if (index == 0) "" else "\n").plus(e)
             }

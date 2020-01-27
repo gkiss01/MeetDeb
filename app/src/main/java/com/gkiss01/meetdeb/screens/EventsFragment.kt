@@ -20,7 +20,7 @@ import com.gkiss01.meetdeb.data.Event
 import com.gkiss01.meetdeb.data.EventList
 import com.gkiss01.meetdeb.data.UpdateEventRequest
 import com.gkiss01.meetdeb.databinding.EventsFragmentBinding
-import com.gkiss01.meetdeb.network.ErrorCode
+import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.NavigationCode
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -63,8 +63,8 @@ class EventsFragment : Fragment() {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onErrorReceived(errorCode: ErrorCode) {
-        if (errorCode == ErrorCode.ERROR_NO_EVENTS_FOUND) {
+    fun onErrorReceived(errorCode: ErrorCodes) {
+        if (errorCode == ErrorCodes.NO_EVENTS_FOUND) {
             viewAdapter.removeLoaderFromList()
         }
     }

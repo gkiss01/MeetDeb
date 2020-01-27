@@ -22,7 +22,7 @@ import com.gkiss01.meetdeb.adapter.DateViewHolder
 import com.gkiss01.meetdeb.data.DateList
 import com.gkiss01.meetdeb.data.UpdateEventRequest
 import com.gkiss01.meetdeb.databinding.DatesFragmentBinding
-import com.gkiss01.meetdeb.network.ErrorCode
+import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.NavigationCode
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -52,8 +52,8 @@ class DatesDialogFragment : DialogFragment() {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onErrorReceived(errorCode: ErrorCode) {
-        if (errorCode == ErrorCode.ERROR_DATE_CREATED) {
+    fun onErrorReceived(errorCode: ErrorCodes) {
+        if (errorCode == ErrorCodes.DATE_ALREADY_CREATED) {
             val view = binding.datesRecyclerView.findViewHolderForAdapterPosition(viewModel.dates.value!!.size) as AdditionViewHolder
             view.clearData()
         }
