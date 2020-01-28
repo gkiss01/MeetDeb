@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -25,6 +26,7 @@ import com.gkiss01.meetdeb.network.NavigationCode
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import kotlin.system.exitProcess
 
 class EventsFragment : Fragment() {
 
@@ -74,6 +76,15 @@ class EventsFragment : Fragment() {
         if (navigationCode == NavigationCode.LOAD_MORE_HAS_ENDED) {
             viewModel.isMoreLoading.value = false
             binding.swipeRefreshLayout.isRefreshing = false
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            requireActivity().finishAffinity()
+            exitProcess(0)
         }
     }
 

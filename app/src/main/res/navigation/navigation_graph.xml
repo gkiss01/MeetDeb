@@ -22,14 +22,13 @@
         tools:layout="@layout/create_event_fragment">
         <action
             android:id="@+id/action_createEventFragment_to_eventsFragment"
-            app:destination="@id/eventsFragment"
-            app:popUpTo="@+id/eventsFragment" />
+            app:destination="@id/eventsFragment" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
         android:name="com.gkiss01.meetdeb.screens.RegisterFragment"
         android:label="RegisterFragment"
-        tools:layout="@layout/register_fragment" >
+        tools:layout="@layout/register_fragment">
         <action
             android:id="@+id/action_registerFragment_to_loginFragment"
             app:destination="@id/loginFragment"
@@ -39,23 +38,21 @@
         android:id="@+id/loginFragment"
         android:name="com.gkiss01.meetdeb.screens.LoginFragment"
         android:label="LoginFragment"
-        tools:layout="@layout/login_fragment" >
+        tools:layout="@layout/login_fragment">
         <action
             android:id="@+id/action_loginFragment_to_registerFragment"
             app:destination="@id/registerFragment"
             app:popUpTo="@+id/registerFragment" />
         <action
             android:id="@+id/action_loginFragment_to_eventsFragment"
-            app:destination="@id/eventsFragment"
-            app:popUpTo="@+id/loadingFragment"
-            app:popUpToInclusive="true" />
+            app:destination="@+id/eventsFragment"></action>
     </fragment>
     <fragment
         android:id="@+id/loadingFragment"
         android:name="com.gkiss01.meetdeb.screens.LoadingFragment"
         android:label="LoadingFragment"
-        tools:layout="@layout/loading_fragment"
-        app:startDestination="@id/action_loadingFragment_to_registerFragment">
+        app:startDestination="@id/action_loadingFragment_to_registerFragment"
+        tools:layout="@layout/loading_fragment">
         <action
             android:id="@+id/action_loadingFragment_to_registerFragment"
             app:destination="@id/registerFragment"
@@ -63,8 +60,6 @@
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_loadingFragment_to_eventsFragment"
-            app:destination="@id/eventsFragment"
-            app:popUpTo="@+id/loadingFragment"
-            app:popUpToInclusive="true" />
+            app:destination="@id/eventsFragment" />
     </fragment>
 </navigation>
