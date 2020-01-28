@@ -8,7 +8,7 @@ import androidx.activity.addCallback
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -93,7 +93,7 @@ class EventsFragment : Fragment() {
         savedInstanceState: Bundle?): View? {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.events_fragment, container, false)
-        viewModel = ViewModelProviders.of(this).get(EventsViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(EventsViewModel::class.java)
 
         binding.addActionButton.setOnClickListener{ run {
             val action = EventsFragmentDirections.actionEventsFragmentToCreateEventFragment()

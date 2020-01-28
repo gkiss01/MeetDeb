@@ -11,7 +11,7 @@ import android.widget.FrameLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.gkiss01.meetdeb.R
@@ -76,7 +76,7 @@ class DatesDialogFragment : DialogFragment() {
         adapterPosition = arguments!!.getInt(EXTRA_ADAPTER_POSITION)
 
         binding = DataBindingUtil.inflate(inflater, R.layout.dates_fragment, container, false)
-        viewModel = ViewModelProviders.of(this).get(DatesDialogViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(DatesDialogViewModel::class.java)
 
         val viewAdapter = DateEntryAdapter(eventId, AdapterClickListener { position ->
             val view = binding.datesRecyclerView.findViewHolderForAdapterPosition(position) as DateViewHolder

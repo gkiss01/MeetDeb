@@ -20,7 +20,7 @@ import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.hideProgress
@@ -75,7 +75,7 @@ class CreateEventFragment : Fragment() {
 
         val application = requireNotNull(this.activity).application
         val viewModelFactory = CreateEventViewModelFactory(application)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(CreateEventViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(CreateEventViewModel::class.java)
 
         binding.viewmodel = viewModel
         binding.createButton.attachTextChangeAnimator()
