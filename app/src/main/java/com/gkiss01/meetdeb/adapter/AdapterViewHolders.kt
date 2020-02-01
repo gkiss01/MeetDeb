@@ -3,6 +3,7 @@ package com.gkiss01.meetdeb.adapter
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewAnimationUtils
@@ -179,6 +180,8 @@ class EventViewHolder(private val binding: EventsListItemBinding): RecyclerView.
     var eventVoted = false
     private var showDetails = false
 
+    private lateinit var drawable: Drawable
+
     fun bind(item: Event, detailsClickListener: AdapterClickListener, joinClickListener: AdapterClickListener, anotherDateClickListener: AdapterClickListener) {
         binding.event = item
         binding.descButton.setOnClickListener {
@@ -231,6 +234,8 @@ class EventViewHolder(private val binding: EventsListItemBinding): RecyclerView.
             anim.duration = 400L
             binding.eventDetails.visibility = View.VISIBLE
             binding.eventLabel.visibility = View.INVISIBLE
+
+            drawable = binding.eventImage.drawable
             GaussianBlur.with(binding.eventImage.context).put(binding.eventImage.drawable, binding.eventImage)
 
             anim.start()
@@ -242,10 +247,7 @@ class EventViewHolder(private val binding: EventsListItemBinding): RecyclerView.
             anim.addListener(onEnd = {
                 binding.eventDetails.visibility = View.GONE
                 binding.eventLabel.visibility = View.VISIBLE
-                Picasso.get()
-                    .load("$BASE_URL/images/$eventId")
-                    .placeholder(R.drawable.placeholder)
-                    .into(binding.eventImage)
+                binding.eventImage.setImageDrawable(drawable)
             })
 
             anim.start()
