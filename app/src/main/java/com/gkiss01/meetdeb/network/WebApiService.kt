@@ -64,7 +64,7 @@ enum class ErrorCodes {
     COULD_NOT_CREATE_DIRECTORY;
 }
 
-val moshi = Moshi.Builder()
+val moshi: Moshi = Moshi.Builder()
     .add(OffsetDateTimeAdapter())
     .add(KotlinJsonAdapterFactory())
     .build()

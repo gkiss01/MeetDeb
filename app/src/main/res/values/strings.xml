@@ -13,7 +13,6 @@
     <string name="event_add_button">Új esemény</string>
     <string name="event_name_hint">Add meg az esemény nevét…</string>
     <string name="event_desc_hint">Miről szól az esemény?</string>
-    <string name="event_date_hint">Válassz egy dátumot…</string>
     <string name="event_venue_hint">Hol lesz az esemény?</string>
     <string name="event_date_set">Dátum</string>
     <string name="event_time_set">Időpont</string>
@@ -45,7 +44,4 @@
     <string name="login_title">Bejelentkezés</string>
     <string name="login_not_registered">Még nem regisztráltál?\nKattints a regisztráláshoz</string>
     <string name="login_waiting">Belépés…</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

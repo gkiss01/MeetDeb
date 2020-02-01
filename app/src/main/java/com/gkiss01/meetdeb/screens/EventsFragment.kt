@@ -119,7 +119,7 @@ class EventsFragment : Fragment() {
             AdapterClickListener { position ->
                 val view = binding.eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventViewHolder
                 val datesDialogFragment = DatesDialogFragment.newInstance(view.eventId, position)
-                datesDialogFragment.show(requireFragmentManager(), "datesDialogFragment")
+                datesDialogFragment.show(parentFragmentManager, "datesDialogFragment")
                 MainActivity.instance.showDates(view.eventId)
         })
 
@@ -131,6 +131,8 @@ class EventsFragment : Fragment() {
 
         binding.eventsRecyclerView.adapter = viewAdapter
         binding.eventsRecyclerView.layoutManager = layoutManager
+        binding.eventsRecyclerView.setHasFixedSize(true)
+        binding.eventsRecyclerView.setItemViewCacheSize(20)
 
         binding.eventsRecyclerView.addOnScrollListener(object: RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
