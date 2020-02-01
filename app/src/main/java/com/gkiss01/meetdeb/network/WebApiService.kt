@@ -27,6 +27,7 @@ enum class TargetVar {
 enum class NavigationCode {
     NAVIGATE_TO_EVENTS_FRAGMENT,
     NAVIGATE_TO_LOGIN_FRAGMENT,
+    NAVIGATE_TO_IMAGE_PICKER,
     LOAD_MORE_HAS_ENDED,
     LOAD_VOTES_HAS_ENDED
 }
