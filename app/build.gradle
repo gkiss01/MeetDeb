@@ -98,9 +98,6 @@ dependencies {
     //Matisse
     implementation 'com.zhihu.android:matisse:0.5.3-beta3'
 
-    //GaussianBlur
-    implementation 'com.github.jrvansuita:GaussianBlur:1.0.3'
-
     //Compressor
     implementation 'id.zelory:compressor:2.1.0'
 

@@ -76,4 +76,8 @@ class EventEntryAdapter(private val detailsClickListener: AdapterClickListener,
             EventBus.getDefault().post(NavigationCode.LOAD_MORE_HAS_ENDED)
         }
     }
+
+    public override fun getItem(position: Int): DataItem {
+        return super.getItem(position)
+    }
 }

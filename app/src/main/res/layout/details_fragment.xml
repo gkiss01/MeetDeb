@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="event"
+            type="com.gkiss01.meetdeb.data.Event" />
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#ECEFF1"
+        app:cardCornerRadius="15dp"
+        tools:context=".screens.DetailsDialogFragment">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/eventDetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/userName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_name"
+                    android:drawablePadding="5dp"
+                    android:fontFamily="@font/muli_extrabold"
+                    android:text="@string/event_creator" />
+
+                <TextView
+                    android:id="@+id/userNameValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/muli"
+                    android:text="@{event.username}" />
+
+                <TextView
+                    android:id="@+id/venue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:drawableStart="@drawable/ic_venue"
+                    android:drawablePadding="5dp"
+                    android:fontFamily="@font/muli_extrabold"
+                    android:text="@string/event_venue" />
+
+                <TextView
+                    android:id="@+id/venueValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/muli"
+                    android:text="@{event.venue}" />
+
+                <TextView
+                    android:id="@+id/date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:drawableStart="@drawable/ic_date"
+                    android:drawablePadding="5dp"
+                    android:fontFamily="@font/muli_extrabold"
+                    android:text="@string/event_date" />
+
+                <TextView
+                    android:id="@+id/dateValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/muli"
+                    app:setDateFormatForEvent="@{event}" />
+
+                <TextView
+                    android:id="@+id/description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:drawableStart="@drawable/ic_description"
+                    android:drawablePadding="5dp"
+                    android:fontFamily="@font/muli_extrabold"
+                    android:text="@string/event_description" />
+
+                <TextView
+                    android:id="@+id/descriptionValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/muli"
+                    android:text="@{event.labels}" />
+
+                <TextView
+                    android:id="@+id/participants"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/muli_extrabold"
+                    app:setParticipantsFormat="@{event}" />
+            </LinearLayout>
+        </ScrollView>
+    </androidx.cardview.widget.CardView>
+</layout>

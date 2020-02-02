@@ -3,12 +3,9 @@ package com.gkiss01.meetdeb.adapter
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewAnimationUtils
 import android.view.ViewGroup
-import androidx.core.animation.addListener
 import androidx.recyclerview.widget.RecyclerView
 import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.hideProgress
@@ -22,11 +19,8 @@ import com.gkiss01.meetdeb.databinding.DatesListItemBinding
 import com.gkiss01.meetdeb.databinding.EventsListItemBinding
 import com.gkiss01.meetdeb.network.BASE_URL
 import com.squareup.picasso.Picasso
-import com.vansuita.gaussianblur.GaussianBlur
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.ZoneOffset
-import kotlin.math.hypot
-import kotlin.math.max
 
 class HeaderViewHolder(view: View): RecyclerView.ViewHolder(view) {
     companion object {
@@ -143,14 +137,13 @@ class DateViewHolder(private val binding: DatesListItemBinding): RecyclerView.Vi
     var dateId = 0L
 
     fun bind(item: Date, dateClickListener: AdapterClickListener) {
+        dateId = item.id
         binding.date = item
         binding.voteButton.setOnClickListener {
             if (!item.accepted) dateClickListener.onClick(this.adapterPosition)
         }
 
         binding.voteButton.hideProgress()
-
-        dateId = item.id
 
         binding.executePendingBindings()
     }
@@ -175,14 +168,10 @@ class DateViewHolder(private val binding: DatesListItemBinding): RecyclerView.Vi
 }
 
 class EventViewHolder(private val binding: EventsListItemBinding): RecyclerView.ViewHolder(binding.root) {
-    var eventId = 0L
-    var eventAccepted = false
-    var eventVoted = false
-    private var showDetails = false
-
-    private lateinit var drawable: Drawable
+    lateinit var event: Event
 
     fun bind(item: Event, detailsClickListener: AdapterClickListener, joinClickListener: AdapterClickListener, anotherDateClickListener: AdapterClickListener) {
+        event = item
         binding.event = item
         binding.descButton.setOnClickListener {
             detailsClickListener.onClick(this.adapterPosition)
@@ -194,8 +183,6 @@ class EventViewHolder(private val binding: EventsListItemBinding): RecyclerView.
             anotherDateClickListener.onClick(this.adapterPosition)
         }
 
-        binding.eventDetails.visibility = View.GONE
-        binding.eventLabel.visibility = View.VISIBLE
         if (item.accepted) {
             binding.acceptButton.hideProgress(R.string.event_accepted)
             binding.acceptButton.setBackgroundResource(R.drawable.event_accepted_button_background)
@@ -208,51 +195,12 @@ class EventViewHolder(private val binding: EventsListItemBinding): RecyclerView.
         binding.anotherDateButton.hideProgress(R.string.event_date_add)
         binding.anotherDateButton.setBackgroundResource(if (item.voted) R.drawable.event_accepted_button_background else 0)
 
-        eventId = item.id
-        eventAccepted = item.accepted
-        eventVoted = item.voted
-        showDetails = false
-
         Picasso.get()
-            .load("$BASE_URL/images/$eventId")
+            .load("$BASE_URL/images/${event.id}")
             .placeholder(R.drawable.placeholder)
             .into(binding.eventImage)
 
         binding.executePendingBindings()
-    }
-
-    fun showEventDetails() {
-        val cx = binding.descButton.x + binding.descButton.width / 2
-        val cy = binding.descButton.y + binding.descButton.height / 2
-
-        if (!showDetails) {
-            var finalRadius = hypot(binding.eventDetails.width.toDouble(), binding.eventDetails.height.toDouble()).toFloat()
-            if (finalRadius.equals(0f))
-                finalRadius = hypot(binding.eventImage.width.toDouble(), binding.eventImage.height.toDouble()).toFloat()
-
-            val anim = ViewAnimationUtils.createCircularReveal(binding.eventDetails, cx.toInt(), cy.toInt(), 0f, finalRadius)
-            anim.duration = 400L
-            binding.eventDetails.visibility = View.VISIBLE
-            binding.eventLabel.visibility = View.INVISIBLE
-
-            drawable = binding.eventImage.drawable
-            GaussianBlur.with(binding.eventImage.context).put(binding.eventImage.drawable, binding.eventImage)
-
-            anim.start()
-            showDetails = true
-        }
-        else {
-            val initialRadius = max(binding.eventDetails.width.toDouble(), binding.eventDetails.height.toDouble()).toFloat()
-            val anim = ViewAnimationUtils.createCircularReveal(binding.eventDetails, cx.toInt(), cy.toInt(), initialRadius, 0f)
-            anim.addListener(onEnd = {
-                binding.eventDetails.visibility = View.GONE
-                binding.eventLabel.visibility = View.VISIBLE
-                binding.eventImage.setImageDrawable(drawable)
-            })
-
-            anim.start()
-            showDetails = false
-        }
     }
 
     fun showEventJoinAnimation() {

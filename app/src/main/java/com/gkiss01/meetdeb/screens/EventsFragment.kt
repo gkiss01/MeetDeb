@@ -58,7 +58,7 @@ class EventsFragment : Fragment() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateRequestReceived(updateEventRequest: UpdateEventRequest) {
         val view = binding.eventsRecyclerView.findViewHolderForAdapterPosition(updateEventRequest.adapterPosition) as EventViewHolder
-        if (!view.eventVoted) {
+        if (!view.event.voted) {
             MainActivity.instance.getEvent(updateEventRequest.eventId)
             view.showEventVoteAnimation()
         }
@@ -109,18 +109,19 @@ class EventsFragment : Fragment() {
 
         viewAdapter = EventEntryAdapter(AdapterClickListener { position ->
                 val view = binding.eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventViewHolder
-                view.showEventDetails()
+                val detailsDialogFragment = DetailsDialogFragment.newInstance(view.event)
+                detailsDialogFragment.show(childFragmentManager, "detailsDialogFragment")
             },
             AdapterClickListener { position ->
                 val view = binding.eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventViewHolder
-                MainActivity.instance.modifyParticipation(view.eventId, view.eventAccepted)
+                MainActivity.instance.modifyParticipation(view.event.id, view.event.accepted)
                 view.showEventJoinAnimation()
             },
             AdapterClickListener { position ->
                 val view = binding.eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventViewHolder
-                val datesDialogFragment = DatesDialogFragment.newInstance(view.eventId, position)
-                datesDialogFragment.show(parentFragmentManager, "datesDialogFragment")
-                MainActivity.instance.showDates(view.eventId)
+                val datesDialogFragment = DatesDialogFragment.newInstance(view.event.id, position)
+                datesDialogFragment.show(childFragmentManager, "datesDialogFragment")
+                MainActivity.instance.showDates(view.event.id)
         })
 
         viewModel.events.observe(this, Observer { events ->

@@ -26,7 +26,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_toEndOf="@id/plusSign"
-            android:fontFamily="sans-serif-condensed-medium"
             android:text="@string/date_add_button"
             android:textAllCaps="false"
             android:textColor="#FFFFFF"

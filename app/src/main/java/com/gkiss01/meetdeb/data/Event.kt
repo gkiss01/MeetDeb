@@ -1,6 +1,7 @@
 package com.gkiss01.meetdeb.data
 
 import org.threeten.bp.OffsetDateTime
+import java.io.Serializable
 
 data class Event(
     var id: Long,
@@ -20,4 +21,4 @@ data class Event(
 
     val accepted: Boolean,
 
-    val voted: Boolean)
+    val voted: Boolean): Serializable
