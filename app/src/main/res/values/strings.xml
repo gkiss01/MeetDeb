@@ -8,6 +8,7 @@
     <string name="event_date">Időpont:</string>
     <string name="event_description">Leírás:</string>
     <string name="event_desc_button">Esemény leírása</string>
+    <string name="event_participants_button">Megnézem!</string>
     <string name="event_image_desc">Event image</string>
 
     <string name="event_add_button">Új esemény</string>
@@ -20,6 +21,8 @@
     <string name="event_create_button">Létrehozás</string>
     <string name="event_create_waiting">Létrehozás…</string>
     <string name="event_created">Kész!</string>
+
+    <string name="participant_image_desc">Profile image</string>
 
     <string name="event_date_add">Más időpont</string>
 

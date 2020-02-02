@@ -18,7 +18,7 @@ const val BASE_URL = "http://172.17.172.157:8080"
 
 enum class TargetVar {
     VAR_GET_EVENTS, VAR_GET_EVENT, VAR_CREATE_EVENT,
-    VAR_CREATE_PARTICIPANT, VAR_DELETE_PARTICIPANT,
+    VAR_GET_PARTICIPANTS, VAR_CREATE_PARTICIPANT, VAR_DELETE_PARTICIPANT,
     VAR_GET_DATES, VAR_CREATE_DATE,
     VAR_CREATE_VOTE,
     VAR_CREATE_USER, VAR_CHECK_USER
@@ -91,6 +91,9 @@ interface WebApiService {
 
     @GET("dates/{eventId}")
     fun getDatesAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): Deferred<GenericResponse>
+
+    @GET("participants/{eventId}")
+    fun getParticipantsAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): Deferred<GenericResponse>
 
     @POST("users")
     fun createUserAsync(@Body user: RequestBody): Deferred<GenericResponse>

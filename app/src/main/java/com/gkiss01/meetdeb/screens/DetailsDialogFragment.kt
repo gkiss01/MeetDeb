@@ -4,12 +4,14 @@ import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
+import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.Event
 import com.gkiss01.meetdeb.databinding.DetailsFragmentBinding
@@ -29,6 +31,11 @@ class DetailsDialogFragment : DialogFragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.details_fragment, container, false)
 
         binding.event = event
+        binding.participantsCheck.setOnClickListener {
+            val participantsDialogFragment = ParticipantsDialogFragment()
+            participantsDialogFragment.show(childFragmentManager, "participantsDialogFragment")
+            MainActivity.instance.showParticipants(event.id)
+        }
 
         return binding.root
     }

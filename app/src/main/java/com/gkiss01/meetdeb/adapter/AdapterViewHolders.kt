@@ -14,9 +14,11 @@ import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.Date
 import com.gkiss01.meetdeb.data.Event
+import com.gkiss01.meetdeb.data.Participant
 import com.gkiss01.meetdeb.databinding.DatesListAdditionBinding
 import com.gkiss01.meetdeb.databinding.DatesListItemBinding
 import com.gkiss01.meetdeb.databinding.EventsListItemBinding
+import com.gkiss01.meetdeb.databinding.ParticipantsListItemBinding
 import com.gkiss01.meetdeb.network.BASE_URL
 import com.squareup.picasso.Picasso
 import org.threeten.bp.OffsetDateTime
@@ -163,6 +165,20 @@ class DateViewHolder(private val binding: DatesListItemBinding): RecyclerView.Vi
             val layoutInflater = LayoutInflater.from(parent.context)
             val binding = DatesListItemBinding.inflate(layoutInflater, parent, false)
             return DateViewHolder(binding)
+        }
+    }
+}
+
+class ParticipantViewHolder(private val binding: ParticipantsListItemBinding): RecyclerView.ViewHolder(binding.root) {
+    fun bind(item: Participant) {
+        binding.name.text = item.username
+    }
+
+    companion object {
+        fun from(parent: ViewGroup): ParticipantViewHolder {
+            val layoutInflater = LayoutInflater.from(parent.context)
+            val binding = ParticipantsListItemBinding.inflate(layoutInflater, parent, false)
+            return ParticipantViewHolder(binding)
         }
     }
 }

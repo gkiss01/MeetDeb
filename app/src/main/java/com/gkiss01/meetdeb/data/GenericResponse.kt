@@ -15,5 +15,7 @@ data class GenericResponse(
 
     val events: List<Event>?,
 
-    val dates: List<Date>?
+    val dates: List<Date>?,
+
+    val participants: List<Participant>?
 )

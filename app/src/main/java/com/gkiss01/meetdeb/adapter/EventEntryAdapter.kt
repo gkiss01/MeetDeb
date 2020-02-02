@@ -31,6 +31,10 @@ class EventEntryAdapter(private val detailsClickListener: AdapterClickListener,
         }
     }
 
+    override fun getItemId(position: Int): Long {
+        return currentList[position].id.hashCode().toLong()
+    }
+
     fun updateDataSourceByEvent(event: Event) {
         adapterScope.launch {
             val submittedList= currentList.map { if (it.id == event.id) DataItem.EventItem(event) else it }.toMutableList()

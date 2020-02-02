@@ -9,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import com.gkiss01.meetdeb.data.DateList
 import com.gkiss01.meetdeb.data.EventList
 import com.gkiss01.meetdeb.data.GenericResponse
+import com.gkiss01.meetdeb.data.ParticipantList
 import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.NavigationCode
 import com.gkiss01.meetdeb.network.TargetVar
@@ -70,6 +71,10 @@ class MainActivity : AppCompatActivity() {
         makeRequest(WebApi.retrofitService.getDatesAsync(basic, eventId), TargetVar.VAR_GET_DATES)
     }
 
+    fun showParticipants(eventId: Long) {
+        makeRequest(WebApi.retrofitService.getParticipantsAsync(basic, eventId), TargetVar.VAR_GET_PARTICIPANTS)
+    }
+
     fun createDate(eventId: Long, date: OffsetDateTime) {
         makeRequest(WebApi.retrofitService.createDateAsync(basic, eventId, date), TargetVar.VAR_CREATE_DATE)
     }
@@ -100,6 +105,7 @@ class MainActivity : AppCompatActivity() {
                         TargetVar.VAR_CREATE_PARTICIPANT, TargetVar.VAR_DELETE_PARTICIPANT, TargetVar.VAR_GET_EVENT -> EventBus.getDefault().post(listResult.event)
                         TargetVar.VAR_GET_DATES, TargetVar.VAR_CREATE_DATE, TargetVar.VAR_CREATE_VOTE -> EventBus.getDefault().post(DateList(listResult.dates ?: emptyList()))
                         TargetVar.VAR_CREATE_USER -> EventBus.getDefault().post(NavigationCode.NAVIGATE_TO_LOGIN_FRAGMENT)
+                        TargetVar.VAR_GET_PARTICIPANTS -> EventBus.getDefault().post(ParticipantList(listResult.participants!!))
                     }
                 }
                 else handleResponseErrors(listResult.errorCode!!, listResult.errors!!)

@@ -95,13 +95,28 @@
                     android:fontFamily="@font/muli"
                     android:text="@{event.labels}" />
 
-                <TextView
-                    android:id="@+id/participants"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:fontFamily="@font/muli_extrabold"
-                    app:setParticipantsFormat="@{event}" />
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/participants"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/muli_extrabold"
+                        app:setParticipantsFormat="@{event}" />
+
+                    <TextView
+                        android:id="@+id/participantsCheck"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:drawableStart="@drawable/ic_participant"
+                        android:text="@string/event_participants_button"
+                        android:textColor="#445963" />
+                </LinearLayout>
             </LinearLayout>
         </ScrollView>
     </androidx.cardview.widget.CardView>

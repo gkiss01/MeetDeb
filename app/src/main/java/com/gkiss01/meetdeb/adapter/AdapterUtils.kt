@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.recyclerview.widget.DiffUtil
 import com.gkiss01.meetdeb.data.Date
 import com.gkiss01.meetdeb.data.Event
+import com.gkiss01.meetdeb.data.Participant
 
 class AdapterDiffCallback: DiffUtil.ItemCallback<DataItem>() {
     override fun areItemsTheSame(oldItem: DataItem, newItem: DataItem): Boolean {
@@ -29,6 +30,10 @@ sealed class DataItem {
 
     data class DateItem(val date: Date): DataItem() {
         override val id = date.id
+    }
+
+    data class ParticipantItem(val participant: Participant): DataItem() {
+        override val id = participant.userId
     }
 
     object Header: DataItem() {

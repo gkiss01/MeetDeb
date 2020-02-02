@@ -123,6 +123,7 @@ class EventsFragment : Fragment() {
                 datesDialogFragment.show(childFragmentManager, "datesDialogFragment")
                 MainActivity.instance.showDates(view.event.id)
         })
+        viewAdapter.setHasStableIds(true)
 
         viewModel.events.observe(this, Observer { events ->
             events?.let { viewAdapter.addHeaderAndSubmitList(it) }
