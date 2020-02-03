@@ -34,6 +34,8 @@ class EventsFragment : Fragment() {
     private lateinit var viewModel: EventsViewModel
     private lateinit var viewAdapter: EventEntryAdapter
 
+    private var selectedEventPosition = -1
+
     override fun onStart() {
         super.onStart()
         EventBus.getDefault().register(this)
@@ -61,13 +63,19 @@ class EventsFragment : Fragment() {
         if (!view.event.voted) {
             MainActivity.instance.getEvent(updateEventRequest.eventId)
             view.showEventVoteAnimation()
+            selectedEventPosition = updateEventRequest.adapterPosition
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onErrorReceived(errorCode: ErrorCodes) {
-        if (errorCode == ErrorCodes.NO_EVENTS_FOUND) {
-            viewAdapter.removeLoaderFromList()
+        if (errorCode == ErrorCodes.UNKNOWN || errorCode == ErrorCodes.NO_EVENTS_FOUND) {
+            if (selectedEventPosition != -1) {
+                viewAdapter.notifyItemChanged(selectedEventPosition)
+                selectedEventPosition = -1
+            }
+            if (viewModel.isMoreLoading.value == true) viewAdapter.removeLoaderFromList()
+            binding.swipeRefreshLayout.isRefreshing = false
         }
     }
 
@@ -116,6 +124,7 @@ class EventsFragment : Fragment() {
                 val view = binding.eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventViewHolder
                 MainActivity.instance.modifyParticipation(view.event.id, view.event.accepted)
                 view.showEventJoinAnimation()
+                selectedEventPosition = position
             },
             AdapterClickListener { position ->
                 val view = binding.eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventViewHolder

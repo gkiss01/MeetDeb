@@ -23,6 +23,7 @@ class AdapterClickListener(val clickListener: (position: Int) -> Unit) {
 
 sealed class DataItem {
     abstract val id: Long
+    open val type: Types = Types.DATA_ITEM_TYPE_UNKNOWN
 
     data class EventItem(val event: Event): DataItem() {
         override val id = event.id
@@ -42,9 +43,15 @@ sealed class DataItem {
 
     object Loader: DataItem() {
         override val id = Long.MIN_VALUE + 1
+        override val type = Types.DATA_ITEM_TYPE_LOADER
     }
 
     object Addition: DataItem() {
         override val id = Long.MIN_VALUE + 2
+    }
+
+    enum class Types {
+        DATA_ITEM_TYPE_UNKNOWN,
+        DATA_ITEM_TYPE_LOADER
     }
 }

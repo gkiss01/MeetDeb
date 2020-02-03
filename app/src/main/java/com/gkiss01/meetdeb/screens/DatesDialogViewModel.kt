@@ -18,7 +18,6 @@ class DatesDialogViewModel : ViewModel() {
     fun addVote(dateId: Long) {
         if (isLoading.value!!) return
         isLoading.value = true
-        votesChanged.value = true
         MainActivity.instance.addVote(dateId)
     }
 }

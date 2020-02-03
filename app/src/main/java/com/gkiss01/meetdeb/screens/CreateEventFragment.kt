@@ -27,6 +27,7 @@ import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.databinding.CreateEventFragmentBinding
+import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.NavigationCode
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
@@ -54,6 +55,13 @@ class CreateEventFragment : Fragment() {
     override fun onStop() {
         EventBus.getDefault().unregister(this)
         super.onStop()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onErrorReceived(errorCode: ErrorCodes) {
+        if (errorCode == ErrorCodes.UNKNOWN) {
+            binding.createButton.hideProgress(R.string.event_create_button)
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.hideProgress
+import com.github.razir.progressbutton.isProgressActive
 import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
@@ -123,6 +124,10 @@ class AdditionViewHolder(private val binding: DatesListAdditionBinding, private 
             binding.downArrow.animate().setDuration(200).rotation(0F)
             expanded = false
         }
+    }
+
+    fun isProgressActive(): Boolean {
+        return binding.createButton.isProgressActive()
     }
 
     companion object {

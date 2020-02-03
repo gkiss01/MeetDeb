@@ -8,6 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
+import java.util.function.Predicate
 
 class EventEntryAdapter(private val detailsClickListener: AdapterClickListener,
                         private val joinClickListener: AdapterClickListener,
@@ -59,7 +60,7 @@ class EventEntryAdapter(private val detailsClickListener: AdapterClickListener,
     fun removeLoaderFromList() {
         adapterScope.launch {
             val submittedList= currentList.toMutableList()
-            if (submittedList.size > 0) submittedList.removeAt(currentList.size - 1)
+            if (submittedList.size > 0) submittedList.removeAll { it.type == DataItem.Types.DATA_ITEM_TYPE_LOADER }
 
             withContext(Dispatchers.Main) {
                 submitList(submittedList)

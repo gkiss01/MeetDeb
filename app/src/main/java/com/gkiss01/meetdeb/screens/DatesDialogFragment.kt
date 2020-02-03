@@ -3,6 +3,7 @@ package com.gkiss01.meetdeb.screens
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,6 +33,7 @@ class DatesDialogFragment : DialogFragment() {
 
     private lateinit var binding: DatesFragmentBinding
     private lateinit var viewModel: DatesDialogViewModel
+    private lateinit var viewAdapter: DateEntryAdapter
 
     private var eventId: Long = -1L
     private var adapterPosition: Int = -1
@@ -53,15 +55,24 @@ class DatesDialogFragment : DialogFragment() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onErrorReceived(errorCode: ErrorCodes) {
-        if (errorCode == ErrorCodes.DATE_ALREADY_CREATED) {
-            val view = binding.datesRecyclerView.findViewHolderForAdapterPosition(viewModel.dates.value!!.size) as AdditionViewHolder
-            view.clearData()
+        if (errorCode == ErrorCodes.UNKNOWN || errorCode == ErrorCodes.DATE_ALREADY_CREATED) {
+            val position = binding.datesRecyclerView.layoutManager!!.childCount
+            if (position == 0) return this.dismiss()
+
+            val view = binding.datesRecyclerView.findViewHolderForAdapterPosition(binding.datesRecyclerView.layoutManager!!.childCount - 1) as AdditionViewHolder
+            if (view.isProgressActive()) view.clearData()
+            else if (viewModel.isLoading.value == false) this.dismiss()
+        }
+        if (errorCode == ErrorCodes.UNKNOWN && viewModel.isLoading.value == true) {
+            viewAdapter.notifyDataSetChanged()
+            viewModel.isLoading.value = false
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onNavigationReceived(navigationCode: NavigationCode) {
         if (navigationCode == NavigationCode.LOAD_VOTES_HAS_ENDED) {
+            if (viewModel.isLoading.value == true) viewModel.votesChanged.value = true
             viewModel.isLoading.value = false
             val view = binding.datesRecyclerView.findViewHolderForAdapterPosition(viewModel.dates.value!!.size) as AdditionViewHolder
             view.clearData(true)
@@ -78,7 +89,7 @@ class DatesDialogFragment : DialogFragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.dates_fragment, container, false)
         viewModel = ViewModelProvider(this).get(DatesDialogViewModel::class.java)
 
-        val viewAdapter = DateEntryAdapter(eventId, AdapterClickListener { position ->
+        viewAdapter = DateEntryAdapter(eventId, AdapterClickListener { position ->
             val view = binding.datesRecyclerView.findViewHolderForAdapterPosition(position) as DateViewHolder
             if (viewModel.isLoading.value!!) view.setRadioButtonUnchecked()
             else {
@@ -91,7 +102,7 @@ class DatesDialogFragment : DialogFragment() {
             viewAdapter.addLoadingAndAddition()
 
         viewModel.dates.observe(this, Observer {
-            viewAdapter.addAdditionAndSubmitList(it)
+            viewAdapter.addDatesAndAddition(it)
         })
 
         (binding.datesRecyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false

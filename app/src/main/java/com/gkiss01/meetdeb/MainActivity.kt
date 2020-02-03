@@ -117,6 +117,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun handleErrors(e: Exception) {
+        EventBus.getDefault().post(ErrorCodes.UNKNOWN)
         val errors = when (e) {
             is SocketTimeoutException -> "Connection error! (server)"
             is ConnectException -> "Connection error! (client)"
@@ -128,10 +129,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun handleResponseErrors(errorCode: ErrorCodes, errors: List<String>) {
+        EventBus.getDefault().post(errorCode)
+
         var errorsMsg = ""
         Log.d("MainActivityApiCall", "Failure: ${errors.size} errors:")
-
-        EventBus.getDefault().post(errorCode)
         errors.forEachIndexed { index, e  ->
             run {
                 Log.d("MainActivityApiCall", e)

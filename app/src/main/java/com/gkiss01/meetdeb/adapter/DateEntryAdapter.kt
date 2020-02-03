@@ -45,7 +45,7 @@ class DateEntryAdapter(private val eventId: Long, private val detailsClickListen
         }
     }
 
-    fun addAdditionAndSubmitList(list: List<Date>) {
+    fun addDatesAndAddition(list: List<Date>) {
         adapterScope.launch {
             val items =  list.map { DataItem.DateItem(it) } + listOf(DataItem.Addition)
 

@@ -16,6 +16,7 @@ import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.adapter.ParticipantEntryAdapter
 import com.gkiss01.meetdeb.data.ParticipantList
 import com.gkiss01.meetdeb.databinding.ParticipantsFragmentBinding
+import com.gkiss01.meetdeb.network.ErrorCodes
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -38,6 +39,13 @@ class ParticipantsDialogFragment : DialogFragment() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onParticipantsReceived(participants: ParticipantList) {
         viewModel.participants.value = participants.participants
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onErrorReceived(errorCode: ErrorCodes) {
+        if (errorCode == ErrorCodes.UNKNOWN || errorCode == ErrorCodes.NO_PARTICIPANTS_FOUND) {
+            this.dismiss()
+        }
     }
 
     override fun onCreateView(
