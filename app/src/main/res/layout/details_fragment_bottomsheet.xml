@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:id="@+id/dfbs_eventDetailsBottomSheet"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    app:behavior_hideable="false"
+    app:behavior_peekHeight="60dp"
+    app:layout_behavior="@string/bottom_sheet_behavior" >
+
+    <TextView
+        android:id="@+id/dfbs_userName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/ic_name"
+        android:drawablePadding="5dp"
+        android:fontFamily="@font/muli_extrabold"
+        android:text="@string/event_creator" />
+
+    <TextView
+        android:id="@+id/dfbs_userNameValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/muli"
+        android:text="@{event.username}" />
+
+    <TextView
+        android:id="@+id/dfbs_venue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:drawableStart="@drawable/ic_venue"
+        android:drawablePadding="5dp"
+        android:fontFamily="@font/muli_extrabold"
+        android:text="@string/event_venue" />
+
+    <TextView
+        android:id="@+id/dfbs_venueValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/muli"
+        android:text="@{event.venue}" />
+
+    <TextView
+        android:id="@+id/dfbs_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:drawableStart="@drawable/ic_date"
+        android:drawablePadding="5dp"
+        android:fontFamily="@font/muli_extrabold"
+        android:text="@string/event_date" />
+
+    <TextView
+        android:id="@+id/dfbs_dateValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/muli" />
+
+    <TextView
+        android:id="@+id/dfbs_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:drawableStart="@drawable/ic_description"
+        android:drawablePadding="56dp"
+        android:fontFamily="@font/muli_extrabold"
+        android:text="@string/event_description" />
+
+    <TextView
+        android:id="@+id/dfbs_descriptionValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/muli"
+        android:text="@{event.labels}" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/dfbs_participants"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/muli_extrabold" />
+
+        <TextView
+            android:id="@+id/dfbs_participantsCheck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:drawableStart="@drawable/ic_participant"
+            android:text="@string/event_participants_button"
+            android:textColor="#445963" />
+    </LinearLayout>
+</LinearLayout>

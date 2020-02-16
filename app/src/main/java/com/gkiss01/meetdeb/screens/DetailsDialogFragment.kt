@@ -1,67 +1,64 @@
 package com.gkiss01.meetdeb.screens
 
-import android.app.Dialog
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
-import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
+import com.andrefrsousa.superbottomsheet.SuperBottomSheetFragment
 import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.Event
-import com.gkiss01.meetdeb.databinding.DetailsFragmentBinding
+import kotlinx.android.synthetic.main.details_fragment_bottomsheet.*
+import org.threeten.bp.format.DateTimeFormatter
 
-class DetailsDialogFragment : DialogFragment() {
-
-    private lateinit var binding: DetailsFragmentBinding
-
-    private lateinit var event: Event
+class DetailsDialogFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.details_fragment, container, false)
+    }
 
-        event = arguments!!.getSerializable(EXTRA_EVENT) as Event
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val event = arguments!!.getSerializable("event") as Event
 
-        binding = DataBindingUtil.inflate(inflater, R.layout.details_fragment, container, false)
+        val bottomSheet = DetailsBottomSheetFragment(event)
+        bottomSheet.isCancelable = false
+        bottomSheet.show(childFragmentManager, "DetailsBottomSheetFragment")
+    }
+}
 
-        binding.event = event
-        binding.participantsCheck.setOnClickListener {
+class DetailsBottomSheetFragment(private val event: Event): SuperBottomSheetFragment() {
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        super.onCreateView(inflater, container, savedInstanceState)
+        return inflater.inflate(R.layout.details_fragment_bottomsheet, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy, HH:mm")
+
+        dfbs_userNameValue.text = event.username
+        dfbs_venueValue.text = event.venue
+        dfbs_dateValue.text = event.date.format(formatter)
+        dfbs_descriptionValue.text = event.labels
+        dfbs_participants.text = "Ott lesz ${event.participants} ember"
+
+//        Picasso.get()
+//            .load("$BASE_URL/images/${event.id}")
+//            .placeholder(R.drawable.placeholder)
+//            .into(df_eventImage)
+
+        dfbs_participantsCheck.setOnClickListener {
             val participantsDialogFragment = ParticipantsDialogFragment()
             participantsDialogFragment.show(childFragmentManager, "participantsDialogFragment")
             MainActivity.instance.showParticipants(event.id)
         }
-
-        return binding.root
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = super.onCreateDialog(savedInstanceState)
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        return dialog
-    }
+    override fun getCornerRadius() = context!!.resources.getDimension(R.dimen.bottomsheet_corner_radius)
 
-    override fun onResume() {
-        dialog!!.window!!.setLayout((resources.displayMetrics.widthPixels * 0.9).toInt(), ViewGroup.LayoutParams.WRAP_CONTENT)
-        dialog!!.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        super.onResume()
-    }
-
-    companion object {
-        private const val EXTRA_EVENT = "evt"
-
-        fun newInstance(event: Event): DetailsDialogFragment {
-            val dialogFragment = DetailsDialogFragment()
-            val args = Bundle().apply {
-                putSerializable(EXTRA_EVENT, event)
-            }
-            dialogFragment.arguments = args
-            return dialogFragment
-        }
-    }
+    override fun getStatusBarColor() = Color.RED
 }

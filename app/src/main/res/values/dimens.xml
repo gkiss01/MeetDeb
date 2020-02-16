@@ -1,3 +1,4 @@
 <resources>
     <dimen name="grid_expected_size">120dp</dimen>
+    <dimen name="bottomsheet_corner_radius">20dp</dimen>
 </resources>

@@ -8,7 +8,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
-import java.util.function.Predicate
 
 class EventEntryAdapter(private val detailsClickListener: AdapterClickListener,
                         private val joinClickListener: AdapterClickListener,

@@ -117,8 +117,8 @@ class EventsFragment : Fragment() {
 
         viewAdapter = EventEntryAdapter(AdapterClickListener { position ->
                 val view = binding.eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventViewHolder
-                val detailsDialogFragment = DetailsDialogFragment.newInstance(view.event)
-                detailsDialogFragment.show(childFragmentManager, "detailsDialogFragment")
+                val action = EventsFragmentDirections.actionEventsFragmentToDetailsDialogFragment(view.event)
+                NavHostFragment.findNavController(this).navigate(action)
             },
             AdapterClickListener { position ->
                 val view = binding.eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventViewHolder
