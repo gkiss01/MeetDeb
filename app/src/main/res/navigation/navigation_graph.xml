@@ -13,9 +13,6 @@
             android:id="@+id/action_eventsFragment_to_createEventFragment"
             app:destination="@id/createEventFragment"
             app:popUpTo="@+id/eventsFragment" />
-        <action
-            android:id="@+id/action_eventsFragment_to_detailsDialogFragment"
-            app:destination="@id/detailsDialogFragment" />
     </fragment>
     <fragment
         android:id="@+id/createEventFragment"
@@ -64,14 +61,5 @@
         <action
             android:id="@+id/action_loadingFragment_to_eventsFragment"
             app:destination="@id/eventsFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/detailsDialogFragment"
-        android:name="com.gkiss01.meetdeb.screens.DetailsDialogFragment"
-        android:label="DetailsDialogFragment"
-        tools:layout="@layout/details_fragment">
-        <argument
-            android:name="event"
-            app:argType="com.gkiss01.meetdeb.data.Event" />
     </fragment>
 </navigation>

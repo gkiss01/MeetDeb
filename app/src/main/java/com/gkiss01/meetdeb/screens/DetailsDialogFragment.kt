@@ -25,7 +25,6 @@ class DetailsDialogFragment : Fragment() {
         val event = arguments!!.getSerializable("event") as Event
 
         val bottomSheet = DetailsBottomSheetFragment(event)
-        bottomSheet.isCancelable = false
         bottomSheet.show(childFragmentManager, "DetailsBottomSheetFragment")
     }
 }
@@ -46,11 +45,6 @@ class DetailsBottomSheetFragment(private val event: Event): SuperBottomSheetFrag
         dfbs_descriptionValue.text = event.labels
         dfbs_participants.text = "Ott lesz ${event.participants} ember"
 
-//        Picasso.get()
-//            .load("$BASE_URL/images/${event.id}")
-//            .placeholder(R.drawable.placeholder)
-//            .into(df_eventImage)
-
         dfbs_participantsCheck.setOnClickListener {
             val participantsDialogFragment = ParticipantsDialogFragment()
             participantsDialogFragment.show(childFragmentManager, "participantsDialogFragment")
@@ -59,6 +53,4 @@ class DetailsBottomSheetFragment(private val event: Event): SuperBottomSheetFrag
     }
 
     override fun getCornerRadius() = context!!.resources.getDimension(R.dimen.bottomsheet_corner_radius)
-
-    override fun getStatusBarColor() = Color.RED
 }

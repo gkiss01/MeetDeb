@@ -117,8 +117,8 @@ class EventsFragment : Fragment() {
 
         viewAdapter = EventEntryAdapter(AdapterClickListener { position ->
                 val view = binding.eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventViewHolder
-                val action = EventsFragmentDirections.actionEventsFragmentToDetailsDialogFragment(view.event)
-                NavHostFragment.findNavController(this).navigate(action)
+                val bottomSheet = DetailsBottomSheetFragment(view.event)
+                bottomSheet.show(childFragmentManager, "DetailsBottomSheetFragment")
             },
             AdapterClickListener { position ->
                 val view = binding.eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventViewHolder
