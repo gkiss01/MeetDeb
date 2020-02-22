@@ -1,102 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
 
-    <data />
+    android:id="@+id/dla_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="13dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/addLayout"
+    <ImageView
+        android:id="@+id/dla_plusSign"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:contentDescription="@string/date_add_button_desc"
+        android:src="@drawable/ic_add_pink"
+        android:tint="#FFFFFF"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="@string/date_add_button"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@id/dla_plusSign"
+        app:layout_constraintStart_toEndOf="@id/dla_plusSign"
+        app:layout_constraintTop_toTopOf="@id/dla_plusSign" />
+
+    <ImageView
+        android:id="@+id/dla_downArrow"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:contentDescription="@string/date_add_button_arrow_desc"
+        android:src="@drawable/ic_arrow_down"
+        android:tint="#ffffff"
+        app:layout_constraintBottom_toBottomOf="@id/dla_plusSign"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/dla_plusSign" />
+
+    <LinearLayout
+        android:id="@+id/dla_subLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="13dp">
-
-        <ImageView
-            android:id="@+id/plusSign"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:contentDescription="@string/date_add_button_desc"
-            android:src="@drawable/ic_add_pink"
-            android:tint="#FFFFFF"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginTop="32dp"
+        android:orientation="vertical"
+        android:padding="3dp"
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@id/dla_plusSign">
 
         <TextView
-            android:id="@+id/addButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_toEndOf="@id/plusSign"
-            android:text="@string/date_add_button"
-            android:textAllCaps="false"
-            android:textColor="#FFFFFF"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="@id/plusSign"
-            app:layout_constraintStart_toEndOf="@id/plusSign"
-            app:layout_constraintTop_toTopOf="@id/plusSign" />
-
-        <LinearLayout
-            android:id="@+id/addDateLayout"
+            android:id="@+id/dla_dateTitle"
+            style="@style/styleCreateEventText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:orientation="vertical"
-            android:padding="3dp"
-            android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@id/plusSign">
+            android:padding="2dp"
+            android:textSize="18sp" />
 
-            <TextView
-                android:id="@+id/eventDateTime"
-                style="@style/styleCreateEventText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="2dp"
-                android:textSize="18sp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal"
-                android:padding="2dp">
-
-                <Button
-                    android:id="@+id/dateButton"
-                    style="@style/styleSetterButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_marginEnd="5dp"
-                    android:layout_weight="1"
-                    android:text="@string/event_date_set" />
-
-                <Button
-                    android:id="@+id/timeButton"
-                    style="@style/styleSetterButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_marginStart="5dp"
-                    android:layout_weight="1"
-                    android:text="@string/event_time_set" />
-            </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:padding="2dp">
 
             <Button
-                android:id="@+id/createButton"
-                style="@style/styleFabLabel"
-                android:layout_width="180dp"
-                android:layout_height="35dp"
-                android:layout_gravity="end"
-                android:layout_marginTop="10dp"
-                android:text="@string/date_create_button" />
+                android:id="@+id/dla_dateButton"
+                style="@style/styleSetterButton"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                android:text="@string/event_date_set" />
+
+            <Button
+                android:id="@+id/dla_timeButton"
+                style="@style/styleSetterButton"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginStart="5dp"
+                android:layout_weight="1"
+                android:text="@string/event_time_set" />
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/downArrow"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:contentDescription="@string/date_add_button_arrow_desc"
-            android:src="@drawable/ic_arrow_down"
-            android:tint="#ffffff"
-            app:layout_constraintBottom_toBottomOf="@id/plusSign"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/plusSign" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</layout>
+        <Button
+            android:id="@+id/dla_createButton"
+            style="@style/styleFabLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_gravity="end"
+            android:layout_marginTop="10dp"
+            android:text="@string/date_create_button" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
