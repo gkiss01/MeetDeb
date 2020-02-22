@@ -17,9 +17,10 @@ import com.gkiss01.meetdeb.data.Date
 import com.gkiss01.meetdeb.data.Event
 import com.gkiss01.meetdeb.data.Participant
 import com.gkiss01.meetdeb.databinding.DatesListAdditionBinding
-import com.gkiss01.meetdeb.databinding.DatesListItemBinding
 import com.gkiss01.meetdeb.network.BASE_URL
+import com.gkiss01.meetdeb.network.dateFormatter
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.dates_list_item.view.*
 import kotlinx.android.synthetic.main.events_list_item.view.*
 import kotlinx.android.synthetic.main.participants_list_item.view.*
 import org.threeten.bp.OffsetDateTime
@@ -140,36 +141,36 @@ class AdditionViewHolder(private val binding: DatesListAdditionBinding, private 
     }
 }
 
-class DateViewHolder(private val binding: DatesListItemBinding): RecyclerView.ViewHolder(binding.root) {
-    var dateId = 0L
+class DateViewHolder(private val view: View): RecyclerView.ViewHolder(view) {
+    var dateId = -1L
 
     fun bind(item: Date, dateClickListener: AdapterClickListener) {
         dateId = item.id
-        binding.date = item
-        binding.voteButton.setOnClickListener {
+        view.dli_dateValue.text = item.date.format(dateFormatter)
+        view.dli_votes.text = "Szavazatok: ${item.votes}"
+        view.dli_voteButton.isChecked = item.accepted
+
+        view.dli_voteButton.setOnClickListener {
             if (!item.accepted) dateClickListener.onClick(this.adapterPosition)
         }
 
-        binding.voteButton.hideProgress()
-
-        binding.executePendingBindings()
+        view.dli_voteButton.hideProgress()
     }
 
     fun showVoteCreateAnimation() {
-        binding.voteButton.showProgress {
+        view.dli_voteButton.showProgress {
             progressColor = Color.parseColor("#485688")
         }
     }
 
     fun setRadioButtonUnchecked() {
-        binding.voteButton.isChecked = false
+        view.dli_voteButton.isChecked = false
     }
 
     companion object {
         fun from(parent: ViewGroup): DateViewHolder {
-            val layoutInflater = LayoutInflater.from(parent.context)
-            val binding = DatesListItemBinding.inflate(layoutInflater, parent, false)
-            return DateViewHolder(binding)
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.dates_list_item, parent, false)
+            return DateViewHolder(view)
         }
     }
 }
@@ -181,8 +182,7 @@ class ParticipantViewHolder(private val view: View): RecyclerView.ViewHolder(vie
 
     companion object {
         fun from(parent: ViewGroup): ParticipantViewHolder {
-            val layoutInflater = LayoutInflater.from(parent.context)
-            val view = layoutInflater.inflate(R.layout.participants_list_item, parent, false)
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.participants_list_item, parent, false)
             return ParticipantViewHolder(view)
         }
     }
@@ -240,8 +240,7 @@ class EventViewHolder(private val view: View): RecyclerView.ViewHolder(view) {
 
     companion object {
         fun from(parent: ViewGroup): EventViewHolder {
-            val layoutInflater = LayoutInflater.from(parent.context)
-            val view = layoutInflater.inflate(R.layout.events_list_item, parent, false)
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.events_list_item, parent, false)
             return EventViewHolder(view)
         }
     }

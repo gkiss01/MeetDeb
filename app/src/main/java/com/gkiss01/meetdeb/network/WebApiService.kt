@@ -10,11 +10,13 @@ import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody
 import org.threeten.bp.OffsetDateTime
+import org.threeten.bp.format.DateTimeFormatter
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.*
 
 const val BASE_URL = "http://172.17.172.157:8080"
+val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy, HH:mm")
 
 enum class TargetVar {
     VAR_GET_EVENTS, VAR_GET_EVENT, VAR_CREATE_EVENT,

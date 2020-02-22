@@ -29,6 +29,7 @@ import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.databinding.CreateEventFragmentBinding
 import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.NavigationCode
+import com.gkiss01.meetdeb.network.dateFormatter
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
 import com.zhihu.matisse.engine.impl.GlideEngine
@@ -114,7 +115,7 @@ class CreateEventFragment : Fragment() {
         }
 
         viewModel.dateTime.observe(this, Observer {
-            binding.eventDateTime.text = it.format(viewModel.formatter)
+            binding.eventDateTime.text = it.format(dateFormatter)
         })
 
         binding.createButton.setOnClickListener {

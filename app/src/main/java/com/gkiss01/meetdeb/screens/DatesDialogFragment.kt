@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.FrameLayout
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -21,16 +20,15 @@ import com.gkiss01.meetdeb.adapter.DateEntryAdapter
 import com.gkiss01.meetdeb.adapter.DateViewHolder
 import com.gkiss01.meetdeb.data.DateList
 import com.gkiss01.meetdeb.data.UpdateEventRequest
-import com.gkiss01.meetdeb.databinding.DatesFragmentBinding
 import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.NavigationCode
+import kotlinx.android.synthetic.main.dates_fragment.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 class DatesDialogFragment : DialogFragment() {
 
-    private lateinit var binding: DatesFragmentBinding
     private lateinit var viewModel: DatesDialogViewModel
     private lateinit var viewAdapter: DateEntryAdapter
 
@@ -55,10 +53,10 @@ class DatesDialogFragment : DialogFragment() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onErrorReceived(errorCode: ErrorCodes) {
         if (errorCode == ErrorCodes.UNKNOWN || errorCode == ErrorCodes.DATE_ALREADY_CREATED) {
-            val position = binding.datesRecyclerView.layoutManager!!.childCount
+            val position = df_datesRecyclerView.layoutManager!!.childCount
             if (position == 0) return this.dismiss()
 
-            val view = binding.datesRecyclerView.findViewHolderForAdapterPosition(binding.datesRecyclerView.layoutManager!!.childCount - 1) as AdditionViewHolder
+            val view = df_datesRecyclerView.findViewHolderForAdapterPosition(df_datesRecyclerView.layoutManager!!.childCount - 1) as AdditionViewHolder
             if (view.isProgressActive()) view.clearData()
             else if (viewModel.isLoading.value == false) this.dismiss()
         }
@@ -73,42 +71,41 @@ class DatesDialogFragment : DialogFragment() {
         if (navigationCode == NavigationCode.LOAD_VOTES_HAS_ENDED) {
             if (viewModel.isLoading.value == true) viewModel.votesChanged.value = true
             viewModel.isLoading.value = false
-            val view = binding.datesRecyclerView.findViewHolderForAdapterPosition(viewModel.dates.value!!.size) as AdditionViewHolder
+            val view = df_datesRecyclerView.findViewHolderForAdapterPosition(viewModel.dates.value!!.size) as AdditionViewHolder
             view.clearData(true)
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        super.onCreateView(inflater, container, savedInstanceState)
+        return inflater.inflate(R.layout.dates_fragment, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        viewModel = ViewModelProvider(this).get(DatesDialogViewModel::class.java)
 
         eventId = arguments!!.getLong(EXTRA_EVENT_ID)
         adapterPosition = arguments!!.getInt(EXTRA_ADAPTER_POSITION)
 
-        binding = DataBindingUtil.inflate(inflater, R.layout.dates_fragment, container, false)
-        viewModel = ViewModelProvider(this).get(DatesDialogViewModel::class.java)
-
         viewAdapter = DateEntryAdapter(eventId, AdapterClickListener { position ->
-            val view = binding.datesRecyclerView.findViewHolderForAdapterPosition(position) as DateViewHolder
-            if (viewModel.isLoading.value!!) view.setRadioButtonUnchecked()
+            val itemView = df_datesRecyclerView.findViewHolderForAdapterPosition(position) as DateViewHolder
+            if (viewModel.isLoading.value!!) itemView.setRadioButtonUnchecked()
             else {
-                view.showVoteCreateAnimation()
-                viewModel.addVote(view.dateId)
+                itemView.showVoteCreateAnimation()
+                viewModel.addVote(itemView.dateId)
             }
         })
 
         if (viewModel.dates.value == null || viewModel.dates.value!!.isEmpty())
             viewAdapter.addLoadingAndAddition()
 
-        viewModel.dates.observe(this, Observer {
+        viewModel.dates.observe(viewLifecycleOwner, Observer {
             viewAdapter.addDatesAndAddition(it)
         })
 
-        (binding.datesRecyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
-        binding.datesRecyclerView.adapter = viewAdapter
-        binding.datesRecyclerView.layoutManager = LinearLayoutManager(context)
-
-        return binding.root
+        (df_datesRecyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+        df_datesRecyclerView.adapter = viewAdapter
+        df_datesRecyclerView.layoutManager = LinearLayoutManager(context)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

@@ -15,12 +15,9 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.ZoneOffset
-import org.threeten.bp.format.DateTimeFormatter
 import java.io.File
 
 class CreateEventViewModel(application: Application): AndroidViewModel(application) {
-    val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy, HH:mm")
-
     var year: Int
     var month: Int
     var day: Int

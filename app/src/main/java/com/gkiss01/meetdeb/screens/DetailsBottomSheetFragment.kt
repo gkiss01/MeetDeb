@@ -9,8 +9,8 @@ import com.andrefrsousa.superbottomsheet.SuperBottomSheetFragment
 import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.Event
+import com.gkiss01.meetdeb.network.dateFormatter
 import kotlinx.android.synthetic.main.details_fragment_bottomsheet.*
-import org.threeten.bp.format.DateTimeFormatter
 
 class DetailsBottomSheetFragment(private val event: Event): SuperBottomSheetFragment() {
 
@@ -20,11 +20,9 @@ class DetailsBottomSheetFragment(private val event: Event): SuperBottomSheetFrag
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy, HH:mm")
-
         dfbs_userNameValue.text = event.username
         dfbs_venueValue.text = event.venue
-        dfbs_dateValue.text = event.date.format(formatter)
+        dfbs_dateValue.text = event.date.format(dateFormatter)
         dfbs_descriptionValue.text = event.labels
         dfbs_participants.text = "Ott lesz ${event.participants} ember"
 
