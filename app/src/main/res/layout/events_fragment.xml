@@ -1,50 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
 
-    <data>
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorEventsBackground"
+    android:orientation="vertical"
+    tools:context=".screens.EventsFragment">
 
-    </data>
-
-    <RelativeLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/ef_swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorEventsBackground"
-        android:orientation="vertical"
-        tools:context=".screens.EventsFragment">
+        android:layout_height="match_parent">
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/swipeRefreshLayout"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/ef_eventsRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            tools:listitem="@layout/events_list_item" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/eventsRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:listitem="@layout/events_list_item" />
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="10dp"
+        app:fab_addButtonColorNormal="@color/colorFabNormal"
+        app:fab_addButtonColorPressed="@color/colorFabPressed"
+        app:fab_labelStyle="@style/styleFabLabel">
 
-        <com.getbase.floatingactionbutton.FloatingActionsMenu
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/ef_addActionButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_margin="10dp"
-            app:fab_addButtonColorNormal="@color/colorFabNormal"
-            app:fab_addButtonColorPressed="@color/colorFabPressed"
-            app:fab_labelStyle="@style/styleFabLabel">
-
-            <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/addActionButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:fab_colorNormal="@color/colorFabMiniNormal"
-                app:fab_colorPressed="@color/colorFabMiniPressed"
-                app:fab_icon="@drawable/ic_add_pink"
-                app:fab_size="mini"
-                app:fab_title="@string/event_add_button" />
-        </com.getbase.floatingactionbutton.FloatingActionsMenu>
-    </RelativeLayout>
-</layout>
+            app:fab_colorNormal="@color/colorFabMiniNormal"
+            app:fab_colorPressed="@color/colorFabMiniPressed"
+            app:fab_icon="@drawable/ic_add_pink"
+            app:fab_size="mini"
+            app:fab_title="@string/event_add_button" />
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
+</RelativeLayout>
