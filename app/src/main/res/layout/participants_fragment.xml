@@ -1,19 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
 
-    <data />
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorEventsBackground">
 
-    <FrameLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/pf_participantsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorEventsBackground"
-        tools:context=".screens.ParticipantsDialogFragment">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/participantsRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:listitem="@layout/participants_list_item" />
-    </FrameLayout>
-</layout>
+        tools:listitem="@layout/participants_list_item" />
+</FrameLayout>

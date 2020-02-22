@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.FrameLayout
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -15,15 +14,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.adapter.ParticipantEntryAdapter
 import com.gkiss01.meetdeb.data.ParticipantList
-import com.gkiss01.meetdeb.databinding.ParticipantsFragmentBinding
 import com.gkiss01.meetdeb.network.ErrorCodes
+import kotlinx.android.synthetic.main.participants_fragment.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 class ParticipantsDialogFragment : DialogFragment() {
 
-    private lateinit var binding: ParticipantsFragmentBinding
     private lateinit var viewModel: ParticipantsDialogViewModel
 
     override fun onStart() {
@@ -48,11 +46,12 @@ class ParticipantsDialogFragment : DialogFragment() {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        super.onCreateView(inflater, container, savedInstanceState)
+        return inflater.inflate(R.layout.participants_fragment, container, false)
+    }
 
-        binding = DataBindingUtil.inflate(inflater, R.layout.participants_fragment, container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewModel = ViewModelProvider(this).get(ParticipantsDialogViewModel::class.java)
 
         val viewAdapter = ParticipantEntryAdapter()
@@ -60,14 +59,12 @@ class ParticipantsDialogFragment : DialogFragment() {
         if (viewModel.participants.value == null || viewModel.participants.value!!.isEmpty())
             viewAdapter.addLoading()
 
-        viewModel.participants.observe(this, Observer {
+        viewModel.participants.observe(viewLifecycleOwner, Observer {
             viewAdapter.addParticipants(it)
         })
 
-        binding.participantsRecyclerView.adapter = viewAdapter
-        binding.participantsRecyclerView.layoutManager = LinearLayoutManager(context)
-
-        return binding.root
+        pf_participantsRecyclerView.adapter = viewAdapter
+        pf_participantsRecyclerView.layoutManager = LinearLayoutManager(context)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

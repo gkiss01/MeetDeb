@@ -18,10 +18,10 @@ import com.gkiss01.meetdeb.data.Event
 import com.gkiss01.meetdeb.data.Participant
 import com.gkiss01.meetdeb.databinding.DatesListAdditionBinding
 import com.gkiss01.meetdeb.databinding.DatesListItemBinding
-import com.gkiss01.meetdeb.databinding.ParticipantsListItemBinding
 import com.gkiss01.meetdeb.network.BASE_URL
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.events_list_item.view.*
+import kotlinx.android.synthetic.main.participants_list_item.view.*
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.ZoneOffset
 
@@ -174,16 +174,16 @@ class DateViewHolder(private val binding: DatesListItemBinding): RecyclerView.Vi
     }
 }
 
-class ParticipantViewHolder(private val binding: ParticipantsListItemBinding): RecyclerView.ViewHolder(binding.root) {
+class ParticipantViewHolder(private val view: View): RecyclerView.ViewHolder(view) {
     fun bind(item: Participant) {
-        binding.name.text = item.username
+        view.pli_name.text = item.username
     }
 
     companion object {
         fun from(parent: ViewGroup): ParticipantViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
-            val binding = ParticipantsListItemBinding.inflate(layoutInflater, parent, false)
-            return ParticipantViewHolder(binding)
+            val view = layoutInflater.inflate(R.layout.participants_list_item, parent, false)
+            return ParticipantViewHolder(view)
         }
     }
 }
