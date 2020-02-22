@@ -1,33 +1,16 @@
 package com.gkiss01.meetdeb.screens
 
-import android.graphics.Color
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import com.andrefrsousa.superbottomsheet.SuperBottomSheetFragment
 import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.Event
 import kotlinx.android.synthetic.main.details_fragment_bottomsheet.*
 import org.threeten.bp.format.DateTimeFormatter
-
-class DetailsDialogFragment : Fragment() {
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.details_fragment, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val event = arguments!!.getSerializable("event") as Event
-
-        val bottomSheet = DetailsBottomSheetFragment(event)
-        bottomSheet.show(childFragmentManager, "DetailsBottomSheetFragment")
-    }
-}
 
 class DetailsBottomSheetFragment(private val event: Event): SuperBottomSheetFragment() {
 
@@ -53,4 +36,7 @@ class DetailsBottomSheetFragment(private val event: Event): SuperBottomSheetFrag
     }
 
     override fun getCornerRadius() = context!!.resources.getDimension(R.dimen.bottomsheet_corner_radius)
+
+    override fun getPeekHeight() = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 105F,
+        context!!.resources.displayMetrics).toInt()
 }
