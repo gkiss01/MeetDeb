@@ -18,10 +18,10 @@ import com.gkiss01.meetdeb.data.Event
 import com.gkiss01.meetdeb.data.Participant
 import com.gkiss01.meetdeb.databinding.DatesListAdditionBinding
 import com.gkiss01.meetdeb.databinding.DatesListItemBinding
-import com.gkiss01.meetdeb.databinding.EventsListItemBinding
 import com.gkiss01.meetdeb.databinding.ParticipantsListItemBinding
 import com.gkiss01.meetdeb.network.BASE_URL
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.events_list_item.view.*
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.ZoneOffset
 
@@ -188,51 +188,51 @@ class ParticipantViewHolder(private val binding: ParticipantsListItemBinding): R
     }
 }
 
-class EventViewHolder(private val binding: EventsListItemBinding): RecyclerView.ViewHolder(binding.root) {
+class EventViewHolder(private val view: View): RecyclerView.ViewHolder(view) {
     lateinit var event: Event
 
     fun bind(item: Event, detailsClickListener: AdapterClickListener, joinClickListener: AdapterClickListener, anotherDateClickListener: AdapterClickListener) {
         event = item
-        binding.event = item
-        binding.descButton.setOnClickListener {
+        view.eli_eventLabel.text = item.name
+
+        view.eli_descButton.setOnClickListener {
             detailsClickListener.onClick(this.adapterPosition)
         }
-        binding.acceptButton.setOnClickListener {
+        view.eli_acceptButton.setOnClickListener {
             joinClickListener.onClick(this.adapterPosition)
         }
-        binding.anotherDateButton.setOnClickListener {
+        view.eli_anotherDateButton.setOnClickListener {
             anotherDateClickListener.onClick(this.adapterPosition)
         }
 
         if (item.accepted) {
-            binding.acceptButton.hideProgress(R.string.event_accepted)
-            binding.acceptButton.setBackgroundResource(R.drawable.event_accepted_button_background)
+            view.eli_acceptButton.hideProgress(R.string.event_accepted)
+            view.eli_acceptButton.setBackgroundResource(R.drawable.event_accepted_button_background)
         }
         else {
-            binding.acceptButton.hideProgress(R.string.event_not_accepted)
-            binding.acceptButton.setBackgroundResource(0)
+            view.eli_acceptButton.hideProgress(R.string.event_not_accepted)
+            view.eli_acceptButton.setBackgroundResource(0)
         }
 
-        binding.anotherDateButton.hideProgress(R.string.event_date_add)
-        binding.anotherDateButton.setBackgroundResource(if (item.voted) R.drawable.event_accepted_button_background else 0)
+        view.eli_anotherDateButton.hideProgress(R.string.event_date_add)
+        view.eli_anotherDateButton.setBackgroundResource(if (item.voted) R.drawable.event_accepted_button_background else 0)
 
         Picasso.get()
             .load("$BASE_URL/images/${event.id}")
             .placeholder(R.drawable.placeholder)
-            .into(binding.eventImage)
+            .into(view.eli_eventImage)
 
-        binding.executePendingBindings()
     }
 
     fun showEventJoinAnimation() {
-        binding.acceptButton.showProgress {
+        view.eli_acceptButton.showProgress {
             buttonTextRes = R.string.event_accept_waiting
             progressColor = Color.parseColor("#485688")
         }
     }
 
     fun showEventVoteAnimation() {
-        binding.anotherDateButton.showProgress {
+        view.eli_anotherDateButton.showProgress {
             buttonTextRes = R.string.event_accept_waiting
             progressColor = Color.parseColor("#485688")
         }
@@ -241,10 +241,8 @@ class EventViewHolder(private val binding: EventsListItemBinding): RecyclerView.
     companion object {
         fun from(parent: ViewGroup): EventViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
-            val binding = EventsListItemBinding.inflate(layoutInflater, parent, false)
-            binding.acceptButton.attachTextChangeAnimator()
-            binding.anotherDateButton.attachTextChangeAnimator()
-            return EventViewHolder(binding)
+            val view = layoutInflater.inflate(R.layout.events_list_item, parent, false)
+            return EventViewHolder(view)
         }
     }
 }

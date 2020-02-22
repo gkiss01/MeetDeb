@@ -1,98 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
 
-    <data>
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="10dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginBottom="25dp"
+    android:backgroundTint="#ECEFF1"
+    app:cardCornerRadius="15dp">
 
-        <variable
-            name="event"
-            type="com.gkiss01.meetdeb.data.Event" />
-    </data>
-
-    <androidx.cardview.widget.CardView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="25dp"
-        android:backgroundTint="#ECEFF1"
-        app:cardCornerRadius="15dp">
+        android:layout_height="wrap_content">
 
         <RelativeLayout
+            android:id="@+id/eli_eventCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <RelativeLayout
-                android:id="@+id/eventCard"
+            <ImageView
+                android:id="@+id/eli_eventImage"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/event_image_desc"
+                android:maxHeight="450dp"
+                android:minHeight="250dp" />
 
-                <ImageView
-                    android:id="@+id/eventImage"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:adjustViewBounds="true"
-                    android:contentDescription="@string/event_image_desc"
-                    android:maxHeight="450dp"
-                    android:minHeight="250dp" />
+            <TextView
+                android:id="@+id/eli_eventLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="#73808080"
+                android:paddingStart="3dp"
+                android:paddingEnd="3dp"
+                android:textAlignment="center"
+                android:textColor="#ffffff"
+                android:textSize="35sp" />
+        </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/eventLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:background="#73808080"
-                    android:paddingStart="3dp"
-                    android:paddingEnd="3dp"
-                    android:text="@{event.name}"
-                    android:textAlignment="center"
-                    android:textColor="#ffffff"
-                    android:textSize="35sp" />
-            </RelativeLayout>
+        <Button
+            android:id="@+id/eli_descButton"
+            style="@style/styleFabLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/event_desc_button"
+            android:textSize="12sp"
+            tools:ignore="RelativeOverlap" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@id/eli_eventCard"
+            android:padding="10dp">
 
             <Button
-                android:id="@+id/descButton"
-                style="@style/styleFabLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="35dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:text="@string/event_desc_button"
-                android:textSize="12sp"
-                tools:ignore="RelativeOverlap" />
+                android:id="@+id/eli_anotherDateButton"
+                style="@style/styleEventButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:text="@string/event_date_add"
+                app:layout_constraintEnd_toStartOf="@id/eli_acceptButton"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/buttonsLayout"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_below="@id/eventCard"
-                android:padding="10dp">
-
-                <Button
-                    android:id="@+id/anotherDateButton"
-                    style="@style/styleEventButton"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    android:text="@string/event_date_add"
-                    app:layout_constraintEnd_toStartOf="@id/acceptButton"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <Button
-                    android:id="@+id/acceptButton"
-                    style="@style/styleEventButton"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/anotherDateButton"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </RelativeLayout>
-    </androidx.cardview.widget.CardView>
-</layout>
+            <Button
+                android:id="@+id/eli_acceptButton"
+                style="@style/styleEventButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/eli_anotherDateButton"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>
