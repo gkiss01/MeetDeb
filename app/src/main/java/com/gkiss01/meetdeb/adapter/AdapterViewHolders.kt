@@ -17,7 +17,7 @@ import com.gkiss01.meetdeb.data.Date
 import com.gkiss01.meetdeb.data.Event
 import com.gkiss01.meetdeb.data.Participant
 import com.gkiss01.meetdeb.network.BASE_URL
-import com.gkiss01.meetdeb.network.dateFormatter
+import com.gkiss01.meetdeb.utils.dateFormatter
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.dates_list_addition.view.*
 import kotlinx.android.synthetic.main.dates_list_item.view.*

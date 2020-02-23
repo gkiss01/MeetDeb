@@ -13,7 +13,6 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -25,7 +24,8 @@ import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.NavigationCode
-import com.gkiss01.meetdeb.network.dateFormatter
+import com.gkiss01.meetdeb.utils.dateFormatter
+import com.gkiss01.meetdeb.utils.hideKeyboard
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
 import com.zhihu.matisse.engine.impl.GlideEngine
@@ -144,8 +144,7 @@ class CreateEventFragment : Fragment() {
                     progressColor = Color.WHITE
                 }
 
-                val inputMethodManager = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+                hideKeyboard(context!!, view)
             }
         }
 

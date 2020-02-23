@@ -39,9 +39,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    dataBinding {
-        enabled = true
-    }
 }
 
 dependencies {
@@ -104,6 +101,6 @@ dependencies {
     //LoadingButton
     implementation 'com.github.razir.progressbutton:progressbutton:1.0.3'
 
-    implementation 'com.google.android.material:material:1.1.0'
+    //SuperBottomSheet
     implementation 'com.github.andrefrsousa:SuperBottomSheet:1.5.0'
 }

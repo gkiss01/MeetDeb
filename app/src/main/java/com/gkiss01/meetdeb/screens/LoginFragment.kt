@@ -1,13 +1,11 @@
 package com.gkiss01.meetdeb.screens
 
-import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import com.github.razir.progressbutton.attachTextChangeAnimator
@@ -17,6 +15,7 @@ import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.NavigationCode
+import com.gkiss01.meetdeb.utils.hideKeyboard
 import kotlinx.android.synthetic.main.login_fragment.*
 import okhttp3.Credentials
 import org.greenrobot.eventbus.EventBus
@@ -93,8 +92,7 @@ class LoginFragment : Fragment() {
                     progressColor = Color.WHITE
                 }
 
-                val inputMethodManager = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+                hideKeyboard(context!!, view)
 
                 val basic = Credentials.basic(email, password)
                 MainActivity.instance.checkUser(basic)

@@ -1,6 +1,5 @@
 package com.gkiss01.meetdeb.screens
 
-import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
@@ -8,7 +7,6 @@ import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import com.github.razir.progressbutton.attachTextChangeAnimator
@@ -20,6 +18,7 @@ import com.gkiss01.meetdeb.data.request.UserRequest
 import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.NavigationCode
 import com.gkiss01.meetdeb.network.moshi
+import com.gkiss01.meetdeb.utils.hideKeyboard
 import kotlinx.android.synthetic.main.register_fragment.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -113,8 +112,7 @@ class RegisterFragment : Fragment() {
                     progressColor = Color.WHITE
                 }
 
-                val inputMethodManager = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+                hideKeyboard(context!!, view)
 
                 val userRequest = UserRequest(email, password, name)
                 val json = moshi.adapter(UserRequest::class.java).toJson(userRequest)

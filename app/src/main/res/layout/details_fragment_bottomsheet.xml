@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="16dp"
-    app:layout_behavior="@string/bottom_sheet_behavior" >
+    app:layout_behavior="@string/bottom_sheet_behavior">
 
     <TextView
         android:layout_width="wrap_content"
