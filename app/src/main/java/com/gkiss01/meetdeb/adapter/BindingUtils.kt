@@ -6,7 +6,6 @@ import com.gkiss01.meetdeb.data.Date
 import com.gkiss01.meetdeb.data.Event
 import com.gkiss01.meetdeb.network.dateFormatter
 import org.threeten.bp.OffsetDateTime
-import org.threeten.bp.format.DateTimeFormatter
 
 @BindingAdapter("setDateFormatForEvent")
 fun TextView.setDateFormatForEvent(item: Event) {

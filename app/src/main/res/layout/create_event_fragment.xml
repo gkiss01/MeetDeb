@@ -1,119 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
 
-    <data>
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorEventsBackground">
 
-        <variable
-            name="viewmodel"
-            type="com.gkiss01.meetdeb.screens.CreateEventViewModel" />
-    </data>
-
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorEventsBackground">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <EditText
+            android:id="@+id/cef_name"
+            style="@style/styleCreateEventText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/event_name_hint"
+            android:importantForAutofill="no"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/cef_description"
+            style="@style/styleCreateEventText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:hint="@string/event_desc_hint"
+            android:importantForAutofill="no"
+            android:inputType="textMultiLine"
+            android:maxLines="15"
+            android:minLines="1"
+            android:scrollbars="vertical" />
+
+        <TextView
+            android:id="@+id/cef_dateTitle"
+            style="@style/styleCreateEventText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:padding="2dp"
+            android:textSize="18sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="20dp">
-
-            <EditText
-                android:id="@+id/eventName"
-                style="@style/styleCreateEventText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/event_name_hint"
-                android:importantForAutofill="no"
-                android:inputType="textPersonName"
-                android:text="@={viewmodel.eventName}" />
-
-            <EditText
-                android:id="@+id/eventDescription"
-                style="@style/styleCreateEventText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:hint="@string/event_desc_hint"
-                android:importantForAutofill="no"
-                android:inputType="textMultiLine"
-                android:maxLines="15"
-                android:minLines="1"
-                android:scrollbars="vertical"
-                android:text="@={viewmodel.eventDescription}" />
-
-            <TextView
-                android:id="@+id/eventDateTime"
-                style="@style/styleCreateEventText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:padding="2dp"
-                android:textSize="18sp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="2dp">
-
-                <Button
-                    android:id="@+id/dateButton"
-                    style="@style/styleSetterButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_marginEnd="5dp"
-                    android:layout_weight="1"
-                    android:text="@string/event_date_set" />
-
-                <Button
-                    android:id="@+id/timeButton"
-                    style="@style/styleSetterButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_marginStart="5dp"
-                    android:layout_weight="1"
-                    android:text="@string/event_time_set" />
-            </LinearLayout>
-
-            <EditText
-                android:id="@+id/eventVenue"
-                style="@style/styleCreateEventText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:hint="@string/event_venue_hint"
-                android:importantForAutofill="no"
-                android:inputType="textPersonName"
-                android:text="@={viewmodel.eventVenue}" />
+            android:orientation="horizontal"
+            android:padding="2dp">
 
             <Button
-                android:id="@+id/imageButton"
+                android:id="@+id/cef_dateButton"
                 style="@style/styleSetterButton"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="30dp"
-                android:layout_marginTop="10dp"
-                android:text="@string/event_image_select" />
-
-            <ImageView
-                android:id="@+id/imagePreview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:adjustViewBounds="true"
-                android:contentDescription="@string/event_image_desc"
-                android:src="@drawable/placeholder" />
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                android:text="@string/event_date_set" />
 
             <Button
-                android:id="@+id/createButton"
-                style="@style/styleFabLabel"
-                android:layout_width="180dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginTop="10dp"
-                android:text="@string/event_create_button" />
+                android:id="@+id/cef_timeButton"
+                style="@style/styleSetterButton"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginStart="5dp"
+                android:layout_weight="1"
+                android:text="@string/event_time_set" />
         </LinearLayout>
-    </ScrollView>
-</layout>
+
+        <EditText
+            android:id="@+id/cef_venue"
+            style="@style/styleCreateEventText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:hint="@string/event_venue_hint"
+            android:importantForAutofill="no"
+            android:inputType="textPersonName" />
+
+        <Button
+            android:id="@+id/cef_imageButton"
+            style="@style/styleSetterButton"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/event_image_select" />
+
+        <ImageView
+            android:id="@+id/cef_imagePreview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/event_image_desc"
+            android:src="@drawable/placeholder" />
+
+        <Button
+            android:id="@+id/cef_createButton"
+            style="@style/styleFabLabel"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="10dp"
+            android:text="@string/event_create_button" />
+    </LinearLayout>
+</ScrollView>

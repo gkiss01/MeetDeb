@@ -7,17 +7,14 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.core.app.ActivityCompat
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -26,13 +23,13 @@ import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.R
-import com.gkiss01.meetdeb.databinding.CreateEventFragmentBinding
 import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.NavigationCode
 import com.gkiss01.meetdeb.network.dateFormatter
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
 import com.zhihu.matisse.engine.impl.GlideEngine
+import kotlinx.android.synthetic.main.create_event_fragment.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -40,13 +37,10 @@ import org.threeten.bp.OffsetDateTime
 
 class CreateEventFragment : Fragment() {
 
-    private val REQUEST_CODE_PICK_IMAGE = 1
-    private val PERMISSION_CODE_STORAGE = 2
-
-    private lateinit var binding: CreateEventFragmentBinding
     private lateinit var viewModel: CreateEventViewModel
 
-    private lateinit var filePath: Uri
+    private val REQUEST_CODE_PICK_IMAGE = 1
+    private val PERMISSION_CODE_STORAGE = 2
 
     override fun onStart() {
         super.onStart()
@@ -61,14 +55,14 @@ class CreateEventFragment : Fragment() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onErrorReceived(errorCode: ErrorCodes) {
         if (errorCode == ErrorCodes.UNKNOWN) {
-            binding.createButton.hideProgress(R.string.event_create_button)
+            cef_createButton.hideProgress(R.string.event_create_button)
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onNavigationReceived(navigationCode: NavigationCode) {
         if (navigationCode == NavigationCode.NAVIGATE_TO_EVENTS_FRAGMENT) {
-            binding.createButton.hideProgress(R.string.event_created)
+            cef_createButton.hideProgress(R.string.event_created)
             Handler().postDelayed({
                 val action = CreateEventFragmentDirections.actionCreateEventFragmentToEventsFragment()
                 NavHostFragment.findNavController(this).navigate(action)
@@ -77,22 +71,18 @@ class CreateEventFragment : Fragment() {
         else if (navigationCode == NavigationCode.NAVIGATE_TO_IMAGE_PICKER) showImagePicker()
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        super.onCreateView(inflater, container, savedInstanceState)
+        return inflater.inflate(R.layout.create_event_fragment, container, false)
+    }
 
-        binding = DataBindingUtil.inflate(inflater, R.layout.create_event_fragment, container, false)
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val application = requireNotNull(this.activity).application
         val viewModelFactory = CreateEventViewModelFactory(application)
         viewModel = ViewModelProvider(this, viewModelFactory).get(CreateEventViewModel::class.java)
 
-        binding.viewmodel = viewModel
-        binding.createButton.attachTextChangeAnimator()
-
-        binding.dateButton.setOnClickListener {
+        cef_dateButton.setOnClickListener {
             val datePickerDialog = DatePickerDialog(context!!, DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
-
                 viewModel.year = year
                 viewModel.month = month + 1
                 viewModel.day = dayOfMonth
@@ -103,9 +93,8 @@ class CreateEventFragment : Fragment() {
         }
 
         val is24HourFormat = android.text.format.DateFormat.is24HourFormat(context)
-        binding.timeButton.setOnClickListener {
+        cef_timeButton.setOnClickListener {
             val timePickerDialog = TimePickerDialog(context!!, TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
-
                 viewModel.hour = hourOfDay
                 viewModel.minute = minute
                 viewModel.calculateDateTime()
@@ -114,53 +103,55 @@ class CreateEventFragment : Fragment() {
             timePickerDialog.show()
         }
 
-        viewModel.dateTime.observe(this, Observer {
-            binding.eventDateTime.text = it.format(dateFormatter)
-        })
+        cef_imageButton.setOnClickListener {
+            requestStoragePermissions()
+        }
 
-        binding.createButton.setOnClickListener {
+        cef_createButton.attachTextChangeAnimator()
+        cef_createButton.setOnClickListener {
             var error = false
+            viewModel.eventName = cef_name.text.toString()
+            viewModel.eventDescription = cef_description.text.toString()
+            viewModel.eventVenue = cef_venue.text.toString()
 
-            if (TextUtils.isEmpty(binding.eventName.text)) {
-                binding.eventName.error = "A mezőt kötelező kitölteni!"
+            if (TextUtils.isEmpty(cef_name.text)) {
+                cef_name.error = "A mezőt kötelező kitölteni!"
                 error = true
             }
-            else if (binding.eventName.text.length > 40) {
-                binding.eventName.error = "A név max. 40 karakter lehet!"
+            else if (cef_name.text.length > 40) {
+                cef_name.error = "A név max. 40 karakter lehet!"
                 error = true
             }
 
-            if (TextUtils.isEmpty(binding.eventDescription.text)) {
-                binding.eventDescription.error = "A mezőt kötelező kitölteni!"
+            if (TextUtils.isEmpty(cef_description.text)) {
+                cef_description.error = "A mezőt kötelező kitölteni!"
                 error = true
             }
-            if (TextUtils.isEmpty(binding.eventVenue.text)) {
-                binding.eventVenue.error = "A mezőt kötelező kitölteni!"
+            if (TextUtils.isEmpty(cef_venue.text)) {
+                cef_venue.error = "A mezőt kötelező kitölteni!"
                 error = true
             }
             if (viewModel.dateTime.value!!.isBefore(OffsetDateTime.now())) {
-                binding.eventDateTime.error = "Jövőbeli dátumot adj meg!"
+                cef_dateTitle.error = "Jövőbeli dátumot adj meg!"
                 error = true
             }
-            else binding.eventDateTime.error = null
+            else cef_dateTitle.error = null
 
             if (!error) {
                 viewModel.createEvent()
-                binding.createButton.showProgress {
+                cef_createButton.showProgress {
                     buttonTextRes = R.string.event_create_waiting
                     progressColor = Color.WHITE
                 }
 
                 val inputMethodManager = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                inputMethodManager.hideSoftInputFromWindow(view!!.windowToken, 0)
+                inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
             }
         }
 
-        binding.imageButton.setOnClickListener {
-            requestStoragePermissions()
-        }
-
-        return binding.root
+        viewModel.dateTime.observe(viewLifecycleOwner, Observer {
+            cef_dateTitle.text = it.format(dateFormatter)
+        })
     }
 
     private fun showImagePicker() {
@@ -195,7 +186,6 @@ class CreateEventFragment : Fragment() {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         if (requestCode == PERMISSION_CODE_STORAGE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.d("CreateEvent", "permission granted")
                 EventBus.getDefault().post(NavigationCode.NAVIGATE_TO_IMAGE_PICKER)
             }
         }
@@ -204,8 +194,7 @@ class CreateEventFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_PICK_IMAGE && resultCode == RESULT_OK) {
-            filePath = Matisse.obtainResult(data)[0]
-            binding.imagePreview.setImageURI(filePath)
+            cef_imagePreview.setImageURI(Matisse.obtainResult(data)[0])
 
             viewModel.imageUrl.value = Matisse.obtainPathResult(data)[0]
         }
