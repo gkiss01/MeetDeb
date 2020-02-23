@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import com.github.razir.progressbutton.attachTextChangeAnimator
@@ -16,18 +15,15 @@ import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
-import com.gkiss01.meetdeb.databinding.LoginFragmentBinding
 import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.NavigationCode
+import kotlinx.android.synthetic.main.login_fragment.*
 import okhttp3.Credentials
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 class LoginFragment : Fragment() {
-
-    private lateinit var binding: LoginFragmentBinding
-
     override fun onStart() {
         super.onStart()
         EventBus.getDefault().register(this)
@@ -41,69 +37,68 @@ class LoginFragment : Fragment() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onErrorReceived(errorCode: ErrorCodes) {
         if (errorCode == ErrorCodes.USER_DISABLED_OR_NOT_VALID) {
-            binding.loginButton.hideProgress(R.string.login_title)
+            lf_loginButton.hideProgress(R.string.login_title)
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onNavigationReceived(navigationCode: NavigationCode) {
         if (navigationCode == NavigationCode.NAVIGATE_TO_EVENTS_FRAGMENT) {
-            MainActivity.instance.updatePrefs(binding.email.text.toString(), binding.password.text.toString())
+            //TODO: lementett értékek, nem pedig az aktuálisan kiolvasott
+            MainActivity.instance.updatePrefs(lf_email.text.toString(), lf_password.text.toString())
 
             val action = LoginFragmentDirections.actionLoginFragmentToEventsFragment()
             NavHostFragment.findNavController(this).navigate(action)
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        super.onCreateView(inflater, container, savedInstanceState)
+        return inflater.inflate(R.layout.login_fragment, container, false)
+    }
 
-        binding = DataBindingUtil.inflate(inflater, R.layout.login_fragment, container, false)
-        binding.loginButton.attachTextChangeAnimator()
-
-        binding.notRegistered.setOnClickListener {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        lf_notRegistered.setOnClickListener {
             val action = LoginFragmentDirections.actionLoginFragmentToRegisterFragment()
             NavHostFragment.findNavController(this).navigate(action)
         }
 
-        binding.loginButton.setOnClickListener {
+        lf_loginButton.attachTextChangeAnimator()
+        lf_loginButton.setOnClickListener {
             var error = false
-            val email = binding.email.text.toString()
-            val password = binding.password.text.toString()
+            val email = lf_email.text.toString()
+            val password = lf_password.text.toString()
 
             if (email.isEmpty()) {
-                binding.email.error = "A mezőt kötelező kitölteni!"
+                lf_email.error = "A mezőt kötelező kitölteni!"
                 error = true
             }
             else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                binding.email.error = "Az email cím nem valódi!"
+                lf_email.error = "Az email cím nem valódi!"
                 error = true
             }
 
             if (password.isEmpty()) {
-                binding.password.error = "A mezőt kötelező kitölteni!"
+                lf_password.error = "A mezőt kötelező kitölteni!"
                 error = true
             }
             else if (password.length < 8) {
-                binding.password.error = "A jelszó min. 8 karakter lehet!"
+                lf_password.error = "A jelszó min. 8 karakter lehet!"
                 error = true
             }
 
             if (!error) {
-                binding.loginButton.showProgress {
+                lf_loginButton.showProgress {
                     buttonTextRes = R.string.login_waiting
                     progressColor = Color.WHITE
                 }
 
                 val inputMethodManager = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                inputMethodManager.hideSoftInputFromWindow(view!!.windowToken, 0)
+                inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
 
                 val basic = Credentials.basic(email, password)
                 MainActivity.instance.checkUser(basic)
             }
         }
-
-        return binding.root
     }
 }

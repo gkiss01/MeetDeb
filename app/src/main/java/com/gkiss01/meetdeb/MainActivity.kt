@@ -34,6 +34,8 @@ class MainActivity : AppCompatActivity() {
 
         val sharedPref = this.getSharedPreferences("BASIC_AUTH_PREFS", Context.MODE_PRIVATE)
         basic = Credentials.basic(sharedPref.getString("OPTION_EMAIL", "unknown")!!, sharedPref.getString("OPTION_PASSWORD", "unknown")!!)
+
+        //TODO: máshol meghívni ezt, mert így minden elforgatásnál lefut
         checkUser(basic)
     }
 
