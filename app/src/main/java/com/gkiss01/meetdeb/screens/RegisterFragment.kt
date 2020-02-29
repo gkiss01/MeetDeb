@@ -26,7 +26,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-class RegisterFragment : Fragment() {
+class RegisterFragment : Fragment(R.layout.register_fragment) {
     override fun onStart() {
         super.onStart()
         EventBus.getDefault().register(this)
@@ -53,11 +53,6 @@ class RegisterFragment : Fragment() {
                 NavHostFragment.findNavController(this).navigate(action)
             }, 500)
         }
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        super.onCreateView(inflater, container, savedInstanceState)
-        return inflater.inflate(R.layout.register_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

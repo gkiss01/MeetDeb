@@ -35,7 +35,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.threeten.bp.OffsetDateTime
 
-class CreateEventFragment : Fragment() {
+class CreateEventFragment : Fragment(R.layout.create_event_fragment) {
 
     private lateinit var viewModel: CreateEventViewModel
 
@@ -69,11 +69,6 @@ class CreateEventFragment : Fragment() {
             }, 500)
         }
         else if (navigationCode == NavigationCode.NAVIGATE_TO_IMAGE_PICKER) showImagePicker()
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        super.onCreateView(inflater, container, savedInstanceState)
-        return inflater.inflate(R.layout.create_event_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

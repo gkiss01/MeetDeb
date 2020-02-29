@@ -27,7 +27,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import kotlin.system.exitProcess
 
-class EventsFragment : Fragment() {
+class EventsFragment : Fragment(R.layout.events_fragment) {
 
     private lateinit var viewModel: EventsViewModel
     private lateinit var viewAdapter: EventEntryAdapter
@@ -92,11 +92,6 @@ class EventsFragment : Fragment() {
             requireActivity().finishAffinity()
             exitProcess(0)
         }
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        super.onCreateView(inflater, container, savedInstanceState)
-        return inflater.inflate(R.layout.events_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -13,7 +13,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-class LoadingFragment : Fragment() {
+class LoadingFragment : Fragment(R.layout.loading_fragment) {
 
     override fun onStart() {
         super.onStart()
@@ -39,12 +39,5 @@ class LoadingFragment : Fragment() {
             val action = LoadingFragmentDirections.actionLoadingFragmentToEventsFragment()
             NavHostFragment.findNavController(this).navigate(action)
         }
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?): View? {
-
-        return inflater.inflate(R.layout.loading_fragment, container, false)
     }
 }
