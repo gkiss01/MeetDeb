@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.FrameLayout
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.adapter.ParticipantEntryAdapter
@@ -21,8 +21,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 class ParticipantsDialogFragment : DialogFragment() {
-
-    private lateinit var viewModel: ParticipantsDialogViewModel
+    private val viewModel: ParticipantsDialogViewModel by viewModels()
 
     override fun onStart() {
         super.onStart()
@@ -52,8 +51,6 @@ class ParticipantsDialogFragment : DialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewModel = ViewModelProvider(this).get(ParticipantsDialogViewModel::class.java)
-
         val viewAdapter = ParticipantEntryAdapter()
 
         if (viewModel.participants.value == null || viewModel.participants.value!!.isEmpty())

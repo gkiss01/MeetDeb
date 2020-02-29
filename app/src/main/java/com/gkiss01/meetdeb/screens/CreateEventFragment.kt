@@ -10,13 +10,11 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.hideProgress
@@ -36,8 +34,7 @@ import org.greenrobot.eventbus.ThreadMode
 import org.threeten.bp.OffsetDateTime
 
 class CreateEventFragment : Fragment(R.layout.create_event_fragment) {
-
-    private lateinit var viewModel: CreateEventViewModel
+    private val viewModel: CreateEventViewModel by viewModels()
 
     private val REQUEST_CODE_PICK_IMAGE = 1
     private val PERMISSION_CODE_STORAGE = 2
@@ -72,10 +69,6 @@ class CreateEventFragment : Fragment(R.layout.create_event_fragment) {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val application = requireNotNull(this.activity).application
-        val viewModelFactory = CreateEventViewModelFactory(application)
-        viewModel = ViewModelProvider(this, viewModelFactory).get(CreateEventViewModel::class.java)
-
         cef_dateButton.setOnClickListener {
             val datePickerDialog = DatePickerDialog(context!!, DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
                 viewModel.year = year

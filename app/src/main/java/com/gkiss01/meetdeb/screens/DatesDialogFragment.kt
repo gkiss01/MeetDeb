@@ -9,8 +9,8 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.FrameLayout
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.gkiss01.meetdeb.R
@@ -29,7 +29,7 @@ import org.greenrobot.eventbus.ThreadMode
 
 class DatesDialogFragment : DialogFragment() {
 
-    private lateinit var viewModel: DatesDialogViewModel
+    private val viewModel: DatesDialogViewModel by viewModels()
     private lateinit var viewAdapter: DateEntryAdapter
 
     private var eventId: Long = -1L
@@ -82,8 +82,6 @@ class DatesDialogFragment : DialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewModel = ViewModelProvider(this).get(DatesDialogViewModel::class.java)
-
         eventId = arguments!!.getLong(EXTRA_EVENT_ID)
         adapterPosition = arguments!!.getInt(EXTRA_ADAPTER_POSITION)
 

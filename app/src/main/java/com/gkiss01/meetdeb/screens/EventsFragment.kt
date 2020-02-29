@@ -1,13 +1,11 @@
 package com.gkiss01.meetdeb.screens
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -28,8 +26,7 @@ import org.greenrobot.eventbus.ThreadMode
 import kotlin.system.exitProcess
 
 class EventsFragment : Fragment(R.layout.events_fragment) {
-
-    private lateinit var viewModel: EventsViewModel
+    private val viewModel: EventsViewModel by activityViewModels()
     private lateinit var viewAdapter: EventEntryAdapter
 
     private var selectedEventPosition = -1
@@ -95,8 +92,6 @@ class EventsFragment : Fragment(R.layout.events_fragment) {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewModel = ViewModelProvider(this).get(EventsViewModel::class.java)
-
         ef_addActionButton.setOnClickListener{ run {
             val action = EventsFragmentDirections.actionEventsFragmentToCreateEventFragment()
             NavHostFragment.findNavController(this).navigate(action)
