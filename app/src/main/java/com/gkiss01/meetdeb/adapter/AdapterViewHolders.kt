@@ -18,6 +18,7 @@ import com.gkiss01.meetdeb.data.Event
 import com.gkiss01.meetdeb.data.Participant
 import com.gkiss01.meetdeb.network.BASE_URL
 import com.gkiss01.meetdeb.utils.dateFormatter
+import com.mikepenz.fastadapter.FastAdapter
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.dates_list_addition.view.*
 import kotlinx.android.synthetic.main.dates_list_item.view.*
@@ -185,22 +186,15 @@ class ParticipantViewHolder(private val view: View): RecyclerView.ViewHolder(vie
     }
 }
 
-class EventViewHolder(private val view: View): RecyclerView.ViewHolder(view) {
+class EventViewHolder(private val view: View): FastAdapter.ViewHolder<Event>(view) {
     lateinit var event: Event
+    val descButton: View = view.eli_descButton
+    val joinButton: View = view.eli_acceptButton
+    val anotherDateButton: View = view.eli_anotherDateButton
 
-    fun bind(item: Event, detailsClickListener: AdapterClickListener, joinClickListener: AdapterClickListener, anotherDateClickListener: AdapterClickListener) {
+    override fun bindView(item: Event, payloads: List<Any>) {
         event = item
         view.eli_eventLabel.text = item.name
-
-        view.eli_descButton.setOnClickListener {
-            detailsClickListener.onClick(this.adapterPosition)
-        }
-        view.eli_acceptButton.setOnClickListener {
-            joinClickListener.onClick(this.adapterPosition)
-        }
-        view.eli_anotherDateButton.setOnClickListener {
-            anotherDateClickListener.onClick(this.adapterPosition)
-        }
 
         if (item.accepted) {
             view.eli_acceptButton.hideProgress(R.string.event_accepted)
@@ -218,7 +212,10 @@ class EventViewHolder(private val view: View): RecyclerView.ViewHolder(view) {
             .load("$BASE_URL/images/${event.id}")
             .placeholder(R.drawable.placeholder)
             .into(view.eli_eventImage)
+    }
 
+    override fun unbindView(item: Event) {
+        view.eli_eventLabel.text = null
     }
 
     fun showEventJoinAnimation() {
@@ -232,13 +229,6 @@ class EventViewHolder(private val view: View): RecyclerView.ViewHolder(view) {
         view.eli_anotherDateButton.showProgress {
             buttonTextRes = R.string.event_accept_waiting
             progressColor = Color.parseColor("#485688")
-        }
-    }
-
-    companion object {
-        fun from(parent: ViewGroup): EventViewHolder {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.events_list_item, parent, false)
-            return EventViewHolder(view)
         }
     }
 }

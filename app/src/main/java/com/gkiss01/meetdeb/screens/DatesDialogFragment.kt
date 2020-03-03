@@ -33,7 +33,6 @@ class DatesDialogFragment : DialogFragment() {
     private lateinit var viewAdapter: DateEntryAdapter
 
     private var eventId: Long = -1L
-    private var adapterPosition: Int = -1
 
     override fun onStart() {
         super.onStart()
@@ -83,7 +82,6 @@ class DatesDialogFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         eventId = arguments!!.getLong(EXTRA_EVENT_ID)
-        adapterPosition = arguments!!.getInt(EXTRA_ADAPTER_POSITION)
 
         viewAdapter = DateEntryAdapter(eventId, AdapterClickListener { position ->
             val itemView = df_datesRecyclerView.findViewHolderForAdapterPosition(position) as DateViewHolder
@@ -120,18 +118,16 @@ class DatesDialogFragment : DialogFragment() {
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         if (viewModel.votesChanged.value!! && viewModel.dates.value!!.isNotEmpty())
-            EventBus.getDefault().post(UpdateEventRequest(eventId, adapterPosition))
+            EventBus.getDefault().post(UpdateEventRequest(eventId))
     }
 
     companion object {
         private const val EXTRA_EVENT_ID = "eid"
-        private const val EXTRA_ADAPTER_POSITION = "aps"
 
-        fun newInstance(eventId: Long, adapterPosition: Int): DatesDialogFragment {
+        fun newInstance(eventId: Long): DatesDialogFragment {
             val dialogFragment = DatesDialogFragment()
             val args = Bundle().apply {
                 putLong(EXTRA_EVENT_ID, eventId)
-                putInt(EXTRA_ADAPTER_POSITION, adapterPosition)
             }
             dialogFragment.arguments = args
             return dialogFragment

@@ -1,6 +1,7 @@
 package com.gkiss01.meetdeb.screens
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
@@ -11,14 +12,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
-import com.gkiss01.meetdeb.adapter.AdapterClickListener
-import com.gkiss01.meetdeb.adapter.EventEntryAdapter
 import com.gkiss01.meetdeb.adapter.EventViewHolder
 import com.gkiss01.meetdeb.data.Event
 import com.gkiss01.meetdeb.data.EventList
 import com.gkiss01.meetdeb.data.UpdateEventRequest
 import com.gkiss01.meetdeb.network.ErrorCodes
-import com.gkiss01.meetdeb.network.NavigationCode
+import com.mikepenz.fastadapter.FastAdapter
+import com.mikepenz.fastadapter.GenericFastAdapter
+import com.mikepenz.fastadapter.adapters.ItemAdapter
+import com.mikepenz.fastadapter.diff.FastAdapterDiffUtil
+import com.mikepenz.fastadapter.listeners.ClickEventHook
+import com.mikepenz.fastadapter.ui.items.ProgressItem
 import kotlinx.android.synthetic.main.events_fragment.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -27,9 +31,10 @@ import kotlin.system.exitProcess
 
 class EventsFragment : Fragment(R.layout.events_fragment) {
     private val viewModel: EventsViewModel by activityViewModels()
-    private lateinit var viewAdapter: EventEntryAdapter
 
-    private var selectedEventPosition = -1
+    private val itemAdapter = ItemAdapter<Event>()
+    private val footerAdapter = ItemAdapter<ProgressItem>()
+    private lateinit var fastAdapter: GenericFastAdapter
 
     override fun onStart() {
         super.onStart()
@@ -42,42 +47,39 @@ class EventsFragment : Fragment(R.layout.events_fragment) {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onEventReceived(event: Event) {
+        viewModel.updateEvent(event)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventsReceived(events: EventList) {
         viewModel.addEvents(events.events)
-        ef_swipeRefreshLayout.isRefreshing = false
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onEventReceived(event: Event) {
-        viewAdapter.updateDataSourceByEvent(event)
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onUpdateRequestReceived(updateEventRequest: UpdateEventRequest) {
-        val view = ef_eventsRecyclerView.findViewHolderForAdapterPosition(updateEventRequest.adapterPosition) as EventViewHolder
+    fun onUpdateRequestReceived(request: UpdateEventRequest) {
+        val position = itemAdapter.getAdapterPosition(request.eventId)
+        val view = ef_eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventViewHolder
+        Log.e("asd", "$view")
         if (!view.event.voted) {
-            MainActivity.instance.getEvent(updateEventRequest.eventId)
             view.showEventVoteAnimation()
-            selectedEventPosition = updateEventRequest.adapterPosition
+            viewModel.selectedEvent = request.eventId
+
+            MainActivity.instance.getEvent(request.eventId)
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onErrorReceived(errorCode: ErrorCodes) {
         if (errorCode == ErrorCodes.UNKNOWN || errorCode == ErrorCodes.NO_EVENTS_FOUND) {
-            if (selectedEventPosition != -1) {
-                viewAdapter.notifyItemChanged(selectedEventPosition)
-                selectedEventPosition = -1
+            if (viewModel.selectedEvent != Long.MIN_VALUE) {
+                fastAdapter.notifyAdapterItemChanged(itemAdapter.getAdapterPosition(viewModel.selectedEvent))
+                viewModel.selectedEvent = Long.MIN_VALUE
             }
-            if (viewModel.isMoreLoading.value == true) viewAdapter.removeLoaderFromList()
-            ef_swipeRefreshLayout.isRefreshing = false
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onNavigationReceived(navigationCode: NavigationCode) {
-        if (navigationCode == NavigationCode.LOAD_MORE_HAS_ENDED) {
-            viewModel.isMoreLoading.value = false
+            if (viewModel.isMoreLoading) {
+                viewModel.isMoreLoading = false
+                footerAdapter.clear()
+            }
             ef_swipeRefreshLayout.isRefreshing = false
         }
     }
@@ -98,50 +100,67 @@ class EventsFragment : Fragment(R.layout.events_fragment) {
         }}
 
         ef_swipeRefreshLayout.setOnRefreshListener {
-            if (!viewModel.isMoreLoading.value!!)
+            if (!viewModel.isMoreLoading)
                 viewModel.refreshEvents()
-            else
-                ef_swipeRefreshLayout.isRefreshing = false
+            else ef_swipeRefreshLayout.isRefreshing = false
         }
 
-        viewAdapter = EventEntryAdapter(AdapterClickListener { position ->
-                val itemView = ef_eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventViewHolder
-                val bottomSheet = DetailsBottomSheetFragment(itemView.event)
-                bottomSheet.show(childFragmentManager, "DetailsBottomSheetFragment")
-            },
-            AdapterClickListener { position ->
-                val itemView = ef_eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventViewHolder
-                MainActivity.instance.modifyParticipation(itemView.event.id, itemView.event.accepted)
-                itemView.showEventJoinAnimation()
-                selectedEventPosition = position
-            },
-            AdapterClickListener { position ->
-                val itemView = ef_eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventViewHolder
-                val datesDialogFragment = DatesDialogFragment.newInstance(itemView.event.id, position)
-                datesDialogFragment.show(childFragmentManager, "datesDialogFragment")
-                MainActivity.instance.showDates(itemView.event.id)
-        })
-        viewAdapter.setHasStableIds(true)
-
-        viewModel.events.observe(viewLifecycleOwner, Observer { events ->
-            events?.let { viewAdapter.addHeaderAndSubmitList(it) }
-        })
+        fastAdapter = FastAdapter.with(listOf(itemAdapter, footerAdapter))
+        fastAdapter.attachDefaultListeners = false
+        ef_eventsRecyclerView.adapter = fastAdapter
 
         val layoutManager = LinearLayoutManager(context)
-
-        ef_eventsRecyclerView.adapter = viewAdapter
         ef_eventsRecyclerView.layoutManager = layoutManager
+
         ef_eventsRecyclerView.setHasFixedSize(true)
         ef_eventsRecyclerView.setItemViewCacheSize(20)
+        ef_eventsRecyclerView.itemAnimator = null
+
+        viewModel.events.observe(viewLifecycleOwner, Observer { events ->
+            events?.let { FastAdapterDiffUtil.set(itemAdapter, it) }
+            ef_swipeRefreshLayout.isRefreshing = false
+            viewModel.isMoreLoading = false // félős
+            footerAdapter.clear()
+        })
+
+        fastAdapter.addEventHook(object : ClickEventHook<Event>() {
+            override fun onBindMany(viewHolder: RecyclerView.ViewHolder): List<View>? {
+                return if (viewHolder is EventViewHolder) listOf(viewHolder.descButton, viewHolder.joinButton, viewHolder.anotherDateButton)
+                else null
+            }
+
+            override fun onClick(v: View, position: Int, fastAdapter: FastAdapter<Event>, item: Event) {
+                when (v.id) {
+                    R.id.eli_descButton -> {
+                        val bottomSheet = DetailsBottomSheetFragment(item)
+                        bottomSheet.show(childFragmentManager, "DetailsBottomSheetFragment")
+                    }
+                    R.id.eli_acceptButton -> {
+                        MainActivity.instance.modifyParticipation(item.id, item.accepted)
+
+                        val itemView = ef_eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventViewHolder
+                        itemView.showEventJoinAnimation()
+                    }
+                    R.id.eli_anotherDateButton -> {
+                        MainActivity.instance.showDates(item.id)
+
+                        val datesDialogFragment = DatesDialogFragment.newInstance(item.id, position)
+                        datesDialogFragment.show(childFragmentManager, "datesDialogFragment")
+                    }
+                }
+            }
+        })
 
         ef_eventsRecyclerView.addOnScrollListener(object: RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
 
-                if (dy > 0 && !viewModel.isMoreLoading.value!!) {
+                if (dy > 0 && !viewModel.isMoreLoading) {
                     if (layoutManager.itemCount <= (layoutManager.findLastVisibleItemPosition() + 1)) {
+                        footerAdapter.clear()
+                        footerAdapter.add(ProgressItem())
+
                         viewModel.loadMoreEvents()
-                        viewAdapter.addLoaderToList()
                     }
                 }
             }
