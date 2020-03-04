@@ -12,27 +12,31 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.SimpleItemAnimator
+import androidx.recyclerview.widget.RecyclerView
 import com.gkiss01.meetdeb.R
-import com.gkiss01.meetdeb.adapter.AdapterClickListener
 import com.gkiss01.meetdeb.adapter.AdditionViewHolder
-import com.gkiss01.meetdeb.adapter.DateEntryAdapter
 import com.gkiss01.meetdeb.adapter.DateViewHolder
+import com.gkiss01.meetdeb.data.Date
 import com.gkiss01.meetdeb.data.DateList
 import com.gkiss01.meetdeb.data.UpdateEventRequest
 import com.gkiss01.meetdeb.network.ErrorCodes
-import com.gkiss01.meetdeb.network.NavigationCode
+import com.mikepenz.fastadapter.FastAdapter
+import com.mikepenz.fastadapter.GenericFastAdapter
+import com.mikepenz.fastadapter.adapters.ItemAdapter
+import com.mikepenz.fastadapter.diff.FastAdapterDiffUtil
+import com.mikepenz.fastadapter.listeners.ClickEventHook
+import com.mikepenz.fastadapter.ui.items.ProgressItem
 import kotlinx.android.synthetic.main.dates_fragment.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 class DatesDialogFragment : DialogFragment() {
-
     private val viewModel: DatesDialogViewModel by viewModels()
-    private lateinit var viewAdapter: DateEntryAdapter
 
-    private var eventId: Long = -1L
+    private val itemAdapter = ItemAdapter<Date>()
+    private val headerAdapter = ItemAdapter<ProgressItem>()
+    private lateinit var fastAdapter: GenericFastAdapter
 
     override fun onStart() {
         super.onStart()
@@ -46,7 +50,7 @@ class DatesDialogFragment : DialogFragment() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onDatesReceived(dates: DateList) {
-        viewModel.dates.value = dates.dates
+        viewModel.setDates(dates.dates)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -57,21 +61,11 @@ class DatesDialogFragment : DialogFragment() {
 
             val view = df_datesRecyclerView.findViewHolderForAdapterPosition(df_datesRecyclerView.layoutManager!!.childCount - 1) as AdditionViewHolder
             if (view.isProgressActive()) view.clearData()
-            else if (viewModel.isLoading.value == false) this.dismiss()
+            else if (!viewModel.isLoading) this.dismiss()
         }
-        if (errorCode == ErrorCodes.UNKNOWN && viewModel.isLoading.value == true) {
-            viewAdapter.notifyDataSetChanged()
-            viewModel.isLoading.value = false
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onNavigationReceived(navigationCode: NavigationCode) {
-        if (navigationCode == NavigationCode.LOAD_VOTES_HAS_ENDED) {
-            if (viewModel.isLoading.value == true) viewModel.votesChanged.value = true
-            viewModel.isLoading.value = false
-            val view = df_datesRecyclerView.findViewHolderForAdapterPosition(viewModel.dates.value!!.size) as AdditionViewHolder
-            view.clearData(true)
+        if (errorCode == ErrorCodes.UNKNOWN && viewModel.isLoading) {
+            fastAdapter.notifyAdapterDataSetChanged()
+            viewModel.isLoading = false
         }
     }
 
@@ -81,27 +75,45 @@ class DatesDialogFragment : DialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        eventId = arguments!!.getLong(EXTRA_EVENT_ID)
+        viewModel.eventId = arguments!!.getLong(EXTRA_EVENT_ID)
 
-        viewAdapter = DateEntryAdapter(eventId, AdapterClickListener { position ->
-            val itemView = df_datesRecyclerView.findViewHolderForAdapterPosition(position) as DateViewHolder
-            if (viewModel.isLoading.value!!) itemView.setRadioButtonUnchecked()
-            else {
-                itemView.showVoteCreateAnimation()
-                viewModel.addVote(itemView.dateId)
+        fastAdapter = FastAdapter.with(listOf(headerAdapter, itemAdapter))
+        fastAdapter.attachDefaultListeners = false
+        df_datesRecyclerView.adapter = fastAdapter
+
+        df_datesRecyclerView.layoutManager = LinearLayoutManager(context)
+
+        df_datesRecyclerView.setItemViewCacheSize(20)
+        df_datesRecyclerView.itemAnimator = null
+
+        fastAdapter.addEventHook(object : ClickEventHook<Date>() {
+            override fun onBind(viewHolder: RecyclerView.ViewHolder): View? {
+                return if (viewHolder is DateViewHolder) viewHolder.voteButton else null
+            }
+
+            override fun onClick(v: View, position: Int, fastAdapter: FastAdapter<Date>, item: Date) {
+                val itemView = df_datesRecyclerView.findViewHolderForAdapterPosition(position) as DateViewHolder
+
+                if (viewModel.isLoading)
+                    itemView.setRadioButtonUnchecked()
+                else if (!item.accepted) {
+                    viewModel.addVote(itemView.dateId)
+                    itemView.showVoteCreateAnimation()
+                }
             }
         })
 
-        if (viewModel.dates.value == null || viewModel.dates.value!!.isEmpty())
-            viewAdapter.addLoadingAndAddition()
+        if (viewModel.dates.value == null || viewModel.dates.value!!.isEmpty()) {
+            headerAdapter.clear()
+            headerAdapter.add(ProgressItem())
+        }
 
         viewModel.dates.observe(viewLifecycleOwner, Observer {
-            viewAdapter.addDatesAndAddition(it)
+            FastAdapterDiffUtil[itemAdapter] = it
+            if (viewModel.isLoading) viewModel.votesChanged = true
+            viewModel.isLoading = false // félős
+            headerAdapter.clear()
         })
-
-        (df_datesRecyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
-        df_datesRecyclerView.adapter = viewAdapter
-        df_datesRecyclerView.layoutManager = LinearLayoutManager(context)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -117,8 +129,8 @@ class DatesDialogFragment : DialogFragment() {
 
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        if (viewModel.votesChanged.value!! && viewModel.dates.value!!.isNotEmpty())
-            EventBus.getDefault().post(UpdateEventRequest(eventId))
+        if (viewModel.votesChanged && viewModel.dates.value!!.isNotEmpty())
+            EventBus.getDefault().post(UpdateEventRequest(viewModel.eventId))
     }
 
     companion object {

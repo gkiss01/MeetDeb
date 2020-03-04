@@ -116,8 +116,8 @@ class EventsFragment : Fragment(R.layout.events_fragment) {
         ef_eventsRecyclerView.setItemViewCacheSize(20)
         ef_eventsRecyclerView.itemAnimator = null
 
-        viewModel.events.observe(viewLifecycleOwner, Observer { events ->
-            events?.let { FastAdapterDiffUtil.set(itemAdapter, it) }
+        viewModel.events.observe(viewLifecycleOwner, Observer {
+            FastAdapterDiffUtil[itemAdapter] = it
             ef_swipeRefreshLayout.isRefreshing = false
             viewModel.isMoreLoading = false // félős
             footerAdapter.clear()
@@ -144,7 +144,7 @@ class EventsFragment : Fragment(R.layout.events_fragment) {
                     R.id.eli_anotherDateButton -> {
                         MainActivity.instance.showDates(item.id)
 
-                        val datesDialogFragment = DatesDialogFragment.newInstance(item.id, position)
+                        val datesDialogFragment = DatesDialogFragment.newInstance(item.id)
                         datesDialogFragment.show(childFragmentManager, "datesDialogFragment")
                     }
                 }

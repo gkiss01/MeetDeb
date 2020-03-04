@@ -139,40 +139,6 @@ class AdditionViewHolder(private val view: View, private val eventId: Long): Rec
     }
 }
 
-class DateViewHolder(private val view: View): RecyclerView.ViewHolder(view) {
-    var dateId = -1L
-
-    fun bind(item: Date, dateClickListener: AdapterClickListener) {
-        dateId = item.id
-        view.dli_dateValue.text = item.date.format(dateFormatter)
-        view.dli_votes.text = "Szavazatok: ${item.votes}"
-        view.dli_voteButton.isChecked = item.accepted
-
-        view.dli_voteButton.setOnClickListener {
-            if (!item.accepted) dateClickListener.onClick(this.adapterPosition)
-        }
-
-        view.dli_voteButton.hideProgress()
-    }
-
-    fun showVoteCreateAnimation() {
-        view.dli_voteButton.showProgress {
-            progressColor = Color.parseColor("#485688")
-        }
-    }
-
-    fun setRadioButtonUnchecked() {
-        view.dli_voteButton.isChecked = false
-    }
-
-    companion object {
-        fun from(parent: ViewGroup): DateViewHolder {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.dates_list_item, parent, false)
-            return DateViewHolder(view)
-        }
-    }
-}
-
 class ParticipantViewHolder(private val view: View): RecyclerView.ViewHolder(view) {
     fun bind(item: Participant) {
         view.pli_name.text = item.username
@@ -183,6 +149,37 @@ class ParticipantViewHolder(private val view: View): RecyclerView.ViewHolder(vie
             val view = LayoutInflater.from(parent.context).inflate(R.layout.participants_list_item, parent, false)
             return ParticipantViewHolder(view)
         }
+    }
+}
+
+class DateViewHolder(private val view: View): FastAdapter.ViewHolder<Date>(view) {
+    var dateId = Long.MIN_VALUE
+    val voteButton: View = view.dli_voteButton
+
+    override fun bindView(item: Date, payloads: List<Any>) {
+        dateId = item.id
+        view.dli_dateValue.text = item.date.format(dateFormatter)
+        view.dli_votes.text = "Szavazatok: ${item.votes}"
+        view.dli_voteButton.isChecked = item.accepted
+
+        view.dli_voteButton.hideProgress()
+    }
+
+    override fun unbindView(item: Date) {
+        dateId = Long.MIN_VALUE
+        view.dli_dateValue.text = null
+        view.dli_votes.text = null
+        view.dli_voteButton.isChecked = false
+    }
+
+    fun showVoteCreateAnimation() {
+        view.dli_voteButton.showProgress {
+            progressColor = Color.parseColor("#485688")
+        }
+    }
+
+    fun setRadioButtonUnchecked() {
+        view.dli_voteButton.isChecked = false
     }
 }
 

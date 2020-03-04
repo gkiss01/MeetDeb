@@ -7,17 +7,18 @@ import com.gkiss01.meetdeb.data.Date
 
 class DatesDialogViewModel : ViewModel() {
     val dates = MutableLiveData<List<Date>>()
-    val isLoading = MutableLiveData<Boolean>()
-    val votesChanged = MutableLiveData<Boolean>()
-
-    init {
-        isLoading.value = false
-        votesChanged.value = false
-    }
+    var isLoading = false
+    var votesChanged = false
+    var eventId = Long.MIN_VALUE
 
     fun addVote(dateId: Long) {
-        if (isLoading.value!!) return
-        isLoading.value = true
-        MainActivity.instance.addVote(dateId)
+        if (!isLoading) {
+            MainActivity.instance.addVote(dateId)
+            isLoading = true
+        }
+    }
+
+    fun setDates(dateList: List<Date>) {
+        dates.value = dateList
     }
 }
