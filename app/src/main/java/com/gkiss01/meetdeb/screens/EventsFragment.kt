@@ -122,8 +122,7 @@ class EventsFragment : Fragment(R.layout.events_fragment) {
         itemAdapter.fastAdapter!!.addClickListener( {null}, { vh: EventViewHolder -> listOf<View>(vh.itemView.eli_descButton, vh.itemView.eli_acceptButton, vh.itemView.eli_anotherDateButton) }) { v, position, _, item ->
             when (v.id) {
                 R.id.eli_descButton -> {
-                    val bottomSheet = DetailsBottomSheetFragment(item)
-                    bottomSheet.show(childFragmentManager, "DetailsBottomSheetFragment")
+                    findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToDetailsBottomSheetFragment(item))
                 }
                 R.id.eli_acceptButton -> {
                     MainActivity.instance.modifyParticipation(item.id, item.accepted)

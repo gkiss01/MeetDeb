@@ -12,6 +12,9 @@
         <action
             android:id="@+id/action_eventsFragment_to_datesDialogFragment"
             app:destination="@id/datesDialogFragment" />
+        <action
+            android:id="@+id/action_eventsFragment_to_detailsBottomSheetFragment"
+            app:destination="@id/detailsBottomSheetFragment" />
     </fragment>
     <fragment
         android:id="@+id/createEventFragment"
@@ -42,4 +45,18 @@
             android:name="eventId"
             app:argType="long" />
     </dialog>
+    <dialog
+        android:id="@+id/detailsBottomSheetFragment"
+        android:name="com.gkiss01.meetdeb.screens.DetailsBottomSheetFragment"
+        android:label="DetailsBottomSheetFragment"
+        tools:layout="@layout/details_fragment_bottomsheet" >
+        <argument
+            android:name="event"
+            app:argType="com.gkiss01.meetdeb.data.fastadapter.Event" />
+    </dialog>
+    <dialog
+        android:id="@+id/participantsDialogFragment"
+        android:name="com.gkiss01.meetdeb.screens.ParticipantsDialogFragment"
+        android:label="participants_fragment"
+        tools:layout="@layout/participants_fragment" />
 </navigation>
