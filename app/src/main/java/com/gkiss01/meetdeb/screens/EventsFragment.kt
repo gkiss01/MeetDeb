@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.gkiss01.meetdeb.MainActivity
@@ -95,10 +96,7 @@ class EventsFragment : Fragment(R.layout.events_fragment) {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        ef_addActionButton.setOnClickListener{ run {
-            val action = EventsFragmentDirections.actionEventsFragmentToCreateEventFragment()
-            NavHostFragment.findNavController(this).navigate(action)
-        }}
+        ef_addActionButton.setOnClickListener{ findNavController().navigate(R.id.createEventFragment) }
 
         ef_swipeRefreshLayout.setOnRefreshListener {
             if (!viewModel.isMoreLoading)
@@ -139,8 +137,7 @@ class EventsFragment : Fragment(R.layout.events_fragment) {
                 R.id.eli_anotherDateButton -> {
                     MainActivity.instance.showDates(item.id)
 
-                    val datesDialogFragment = DatesDialogFragment.newInstance(item.id)
-                    datesDialogFragment.show(childFragmentManager, "datesDialogFragment")
+                    findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToDatesDialogFragment(item.id))
                 }
             }
         }

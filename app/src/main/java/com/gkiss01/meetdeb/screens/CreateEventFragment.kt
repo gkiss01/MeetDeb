@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
@@ -60,10 +61,7 @@ class CreateEventFragment : Fragment(R.layout.create_event_fragment) {
     fun onNavigationReceived(navigationCode: NavigationCode) {
         if (navigationCode == NavigationCode.NAVIGATE_TO_EVENTS_FRAGMENT) {
             cef_createButton.hideProgress(R.string.event_created)
-            Handler().postDelayed({
-                val action = CreateEventFragmentDirections.actionCreateEventFragmentToEventsFragment()
-                NavHostFragment.findNavController(this).navigate(action)
-            }, 500)
+            Handler().postDelayed({ findNavController().popBackStack() }, 500)
         }
         else if (navigationCode == NavigationCode.NAVIGATE_TO_IMAGE_PICKER) showImagePicker()
     }

@@ -80,7 +80,7 @@ class DatesDialogFragment : DialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewModel.eventId = arguments!!.getLong(EXTRA_EVENT_ID)
+        viewModel.eventId = arguments!!.getLong("eventId")
 
         fastAdapter = FastAdapter.with(listOf(headerAdapter, itemAdapter, footerAdapter))
         fastAdapter.attachDefaultListeners = false
@@ -148,18 +148,5 @@ class DatesDialogFragment : DialogFragment() {
         super.onDismiss(dialog)
         if (viewModel.votesChanged && viewModel.dates.value!!.isNotEmpty())
             EventBus.getDefault().post(UpdateEventRequest(viewModel.eventId))
-    }
-
-    companion object {
-        private const val EXTRA_EVENT_ID = "eid"
-
-        fun newInstance(eventId: Long): DatesDialogFragment {
-            val dialogFragment = DatesDialogFragment()
-            val args = Bundle().apply {
-                putLong(EXTRA_EVENT_ID, eventId)
-            }
-            dialogFragment.arguments = args
-            return dialogFragment
-        }
     }
 }
