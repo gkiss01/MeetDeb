@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import com.andrefrsousa.superbottomsheet.SuperBottomSheetFragment
 import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
-import com.gkiss01.meetdeb.data.Event
+import com.gkiss01.meetdeb.data.fastadapter.Event
 import com.gkiss01.meetdeb.utils.dateFormatter
 import kotlinx.android.synthetic.main.details_fragment_bottomsheet.*
 

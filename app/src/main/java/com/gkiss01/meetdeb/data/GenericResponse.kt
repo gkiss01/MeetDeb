@@ -1,5 +1,8 @@
 package com.gkiss01.meetdeb.data
 
+import com.gkiss01.meetdeb.data.fastadapter.Date
+import com.gkiss01.meetdeb.data.fastadapter.Event
+import com.gkiss01.meetdeb.data.fastadapter.Participant
 import com.gkiss01.meetdeb.network.ErrorCodes
 
 data class GenericResponse(

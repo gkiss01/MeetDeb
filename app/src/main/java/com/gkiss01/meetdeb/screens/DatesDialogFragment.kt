@@ -14,12 +14,12 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
-import com.gkiss01.meetdeb.adapter.DatePickerItem
 import com.gkiss01.meetdeb.adapter.DatePickerViewHolder
 import com.gkiss01.meetdeb.adapter.DateViewHolder
-import com.gkiss01.meetdeb.data.Date
 import com.gkiss01.meetdeb.data.DateList
 import com.gkiss01.meetdeb.data.UpdateEventRequest
+import com.gkiss01.meetdeb.data.fastadapter.Date
+import com.gkiss01.meetdeb.data.fastadapter.DatePickerItem
 import com.gkiss01.meetdeb.network.ErrorCodes
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericFastAdapter

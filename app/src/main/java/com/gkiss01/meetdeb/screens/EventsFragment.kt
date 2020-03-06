@@ -13,9 +13,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.adapter.EventViewHolder
-import com.gkiss01.meetdeb.data.Event
 import com.gkiss01.meetdeb.data.EventList
 import com.gkiss01.meetdeb.data.UpdateEventRequest
+import com.gkiss01.meetdeb.data.fastadapter.Event
 import com.gkiss01.meetdeb.network.ErrorCodes
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericFastAdapter

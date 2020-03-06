@@ -9,9 +9,10 @@ import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.isProgressActive
 import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.R
-import com.gkiss01.meetdeb.data.Date
-import com.gkiss01.meetdeb.data.Event
-import com.gkiss01.meetdeb.data.Participant
+import com.gkiss01.meetdeb.data.fastadapter.Date
+import com.gkiss01.meetdeb.data.fastadapter.DatePickerItem
+import com.gkiss01.meetdeb.data.fastadapter.Event
+import com.gkiss01.meetdeb.data.fastadapter.Participant
 import com.gkiss01.meetdeb.network.BASE_URL
 import com.gkiss01.meetdeb.utils.dateFormatter
 import com.mikepenz.fastadapter.FastAdapter
@@ -90,16 +91,13 @@ class DatePickerViewHolder(private val view: View): FastAdapter.ViewHolder<DateP
     }
 }
 
-class ParticipantViewHolder(private val view: View): RecyclerView.ViewHolder(view) {
-    fun bind(item: Participant) {
+class ParticipantViewHolder(private val view: View): FastAdapter.ViewHolder<Participant>(view) {
+    override fun bindView(item: Participant, payloads: List<Any>) {
         view.pli_name.text = item.username
     }
 
-    companion object {
-        fun from(parent: ViewGroup): ParticipantViewHolder {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.participants_list_item, parent, false)
-            return ParticipantViewHolder(view)
-        }
+    override fun unbindView(item: Participant) {
+        view.pli_name.text = null
     }
 }
 

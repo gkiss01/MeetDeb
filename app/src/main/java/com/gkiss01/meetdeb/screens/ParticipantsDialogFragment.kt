@@ -12,9 +12,14 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gkiss01.meetdeb.R
-import com.gkiss01.meetdeb.adapter.ParticipantEntryAdapter
 import com.gkiss01.meetdeb.data.ParticipantList
+import com.gkiss01.meetdeb.data.fastadapter.Participant
 import com.gkiss01.meetdeb.network.ErrorCodes
+import com.mikepenz.fastadapter.FastAdapter
+import com.mikepenz.fastadapter.GenericFastAdapter
+import com.mikepenz.fastadapter.adapters.ItemAdapter
+import com.mikepenz.fastadapter.diff.FastAdapterDiffUtil
+import com.mikepenz.fastadapter.ui.items.ProgressItem
 import kotlinx.android.synthetic.main.participants_fragment.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -22,6 +27,10 @@ import org.greenrobot.eventbus.ThreadMode
 
 class ParticipantsDialogFragment : DialogFragment() {
     private val viewModel: ParticipantsDialogViewModel by viewModels()
+
+    private val itemAdapter = ItemAdapter<Participant>()
+    private val headerAdapter = ItemAdapter<ProgressItem>()
+    private lateinit var fastAdapter: GenericFastAdapter
 
     override fun onStart() {
         super.onStart()
@@ -35,7 +44,7 @@ class ParticipantsDialogFragment : DialogFragment() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onParticipantsReceived(participants: ParticipantList) {
-        viewModel.participants.value = participants.participants
+        viewModel.setParticipants(participants.participants)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -51,17 +60,24 @@ class ParticipantsDialogFragment : DialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val viewAdapter = ParticipantEntryAdapter()
+        fastAdapter = FastAdapter.with(listOf(headerAdapter, itemAdapter))
+        fastAdapter.attachDefaultListeners = false
+        pf_participantsRecyclerView.adapter = fastAdapter
 
-        if (viewModel.participants.value == null || viewModel.participants.value!!.isEmpty())
-            viewAdapter.addLoading()
+        pf_participantsRecyclerView.layoutManager = LinearLayoutManager(context)
+
+        pf_participantsRecyclerView.setItemViewCacheSize(20)
+        pf_participantsRecyclerView.itemAnimator = null
+
+        if (viewModel.participants.value == null || viewModel.participants.value!!.isEmpty()) {
+            headerAdapter.clear()
+            headerAdapter.add(ProgressItem())
+        }
 
         viewModel.participants.observe(viewLifecycleOwner, Observer {
-            viewAdapter.addParticipants(it)
+            FastAdapterDiffUtil[itemAdapter] = it
+            headerAdapter.clear()
         })
-
-        pf_participantsRecyclerView.adapter = viewAdapter
-        pf_participantsRecyclerView.layoutManager = LinearLayoutManager(context)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

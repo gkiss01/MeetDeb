@@ -1,9 +1,10 @@
-package com.gkiss01.meetdeb.adapter
+package com.gkiss01.meetdeb.data.fastadapter
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.view.View
 import com.gkiss01.meetdeb.R
+import com.gkiss01.meetdeb.adapter.DatePickerViewHolder
 import com.gkiss01.meetdeb.utils.updateOffsetDateTime
 import com.mikepenz.fastadapter.items.AbstractItem
 import kotlinx.android.synthetic.main.dates_list_picker.view.*
@@ -41,5 +42,6 @@ class DatePickerItem: AbstractItem<DatePickerViewHolder>() {
         }
     }
 
-    override fun getViewHolder(v: View): DatePickerViewHolder = DatePickerViewHolder(v)
+    override fun getViewHolder(v: View): DatePickerViewHolder =
+        DatePickerViewHolder(v)
 }
