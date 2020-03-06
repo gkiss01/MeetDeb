@@ -12,9 +12,10 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
-import com.gkiss01.meetdeb.adapter.AdditionViewHolder
+import com.gkiss01.meetdeb.adapter.DatePickerItem
+import com.gkiss01.meetdeb.adapter.DatePickerViewHolder
 import com.gkiss01.meetdeb.adapter.DateViewHolder
 import com.gkiss01.meetdeb.data.Date
 import com.gkiss01.meetdeb.data.DateList
@@ -24,18 +25,20 @@ import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericFastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.diff.FastAdapterDiffUtil
-import com.mikepenz.fastadapter.listeners.ClickEventHook
+import com.mikepenz.fastadapter.listeners.addClickListener
 import com.mikepenz.fastadapter.ui.items.ProgressItem
 import kotlinx.android.synthetic.main.dates_fragment.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.threeten.bp.OffsetDateTime
 
 class DatesDialogFragment : DialogFragment() {
     private val viewModel: DatesDialogViewModel by viewModels()
 
     private val itemAdapter = ItemAdapter<Date>()
     private val headerAdapter = ItemAdapter<ProgressItem>()
+    private val footerAdapter = ItemAdapter<DatePickerItem>()
     private lateinit var fastAdapter: GenericFastAdapter
 
     override fun onStart() {
@@ -59,7 +62,7 @@ class DatesDialogFragment : DialogFragment() {
             val position = df_datesRecyclerView.layoutManager!!.childCount
             if (position == 0) return this.dismiss()
 
-            val view = df_datesRecyclerView.findViewHolderForAdapterPosition(df_datesRecyclerView.layoutManager!!.childCount - 1) as AdditionViewHolder
+            val view = df_datesRecyclerView.findViewHolderForAdapterPosition(df_datesRecyclerView.layoutManager!!.childCount - 1) as DatePickerViewHolder
             if (view.isProgressActive()) view.clearData()
             else if (!viewModel.isLoading) this.dismiss()
         }
@@ -77,31 +80,40 @@ class DatesDialogFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewModel.eventId = arguments!!.getLong(EXTRA_EVENT_ID)
 
-        fastAdapter = FastAdapter.with(listOf(headerAdapter, itemAdapter))
+        fastAdapter = FastAdapter.with(listOf(headerAdapter, itemAdapter, footerAdapter))
         fastAdapter.attachDefaultListeners = false
         df_datesRecyclerView.adapter = fastAdapter
 
-        df_datesRecyclerView.layoutManager = LinearLayoutManager(context)
+        val layoutManager = LinearLayoutManager(context)
+        df_datesRecyclerView.layoutManager = layoutManager
 
         df_datesRecyclerView.setItemViewCacheSize(20)
         df_datesRecyclerView.itemAnimator = null
 
-        fastAdapter.addEventHook(object : ClickEventHook<Date>() {
-            override fun onBind(viewHolder: RecyclerView.ViewHolder): View? {
-                return if (viewHolder is DateViewHolder) viewHolder.voteButton else null
-            }
+        itemAdapter.fastAdapter!!.addClickListener({ vh: DateViewHolder -> vh.voteButton }) { _, position, _, item ->
+            val itemView = df_datesRecyclerView.findViewHolderForAdapterPosition(position) as DateViewHolder
 
-            override fun onClick(v: View, position: Int, fastAdapter: FastAdapter<Date>, item: Date) {
-                val itemView = df_datesRecyclerView.findViewHolderForAdapterPosition(position) as DateViewHolder
-
-                if (viewModel.isLoading)
-                    itemView.setRadioButtonUnchecked()
-                else if (!item.accepted) {
-                    viewModel.addVote(itemView.dateId)
-                    itemView.showVoteCreateAnimation()
-                }
+            if (viewModel.isLoading)
+                itemView.setRadioButtonUnchecked()
+            else if (!item.accepted) {
+                viewModel.addVote(itemView.dateId)
+                itemView.showVoteCreateAnimation()
             }
-        })
+        }
+
+        footerAdapter.add(DatePickerItem())
+        footerAdapter.fastAdapter!!.addClickListener({ vh: DatePickerViewHolder -> vh.createButton }) { _, position, _, _ ->
+            val itemView = df_datesRecyclerView.findViewHolderForAdapterPosition(position) as DatePickerViewHolder
+
+            if (itemView.getPickedDate().isBefore(OffsetDateTime.now()))
+                itemView.setError("Jövőbeli dátumot adj meg!")
+            else {
+                MainActivity.instance.createDate(viewModel.eventId, itemView.getPickedDate())
+
+                itemView.setError(null)
+                itemView.showDateCreateAnimation()
+            }
+        }
 
         if (viewModel.dates.value == null || viewModel.dates.value!!.isEmpty()) {
             headerAdapter.clear()
@@ -113,6 +125,9 @@ class DatesDialogFragment : DialogFragment() {
             if (viewModel.isLoading) viewModel.votesChanged = true
             viewModel.isLoading = false // félős
             headerAdapter.clear()
+
+            val itemView = df_datesRecyclerView.findViewHolderForAdapterPosition(layoutManager.itemCount - 1) as DatePickerViewHolder
+            itemView.clearData(true)
         })
     }
 

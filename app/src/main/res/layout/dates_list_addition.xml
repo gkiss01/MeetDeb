@@ -7,38 +7,46 @@
     android:layout_height="wrap_content"
     android:padding="13dp">
 
-    <ImageView
-        android:id="@+id/dla_plusSign"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:contentDescription="@string/date_add_button_desc"
-        android:src="@drawable/ic_add_pink"
-        android:tint="#FFFFFF"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/dla_headerLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text="@string/date_add_button"
-        android:textAllCaps="false"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@id/dla_plusSign"
-        app:layout_constraintStart_toEndOf="@id/dla_plusSign"
-        app:layout_constraintTop_toTopOf="@id/dla_plusSign" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" >
 
-    <ImageView
-        android:id="@+id/dla_downArrow"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:contentDescription="@string/date_add_button_arrow_desc"
-        android:src="@drawable/ic_arrow_down"
-        android:tint="#ffffff"
-        app:layout_constraintBottom_toBottomOf="@id/dla_plusSign"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/dla_plusSign" />
+        <ImageView
+            android:id="@+id/dla_plusSign"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:contentDescription="@string/date_add_button_desc"
+            android:src="@drawable/ic_add_pink"
+            android:tint="#FFFFFF"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@string/date_add_button"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@id/dla_plusSign"
+            app:layout_constraintStart_toEndOf="@id/dla_plusSign"
+            app:layout_constraintTop_toTopOf="@id/dla_plusSign" />
+
+        <ImageView
+            android:id="@+id/dla_downArrow"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:contentDescription="@string/date_add_button_arrow_desc"
+            android:src="@drawable/ic_arrow_down"
+            android:tint="#ffffff"
+            app:layout_constraintBottom_toBottomOf="@id/dla_plusSign"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/dla_plusSign" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
         android:id="@+id/dla_subLayout"
@@ -48,7 +56,7 @@
         android:orientation="vertical"
         android:padding="3dp"
         android:visibility="visible"
-        app:layout_constraintTop_toBottomOf="@id/dla_plusSign">
+        app:layout_constraintTop_toBottomOf="@id/dla_headerLayout">
 
         <TextView
             android:id="@+id/dla_dateTitle"
