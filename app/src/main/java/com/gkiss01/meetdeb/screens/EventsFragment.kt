@@ -21,7 +21,7 @@ import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericFastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.diff.FastAdapterDiffUtil
-import com.mikepenz.fastadapter.listeners.ClickEventHook
+import com.mikepenz.fastadapter.listeners.addClickListener
 import com.mikepenz.fastadapter.ui.items.ProgressItem
 import kotlinx.android.synthetic.main.events_fragment.*
 import kotlinx.android.synthetic.main.events_list_item.view.*
@@ -124,33 +124,26 @@ class EventsFragment : Fragment(R.layout.events_fragment) {
             footerAdapter.clear()
         })
 
-        fastAdapter.addEventHook(object : ClickEventHook<Event>() {
-            override fun onBindMany(viewHolder: RecyclerView.ViewHolder): List<View>? {
-                return if (viewHolder is EventViewHolder) listOf(viewHolder.itemView.eli_descButton, viewHolder.itemView.eli_acceptButton, viewHolder.itemView.eli_anotherDateButton)
-                else null
-            }
+        itemAdapter.fastAdapter!!.addClickListener( {null}, { vh: EventViewHolder -> listOf<View>(vh.itemView.eli_descButton, vh.itemView.eli_acceptButton, vh.itemView.eli_anotherDateButton) }) { v, position, _, item ->
+            when (v.id) {
+                R.id.eli_descButton -> {
+                    val bottomSheet = DetailsBottomSheetFragment(item)
+                    bottomSheet.show(childFragmentManager, "DetailsBottomSheetFragment")
+                }
+                R.id.eli_acceptButton -> {
+                    MainActivity.instance.modifyParticipation(item.id, item.accepted)
 
-            override fun onClick(v: View, position: Int, fastAdapter: FastAdapter<Event>, item: Event) {
-                when (v.id) {
-                    R.id.eli_descButton -> {
-                        val bottomSheet = DetailsBottomSheetFragment(item)
-                        bottomSheet.show(childFragmentManager, "DetailsBottomSheetFragment")
-                    }
-                    R.id.eli_acceptButton -> {
-                        MainActivity.instance.modifyParticipation(item.id, item.accepted)
+                    val itemView = ef_eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventViewHolder
+                    itemView.showJoinAnimation()
+                }
+                R.id.eli_anotherDateButton -> {
+                    MainActivity.instance.showDates(item.id)
 
-                        val itemView = ef_eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventViewHolder
-                        itemView.showJoinAnimation()
-                    }
-                    R.id.eli_anotherDateButton -> {
-                        MainActivity.instance.showDates(item.id)
-
-                        val datesDialogFragment = DatesDialogFragment.newInstance(item.id)
-                        datesDialogFragment.show(childFragmentManager, "datesDialogFragment")
-                    }
+                    val datesDialogFragment = DatesDialogFragment.newInstance(item.id)
+                    datesDialogFragment.show(childFragmentManager, "datesDialogFragment")
                 }
             }
-        })
+        }
 
         ef_eventsRecyclerView.addOnScrollListener(object: RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {

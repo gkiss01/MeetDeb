@@ -64,7 +64,7 @@ class DatesDialogFragment : DialogFragment() {
             val position = df_datesRecyclerView.layoutManager!!.childCount
             if (position == 0) return this.dismiss()
 
-            val view = df_datesRecyclerView.findViewHolderForAdapterPosition(df_datesRecyclerView.layoutManager!!.childCount - 1) as DatePickerViewHolder
+            val view = df_datesRecyclerView.findViewHolderForAdapterPosition(position - 1) as DatePickerViewHolder
             if (view.isProgressActive()) view.clearAnimation()
             else if (!viewModel.isLoading) this.dismiss()
         }
@@ -96,10 +96,10 @@ class DatesDialogFragment : DialogFragment() {
             val itemView = df_datesRecyclerView.findViewHolderForAdapterPosition(position) as DateViewHolder
 
             if (viewModel.isLoading)
-                itemView.setRadioButtonUnchecked()
+                itemView.setUnchecked()
             else if (!item.accepted) {
                 viewModel.addVote(itemView.dateId)
-                itemView.showVoteCreateAnimation()
+                itemView.showAnimation()
             }
         }
 

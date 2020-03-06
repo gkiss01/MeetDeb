@@ -122,13 +122,13 @@ class DateViewHolder(private val view: View): FastAdapter.ViewHolder<Date>(view)
         view.dli_voteButton.isChecked = false
     }
 
-    fun showVoteCreateAnimation() {
+    fun showAnimation() {
         view.dli_voteButton.showProgress {
             progressColor = Color.parseColor("#485688")
         }
     }
 
-    fun setRadioButtonUnchecked() {
+    fun setUnchecked() {
         view.dli_voteButton.isChecked = false
     }
 }
