@@ -5,8 +5,9 @@ import android.os.Bundle
 import android.os.Handler
 import android.util.Patterns
 import android.view.View
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
@@ -46,18 +47,20 @@ class RegisterFragment : Fragment(R.layout.register_fragment) {
     fun onNavigationReceived(navigationCode: NavigationCode) {
         if (navigationCode == NavigationCode.NAVIGATE_TO_LOGIN_FRAGMENT) {
             rf_registerButton.hideProgress(R.string.register_created)
-            Handler().postDelayed({
-                val action = RegisterFragmentDirections.actionRegisterFragmentToLoginFragment()
-                NavHostFragment.findNavController(this).navigate(action)
-            }, 500)
+            Handler().postDelayed({ findNavController().navigate(R.id.loginFragment) }, 500)
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            requireActivity().finishAffinity()
         }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        rf_alreadyRegistered.setOnClickListener {
-            val action = RegisterFragmentDirections.actionRegisterFragmentToLoginFragment()
-            NavHostFragment.findNavController(this).navigate(action)
-        }
+        rf_alreadyRegistered.setOnClickListener { findNavController().navigate(R.id.loginFragment) }
 
         rf_registerButton.attachTextChangeAnimator()
         rf_registerButton.setOnClickListener {

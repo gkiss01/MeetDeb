@@ -17,7 +17,7 @@ data class Date(
     override val layoutRes: Int
         get() = R.layout.dates_list_item
     override val type: Int
-        get() = R.id.df_datesRecyclerView
+        get() = R.id.dli_layout
 
     override fun getViewHolder(v: View): DateViewHolder {
         return DateViewHolder(v)

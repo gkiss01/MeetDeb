@@ -28,8 +28,8 @@ import com.mikepenz.fastadapter.diff.FastAdapterDiffUtil
 import com.mikepenz.fastadapter.listeners.addClickListener
 import com.mikepenz.fastadapter.ui.items.ProgressItem
 import kotlinx.android.synthetic.main.dates_fragment.*
-import kotlinx.android.synthetic.main.dates_list_addition.view.*
 import kotlinx.android.synthetic.main.dates_list_item.view.*
+import kotlinx.android.synthetic.main.dates_list_picker.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -104,7 +104,7 @@ class DatesDialogFragment : DialogFragment() {
         }
 
         footerAdapter.add(DatePickerItem())
-        footerAdapter.fastAdapter!!.addClickListener({ vh: DatePickerViewHolder -> vh.itemView.dla_createButton }) { _, position, _, item ->
+        footerAdapter.fastAdapter!!.addClickListener({ vh: DatePickerViewHolder -> vh.itemView.dlp_createButton }) { _, position, _, item ->
             val itemView = df_datesRecyclerView.findViewHolderForAdapterPosition(position) as DatePickerViewHolder
 
             if (item.offsetDateTime.isBefore(OffsetDateTime.now()))

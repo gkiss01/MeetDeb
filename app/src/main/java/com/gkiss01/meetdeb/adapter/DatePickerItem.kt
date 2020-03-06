@@ -6,25 +6,25 @@ import android.view.View
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.utils.updateOffsetDateTime
 import com.mikepenz.fastadapter.items.AbstractItem
-import kotlinx.android.synthetic.main.dates_list_addition.view.*
+import kotlinx.android.synthetic.main.dates_list_picker.view.*
 import org.threeten.bp.OffsetDateTime
 
 class DatePickerItem: AbstractItem<DatePickerViewHolder>() {
     var offsetDateTime: OffsetDateTime = OffsetDateTime.now()
 
-    override val type: Int
-        get() = R.id.dla_layout
     override val layoutRes: Int
-        get() = R.layout.dates_list_addition
+        get() = R.layout.dates_list_picker
+    override val type: Int
+        get() = R.id.dlp_layout
 
     override fun bindView(holder: DatePickerViewHolder, payloads: List<Any>) {
         super.bindView(holder, payloads)
         val context = holder.itemView.context
         val is24HourFormat = android.text.format.DateFormat.is24HourFormat(context)
 
-        holder.itemView.dla_headerLayout.setOnClickListener { holder.closeOrExpand() }
+        holder.itemView.dlp_headerLayout.setOnClickListener { holder.closeOrExpand() }
 
-        holder.itemView.dla_dateButton.setOnClickListener {
+        holder.itemView.dlp_dateButton.setOnClickListener {
             val datePickerDialog = DatePickerDialog(context, DatePickerDialog.OnDateSetListener { _, year, monthValue, dayOfMonth ->
                 offsetDateTime = updateOffsetDateTime(offsetDateTime, year, monthValue + 1, dayOfMonth)
                 holder.updateSelectedDate(offsetDateTime)
@@ -32,7 +32,7 @@ class DatePickerItem: AbstractItem<DatePickerViewHolder>() {
             datePickerDialog.show()
         }
 
-        holder.itemView.dla_timeButton.setOnClickListener {
+        holder.itemView.dlp_timeButton.setOnClickListener {
             val timePickerDialog = TimePickerDialog(context, TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
                 offsetDateTime = updateOffsetDateTime(offsetDateTime, hourOfDay, minute)
                 holder.updateSelectedDate(offsetDateTime)

@@ -16,8 +16,8 @@ import com.gkiss01.meetdeb.network.BASE_URL
 import com.gkiss01.meetdeb.utils.dateFormatter
 import com.mikepenz.fastadapter.FastAdapter
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.dates_list_addition.view.*
 import kotlinx.android.synthetic.main.dates_list_item.view.*
+import kotlinx.android.synthetic.main.dates_list_picker.view.*
 import kotlinx.android.synthetic.main.events_list_item.view.*
 import kotlinx.android.synthetic.main.participants_list_item.view.*
 import org.threeten.bp.OffsetDateTime
@@ -45,48 +45,48 @@ class DatePickerViewHolder(private val view: View): FastAdapter.ViewHolder<DateP
 
     override fun bindView(item: DatePickerItem, payloads: List<Any>) {
         expanded = false
-        view.dla_subLayout.visibility = View.GONE
+        view.dlp_subLayout.visibility = View.GONE
         updateSelectedDate(item.offsetDateTime)
     }
 
     override fun unbindView(item: DatePickerItem) {
         expanded = false
-        view.dla_subLayout.visibility = View.GONE
-        view.dla_dateTitle.text = null
+        view.dlp_subLayout.visibility = View.GONE
+        view.dlp_dateTitle.text = null
     }
 
     fun updateSelectedDate(offsetDateTime: OffsetDateTime) {
-        view.dla_dateTitle.text = offsetDateTime.format(dateFormatter)
+        view.dlp_dateTitle.text = offsetDateTime.format(dateFormatter)
     }
 
     fun setError(error: String?) {
-        view.dla_dateTitle.error = error
+        view.dlp_dateTitle.error = error
     }
 
     fun closeOrExpand() {
         expanded = !expanded
-        view.dla_subLayout.visibility = if (expanded) View.VISIBLE else View.GONE
-        view.dla_downArrow.animate().setDuration(200).rotation(if (expanded) 180F else 0F)
+        view.dlp_subLayout.visibility = if (expanded) View.VISIBLE else View.GONE
+        view.dlp_downArrow.animate().setDuration(200).rotation(if (expanded) 180F else 0F)
     }
 
     fun showAnimation() {
-        view.dla_createButton.showProgress {
+        view.dlp_createButton.showProgress {
             buttonTextRes = R.string.date_create_waiting
             progressColor = Color.WHITE
         }
     }
 
     fun clearAnimation(closePicker: Boolean = false) {
-        view.dla_createButton.hideProgress(R.string.date_create_button)
+        view.dlp_createButton.hideProgress(R.string.date_create_button)
         if (closePicker) {
             expanded = false
-            view.dla_subLayout.visibility = View.GONE
-            view.dla_downArrow.animate().setDuration(200).rotation(0F)
+            view.dlp_subLayout.visibility = View.GONE
+            view.dlp_downArrow.animate().setDuration(200).rotation(0F)
         }
     }
 
     fun isProgressActive(): Boolean {
-        return view.dla_createButton.isProgressActive()
+        return view.dlp_createButton.isProgressActive()
     }
 }
 

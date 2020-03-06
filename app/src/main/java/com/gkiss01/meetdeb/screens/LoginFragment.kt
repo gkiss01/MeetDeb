@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.util.Patterns
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
@@ -44,16 +44,12 @@ class LoginFragment : Fragment(R.layout.login_fragment) {
             //TODO: lementett értékek, nem pedig az aktuálisan kiolvasott
             MainActivity.instance.updatePrefs(lf_email.text.toString(), lf_password.text.toString())
 
-            val action = LoginFragmentDirections.actionLoginFragmentToEventsFragment()
-            NavHostFragment.findNavController(this).navigate(action)
+            findNavController().navigate(R.id.eventsFragment)
         }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        lf_notRegistered.setOnClickListener {
-            val action = LoginFragmentDirections.actionLoginFragmentToRegisterFragment()
-            NavHostFragment.findNavController(this).navigate(action)
-        }
+        lf_notRegistered.setOnClickListener { findNavController().popBackStack() }
 
         lf_loginButton.attachTextChangeAnimator()
         lf_loginButton.setOnClickListener {

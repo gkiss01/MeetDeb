@@ -22,7 +22,7 @@ data class Event(
     override val layoutRes: Int
         get() = R.layout.events_list_item
     override val type: Int
-        get() = R.id.ef_eventsRecyclerView
+        get() = R.id.eli_layout
     override var identifier: Long
         get() = id
         set(value) {}

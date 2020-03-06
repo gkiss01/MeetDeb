@@ -7,7 +7,6 @@ import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -29,7 +28,6 @@ import kotlinx.android.synthetic.main.events_list_item.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import kotlin.system.exitProcess
 
 class EventsFragment : Fragment(R.layout.events_fragment) {
     private val viewModel: EventsViewModel by activityViewModels()
@@ -91,7 +89,6 @@ class EventsFragment : Fragment(R.layout.events_fragment) {
 
         requireActivity().onBackPressedDispatcher.addCallback(this) {
             requireActivity().finishAffinity()
-            exitProcess(0)
         }
     }
 
