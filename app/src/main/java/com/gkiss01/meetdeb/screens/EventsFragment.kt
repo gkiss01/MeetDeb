@@ -24,6 +24,7 @@ import com.mikepenz.fastadapter.diff.FastAdapterDiffUtil
 import com.mikepenz.fastadapter.listeners.ClickEventHook
 import com.mikepenz.fastadapter.ui.items.ProgressItem
 import kotlinx.android.synthetic.main.events_fragment.*
+import kotlinx.android.synthetic.main.events_list_item.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -62,7 +63,7 @@ class EventsFragment : Fragment(R.layout.events_fragment) {
         val view = ef_eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventViewHolder
         Log.e("asd", "$view")
         if (!view.event.voted) {
-            view.showEventVoteAnimation()
+            view.showVoteAnimation()
             viewModel.selectedEvent = request.eventId
 
             MainActivity.instance.getEvent(request.eventId)
@@ -125,7 +126,7 @@ class EventsFragment : Fragment(R.layout.events_fragment) {
 
         fastAdapter.addEventHook(object : ClickEventHook<Event>() {
             override fun onBindMany(viewHolder: RecyclerView.ViewHolder): List<View>? {
-                return if (viewHolder is EventViewHolder) listOf(viewHolder.descButton, viewHolder.joinButton, viewHolder.anotherDateButton)
+                return if (viewHolder is EventViewHolder) listOf(viewHolder.itemView.eli_descButton, viewHolder.itemView.eli_acceptButton, viewHolder.itemView.eli_anotherDateButton)
                 else null
             }
 
@@ -139,7 +140,7 @@ class EventsFragment : Fragment(R.layout.events_fragment) {
                         MainActivity.instance.modifyParticipation(item.id, item.accepted)
 
                         val itemView = ef_eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventViewHolder
-                        itemView.showEventJoinAnimation()
+                        itemView.showJoinAnimation()
                     }
                     R.id.eli_anotherDateButton -> {
                         MainActivity.instance.showDates(item.id)

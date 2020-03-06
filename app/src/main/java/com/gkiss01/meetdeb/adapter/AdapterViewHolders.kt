@@ -1,7 +1,5 @@
 package com.gkiss01.meetdeb.adapter
 
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -16,7 +14,6 @@ import com.gkiss01.meetdeb.data.Event
 import com.gkiss01.meetdeb.data.Participant
 import com.gkiss01.meetdeb.network.BASE_URL
 import com.gkiss01.meetdeb.utils.dateFormatter
-import com.gkiss01.meetdeb.utils.updateOffsetDateTime
 import com.mikepenz.fastadapter.FastAdapter
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.dates_list_addition.view.*
@@ -43,63 +40,48 @@ class LoaderViewHolder(view: View): RecyclerView.ViewHolder(view) {
     }
 }
 
-class DatePickerViewHolder(private val view: View): RecyclerView.ViewHolder(view) {
+class DatePickerViewHolder(private val view: View): FastAdapter.ViewHolder<DatePickerItem>(view) {
     private var expanded = false
-    private var offsetDateTime = OffsetDateTime.MIN
-    val createButton: View = view.dla_createButton
 
-    fun bind() {
-        if (offsetDateTime == OffsetDateTime.MIN) {
-            offsetDateTime = OffsetDateTime.now()
-        }
-
+    override fun bindView(item: DatePickerItem, payloads: List<Any>) {
         expanded = false
         view.dla_subLayout.visibility = View.GONE
-        view.dla_dateTitle.text = offsetDateTime.format(dateFormatter)
-
-        view.dla_headerLayout.setOnClickListener {
-            view.dla_subLayout.visibility = if (expanded) View.GONE else View.VISIBLE
-            view.dla_downArrow.animate().setDuration(200).rotation(if (expanded) 0F else 180F)
-            expanded = !expanded
-        }
-
-        view.dla_dateButton.setOnClickListener {
-            val datePickerDialog = DatePickerDialog(view.dla_dateButton.context, DatePickerDialog.OnDateSetListener { _, year, monthValue, dayOfMonth ->
-                offsetDateTime = updateOffsetDateTime(offsetDateTime, year, monthValue + 1, dayOfMonth)
-                view.dla_dateTitle.text = offsetDateTime.format(dateFormatter)
-            }, offsetDateTime.year, offsetDateTime.monthValue - 1, offsetDateTime.dayOfMonth)
-            datePickerDialog.show()
-        }
-
-        val is24HourFormat = android.text.format.DateFormat.is24HourFormat(view.context)
-        view.dla_timeButton.setOnClickListener {
-            val timePickerDialog = TimePickerDialog(view.dla_timeButton.context, TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
-                offsetDateTime = updateOffsetDateTime(offsetDateTime, hourOfDay, minute)
-                view.dla_dateTitle.text = offsetDateTime.format(dateFormatter)
-            }, offsetDateTime.hour, offsetDateTime.minute, is24HourFormat)
-            timePickerDialog.show()
-        }
+        updateSelectedDate(item.offsetDateTime)
     }
 
-    fun getPickedDate(): OffsetDateTime = offsetDateTime
+    override fun unbindView(item: DatePickerItem) {
+        expanded = false
+        view.dla_subLayout.visibility = View.GONE
+        view.dla_dateTitle.text = null
+    }
+
+    fun updateSelectedDate(offsetDateTime: OffsetDateTime) {
+        view.dla_dateTitle.text = offsetDateTime.format(dateFormatter)
+    }
 
     fun setError(error: String?) {
         view.dla_dateTitle.error = error
     }
 
-    fun showDateCreateAnimation() {
+    fun closeOrExpand() {
+        expanded = !expanded
+        view.dla_subLayout.visibility = if (expanded) View.VISIBLE else View.GONE
+        view.dla_downArrow.animate().setDuration(200).rotation(if (expanded) 180F else 0F)
+    }
+
+    fun showAnimation() {
         view.dla_createButton.showProgress {
             buttonTextRes = R.string.date_create_waiting
             progressColor = Color.WHITE
         }
     }
 
-    fun clearData(closePicker: Boolean = false) {
+    fun clearAnimation(closePicker: Boolean = false) {
         view.dla_createButton.hideProgress(R.string.date_create_button)
         if (closePicker) {
+            expanded = false
             view.dla_subLayout.visibility = View.GONE
             view.dla_downArrow.animate().setDuration(200).rotation(0F)
-            expanded = false
         }
     }
 
@@ -123,7 +105,6 @@ class ParticipantViewHolder(private val view: View): RecyclerView.ViewHolder(vie
 
 class DateViewHolder(private val view: View): FastAdapter.ViewHolder<Date>(view) {
     var dateId = Long.MIN_VALUE
-    val voteButton: View = view.dli_voteButton
 
     override fun bindView(item: Date, payloads: List<Any>) {
         dateId = item.id
@@ -154,9 +135,6 @@ class DateViewHolder(private val view: View): FastAdapter.ViewHolder<Date>(view)
 
 class EventViewHolder(private val view: View): FastAdapter.ViewHolder<Event>(view) {
     lateinit var event: Event
-    val descButton: View = view.eli_descButton
-    val joinButton: View = view.eli_acceptButton
-    val anotherDateButton: View = view.eli_anotherDateButton
 
     override fun bindView(item: Event, payloads: List<Any>) {
         event = item
@@ -182,16 +160,20 @@ class EventViewHolder(private val view: View): FastAdapter.ViewHolder<Event>(vie
 
     override fun unbindView(item: Event) {
         view.eli_eventLabel.text = null
+        view.eli_acceptButton.hideProgress(R.string.event_not_accepted)
+        view.eli_acceptButton.setBackgroundResource(0)
+        view.eli_anotherDateButton.hideProgress(R.string.event_date_add)
+        view.eli_anotherDateButton.setBackgroundResource(0)
     }
 
-    fun showEventJoinAnimation() {
+    fun showJoinAnimation() {
         view.eli_acceptButton.showProgress {
             buttonTextRes = R.string.event_accept_waiting
             progressColor = Color.parseColor("#485688")
         }
     }
 
-    fun showEventVoteAnimation() {
+    fun showVoteAnimation() {
         view.eli_anotherDateButton.showProgress {
             buttonTextRes = R.string.event_accept_waiting
             progressColor = Color.parseColor("#485688")

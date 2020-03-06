@@ -14,7 +14,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.*
 
-const val BASE_URL = "http://172.17.172.157:8080"
+const val BASE_URL = "http://172.21.68.28:8080"
 //const val BASE_URL = "http://192.168.1.103:8080"
 
 enum class TargetVar {
