@@ -47,4 +47,6 @@
     <string name="login_title">Bejelentkezés</string>
     <string name="login_not_registered">Még nem regisztráltál?\nKattints a regisztráláshoz</string>
     <string name="login_waiting">Belépés…</string>
+    <string name="event_more_button_desc">Event more button</string>
+    <string name="event_more_delete">Törlés</string>
 </resources>

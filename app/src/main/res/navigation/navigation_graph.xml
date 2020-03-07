@@ -20,27 +20,27 @@
         android:id="@+id/createEventFragment"
         android:name="com.gkiss01.meetdeb.screens.CreateEventFragment"
         android:label="CreateEventFragment"
-        tools:layout="@layout/create_event_fragment"/>
+        tools:layout="@layout/create_event_fragment" />
     <fragment
         android:id="@+id/registerFragment"
         android:name="com.gkiss01.meetdeb.screens.RegisterFragment"
         android:label="RegisterFragment"
-        tools:layout="@layout/register_fragment"/>
+        tools:layout="@layout/register_fragment" />
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.gkiss01.meetdeb.screens.LoginFragment"
         android:label="LoginFragment"
-        tools:layout="@layout/login_fragment"/>
+        tools:layout="@layout/login_fragment" />
     <fragment
         android:id="@+id/loadingFragment"
         android:name="com.gkiss01.meetdeb.screens.LoadingFragment"
         android:label="LoadingFragment"
-        tools:layout="@layout/loading_fragment"/>
+        tools:layout="@layout/loading_fragment" />
     <dialog
         android:id="@+id/datesDialogFragment"
         android:name="com.gkiss01.meetdeb.screens.DatesDialogFragment"
         android:label="dates_fragment"
-        tools:layout="@layout/dates_fragment" >
+        tools:layout="@layout/dates_fragment">
         <argument
             android:name="eventId"
             app:argType="long" />
@@ -49,7 +49,7 @@
         android:id="@+id/detailsBottomSheetFragment"
         android:name="com.gkiss01.meetdeb.screens.DetailsBottomSheetFragment"
         android:label="DetailsBottomSheetFragment"
-        tools:layout="@layout/details_fragment_bottomsheet" >
+        tools:layout="@layout/details_fragment_bottomsheet">
         <argument
             android:name="event"
             app:argType="com.gkiss01.meetdeb.data.fastadapter.Event" />

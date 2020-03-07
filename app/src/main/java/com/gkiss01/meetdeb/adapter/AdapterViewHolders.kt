@@ -137,6 +137,7 @@ class EventViewHolder(private val view: View): FastAdapter.ViewHolder<Event>(vie
     override fun bindView(item: Event, payloads: List<Any>) {
         event = item
         view.eli_eventLabel.text = item.name
+        view.eli_creatorLabel.text = item.username
 
         if (item.accepted) {
             view.eli_acceptButton.hideProgress(R.string.event_accepted)

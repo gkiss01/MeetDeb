@@ -2,7 +2,9 @@ package com.gkiss01.meetdeb.screens
 
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuInflater
 import android.view.View
+import android.widget.PopupMenu
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -119,7 +121,7 @@ class EventsFragment : Fragment(R.layout.events_fragment) {
             footerAdapter.clear()
         })
 
-        itemAdapter.fastAdapter!!.addClickListener( {null}, { vh: EventViewHolder -> listOf<View>(vh.itemView.eli_descButton, vh.itemView.eli_acceptButton, vh.itemView.eli_anotherDateButton) }) { v, position, _, item ->
+        itemAdapter.fastAdapter!!.addClickListener( {null}, { vh: EventViewHolder -> listOf<View>(vh.itemView.eli_descButton, vh.itemView.eli_acceptButton, vh.itemView.eli_anotherDateButton, vh.itemView.eli_moreButton) }) { v, position, _, item ->
             when (v.id) {
                 R.id.eli_descButton -> {
                     findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToDetailsBottomSheetFragment(item))
@@ -134,6 +136,12 @@ class EventsFragment : Fragment(R.layout.events_fragment) {
                     MainActivity.instance.showDates(item.id)
 
                     findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToDatesDialogFragment(item.id))
+                }
+                R.id.eli_moreButton -> {
+                    val popup = PopupMenu(context, v)
+                    val inflater: MenuInflater = popup.menuInflater
+                    inflater.inflate(R.menu.event_more, popup.menu)
+                    popup.show()
                 }
             }
         }
