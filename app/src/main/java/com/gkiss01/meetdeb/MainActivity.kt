@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var basic: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 

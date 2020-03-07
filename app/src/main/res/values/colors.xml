@@ -13,4 +13,6 @@
     <color name="colorCreateEventText">#ffffff</color>
     <color name="colorCreateEventButton">#557771</color>
     <color name="colorEventButtonText">#000000</color>
+
+    <color name="white">#ffffff</color>
 </resources>

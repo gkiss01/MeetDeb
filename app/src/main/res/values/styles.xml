@@ -11,6 +11,10 @@
         <item name="android:fontFamily">@font/muli</item>
     </style>
 
+    <style name="AppTheme.Launcher">
+        <item name="android:windowBackground">@drawable/launch_screen</item>
+    </style>
+
     <style name="styleCreateEventText">
         <item name="android:textColor">@color/colorCreateEventText</item>
         <item name="android:textColorHint">@color/colorCreateEventText</item>
