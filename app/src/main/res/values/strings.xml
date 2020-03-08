@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MeetDeb</string>
+    <string name="app_name">meetDeb</string>
 
     <string name="events_list_header">Események</string>
 
@@ -47,7 +47,9 @@
     <string name="login_title">Bejelentkezés</string>
     <string name="login_not_registered">Még nem regisztráltál?\nKattints a regisztráláshoz</string>
     <string name="login_waiting">Belépés…</string>
+
+    <string name="loader_screen_logo">Loader screen logo</string>
     <string name="event_more_button_desc">Event more button</string>
     <string name="event_more_delete">Törlés</string>
-    <string name="loader_screen_logo">Loader screen logo</string>
+    <string name="event_more_report">Jelentés</string>
 </resources>
