@@ -16,7 +16,6 @@ import com.gkiss01.meetdeb.network.NavigationCode
 import com.gkiss01.meetdeb.utils.hideKeyboard
 import com.gkiss01.meetdeb.utils.setSavedUser
 import kotlinx.android.synthetic.main.login_fragment.*
-import okhttp3.Credentials
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode

@@ -65,6 +65,7 @@ dependencies {
     implementation "com.mikepenz:fastadapter:5.0.0"
     implementation "com.mikepenz:fastadapter-extensions-diff:5.0.0"
     implementation "com.mikepenz:fastadapter-extensions-ui:5.0.0"
+    implementation "com.mikepenz:itemanimators:1.1.0"
 
     implementation "com.google.android.material:material:1.1.0"
 

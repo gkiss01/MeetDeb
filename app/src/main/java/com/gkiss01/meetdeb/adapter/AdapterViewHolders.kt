@@ -4,12 +4,9 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.isProgressActive
-import com.github.razir.progressbutton.showDrawable
 import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R

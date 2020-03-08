@@ -1,7 +1,6 @@
 package com.gkiss01.meetdeb.screens
 
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.PopupMenu
@@ -26,6 +25,7 @@ import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.diff.FastAdapterDiffUtil
 import com.mikepenz.fastadapter.listeners.addClickListener
 import com.mikepenz.fastadapter.ui.items.ProgressItem
+import com.mikepenz.itemanimators.AlphaInAnimator
 import kotlinx.android.synthetic.main.events_fragment.*
 import kotlinx.android.synthetic.main.events_list_item.view.*
 import org.greenrobot.eventbus.EventBus
@@ -118,10 +118,11 @@ class EventsFragment : Fragment(R.layout.events_fragment), PopupMenu.OnMenuItemC
 
         ef_eventsRecyclerView.setHasFixedSize(true)
         ef_eventsRecyclerView.setItemViewCacheSize(6)
-        ef_eventsRecyclerView.itemAnimator = null
+        ef_eventsRecyclerView.itemAnimator = AlphaInAnimator()
 
         viewModel.events.observe(viewLifecycleOwner, Observer {
             FastAdapterDiffUtil[itemAdapter] = it
+            ef_eventsRecyclerView.scheduleLayoutAnimation()
             ef_swipeRefreshLayout.isRefreshing = false
             viewModel.isMoreLoading = false // félős
             footerAdapter.clear()
