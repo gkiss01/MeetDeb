@@ -25,7 +25,7 @@ class DetailsBottomSheetFragment: SuperBottomSheetFragment() {
         dfbs_userNameValue.text = event.username
         dfbs_venueValue.text = event.venue
         dfbs_dateValue.text = event.date.format(dateFormatter)
-        dfbs_descriptionValue.text = event.labels
+        dfbs_descriptionValue.text = event.description
         dfbs_participants.text = "Ott lesz ${event.participants} ember"
 
         dfbs_participantsCheck.setOnClickListener {

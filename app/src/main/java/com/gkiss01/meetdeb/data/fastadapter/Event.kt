@@ -14,7 +14,8 @@ data class Event(
     @com.gkiss01.meetdeb.adapter.OffsetDateTime
     var date: OffsetDateTime,
     var venue: String,
-    var labels: String,
+    var description: String,
+    var reported: Boolean,
     var participants: Int,
     val accepted: Boolean,
     val voted: Boolean): Serializable, AbstractItem<EventViewHolder>() {

@@ -1,6 +1,5 @@
 package com.gkiss01.meetdeb
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -34,10 +33,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        basic = Credentials.basic(getSavedUsername(this), getSavedPassword(this))
-
         //TODO: máshol meghívni ezt, mert így minden elforgatásnál lefut
-        checkUser(basic)
+        checkUser()
     }
 
     companion object {
@@ -50,12 +47,8 @@ class MainActivity : AppCompatActivity() {
 
     fun isUserAdmin(): Boolean = isAdmin
 
-    fun updatePrefs(email: String, password: String) {
-        setSavedUser(this, email, password)
-        basic = Credentials.basic(email, password)
-    }
-
-    fun checkUser(basic: String) {
+    fun checkUser() {
+        basic = Credentials.basic(getSavedUsername(this), getSavedPassword(this))
         makeRequest(WebApi.retrofitService.checkUserAsync(basic), TargetVar.VAR_CHECK_USER)
     }
 
@@ -69,6 +62,14 @@ class MainActivity : AppCompatActivity() {
 
     fun uploadEvent(event: RequestBody, image: MultipartBody.Part?) {
         makeRequest(WebApi.retrofitService.createEventAsync(basic, event, image), TargetVar.VAR_CREATE_EVENT)
+    }
+
+    fun reportEvent(eventId: Long) {
+        makeRequest(WebApi.retrofitService.reportEventAsync(basic, eventId), TargetVar.VAR_REPORT_EVENT)
+    }
+
+    fun removeReport(eventId: Long) {
+        makeRequest(WebApi.retrofitService.removeReportAsync(basic, eventId), TargetVar.VAR_REMOVE_EVENT_REPORT)
     }
 
     fun showDates(eventId: Long) {
@@ -106,22 +107,18 @@ class MainActivity : AppCompatActivity() {
                     when (targetVar) {
                         TargetVar.VAR_CHECK_USER -> {
                             if (listResult.user!!.roles.contains(Role.ROLE_ADMIN)) {
-                                setSavedUser(
-                                    this@MainActivity,
-                                    getSavedUsername(this@MainActivity),
-                                    getSavedPassword(this@MainActivity),
-                                    true
-                                )
+                                setSavedUser(this@MainActivity, getSavedUsername(this@MainActivity), getSavedPassword(this@MainActivity), true)
                                 isAdmin = true
                             }
                             EventBus.getDefault().post(NavigationCode.NAVIGATE_TO_EVENTS_FRAGMENT)
                         }
                         TargetVar.VAR_GET_EVENTS -> EventBus.getDefault().post(EventList(listResult.events!!))
                         TargetVar.VAR_CREATE_EVENT -> EventBus.getDefault().post(NavigationCode.NAVIGATE_TO_EVENTS_FRAGMENT)
-                        TargetVar.VAR_CREATE_PARTICIPANT, TargetVar.VAR_DELETE_PARTICIPANT, TargetVar.VAR_GET_EVENT -> EventBus.getDefault().post(listResult.event)
+                        TargetVar.VAR_CREATE_PARTICIPANT, TargetVar.VAR_DELETE_PARTICIPANT, TargetVar.VAR_GET_EVENT, TargetVar.VAR_REMOVE_EVENT_REPORT -> EventBus.getDefault().post(listResult.event)
                         TargetVar.VAR_GET_DATES, TargetVar.VAR_CREATE_DATE, TargetVar.VAR_CREATE_VOTE -> EventBus.getDefault().post(DateList(listResult.dates ?: emptyList()))
                         TargetVar.VAR_CREATE_USER -> EventBus.getDefault().post(NavigationCode.NAVIGATE_TO_LOGIN_FRAGMENT)
                         TargetVar.VAR_GET_PARTICIPANTS -> EventBus.getDefault().post(ParticipantList(listResult.participants!!))
+                        TargetVar.VAR_REPORT_EVENT -> Toast.makeText(this@MainActivity, "Event reported!", Toast.LENGTH_LONG).show()
                     }
                 }
                 else handleResponseErrors(listResult.errorCode!!, listResult.errors!!)

@@ -14,6 +14,7 @@ import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.NavigationCode
 import com.gkiss01.meetdeb.utils.hideKeyboard
+import com.gkiss01.meetdeb.utils.setSavedUser
 import kotlinx.android.synthetic.main.login_fragment.*
 import okhttp3.Credentials
 import org.greenrobot.eventbus.EventBus
@@ -40,12 +41,8 @@ class LoginFragment : Fragment(R.layout.login_fragment) {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onNavigationReceived(navigationCode: NavigationCode) {
-        if (navigationCode == NavigationCode.NAVIGATE_TO_EVENTS_FRAGMENT) {
-            //TODO: lementett értékek, nem pedig az aktuálisan kiolvasott
-            MainActivity.instance.updatePrefs(lf_email.text.toString(), lf_password.text.toString())
-
+        if (navigationCode == NavigationCode.NAVIGATE_TO_EVENTS_FRAGMENT)
             findNavController().navigate(R.id.eventsFragment)
-        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -76,16 +73,19 @@ class LoginFragment : Fragment(R.layout.login_fragment) {
             }
 
             if (!error) {
-                lf_loginButton.showProgress {
-                    buttonTextRes = R.string.login_waiting
-                    progressColor = Color.WHITE
-                }
-
                 hideKeyboard(context!!, view)
+                showAnimation()
 
-                val basic = Credentials.basic(email, password)
-                MainActivity.instance.checkUser(basic)
+                setSavedUser(context!!, email, password)
+                MainActivity.instance.checkUser()
             }
+        }
+    }
+
+    private fun showAnimation() {
+        lf_loginButton.showProgress {
+            buttonTextRes = R.string.login_waiting
+            progressColor = Color.WHITE
         }
     }
 }

@@ -4,10 +4,14 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.isProgressActive
+import com.github.razir.progressbutton.showDrawable
 import com.github.razir.progressbutton.showProgress
+import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.fastadapter.Date
 import com.gkiss01.meetdeb.data.fastadapter.DatePickerItem
@@ -138,6 +142,9 @@ class EventViewHolder(private val view: View): FastAdapter.ViewHolder<Event>(vie
         event = item
         view.eli_eventLabel.text = item.name
         view.eli_creatorLabel.text = item.username
+
+        if (MainActivity.instance.isUserAdmin())
+            view.eli_creatorLabel.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_creator, 0, if (item.reported) R.drawable.ic_report else 0, 0)
 
         if (item.accepted) {
             view.eli_acceptButton.hideProgress(R.string.event_accepted)

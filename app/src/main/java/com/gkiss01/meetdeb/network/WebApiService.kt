@@ -18,6 +18,7 @@ const val BASE_URL = "http://172.17.172.157:8080"
 
 enum class TargetVar {
     VAR_GET_EVENTS, VAR_GET_EVENT, VAR_CREATE_EVENT,
+    VAR_REPORT_EVENT, VAR_REMOVE_EVENT_REPORT,
     VAR_GET_PARTICIPANTS, VAR_CREATE_PARTICIPANT, VAR_DELETE_PARTICIPANT,
     VAR_GET_DATES, VAR_CREATE_DATE,
     VAR_CREATE_VOTE,
@@ -27,9 +28,7 @@ enum class TargetVar {
 enum class NavigationCode {
     NAVIGATE_TO_EVENTS_FRAGMENT,
     NAVIGATE_TO_LOGIN_FRAGMENT,
-    NAVIGATE_TO_IMAGE_PICKER,
-    LOAD_MORE_HAS_ENDED,
-    LOAD_VOTES_HAS_ENDED
+    NAVIGATE_TO_IMAGE_PICKER
 }
 
 enum class ErrorCodes {
@@ -88,6 +87,12 @@ interface WebApiService {
 
     @GET("events")
     fun getEventsAsync(@Header("Authorization") auth: String, @Query("page") page: Int): Deferred<GenericResponse>
+
+    @GET("events/reports-add/{eventId}")
+    fun reportEventAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): Deferred<GenericResponse>
+
+    @GET("events/reports-remove/{eventId}")
+    fun removeReportAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): Deferred<GenericResponse>
 
     @GET("dates/{eventId}")
     fun getDatesAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): Deferred<GenericResponse>

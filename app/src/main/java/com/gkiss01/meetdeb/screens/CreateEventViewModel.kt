@@ -5,7 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.gkiss01.meetdeb.MainActivity
-import com.gkiss01.meetdeb.data.request.EventRequest
+import com.gkiss01.meetdeb.data.apirequest.EventRequest
 import com.gkiss01.meetdeb.network.moshi
 import id.zelory.compressor.Compressor
 import okhttp3.MediaType.Companion.toMediaTypeOrNull

@@ -1,4 +1,4 @@
-package com.gkiss01.meetdeb.data.request
+package com.gkiss01.meetdeb.data.apirequest
 
 import org.threeten.bp.OffsetDateTime
 
@@ -10,5 +10,5 @@ class EventRequest(
 
     private val venue: String,
 
-    private val labels: String
+    private val description: String
 )

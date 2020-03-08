@@ -2,7 +2,6 @@ package com.gkiss01.meetdeb.screens
 
 import android.os.Bundle
 import android.util.Log
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.PopupMenu
@@ -17,7 +16,7 @@ import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.adapter.EventViewHolder
 import com.gkiss01.meetdeb.data.EventList
-import com.gkiss01.meetdeb.data.UpdateEventRequest
+import com.gkiss01.meetdeb.data.adapterrequest.UpdateEventRequest
 import com.gkiss01.meetdeb.data.fastadapter.Event
 import com.gkiss01.meetdeb.network.ErrorCodes
 import com.mikepenz.fastadapter.FastAdapter
@@ -112,7 +111,7 @@ class EventsFragment : Fragment(R.layout.events_fragment), PopupMenu.OnMenuItemC
         ef_eventsRecyclerView.layoutManager = layoutManager
 
         ef_eventsRecyclerView.setHasFixedSize(true)
-        ef_eventsRecyclerView.setItemViewCacheSize(20)
+        ef_eventsRecyclerView.setItemViewCacheSize(6)
         ef_eventsRecyclerView.itemAnimator = null
 
         viewModel.events.observe(viewLifecycleOwner, Observer {
@@ -141,6 +140,10 @@ class EventsFragment : Fragment(R.layout.events_fragment), PopupMenu.OnMenuItemC
                 R.id.eli_moreButton -> {
                     PopupMenu(context, v).apply {
                         setOnMenuItemClickListener(this@EventsFragment)
+                        setOnDismissListener {
+                            viewModel.selectedEvent = Long.MIN_VALUE
+                        }
+                        viewModel.selectedEvent = item.id
                         inflate(if (MainActivity.instance.isUserAdmin()) R.menu.event_more_admin else R.menu.event_more)
                         show()
                     }
@@ -166,6 +169,14 @@ class EventsFragment : Fragment(R.layout.events_fragment), PopupMenu.OnMenuItemC
 
     override fun onMenuItemClick(item: MenuItem?): Boolean {
         return when (item!!.itemId) {
+            R.id.report -> {
+                MainActivity.instance.reportEvent(viewModel.selectedEvent)
+                true
+            }
+            R.id.removeReport -> {
+                MainActivity.instance.removeReport(viewModel.selectedEvent)
+                true
+            }
             R.id.delete -> {
                 Log.e("MeetLog", "delete tapped")
                 true
