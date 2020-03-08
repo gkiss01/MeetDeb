@@ -3,6 +3,7 @@ package com.gkiss01.meetdeb.screens
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.widget.PopupMenu
 import androidx.activity.addCallback
@@ -31,7 +32,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-class EventsFragment : Fragment(R.layout.events_fragment) {
+class EventsFragment : Fragment(R.layout.events_fragment), PopupMenu.OnMenuItemClickListener {
     private val viewModel: EventsViewModel by activityViewModels()
 
     private val itemAdapter = ItemAdapter<Event>()
@@ -62,7 +63,7 @@ class EventsFragment : Fragment(R.layout.events_fragment) {
     fun onUpdateRequestReceived(request: UpdateEventRequest) {
         val position = itemAdapter.getAdapterPosition(request.eventId)
         val view = ef_eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventViewHolder
-        Log.e("asd", "$view")
+
         if (!view.event.voted) {
             view.showVoteAnimation()
             viewModel.selectedEvent = request.eventId
@@ -138,10 +139,11 @@ class EventsFragment : Fragment(R.layout.events_fragment) {
                     findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToDatesDialogFragment(item.id))
                 }
                 R.id.eli_moreButton -> {
-                    val popup = PopupMenu(context, v)
-                    val inflater: MenuInflater = popup.menuInflater
-                    inflater.inflate(R.menu.event_more, popup.menu)
-                    popup.show()
+                    PopupMenu(context, v).apply {
+                        setOnMenuItemClickListener(this@EventsFragment)
+                        inflate(if (MainActivity.instance.isUserAdmin()) R.menu.event_more_admin else R.menu.event_more)
+                        show()
+                    }
                 }
             }
         }
@@ -160,5 +162,15 @@ class EventsFragment : Fragment(R.layout.events_fragment) {
                 }
             }
         })
+    }
+
+    override fun onMenuItemClick(item: MenuItem?): Boolean {
+        return when (item!!.itemId) {
+            R.id.delete -> {
+                Log.e("MeetLog", "delete tapped")
+                true
+            }
+            else -> false
+        }
     }
 }

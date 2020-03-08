@@ -8,6 +8,21 @@ import org.threeten.bp.format.DateTimeFormatter
 
 val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy, HH:mm")
 
+fun getSavedUsername(context: Context, default: String = "unknown"): String {
+    val sharedPref = context.getSharedPreferences("BASIC_AUTH_PREFS", Context.MODE_PRIVATE)
+    return sharedPref.getString("OPTION_EMAIL", default)!!
+}
+
+fun getSavedPassword(context: Context, default: String = "unknown"): String {
+    val sharedPref = context.getSharedPreferences("BASIC_AUTH_PREFS", Context.MODE_PRIVATE)
+    return sharedPref.getString("OPTION_PASSWORD", default)!!
+}
+
+fun setSavedUser(context: Context, username: String, password: String, admin: Boolean = false) {
+    val sharedPref = context.getSharedPreferences("BASIC_AUTH_PREFS", Context.MODE_PRIVATE)
+    sharedPref.edit().putString("OPTION_EMAIL", username).putString("OPTION_PASSWORD", password).putBoolean("OPTION_ADMIN", admin).apply()
+}
+
 fun hideKeyboard(context: Context, view: View) {
     val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)

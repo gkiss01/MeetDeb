@@ -25,7 +25,7 @@ data class Event(
         get() = R.id.eli_layout
     override var identifier: Long
         get() = id
-        set(value) {}
+        set(_) {}
 
     override fun getViewHolder(v: View): EventViewHolder {
         return EventViewHolder(v)

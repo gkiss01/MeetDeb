@@ -6,14 +6,14 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.gkiss01.meetdeb.data.DateList
-import com.gkiss01.meetdeb.data.EventList
-import com.gkiss01.meetdeb.data.GenericResponse
-import com.gkiss01.meetdeb.data.ParticipantList
+import com.gkiss01.meetdeb.data.*
 import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.NavigationCode
 import com.gkiss01.meetdeb.network.TargetVar
 import com.gkiss01.meetdeb.network.WebApi
+import com.gkiss01.meetdeb.utils.getSavedPassword
+import com.gkiss01.meetdeb.utils.getSavedUsername
+import com.gkiss01.meetdeb.utils.setSavedUser
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.launch
 import okhttp3.Credentials
@@ -27,14 +27,14 @@ import java.net.SocketTimeoutException
 class MainActivity : AppCompatActivity() {
 
     private lateinit var basic: String
+    private var isAdmin = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val sharedPref = this.getSharedPreferences("BASIC_AUTH_PREFS", Context.MODE_PRIVATE)
-        basic = Credentials.basic(sharedPref.getString("OPTION_EMAIL", "unknown")!!, sharedPref.getString("OPTION_PASSWORD", "unknown")!!)
+        basic = Credentials.basic(getSavedUsername(this), getSavedPassword(this))
 
         //TODO: máshol meghívni ezt, mert így minden elforgatásnál lefut
         checkUser(basic)
@@ -48,9 +48,10 @@ class MainActivity : AppCompatActivity() {
         instance = this
     }
 
+    fun isUserAdmin(): Boolean = isAdmin
+
     fun updatePrefs(email: String, password: String) {
-        val sharedPref = this.getSharedPreferences("BASIC_AUTH_PREFS", Context.MODE_PRIVATE)
-        sharedPref.edit().putString("OPTION_EMAIL", email).putString("OPTION_PASSWORD", password).apply()
+        setSavedUser(this, email, password)
         basic = Credentials.basic(email, password)
     }
 
@@ -103,8 +104,20 @@ class MainActivity : AppCompatActivity() {
                 val listResult = target.await()
                 if (!listResult.error) {
                     when (targetVar) {
+                        TargetVar.VAR_CHECK_USER -> {
+                            if (listResult.user!!.roles.contains(Role.ROLE_ADMIN)) {
+                                setSavedUser(
+                                    this@MainActivity,
+                                    getSavedUsername(this@MainActivity),
+                                    getSavedPassword(this@MainActivity),
+                                    true
+                                )
+                                isAdmin = true
+                            }
+                            EventBus.getDefault().post(NavigationCode.NAVIGATE_TO_EVENTS_FRAGMENT)
+                        }
                         TargetVar.VAR_GET_EVENTS -> EventBus.getDefault().post(EventList(listResult.events!!))
-                        TargetVar.VAR_CREATE_EVENT, TargetVar.VAR_CHECK_USER -> EventBus.getDefault().post(NavigationCode.NAVIGATE_TO_EVENTS_FRAGMENT)
+                        TargetVar.VAR_CREATE_EVENT -> EventBus.getDefault().post(NavigationCode.NAVIGATE_TO_EVENTS_FRAGMENT)
                         TargetVar.VAR_CREATE_PARTICIPANT, TargetVar.VAR_DELETE_PARTICIPANT, TargetVar.VAR_GET_EVENT -> EventBus.getDefault().post(listResult.event)
                         TargetVar.VAR_GET_DATES, TargetVar.VAR_CREATE_DATE, TargetVar.VAR_CREATE_VOTE -> EventBus.getDefault().post(DateList(listResult.dates ?: emptyList()))
                         TargetVar.VAR_CREATE_USER -> EventBus.getDefault().post(NavigationCode.NAVIGATE_TO_LOGIN_FRAGMENT)
