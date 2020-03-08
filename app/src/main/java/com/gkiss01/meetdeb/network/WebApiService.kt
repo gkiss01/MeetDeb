@@ -17,7 +17,7 @@ import retrofit2.http.*
 const val BASE_URL = "http://172.17.172.157:8080"
 
 enum class TargetVar {
-    VAR_GET_EVENTS, VAR_GET_EVENT, VAR_CREATE_EVENT,
+    VAR_GET_EVENTS, VAR_GET_EVENT, VAR_CREATE_EVENT, VAR_DELETE_EVENT,
     VAR_REPORT_EVENT, VAR_REMOVE_EVENT_REPORT,
     VAR_GET_PARTICIPANTS, VAR_CREATE_PARTICIPANT, VAR_DELETE_PARTICIPANT,
     VAR_GET_DATES, VAR_CREATE_DATE,
@@ -116,6 +116,9 @@ interface WebApiService {
 
     @POST("dates/{eventId}")
     fun createDateAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long, @Query("date") date: OffsetDateTime): Deferred<GenericResponse>
+
+    @DELETE("events/{eventId}")
+    fun deleteEventAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): Deferred<GenericResponse>
 
     @DELETE("participants/{eventId}")
     fun deleteParticipantAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): Deferred<GenericResponse>

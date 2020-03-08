@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.gkiss01.meetdeb.data.*
+import com.gkiss01.meetdeb.data.adapterrequest.DeleteEventRequest
 import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.NavigationCode
 import com.gkiss01.meetdeb.network.TargetVar
@@ -64,6 +65,10 @@ class MainActivity : AppCompatActivity() {
         makeRequest(WebApi.retrofitService.createEventAsync(basic, event, image), TargetVar.VAR_CREATE_EVENT)
     }
 
+    fun deleteEvent(eventId: Long) {
+        makeRequest(WebApi.retrofitService.deleteEventAsync(basic, eventId), TargetVar.VAR_DELETE_EVENT)
+    }
+
     fun reportEvent(eventId: Long) {
         makeRequest(WebApi.retrofitService.reportEventAsync(basic, eventId), TargetVar.VAR_REPORT_EVENT)
     }
@@ -119,6 +124,7 @@ class MainActivity : AppCompatActivity() {
                         TargetVar.VAR_CREATE_USER -> EventBus.getDefault().post(NavigationCode.NAVIGATE_TO_LOGIN_FRAGMENT)
                         TargetVar.VAR_GET_PARTICIPANTS -> EventBus.getDefault().post(ParticipantList(listResult.participants!!))
                         TargetVar.VAR_REPORT_EVENT -> Toast.makeText(this@MainActivity, "Event reported!", Toast.LENGTH_LONG).show()
+                        TargetVar.VAR_DELETE_EVENT -> EventBus.getDefault().post(DeleteEventRequest(listResult.withId!!))
                     }
                 }
                 else handleResponseErrors(listResult.errorCode!!, listResult.errors!!)

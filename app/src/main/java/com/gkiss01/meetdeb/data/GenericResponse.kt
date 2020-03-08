@@ -9,6 +9,7 @@ data class GenericResponse(
     val error: Boolean,
     val errorCode: ErrorCodes?,
     val errors: List<String>?,
+    val withId: Long?,
 
     val user: User?,
     val event: Event?,

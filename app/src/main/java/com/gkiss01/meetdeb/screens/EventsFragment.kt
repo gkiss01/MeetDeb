@@ -16,6 +16,7 @@ import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.adapter.EventViewHolder
 import com.gkiss01.meetdeb.data.EventList
+import com.gkiss01.meetdeb.data.adapterrequest.DeleteEventRequest
 import com.gkiss01.meetdeb.data.adapterrequest.UpdateEventRequest
 import com.gkiss01.meetdeb.data.fastadapter.Event
 import com.gkiss01.meetdeb.network.ErrorCodes
@@ -56,6 +57,11 @@ class EventsFragment : Fragment(R.layout.events_fragment), PopupMenu.OnMenuItemC
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventsReceived(events: EventList) {
         viewModel.addEvents(events.events)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onDeleteRequestReceived(request: DeleteEventRequest) {
+        viewModel.deleteEvent(request.eventId)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -178,7 +184,7 @@ class EventsFragment : Fragment(R.layout.events_fragment), PopupMenu.OnMenuItemC
                 true
             }
             R.id.delete -> {
-                Log.e("MeetLog", "delete tapped")
+                MainActivity.instance.deleteEvent(viewModel.selectedEvent)
                 true
             }
             else -> false

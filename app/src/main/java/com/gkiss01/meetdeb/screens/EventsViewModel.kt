@@ -34,4 +34,8 @@ class EventsViewModel : ViewModel() {
     fun updateEvent(event: Event) {
         events.value = events.value!!.map { if (it.id == event.id) event else it }
     }
+
+    fun deleteEvent(eventId: Long) {
+        events.value = events.value!!.filterNot { it.id == eventId }
+    }
 }
