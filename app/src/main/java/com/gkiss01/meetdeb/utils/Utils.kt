@@ -43,3 +43,5 @@ fun updateOffsetDateTime(offsetDateTime: OffsetDateTime, hourOfDay: Int, minute:
     return OffsetDateTime.of(offsetDateTime.year, offsetDateTime.monthValue, offsetDateTime.dayOfMonth, hourOfDay, minute,
         offsetDateTime.second, offsetDateTime.nano, offsetDateTime.offset)
 }
+
+fun isDate24HourFormat(context: Context) = android.text.format.DateFormat.is24HourFormat(context)

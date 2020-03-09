@@ -5,6 +5,7 @@ import android.app.TimePickerDialog
 import android.view.View
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.adapter.DatePickerViewHolder
+import com.gkiss01.meetdeb.utils.isDate24HourFormat
 import com.gkiss01.meetdeb.utils.updateOffsetDateTime
 import com.mikepenz.fastadapter.items.AbstractItem
 import kotlinx.android.synthetic.main.dates_list_picker.view.*
@@ -21,7 +22,6 @@ class DatePickerItem: AbstractItem<DatePickerViewHolder>() {
     override fun bindView(holder: DatePickerViewHolder, payloads: List<Any>) {
         super.bindView(holder, payloads)
         val context = holder.itemView.context
-        val is24HourFormat = android.text.format.DateFormat.is24HourFormat(context)
 
         holder.itemView.dlp_headerLayout.setOnClickListener { holder.closeOrExpand() }
 
@@ -37,7 +37,7 @@ class DatePickerItem: AbstractItem<DatePickerViewHolder>() {
             val timePickerDialog = TimePickerDialog(context, TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
                 offsetDateTime = updateOffsetDateTime(offsetDateTime, hourOfDay, minute)
                 holder.updateSelectedDate(offsetDateTime)
-            }, offsetDateTime.hour, offsetDateTime.minute, is24HourFormat)
+            }, offsetDateTime.hour, offsetDateTime.minute, isDate24HourFormat(context))
             timePickerDialog.show()
         }
     }

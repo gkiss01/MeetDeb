@@ -14,16 +14,18 @@ import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.R
+import com.gkiss01.meetdeb.data.fastadapter.Event
 import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.NavigationCode
 import com.gkiss01.meetdeb.utils.dateFormatter
 import com.gkiss01.meetdeb.utils.hideKeyboard
+import com.gkiss01.meetdeb.utils.isDate24HourFormat
+import com.gkiss01.meetdeb.utils.updateOffsetDateTime
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
 import com.zhihu.matisse.engine.impl.GlideEngine
@@ -66,25 +68,25 @@ class CreateEventFragment : Fragment(R.layout.create_event_fragment) {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        cef_dateButton.setOnClickListener {
-            val datePickerDialog = DatePickerDialog(context!!, DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
-                viewModel.year = year
-                viewModel.month = month + 1
-                viewModel.day = dayOfMonth
-                viewModel.calculateDateTime()
+        viewModel.event = (arguments?.getSerializable("event") as Event?)?:
+                Event(Long.MIN_VALUE, "", Long.MIN_VALUE, "", OffsetDateTime.now(), "", "", false, 0,
+                    accepted = false,
+                    voted = false
+                )
 
-            }, viewModel.year, viewModel.month - 1, viewModel.day)
+        cef_dateButton.setOnClickListener {
+            val datePickerDialog = DatePickerDialog(context!!, DatePickerDialog.OnDateSetListener { _, year, monthValue, dayOfMonth ->
+                viewModel.eventDate = updateOffsetDateTime(viewModel.eventDate, year, monthValue + 1, dayOfMonth)
+                cef_dateTitle.text = viewModel.eventDate.format(dateFormatter)
+            }, viewModel.eventDate.year, viewModel.eventDate.monthValue - 1, viewModel.eventDate.dayOfMonth)
             datePickerDialog.show()
         }
 
-        val is24HourFormat = android.text.format.DateFormat.is24HourFormat(context)
         cef_timeButton.setOnClickListener {
-            val timePickerDialog = TimePickerDialog(context!!, TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
-                viewModel.hour = hourOfDay
-                viewModel.minute = minute
-                viewModel.calculateDateTime()
-
-            }, viewModel.hour, viewModel.minute, is24HourFormat)
+            val timePickerDialog = TimePickerDialog(context, TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
+                viewModel.eventDate = updateOffsetDateTime(viewModel.eventDate, hourOfDay, minute)
+                cef_dateTitle.text = viewModel.eventDate.format(dateFormatter)
+            }, viewModel.eventDate.hour, viewModel.eventDate.minute, isDate24HourFormat(context!!))
             timePickerDialog.show()
         }
 
@@ -112,30 +114,28 @@ class CreateEventFragment : Fragment(R.layout.create_event_fragment) {
                 cef_description.error = "A mezőt kötelező kitölteni!"
                 error = true
             }
+
             if (TextUtils.isEmpty(cef_venue.text)) {
                 cef_venue.error = "A mezőt kötelező kitölteni!"
                 error = true
             }
-            if (viewModel.dateTime.value!!.isBefore(OffsetDateTime.now())) {
+
+            if (viewModel.eventDate.isBefore(OffsetDateTime.now())) {
                 cef_dateTitle.error = "Jövőbeli dátumot adj meg!"
                 error = true
             }
             else cef_dateTitle.error = null
 
             if (!error) {
-                viewModel.createEvent()
+                hideKeyboard(context!!, view)
+
                 cef_createButton.showProgress {
                     buttonTextRes = R.string.event_create_waiting
                     progressColor = Color.WHITE
                 }
-
-                hideKeyboard(context!!, view)
+                viewModel.createEvent()
             }
         }
-
-        viewModel.dateTime.observe(viewLifecycleOwner, Observer {
-            cef_dateTitle.text = it.format(dateFormatter)
-        })
     }
 
     private fun showImagePicker() {

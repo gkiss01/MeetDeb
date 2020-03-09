@@ -1,7 +1,6 @@
 package com.gkiss01.meetdeb.screens
 
 import android.os.Bundle
-import android.view.MenuItem
 import android.view.View
 import android.widget.PopupMenu
 import androidx.activity.addCallback
@@ -34,7 +33,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-class EventsFragment : Fragment(R.layout.events_fragment), PopupMenu.OnMenuItemClickListener {
+class EventsFragment : Fragment(R.layout.events_fragment) {
     private val viewModel: EventsViewModel by activityViewModels()
 
     private val itemAdapter = ItemAdapter<Event>()
@@ -147,25 +146,7 @@ class EventsFragment : Fragment(R.layout.events_fragment), PopupMenu.OnMenuItemC
                     findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToDatesDialogFragment(item.id))
                 }
                 R.id.eli_moreButton -> {
-                    PopupMenu(context, v).apply {
-                        if (isActiveUserAdmin()) {
-                            if (item.reported) menu.add(0, R.id.removeReport, 0, R.string.event_more_remove_report)
-                            menu.add(0, R.id.delete, 0, R.string.event_more_delete)
-                        } else {
-                            if (item.userId == getActiveUser().id) {
-                                menu.add(0, R.id.update, 0, R.string.event_more_update)
-                                menu.add(0, R.id.delete, 0, R.string.event_more_delete)
-                            }
-                            else menu.add(0, R.id.report, 0, R.string.event_more_report)
-                        }
-
-                        setOnMenuItemClickListener(this@EventsFragment)
-                        setOnDismissListener {
-                            viewModel.selectedEvent = Long.MIN_VALUE
-                        }
-                        viewModel.selectedEvent = item.id
-                        show()
-                    }
+                    createMoreActionMenu(v, item)
                 }
             }
         }
@@ -186,25 +167,33 @@ class EventsFragment : Fragment(R.layout.events_fragment), PopupMenu.OnMenuItemC
         })
     }
 
-    override fun onMenuItemClick(item: MenuItem?): Boolean {
-        return when (item!!.itemId) {
-            R.id.report -> {
-                MainActivity.instance.reportEvent(viewModel.selectedEvent)
-                true
+    private fun createMoreActionMenu(view: View, event: Event) {
+        PopupMenu(context, view).apply {
+            if (isActiveUserAdmin()) {
+                if (event.reported) menu.add(0, R.id.removeReport, 0, R.string.event_more_remove_report)
+                menu.add(0, R.id.delete, 0, R.string.event_more_delete)
+            } else {
+                if (event.userId == getActiveUser().id) {
+                    menu.add(0, R.id.update, 0, R.string.event_more_update)
+                    menu.add(0, R.id.delete, 0, R.string.event_more_delete)
+                }
+                else menu.add(0, R.id.report, 0, R.string.event_more_report)
             }
-            R.id.removeReport -> {
-                MainActivity.instance.removeReport(viewModel.selectedEvent)
-                true
-            }
-            R.id.delete -> {
-                MainActivity.instance.deleteEvent(viewModel.selectedEvent)
-                true
-            }
-            R.id.update -> {
 
+            setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.report ->
+                        MainActivity.instance.reportEvent(event.id)
+                    R.id.removeReport ->
+                        MainActivity.instance.removeReport(event.id)
+                    R.id.delete ->
+                        MainActivity.instance.deleteEvent(event.id)
+                    R.id.update ->
+                        findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToCreateEventFragment(event))
+                }
                 true
             }
-            else -> false
+            show()
         }
     }
 }
