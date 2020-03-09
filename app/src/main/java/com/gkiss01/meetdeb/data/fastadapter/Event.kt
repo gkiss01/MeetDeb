@@ -10,6 +10,7 @@ import java.io.Serializable
 data class Event(
     var id: Long,
     var username: String,
+    var userId: Long,
     var name: String,
     @com.gkiss01.meetdeb.adapter.OffsetDateTime
     var date: OffsetDateTime,

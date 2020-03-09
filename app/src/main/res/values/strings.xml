@@ -53,4 +53,5 @@
     <string name="event_more_delete">Törlés</string>
     <string name="event_more_report">Jelentés</string>
     <string name="event_more_remove_report">Jelentés törlése</string>
+    <string name="event_more_update">Frissítés</string>
 </resources>

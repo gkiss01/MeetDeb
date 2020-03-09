@@ -13,7 +13,6 @@ import com.gkiss01.meetdeb.network.TargetVar
 import com.gkiss01.meetdeb.network.WebApi
 import com.gkiss01.meetdeb.utils.getSavedPassword
 import com.gkiss01.meetdeb.utils.getSavedUsername
-import com.gkiss01.meetdeb.utils.setSavedUser
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.launch
 import okhttp3.Credentials
@@ -27,7 +26,7 @@ import java.net.SocketTimeoutException
 class MainActivity : AppCompatActivity() {
 
     private lateinit var basic: String
-    private var isAdmin = false
+    private lateinit var activeUser: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
@@ -46,7 +45,7 @@ class MainActivity : AppCompatActivity() {
         instance = this
     }
 
-    fun isUserAdmin(): Boolean = isAdmin
+    fun getActiveUser(): User = activeUser
 
     fun checkUser() {
         basic = Credentials.basic(getSavedUsername(this), getSavedPassword(this))
@@ -111,10 +110,7 @@ class MainActivity : AppCompatActivity() {
                 if (!listResult.error) {
                     when (targetVar) {
                         TargetVar.VAR_CHECK_USER -> {
-                            if (listResult.user!!.roles.contains(Role.ROLE_ADMIN)) {
-                                setSavedUser(this@MainActivity, getSavedUsername(this@MainActivity), getSavedPassword(this@MainActivity), true)
-                                isAdmin = true
-                            }
+                            activeUser = listResult.user!!
                             EventBus.getDefault().post(NavigationCode.NAVIGATE_TO_EVENTS_FRAGMENT)
                         }
                         TargetVar.VAR_GET_EVENTS -> EventBus.getDefault().post(EventList(listResult.events!!))

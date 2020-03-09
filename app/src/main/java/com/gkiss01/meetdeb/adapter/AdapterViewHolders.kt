@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.isProgressActive
 import com.github.razir.progressbutton.showProgress
-import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.fastadapter.Date
 import com.gkiss01.meetdeb.data.fastadapter.DatePickerItem
@@ -16,6 +15,7 @@ import com.gkiss01.meetdeb.data.fastadapter.Event
 import com.gkiss01.meetdeb.data.fastadapter.Participant
 import com.gkiss01.meetdeb.network.BASE_URL
 import com.gkiss01.meetdeb.utils.dateFormatter
+import com.gkiss01.meetdeb.utils.isActiveUserAdmin
 import com.mikepenz.fastadapter.FastAdapter
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.dates_list_item.view.*
@@ -140,7 +140,7 @@ class EventViewHolder(private val view: View): FastAdapter.ViewHolder<Event>(vie
         view.eli_eventLabel.text = item.name
         view.eli_creatorLabel.text = item.username
 
-        if (MainActivity.instance.isUserAdmin())
+        if (isActiveUserAdmin())
             view.eli_creatorLabel.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_creator, 0, if (item.reported) R.drawable.ic_report else 0, 0)
 
         if (item.accepted) {

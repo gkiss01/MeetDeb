@@ -19,6 +19,8 @@ import com.gkiss01.meetdeb.data.adapterrequest.DeleteEventRequest
 import com.gkiss01.meetdeb.data.adapterrequest.UpdateEventRequest
 import com.gkiss01.meetdeb.data.fastadapter.Event
 import com.gkiss01.meetdeb.network.ErrorCodes
+import com.gkiss01.meetdeb.utils.getActiveUser
+import com.gkiss01.meetdeb.utils.isActiveUserAdmin
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericFastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
@@ -146,12 +148,22 @@ class EventsFragment : Fragment(R.layout.events_fragment), PopupMenu.OnMenuItemC
                 }
                 R.id.eli_moreButton -> {
                     PopupMenu(context, v).apply {
+                        if (isActiveUserAdmin()) {
+                            if (item.reported) menu.add(0, R.id.removeReport, 0, R.string.event_more_remove_report)
+                            menu.add(0, R.id.delete, 0, R.string.event_more_delete)
+                        } else {
+                            if (item.userId == getActiveUser().id) {
+                                menu.add(0, R.id.update, 0, R.string.event_more_update)
+                                menu.add(0, R.id.delete, 0, R.string.event_more_delete)
+                            }
+                            else menu.add(0, R.id.report, 0, R.string.event_more_report)
+                        }
+
                         setOnMenuItemClickListener(this@EventsFragment)
                         setOnDismissListener {
                             viewModel.selectedEvent = Long.MIN_VALUE
                         }
                         viewModel.selectedEvent = item.id
-                        inflate(if (MainActivity.instance.isUserAdmin()) R.menu.event_more_admin else R.menu.event_more)
                         show()
                     }
                 }
@@ -186,6 +198,10 @@ class EventsFragment : Fragment(R.layout.events_fragment), PopupMenu.OnMenuItemC
             }
             R.id.delete -> {
                 MainActivity.instance.deleteEvent(viewModel.selectedEvent)
+                true
+            }
+            R.id.update -> {
+
                 true
             }
             else -> false

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/removeReport"
-        android:icon="@drawable/ic_report"
-        android:title="@string/event_more_remove_report" />
-    <item android:id="@+id/delete"
-        android:icon="@drawable/ic_delete"
-        android:title="@string/event_more_delete" />
-</menu>
