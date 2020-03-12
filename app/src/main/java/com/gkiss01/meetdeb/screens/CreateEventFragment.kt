@@ -1,11 +1,10 @@
 package com.gkiss01.meetdeb.screens
 
+import android.Manifest
 import android.app.Activity.RESULT_OK
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
@@ -13,7 +12,7 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ActivityCompat
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -25,12 +24,19 @@ import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.fastadapter.Event
 import com.gkiss01.meetdeb.databinding.CreateEventFragmentBinding
+import com.gkiss01.meetdeb.network.BASE_URL
 import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.NavigationCode
 import com.gkiss01.meetdeb.utils.formatDate
 import com.gkiss01.meetdeb.utils.hideKeyboard
 import com.gkiss01.meetdeb.utils.isDate24HourFormat
 import com.gkiss01.meetdeb.utils.updateOffsetDateTime
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.MultiplePermissionsReport
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import com.squareup.picasso.Picasso
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
 import com.zhihu.matisse.engine.impl.GlideEngine
@@ -45,7 +51,6 @@ class CreateEventFragment : Fragment() {
     private val viewModel: CreateEventViewModel by viewModels()
 
     private val REQUEST_CODE_PICK_IMAGE = 1
-    private val PERMISSION_CODE_STORAGE = 2
 
     override fun onStart() {
         super.onStart()
@@ -91,6 +96,10 @@ class CreateEventFragment : Fragment() {
         }
 
         binding.event = viewModel.event
+        Picasso.get()
+            .load("$BASE_URL/images/${viewModel.event.id}")
+            .placeholder(R.drawable.placeholder)
+            .into(cef_imagePreview)
 
         cef_dateButton.setOnClickListener {
             val datePickerDialog = DatePickerDialog(context!!, DatePickerDialog.OnDateSetListener { _, year, monthValue, dayOfMonth ->
@@ -109,7 +118,8 @@ class CreateEventFragment : Fragment() {
         }
 
         cef_imageButton.setOnClickListener {
-            requestStoragePermissions()
+            if (viewModel.type.value == ScreenType.NEW) requestStoragePermissions()
+            else Toast.makeText(context, "A képet nem tudod frissíteni!", Toast.LENGTH_LONG).show()
         }
 
         viewModel.type.observe(viewLifecycleOwner, Observer {
@@ -157,6 +167,22 @@ class CreateEventFragment : Fragment() {
         }
     }
 
+    private fun requestStoragePermissions() {
+        Dexter.withActivity(activity)
+            .withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            .withListener(object: MultiplePermissionsListener {
+                override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
+                    report?.let {
+                        if(report.areAllPermissionsGranted()) showImagePicker()
+                    }
+                }
+                override fun onPermissionRationaleShouldBeShown(permissions: MutableList<PermissionRequest>?, token: PermissionToken?) {
+                    token?.continuePermissionRequest()
+                }
+            })
+            .check()
+    }
+
     private fun showImagePicker() {
         Matisse.from(this)
             .choose(MimeType.ofImage())
@@ -167,31 +193,6 @@ class CreateEventFragment : Fragment() {
             .imageEngine(GlideEngine())
             .autoHideToolbarOnSingleTap(true)
             .forResult(REQUEST_CODE_PICK_IMAGE)
-    }
-
-    private fun requestStoragePermissions() {
-        val permissions = arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE,
-            android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-
-        if(hasPermissions(context!!, permissions.toList())) showImagePicker()
-        else ActivityCompat.requestPermissions(activity!!, permissions, PERMISSION_CODE_STORAGE)
-    }
-
-    private fun hasPermissions(context: Context, permissions: List<String>): Boolean {
-        for (permission in permissions) {
-            if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
-                return false
-            }
-        }
-        return true
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        if (requestCode == PERMISSION_CODE_STORAGE) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                EventBus.getDefault().post(NavigationCode.NAVIGATE_TO_IMAGE_PICKER)
-            }
-        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
