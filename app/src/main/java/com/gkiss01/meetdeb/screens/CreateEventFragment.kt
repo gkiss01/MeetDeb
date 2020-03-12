@@ -198,9 +198,8 @@ class CreateEventFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_PICK_IMAGE && resultCode == RESULT_OK) {
+            viewModel.imageUrl = Matisse.obtainPathResult(data)[0]
             cef_imagePreview.setImageURI(Matisse.obtainResult(data)[0])
-
-            viewModel.imageUrl.value = Matisse.obtainPathResult(data)[0]
         }
     }
 }

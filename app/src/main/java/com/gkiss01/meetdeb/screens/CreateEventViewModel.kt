@@ -22,11 +22,11 @@ enum class ScreenType {
 
 class CreateEventViewModel(application: Application): AndroidViewModel(application) {
     var event: Event = Event("", OffsetDateTime.now(), "", "")
+    lateinit var imageUrl: String
     val type = MutableLiveData<ScreenType>()
-    val imageUrl = MutableLiveData<String>()
 
     fun uploadEvent() {
-        val file = File(imageUrl.value!!)
+        val file = File(imageUrl)
         var body: MultipartBody.Part? = null
 
         if (file.exists()) {
@@ -45,6 +45,5 @@ class CreateEventViewModel(application: Application): AndroidViewModel(applicati
 
     init {
         type.value = ScreenType.NONE
-        imageUrl.value = ""
     }
 }
