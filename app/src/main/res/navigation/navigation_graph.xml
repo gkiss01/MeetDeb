@@ -23,7 +23,7 @@
         android:id="@+id/createEventFragment"
         android:name="com.gkiss01.meetdeb.screens.CreateEventFragment"
         android:label="CreateEventFragment"
-        tools:layout="@layout/create_event_fragment" >
+        tools:layout="@layout/create_event_fragment">
         <argument
             android:name="event"
             app:argType="com.gkiss01.meetdeb.data.fastadapter.Event" />

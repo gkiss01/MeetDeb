@@ -16,17 +16,16 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.threeten.bp.OffsetDateTime
 import java.io.File
 
+enum class ScreenType {
+    NONE, NEW, UPDATE
+}
+
 class CreateEventViewModel(application: Application): AndroidViewModel(application) {
-    lateinit var event: Event
-
-    var eventName: String = ""
-    var eventVenue: String = ""
-    var eventDescription: String = ""
-    var eventDate: OffsetDateTime = OffsetDateTime.now()
-
+    var event: Event = Event("", OffsetDateTime.now(), "", "")
+    val type = MutableLiveData<ScreenType>()
     val imageUrl = MutableLiveData<String>()
 
-    fun createEvent() {
+    fun uploadEvent() {
         val file = File(imageUrl.value!!)
         var body: MultipartBody.Part? = null
 
@@ -36,14 +35,16 @@ class CreateEventViewModel(application: Application): AndroidViewModel(applicati
             body = MultipartBody.Part.createFormData("file", file.name, requestFile)
         }
 
-        val eventRequest = EventRequest(eventName, eventDate, eventVenue, eventDescription)
+        val eventRequest = EventRequest(event.name, event.date, event.venue, event.description)
         val json = moshi.adapter(EventRequest::class.java).toJson(eventRequest)
-        val event: RequestBody = json.toRequestBody("application/json".toMediaTypeOrNull())
+        val eventJson: RequestBody = json.toRequestBody("application/json".toMediaTypeOrNull())
 
-        MainActivity.instance.uploadEvent(event, body)
+        if (type.value == ScreenType.NEW) MainActivity.instance.createEvent(eventJson, body)
+        else MainActivity.instance.updateEvent(event.id, eventJson)
     }
 
     init {
+        type.value = ScreenType.NONE
         imageUrl.value = ""
     }
 }

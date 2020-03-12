@@ -21,6 +21,9 @@ data class Event(
     val accepted: Boolean,
     val voted: Boolean): Serializable, AbstractItem<EventViewHolder>() {
 
+    constructor(name: String, date: OffsetDateTime, venue: String, description: String):
+            this(Long.MIN_VALUE, "", Long.MIN_VALUE, name, date, venue, description, false, 0, false,  false)
+
     override val layoutRes: Int
         get() = R.layout.events_list_item
     override val type: Int

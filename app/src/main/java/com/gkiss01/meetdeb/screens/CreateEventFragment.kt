@@ -10,16 +10,21 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.fastadapter.Event
+import com.gkiss01.meetdeb.databinding.CreateEventFragmentBinding
 import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.NavigationCode
 import com.gkiss01.meetdeb.utils.dateFormatter
@@ -35,7 +40,8 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.threeten.bp.OffsetDateTime
 
-class CreateEventFragment : Fragment(R.layout.create_event_fragment) {
+class CreateEventFragment : Fragment() {
+    private lateinit var binding: CreateEventFragmentBinding
     private val viewModel: CreateEventViewModel by viewModels()
 
     private val REQUEST_CODE_PICK_IMAGE = 1
@@ -54,39 +60,51 @@ class CreateEventFragment : Fragment(R.layout.create_event_fragment) {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onErrorReceived(errorCode: ErrorCodes) {
         if (errorCode == ErrorCodes.UNKNOWN) {
-            cef_createButton.hideProgress(R.string.event_create_button)
+            cef_createButton.hideProgress(if (viewModel.type.value == ScreenType.NEW) R.string.event_create_button else R.string.event_more_update)
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onNavigationReceived(navigationCode: NavigationCode) {
-        if (navigationCode == NavigationCode.NAVIGATE_TO_EVENTS_FRAGMENT) {
-            cef_createButton.hideProgress(R.string.event_created)
-            Handler().postDelayed({ findNavController().popBackStack() }, 500)
+        if (navigationCode == NavigationCode.NAVIGATE_BACK_TO_EVENTS_FRAGMENT) {
+            cef_createButton.hideProgress(if (viewModel.type.value == ScreenType.NEW) R.string.event_created else R.string.event_more_updated)
+            Handler().postDelayed({ findNavController().popBackStack(R.id.eventsFragment, false) }, 500)
         }
         else if (navigationCode == NavigationCode.NAVIGATE_TO_IMAGE_PICKER) showImagePicker()
     }
 
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?): View? {
+
+        binding = DataBindingUtil.inflate(inflater, R.layout.create_event_fragment, container, false)
+        return binding.root
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewModel.event = (arguments?.getSerializable("event") as Event?)?:
-                Event(Long.MIN_VALUE, "", Long.MIN_VALUE, "", OffsetDateTime.now(), "", "", false, 0,
-                    accepted = false,
-                    voted = false
-                )
+        val argEvent = arguments?.getSerializable("event") as Event?
+        if (viewModel.type.value == ScreenType.NONE) {
+            if (argEvent != null) {
+                viewModel.type.value = ScreenType.UPDATE
+                viewModel.event = argEvent
+            } else viewModel.type.value = ScreenType.NEW
+        }
+
+        binding.event = viewModel.event
 
         cef_dateButton.setOnClickListener {
             val datePickerDialog = DatePickerDialog(context!!, DatePickerDialog.OnDateSetListener { _, year, monthValue, dayOfMonth ->
-                viewModel.eventDate = updateOffsetDateTime(viewModel.eventDate, year, monthValue + 1, dayOfMonth)
-                cef_dateTitle.text = viewModel.eventDate.format(dateFormatter)
-            }, viewModel.eventDate.year, viewModel.eventDate.monthValue - 1, viewModel.eventDate.dayOfMonth)
+                viewModel.event.date = updateOffsetDateTime(viewModel.event.date, year, monthValue + 1, dayOfMonth)
+                cef_dateTitle.text = viewModel.event.date.format(dateFormatter)
+            }, viewModel.event.date.year, viewModel.event.date.monthValue - 1, viewModel.event.date.dayOfMonth)
             datePickerDialog.show()
         }
 
         cef_timeButton.setOnClickListener {
             val timePickerDialog = TimePickerDialog(context, TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
-                viewModel.eventDate = updateOffsetDateTime(viewModel.eventDate, hourOfDay, minute)
-                cef_dateTitle.text = viewModel.eventDate.format(dateFormatter)
-            }, viewModel.eventDate.hour, viewModel.eventDate.minute, isDate24HourFormat(context!!))
+                viewModel.event.date = updateOffsetDateTime(viewModel.event.date, hourOfDay, minute)
+                cef_dateTitle.text = viewModel.event.date.format(dateFormatter)
+            }, viewModel.event.date.hour, viewModel.event.date.minute, isDate24HourFormat(context!!))
             timePickerDialog.show()
         }
 
@@ -94,33 +112,34 @@ class CreateEventFragment : Fragment(R.layout.create_event_fragment) {
             requestStoragePermissions()
         }
 
+        viewModel.type.observe(viewLifecycleOwner, Observer {
+            cef_createButton.text = getString(if (it == ScreenType.NEW) R.string.event_create_button else R.string.event_more_update)
+        })
+
         cef_createButton.attachTextChangeAnimator()
         cef_createButton.setOnClickListener {
             var error = false
-            viewModel.eventName = cef_name.text.toString()
-            viewModel.eventDescription = cef_description.text.toString()
-            viewModel.eventVenue = cef_venue.text.toString()
 
-            if (TextUtils.isEmpty(cef_name.text)) {
+            if (TextUtils.isEmpty(viewModel.event.name)) {
                 cef_name.error = "A mezőt kötelező kitölteni!"
                 error = true
             }
-            else if (cef_name.text.length > 40) {
+            else if (viewModel.event.name.length > 40) {
                 cef_name.error = "A név max. 40 karakter lehet!"
                 error = true
             }
 
-            if (TextUtils.isEmpty(cef_description.text)) {
+            if (TextUtils.isEmpty(viewModel.event.description)) {
                 cef_description.error = "A mezőt kötelező kitölteni!"
                 error = true
             }
 
-            if (TextUtils.isEmpty(cef_venue.text)) {
+            if (TextUtils.isEmpty(viewModel.event.venue)) {
                 cef_venue.error = "A mezőt kötelező kitölteni!"
                 error = true
             }
 
-            if (viewModel.eventDate.isBefore(OffsetDateTime.now())) {
+            if (viewModel.event.date.isBefore(OffsetDateTime.now())) {
                 cef_dateTitle.error = "Jövőbeli dátumot adj meg!"
                 error = true
             }
@@ -130,10 +149,10 @@ class CreateEventFragment : Fragment(R.layout.create_event_fragment) {
                 hideKeyboard(context!!, view)
 
                 cef_createButton.showProgress {
-                    buttonTextRes = R.string.event_create_waiting
+                    buttonTextRes = if (viewModel.type.value == ScreenType.NEW) R.string.event_create_waiting else R.string.event_more_update_waiting
                     progressColor = Color.WHITE
                 }
-                viewModel.createEvent()
+                viewModel.uploadEvent()
             }
         }
     }

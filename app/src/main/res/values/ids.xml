@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Menü elem azonosítók -->
-    <item name="report" type="id"/>
-    <item name="removeReport" type="id"/>
-    <item name="delete" type="id"/>
-    <item name="update" type="id"/>
+    <item name="report" type="id" />
+    <item name="removeReport" type="id" />
+    <item name="delete" type="id" />
+    <item name="update" type="id" />
 </resources>

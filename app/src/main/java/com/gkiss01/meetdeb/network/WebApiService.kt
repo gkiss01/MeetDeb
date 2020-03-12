@@ -17,7 +17,7 @@ import retrofit2.http.*
 const val BASE_URL = "http://172.17.172.157:8080"
 
 enum class TargetVar {
-    VAR_GET_EVENTS, VAR_GET_EVENT, VAR_CREATE_EVENT, VAR_DELETE_EVENT,
+    VAR_GET_EVENTS, VAR_GET_EVENT, VAR_CREATE_UPDATE_EVENT, VAR_DELETE_EVENT,
     VAR_REPORT_EVENT, VAR_REMOVE_EVENT_REPORT,
     VAR_GET_PARTICIPANTS, VAR_CREATE_PARTICIPANT, VAR_DELETE_PARTICIPANT,
     VAR_GET_DATES, VAR_CREATE_DATE,
@@ -27,6 +27,7 @@ enum class TargetVar {
 
 enum class NavigationCode {
     NAVIGATE_TO_EVENTS_FRAGMENT,
+    NAVIGATE_BACK_TO_EVENTS_FRAGMENT,
     NAVIGATE_TO_LOGIN_FRAGMENT,
     NAVIGATE_TO_IMAGE_PICKER
 }
@@ -107,6 +108,10 @@ interface WebApiService {
     @POST("events")
     fun createEventAsync(@Header("Authorization") auth: String, @Part("event") event: RequestBody,
                          @Part file: MultipartBody.Part?): Deferred<GenericResponse>
+
+    @Multipart
+    @POST("events/update/{eventId}")
+    fun updateEventAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long, @Part("event") event: RequestBody): Deferred<GenericResponse>
 
     @POST("participants/{eventId}")
     fun createParticipantAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): Deferred<GenericResponse>

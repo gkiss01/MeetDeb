@@ -169,11 +169,12 @@ class EventsFragment : Fragment(R.layout.events_fragment) {
 
     private fun createMoreActionMenu(view: View, event: Event) {
         PopupMenu(context, view).apply {
-            if (isActiveUserAdmin()) {
+            if (isActiveUserAdmin()!!) {
+                if (event.userId == getActiveUser()!!.id) menu.add(0, R.id.update, 0, R.string.event_more_update)
                 if (event.reported) menu.add(0, R.id.removeReport, 0, R.string.event_more_remove_report)
                 menu.add(0, R.id.delete, 0, R.string.event_more_delete)
             } else {
-                if (event.userId == getActiveUser().id) {
+                if (event.userId == getActiveUser()!!.id) {
                     menu.add(0, R.id.update, 0, R.string.event_more_update)
                     menu.add(0, R.id.delete, 0, R.string.event_more_delete)
                 }

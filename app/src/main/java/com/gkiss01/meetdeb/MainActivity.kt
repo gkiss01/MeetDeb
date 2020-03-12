@@ -26,7 +26,6 @@ import java.net.SocketTimeoutException
 class MainActivity : AppCompatActivity() {
 
     private lateinit var basic: String
-    private lateinit var activeUser: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
@@ -34,7 +33,15 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         //TODO: máshol meghívni ezt, mert így minden elforgatásnál lefut
-        checkUser()
+        if ((application as MainApplication).activeUser == null) checkUser()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if ((application as MainApplication).activeUser != null) {
+            basic = Credentials.basic(getSavedUsername(this), getSavedPassword(this))
+            EventBus.getDefault().post(NavigationCode.NAVIGATE_TO_EVENTS_FRAGMENT)
+        }
     }
 
     companion object {
@@ -45,7 +52,7 @@ class MainActivity : AppCompatActivity() {
         instance = this
     }
 
-    fun getActiveUser(): User = activeUser
+    fun getActiveUser(): User? = (application as MainApplication).activeUser
 
     fun checkUser() {
         basic = Credentials.basic(getSavedUsername(this), getSavedPassword(this))
@@ -60,8 +67,12 @@ class MainActivity : AppCompatActivity() {
         makeRequest(WebApi.retrofitService.getEventsAsync(basic, page), TargetVar.VAR_GET_EVENTS)
     }
 
-    fun uploadEvent(event: RequestBody, image: MultipartBody.Part?) {
-        makeRequest(WebApi.retrofitService.createEventAsync(basic, event, image), TargetVar.VAR_CREATE_EVENT)
+    fun createEvent(event: RequestBody, image: MultipartBody.Part?) {
+        makeRequest(WebApi.retrofitService.createEventAsync(basic, event, image), TargetVar.VAR_CREATE_UPDATE_EVENT)
+    }
+
+    fun updateEvent(eventId: Long, event: RequestBody) {
+        makeRequest(WebApi.retrofitService.updateEventAsync(basic, eventId, event), TargetVar.VAR_CREATE_UPDATE_EVENT)
     }
 
     fun deleteEvent(eventId: Long) {
@@ -110,11 +121,11 @@ class MainActivity : AppCompatActivity() {
                 if (!listResult.error) {
                     when (targetVar) {
                         TargetVar.VAR_CHECK_USER -> {
-                            activeUser = listResult.user!!
+                            (application as MainApplication).activeUser = listResult.user!!
                             EventBus.getDefault().post(NavigationCode.NAVIGATE_TO_EVENTS_FRAGMENT)
                         }
                         TargetVar.VAR_GET_EVENTS -> EventBus.getDefault().post(EventList(listResult.events!!))
-                        TargetVar.VAR_CREATE_EVENT -> EventBus.getDefault().post(NavigationCode.NAVIGATE_TO_EVENTS_FRAGMENT)
+                        TargetVar.VAR_CREATE_UPDATE_EVENT -> EventBus.getDefault().post(NavigationCode.NAVIGATE_BACK_TO_EVENTS_FRAGMENT)
                         TargetVar.VAR_CREATE_PARTICIPANT, TargetVar.VAR_DELETE_PARTICIPANT, TargetVar.VAR_GET_EVENT, TargetVar.VAR_REMOVE_EVENT_REPORT -> EventBus.getDefault().post(listResult.event)
                         TargetVar.VAR_GET_DATES, TargetVar.VAR_CREATE_DATE, TargetVar.VAR_CREATE_VOTE -> EventBus.getDefault().post(DateList(listResult.dates ?: emptyList()))
                         TargetVar.VAR_CREATE_USER -> EventBus.getDefault().post(NavigationCode.NAVIGATE_TO_LOGIN_FRAGMENT)
