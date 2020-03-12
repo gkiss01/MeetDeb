@@ -14,7 +14,7 @@ import com.gkiss01.meetdeb.data.fastadapter.DatePickerItem
 import com.gkiss01.meetdeb.data.fastadapter.Event
 import com.gkiss01.meetdeb.data.fastadapter.Participant
 import com.gkiss01.meetdeb.network.BASE_URL
-import com.gkiss01.meetdeb.utils.dateFormatter
+import com.gkiss01.meetdeb.utils.formatDate
 import com.gkiss01.meetdeb.utils.isActiveUserAdmin
 import com.mikepenz.fastadapter.FastAdapter
 import com.squareup.picasso.Picasso
@@ -58,7 +58,7 @@ class DatePickerViewHolder(private val view: View): FastAdapter.ViewHolder<DateP
     }
 
     fun updateSelectedDate(offsetDateTime: OffsetDateTime) {
-        view.dlp_dateTitle.text = offsetDateTime.format(dateFormatter)
+        view.dlp_dateTitle.text = formatDate(offsetDateTime)
     }
 
     fun setError(error: String?) {
@@ -107,7 +107,7 @@ class DateViewHolder(private val view: View): FastAdapter.ViewHolder<Date>(view)
 
     override fun bindView(item: Date, payloads: List<Any>) {
         dateId = item.id
-        view.dli_dateValue.text = item.date.format(dateFormatter)
+        view.dli_dateValue.text = formatDate(item.date)
         view.dli_votes.text = "Szavazatok: ${item.votes}"
         view.dli_voteButton.isChecked = item.accepted
 

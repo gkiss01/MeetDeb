@@ -27,7 +27,7 @@ import com.gkiss01.meetdeb.data.fastadapter.Event
 import com.gkiss01.meetdeb.databinding.CreateEventFragmentBinding
 import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.NavigationCode
-import com.gkiss01.meetdeb.utils.dateFormatter
+import com.gkiss01.meetdeb.utils.formatDate
 import com.gkiss01.meetdeb.utils.hideKeyboard
 import com.gkiss01.meetdeb.utils.isDate24HourFormat
 import com.gkiss01.meetdeb.utils.updateOffsetDateTime
@@ -95,7 +95,7 @@ class CreateEventFragment : Fragment() {
         cef_dateButton.setOnClickListener {
             val datePickerDialog = DatePickerDialog(context!!, DatePickerDialog.OnDateSetListener { _, year, monthValue, dayOfMonth ->
                 viewModel.event.date = updateOffsetDateTime(viewModel.event.date, year, monthValue + 1, dayOfMonth)
-                cef_dateTitle.text = viewModel.event.date.format(dateFormatter)
+                cef_dateTitle.text = formatDate(viewModel.event.date)
             }, viewModel.event.date.year, viewModel.event.date.monthValue - 1, viewModel.event.date.dayOfMonth)
             datePickerDialog.show()
         }
@@ -103,7 +103,7 @@ class CreateEventFragment : Fragment() {
         cef_timeButton.setOnClickListener {
             val timePickerDialog = TimePickerDialog(context, TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
                 viewModel.event.date = updateOffsetDateTime(viewModel.event.date, hourOfDay, minute)
-                cef_dateTitle.text = viewModel.event.date.format(dateFormatter)
+                cef_dateTitle.text = formatDate(viewModel.event.date)
             }, viewModel.event.date.hour, viewModel.event.date.minute, isDate24HourFormat(context!!))
             timePickerDialog.show()
         }

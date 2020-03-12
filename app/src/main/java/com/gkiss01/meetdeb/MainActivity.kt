@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.gkiss01.meetdeb.data.*
 import com.gkiss01.meetdeb.data.adapterrequest.DeleteEventRequest
@@ -24,24 +26,21 @@ import java.net.ConnectException
 import java.net.SocketTimeoutException
 
 class MainActivity : AppCompatActivity() {
-
-    private lateinit var basic: String
+    private lateinit var viewModel: ActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //TODO: máshol meghívni ezt, mert így minden elforgatásnál lefut
-        if ((application as MainApplication).activeUser == null) checkUser()
-    }
+        viewModel = ViewModelProvider(this).get(ActivityViewModel::class.java)
 
-    override fun onResume() {
-        super.onResume()
-        if ((application as MainApplication).activeUser != null) {
-            basic = Credentials.basic(getSavedUsername(this), getSavedPassword(this))
+        if (viewModel.activeUser.value == null)
+            checkUser()
+
+        viewModel.activeUser.observe(this, Observer {
             EventBus.getDefault().post(NavigationCode.NAVIGATE_TO_EVENTS_FRAGMENT)
-        }
+        })
     }
 
     companion object {
@@ -52,62 +51,62 @@ class MainActivity : AppCompatActivity() {
         instance = this
     }
 
-    fun getActiveUser(): User? = (application as MainApplication).activeUser
+    fun getActiveUser(): User? = viewModel.activeUser.value
 
     fun checkUser() {
-        basic = Credentials.basic(getSavedUsername(this), getSavedPassword(this))
-        makeRequest(WebApi.retrofitService.checkUserAsync(basic), TargetVar.VAR_CHECK_USER)
+        viewModel.basic = Credentials.basic(getSavedUsername(this), getSavedPassword(this))
+        makeRequest(WebApi.retrofitService.checkUserAsync(viewModel.basic), TargetVar.VAR_CHECK_USER)
     }
 
     fun getEvent(eventId: Long) {
-        makeRequest(WebApi.retrofitService.getEventAsync(basic, eventId), TargetVar.VAR_GET_EVENT)
+        makeRequest(WebApi.retrofitService.getEventAsync(viewModel.basic, eventId), TargetVar.VAR_GET_EVENT)
     }
 
     fun getEvents(page: Int = 1) {
-        makeRequest(WebApi.retrofitService.getEventsAsync(basic, page), TargetVar.VAR_GET_EVENTS)
+        makeRequest(WebApi.retrofitService.getEventsAsync(viewModel.basic, page), TargetVar.VAR_GET_EVENTS)
     }
 
     fun createEvent(event: RequestBody, image: MultipartBody.Part?) {
-        makeRequest(WebApi.retrofitService.createEventAsync(basic, event, image), TargetVar.VAR_CREATE_UPDATE_EVENT)
+        makeRequest(WebApi.retrofitService.createEventAsync(viewModel.basic, event, image), TargetVar.VAR_CREATE_UPDATE_EVENT)
     }
 
     fun updateEvent(eventId: Long, event: RequestBody) {
-        makeRequest(WebApi.retrofitService.updateEventAsync(basic, eventId, event), TargetVar.VAR_CREATE_UPDATE_EVENT)
+        makeRequest(WebApi.retrofitService.updateEventAsync(viewModel.basic, eventId, event), TargetVar.VAR_CREATE_UPDATE_EVENT)
     }
 
     fun deleteEvent(eventId: Long) {
-        makeRequest(WebApi.retrofitService.deleteEventAsync(basic, eventId), TargetVar.VAR_DELETE_EVENT)
+        makeRequest(WebApi.retrofitService.deleteEventAsync(viewModel.basic, eventId), TargetVar.VAR_DELETE_EVENT)
     }
 
     fun reportEvent(eventId: Long) {
-        makeRequest(WebApi.retrofitService.reportEventAsync(basic, eventId), TargetVar.VAR_REPORT_EVENT)
+        makeRequest(WebApi.retrofitService.reportEventAsync(viewModel.basic, eventId), TargetVar.VAR_REPORT_EVENT)
     }
 
     fun removeReport(eventId: Long) {
-        makeRequest(WebApi.retrofitService.removeReportAsync(basic, eventId), TargetVar.VAR_REMOVE_EVENT_REPORT)
+        makeRequest(WebApi.retrofitService.removeReportAsync(viewModel.basic, eventId), TargetVar.VAR_REMOVE_EVENT_REPORT)
     }
 
     fun showDates(eventId: Long) {
-        makeRequest(WebApi.retrofitService.getDatesAsync(basic, eventId), TargetVar.VAR_GET_DATES)
+        makeRequest(WebApi.retrofitService.getDatesAsync(viewModel.basic, eventId), TargetVar.VAR_GET_DATES)
     }
 
     fun showParticipants(eventId: Long) {
-        makeRequest(WebApi.retrofitService.getParticipantsAsync(basic, eventId), TargetVar.VAR_GET_PARTICIPANTS)
+        makeRequest(WebApi.retrofitService.getParticipantsAsync(viewModel.basic, eventId), TargetVar.VAR_GET_PARTICIPANTS)
     }
 
     fun createDate(eventId: Long, date: OffsetDateTime) {
-        makeRequest(WebApi.retrofitService.createDateAsync(basic, eventId, date), TargetVar.VAR_CREATE_DATE)
+        makeRequest(WebApi.retrofitService.createDateAsync(viewModel.basic, eventId, date), TargetVar.VAR_CREATE_DATE)
     }
 
     fun addVote(dateId: Long) {
-        makeRequest(WebApi.retrofitService.createVoteAsync(basic, dateId), TargetVar.VAR_CREATE_VOTE)
+        makeRequest(WebApi.retrofitService.createVoteAsync(viewModel.basic, dateId), TargetVar.VAR_CREATE_VOTE)
     }
 
     fun modifyParticipation(eventId: Long, eventAccepted: Boolean) {
         if (eventAccepted)
-            makeRequest(WebApi.retrofitService.deleteParticipantAsync(basic, eventId), TargetVar.VAR_DELETE_PARTICIPANT)
+            makeRequest(WebApi.retrofitService.deleteParticipantAsync(viewModel.basic, eventId), TargetVar.VAR_DELETE_PARTICIPANT)
         else
-            makeRequest(WebApi.retrofitService.createParticipantAsync(basic, eventId), TargetVar.VAR_CREATE_PARTICIPANT)
+            makeRequest(WebApi.retrofitService.createParticipantAsync(viewModel.basic, eventId), TargetVar.VAR_CREATE_PARTICIPANT)
     }
 
     fun uploadUser(user: RequestBody) {
@@ -121,8 +120,7 @@ class MainActivity : AppCompatActivity() {
                 if (!listResult.error) {
                     when (targetVar) {
                         TargetVar.VAR_CHECK_USER -> {
-                            (application as MainApplication).activeUser = listResult.user!!
-                            EventBus.getDefault().post(NavigationCode.NAVIGATE_TO_EVENTS_FRAGMENT)
+                            viewModel.activeUser.value = listResult.user!!
                         }
                         TargetVar.VAR_GET_EVENTS -> EventBus.getDefault().post(EventList(listResult.events!!))
                         TargetVar.VAR_CREATE_UPDATE_EVENT -> EventBus.getDefault().post(NavigationCode.NAVIGATE_BACK_TO_EVENTS_FRAGMENT)
