@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.PopupMenu
 import androidx.activity.addCallback
-import androidx.core.view.ScrollingView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -29,6 +28,14 @@ import com.mikepenz.fastadapter.diff.FastAdapterDiffUtil
 import com.mikepenz.fastadapter.listeners.addClickListener
 import com.mikepenz.fastadapter.ui.items.ProgressItem
 import com.mikepenz.itemanimators.AlphaInAnimator
+import com.mikepenz.materialdrawer.holder.DimenHolder
+import com.mikepenz.materialdrawer.holder.ImageHolder
+import com.mikepenz.materialdrawer.holder.StringHolder
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
+import com.mikepenz.materialdrawer.model.ProfileDrawerItem
+import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
+import com.mikepenz.materialdrawer.model.SectionDrawerItem
+import com.mikepenz.materialdrawer.widget.AccountHeaderView
 import kotlinx.android.synthetic.main.events_fragment.*
 import kotlinx.android.synthetic.main.events_list_item.view.*
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
@@ -103,6 +110,42 @@ class EventsFragment : Fragment(R.layout.events_fragment) {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        AccountHeaderView(context!!).apply {
+            attachToSliderView(ef_slider)
+            height = DimenHolder.fromDp(200)
+            headerBackground = ImageHolder(R.drawable.landscape)
+            addProfile(ProfileDrawerItem().apply {
+                name = StringHolder(getActiveUser()!!.name)
+                description = StringHolder(getActiveUser()!!.email)
+            }, 0)
+            selectionListEnabledForSingleProfile = false
+        }
+
+        ef_slider.itemAdapter.add(
+            PrimaryDrawerItem().apply {
+                identifier = 1
+                name = StringHolder("Események")
+                isSelected = true
+                isEnabled = false
+            },
+            PrimaryDrawerItem().apply {
+                identifier = 2
+                name = StringHolder("Profil")
+            },
+            SectionDrawerItem().apply {
+                name = StringHolder("Továbbiak")
+            },
+            SecondaryDrawerItem().apply {
+                identifier = 3
+                name = StringHolder("Kilépés")
+            }
+        )
+
+        ef_slider.onDrawerItemClickListener = { _, _, _ ->
+
+            false
+        }
+
         ef_addActionButton.setOnClickListener{ findNavController().navigate(R.id.createEventFragment) }
 
         ef_swipeRefreshLayout.setOnRefreshListener {

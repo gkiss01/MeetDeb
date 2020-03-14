@@ -8,11 +8,32 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
 
+        <item name="materialDrawerStyle">@style/Widget.MaterialDrawerStyleCustom</item>
+        <item name="materialDrawerHeaderStyle">@style/Widget.MaterialDrawerHeaderStyleCustom</item>
+
         <item name="android:fontFamily">@font/muli</item>
     </style>
 
     <style name="AppTheme.Launcher">
         <item name="android:windowBackground">@drawable/launch_screen</item>
+    </style>
+
+    <style name="Widget.MaterialDrawerStyleCustom" parent="Widget.MaterialDrawerStyle">
+        <item name="materialDrawerInsetForeground">#4000</item>
+
+        <item name="materialDrawerBackground">@color/colorPrimary</item>
+        <item name="materialDrawerPrimaryText">@color/white</item>
+        <item name="materialDrawerPrimaryIcon">@color/white</item>
+        <item name="materialDrawerSecondaryText">@color/white</item>
+        <item name="materialDrawerSecondaryIcon">@color/white</item>
+        <item name="materialDrawerDividerColor">@color/white</item>
+        <item name="materialDrawerSelectedBackgroundColor">@color/white</item>
+    </style>
+
+    <style name="Widget.MaterialDrawerHeaderStyleCustom" parent="">
+        <item name="materialDrawerCompactStyle">true</item>
+        <item name="materialDrawerHeaderSelectionText">@color/white</item>
+        <item name="materialDrawerHeaderSelectionSubtext">@color/white</item>
     </style>
 
     <style name="styleCreateEventText">
