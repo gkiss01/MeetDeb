@@ -1,9 +1,11 @@
 package com.gkiss01.meetdeb.screens
 
+import ScrollingViewOnApplyWindowInsetsListener
 import android.os.Bundle
 import android.view.View
 import android.widget.PopupMenu
 import androidx.activity.addCallback
+import androidx.core.view.ScrollingView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -29,6 +31,7 @@ import com.mikepenz.fastadapter.ui.items.ProgressItem
 import com.mikepenz.itemanimators.AlphaInAnimator
 import kotlinx.android.synthetic.main.events_fragment.*
 import kotlinx.android.synthetic.main.events_list_item.view.*
+import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -111,6 +114,9 @@ class EventsFragment : Fragment(R.layout.events_fragment) {
         fastAdapter = FastAdapter.with(listOf(itemAdapter, footerAdapter))
         fastAdapter.attachDefaultListeners = false
         ef_eventsRecyclerView.adapter = fastAdapter
+
+        val fastScroller = FastScrollerBuilder(ef_eventsRecyclerView).useMd2Style().build()
+        ef_eventsRecyclerView.setOnApplyWindowInsetsListener(ScrollingViewOnApplyWindowInsetsListener(ef_eventsRecyclerView, fastScroller))
 
         val layoutManager = LinearLayoutManager(context)
         ef_eventsRecyclerView.layoutManager = layoutManager
