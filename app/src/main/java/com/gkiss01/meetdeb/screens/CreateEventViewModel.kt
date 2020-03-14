@@ -22,7 +22,7 @@ enum class ScreenType {
 
 class CreateEventViewModel(application: Application): AndroidViewModel(application) {
     var event: Event = Event("", OffsetDateTime.now(), "", "")
-    lateinit var imageUrl: String
+    var imageUrl: String = ""
     val type = MutableLiveData<ScreenType>()
 
     fun uploadEvent() {
