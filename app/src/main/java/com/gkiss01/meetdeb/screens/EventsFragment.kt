@@ -70,12 +70,10 @@ class EventsFragment : Fragment(R.layout.events_fragment) {
         val position = itemAdapter.getAdapterPosition(request.eventId)
         val view = ef_eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventViewHolder
 
-        if (!view.event.voted) {
-            view.showVoteAnimation()
-            viewModel.selectedEvent = request.eventId
+        view.showVoteAnimation()
+        viewModel.selectedEvent = request.eventId
 
-            MainActivity.instance.getEvent(request.eventId)
-        }
+        MainActivity.instance.getEvent(request.eventId)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -123,7 +121,6 @@ class EventsFragment : Fragment(R.layout.events_fragment) {
 
         viewModel.events.observe(viewLifecycleOwner, Observer {
             FastAdapterDiffUtil[itemAdapter] = it
-            ef_eventsRecyclerView.scheduleLayoutAnimation()
             ef_swipeRefreshLayout.isRefreshing = false
             viewModel.isMoreLoading = false // félős
             footerAdapter.clear()
@@ -143,7 +140,7 @@ class EventsFragment : Fragment(R.layout.events_fragment) {
                 R.id.eli_anotherDateButton -> {
                     MainActivity.instance.showDates(item.id)
 
-                    findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToDatesDialogFragment(item.id))
+                    findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToDatesDialogFragment(item))
                 }
                 R.id.eli_moreButton -> {
                     createMoreActionMenu(v, item)

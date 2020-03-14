@@ -8,6 +8,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.gkiss01.meetdeb.data.*
+import com.gkiss01.meetdeb.data.adapterrequest.DeleteDateRequest
 import com.gkiss01.meetdeb.data.adapterrequest.DeleteEventRequest
 import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.NavigationCode
@@ -90,16 +91,20 @@ class MainActivity : AppCompatActivity() {
         makeRequest(WebApi.retrofitService.getDatesAsync(viewModel.basic, eventId), TargetVar.VAR_GET_DATES)
     }
 
-    fun showParticipants(eventId: Long) {
-        makeRequest(WebApi.retrofitService.getParticipantsAsync(viewModel.basic, eventId), TargetVar.VAR_GET_PARTICIPANTS)
-    }
-
     fun createDate(eventId: Long, date: OffsetDateTime) {
         makeRequest(WebApi.retrofitService.createDateAsync(viewModel.basic, eventId, date), TargetVar.VAR_CREATE_DATE)
     }
 
-    fun addVote(dateId: Long) {
+    fun deleteDate(dateId: Long) {
+        makeRequest(WebApi.retrofitService.deleteDateAsync(viewModel.basic, dateId), TargetVar.VAR_DELETE_DATE)
+    }
+
+    fun createVote(dateId: Long) {
         makeRequest(WebApi.retrofitService.createVoteAsync(viewModel.basic, dateId), TargetVar.VAR_CREATE_VOTE)
+    }
+
+    fun showParticipants(eventId: Long) {
+        makeRequest(WebApi.retrofitService.getParticipantsAsync(viewModel.basic, eventId), TargetVar.VAR_GET_PARTICIPANTS)
     }
 
     fun modifyParticipation(eventId: Long, eventAccepted: Boolean) {
@@ -130,6 +135,7 @@ class MainActivity : AppCompatActivity() {
                         TargetVar.VAR_GET_PARTICIPANTS -> EventBus.getDefault().post(ParticipantList(listResult.participants!!))
                         TargetVar.VAR_REPORT_EVENT -> Toast.makeText(this@MainActivity, "Event reported!", Toast.LENGTH_LONG).show()
                         TargetVar.VAR_DELETE_EVENT -> EventBus.getDefault().post(DeleteEventRequest(listResult.withId!!))
+                        TargetVar.VAR_DELETE_DATE -> EventBus.getDefault().post(DeleteDateRequest(listResult.withId!!))
                     }
                 }
                 else handleResponseErrors(listResult.errorCode!!, listResult.errors!!)

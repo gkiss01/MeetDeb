@@ -14,13 +14,13 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.*
 
-const val BASE_URL = "http://172.17.172.157:8080"
+const val BASE_URL = "http://192.168.1.103:8080"
 
 enum class TargetVar {
     VAR_GET_EVENTS, VAR_GET_EVENT, VAR_CREATE_UPDATE_EVENT, VAR_DELETE_EVENT,
     VAR_REPORT_EVENT, VAR_REMOVE_EVENT_REPORT,
     VAR_GET_PARTICIPANTS, VAR_CREATE_PARTICIPANT, VAR_DELETE_PARTICIPANT,
-    VAR_GET_DATES, VAR_CREATE_DATE,
+    VAR_GET_DATES, VAR_CREATE_DATE, VAR_DELETE_DATE,
     VAR_CREATE_VOTE,
     VAR_CREATE_USER, VAR_CHECK_USER
 }
@@ -124,6 +124,9 @@ interface WebApiService {
 
     @DELETE("events/{eventId}")
     fun deleteEventAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): Deferred<GenericResponse>
+
+    @DELETE("dates/{dateId}")
+    fun deleteDateAsync(@Header("Authorization") auth: String, @Path("dateId") dateId: Long): Deferred<GenericResponse>
 
     @DELETE("participants/{eventId}")
     fun deleteParticipantAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): Deferred<GenericResponse>

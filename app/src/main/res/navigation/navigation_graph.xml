@@ -49,8 +49,8 @@
         android:label="dates_fragment"
         tools:layout="@layout/dates_fragment">
         <argument
-            android:name="eventId"
-            app:argType="long" />
+            android:name="event"
+            app:argType="com.gkiss01.meetdeb.data.fastadapter.Event" />
     </dialog>
     <dialog
         android:id="@+id/detailsBottomSheetFragment"
