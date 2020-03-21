@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.PopupMenu
 import androidx.activity.addCallback
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -21,6 +22,7 @@ import com.gkiss01.meetdeb.data.fastadapter.Event
 import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.utils.getActiveUser
 import com.gkiss01.meetdeb.utils.isActiveUserAdmin
+import com.gkiss01.meetdeb.utils.setSavedUser
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericFastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
@@ -35,6 +37,7 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
 import com.mikepenz.materialdrawer.model.SectionDrawerItem
+import com.mikepenz.materialdrawer.model.interfaces.iconDrawable
 import com.mikepenz.materialdrawer.widget.AccountHeaderView
 import kotlinx.android.synthetic.main.events_fragment.*
 import kotlinx.android.synthetic.main.events_list_item.view.*
@@ -127,10 +130,12 @@ class EventsFragment : Fragment(R.layout.events_fragment) {
                 name = StringHolder("Események")
                 isSelected = true
                 isEnabled = false
+                iconDrawable = ContextCompat.getDrawable(context!!, R.drawable.ic_event)!!
             },
             PrimaryDrawerItem().apply {
                 identifier = 2
                 name = StringHolder("Profil")
+                iconDrawable = ContextCompat.getDrawable(context!!, R.drawable.ic_person)!!
             },
             SectionDrawerItem().apply {
                 name = StringHolder("Továbbiak")
@@ -138,11 +143,20 @@ class EventsFragment : Fragment(R.layout.events_fragment) {
             SecondaryDrawerItem().apply {
                 identifier = 3
                 name = StringHolder("Kilépés")
+                iconDrawable = ContextCompat.getDrawable(context!!, R.drawable.ic_logout)!!
             }
         )
 
-        ef_slider.onDrawerItemClickListener = { _, _, _ ->
-
+        ef_slider.onDrawerItemClickListener = { _, item, _ ->
+            when (item.identifier) {
+                2L -> {
+                    findNavController().navigate(R.id.profileFragment)
+                }
+                3L -> {
+                    setSavedUser(context!!, "null", "null")
+                    findNavController().navigate(R.id.registerFragment)
+                }
+            }
             false
         }
 

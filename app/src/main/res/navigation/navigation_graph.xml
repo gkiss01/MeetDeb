@@ -66,4 +66,9 @@
         android:name="com.gkiss01.meetdeb.screens.ParticipantsDialogFragment"
         android:label="participants_fragment"
         tools:layout="@layout/participants_fragment" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.gkiss01.meetdeb.screens.ProfileFragment"
+        android:label="profile_fragment"
+        tools:layout="@layout/profile_fragment" />
 </navigation>
