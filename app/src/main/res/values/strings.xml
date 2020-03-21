@@ -56,4 +56,13 @@
     <string name="event_more_update">Frissítés</string>
     <string name="event_more_update_waiting">Frissítés…</string>
     <string name="event_more_updated">Kész!</string>
+    <string name="profile_image_desc">Profile image</string>
+    <string name="profile_accepted">csatlakozott</string>
+    <string name="profile_created">létrehozott</string>
+    <string name="profile_identifier">Azonosító</string>
+
+    <string name="profile_admin">Adminisztrátor</string>
+    <string name="profile_user">Felhasználó</string>
+    <string name="profile_delete">Fiók törlése</string>
+    <string name="profile_modify">Adatok módosítása</string>
 </resources>

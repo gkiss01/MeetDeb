@@ -15,4 +15,6 @@
     <color name="colorEventButtonText">#000000</color>
 
     <color name="white">#ffffff</color>
+    <color name="yellow">#d9a343</color>
+    <color name="red">#ec4b4b</color>
 </resources>

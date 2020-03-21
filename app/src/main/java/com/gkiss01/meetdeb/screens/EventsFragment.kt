@@ -147,6 +147,7 @@ class EventsFragment : Fragment(R.layout.events_fragment) {
             }
         )
 
+        ef_slider.closeOnClick = true
         ef_slider.onDrawerItemClickListener = { _, item, _ ->
             when (item.identifier) {
                 2L -> {
