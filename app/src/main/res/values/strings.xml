@@ -2,6 +2,7 @@
     <string name="app_name">meetDeb</string>
 
     <string name="events_list_header">Események</string>
+    <string name="done">Kész!</string>
 
     <string name="event_creator">Létrehozó:</string>
     <string name="event_venue">Helyszín:</string>
@@ -57,7 +58,7 @@
     <string name="event_more_update_waiting">Frissítés…</string>
     <string name="event_more_updated">Kész!</string>
     <string name="profile_image_desc">Profile image</string>
-    <string name="profile_accepted">csatlakozott</string>
+    <string name="profile_accepted">résztvett</string>
     <string name="profile_created">létrehozott</string>
     <string name="profile_identifier">Azonosító</string>
 
@@ -65,4 +66,8 @@
     <string name="profile_user">Felhasználó</string>
     <string name="profile_delete">Fiók törlése</string>
     <string name="profile_modify">Adatok módosítása</string>
+    <string name="delete_account_info">Amennyiben törlöd a fiókod, minden adat véglegesen elveszlik. Ez magába foglalja az általad létrehozott múltbeli és jövőbeli eseményeket, más időpont ajánlásokat és az ezekre történő szavazatokat.</string>
+    <string name="delete_account_title">Figyelem!</string>
+    <string name="delete_account_yes">Igen, törlöm</string>
+    <string name="delete_account_no">Vissza</string>
 </resources>

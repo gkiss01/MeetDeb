@@ -22,7 +22,7 @@ enum class TargetVar {
     VAR_GET_PARTICIPANTS, VAR_CREATE_PARTICIPANT, VAR_DELETE_PARTICIPANT,
     VAR_GET_DATES, VAR_CREATE_DATE, VAR_DELETE_DATE,
     VAR_CREATE_VOTE,
-    VAR_CREATE_USER, VAR_CHECK_USER
+    VAR_CREATE_USER, VAR_DELETE_USER, VAR_CHECK_USER
 }
 
 enum class NavigationCode {
@@ -130,6 +130,9 @@ interface WebApiService {
 
     @DELETE("participants/{eventId}")
     fun deleteParticipantAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): Deferred<GenericResponse>
+
+    @DELETE("users/{userId}")
+    fun deleteUserAsync(@Header("Authorization") auth: String, @Path("userId") userId: Long): Deferred<GenericResponse>
 
 //    @Multipart
 //    @POST("images/{eventId}")

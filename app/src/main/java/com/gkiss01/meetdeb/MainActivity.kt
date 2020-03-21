@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import com.gkiss01.meetdeb.data.*
 import com.gkiss01.meetdeb.data.adapterrequest.DeleteDateRequest
 import com.gkiss01.meetdeb.data.adapterrequest.DeleteEventRequest
+import com.gkiss01.meetdeb.data.adapterrequest.DeleteUserRequest
 import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.NavigationCode
 import com.gkiss01.meetdeb.network.TargetVar
@@ -118,15 +119,17 @@ class MainActivity : AppCompatActivity() {
         makeRequest(WebApi.retrofitService.createUserAsync(user), TargetVar.VAR_CREATE_USER)
     }
 
+    fun deleteUser(userId: Long) {
+        makeRequest(WebApi.retrofitService.deleteUserAsync(viewModel.basic, userId), TargetVar.VAR_DELETE_USER)
+    }
+
     private fun makeRequest(target: Deferred<GenericResponse>, targetVar: TargetVar) {
         lifecycleScope.launch {
             try {
                 val listResult = target.await()
                 if (!listResult.error) {
                     when (targetVar) {
-                        TargetVar.VAR_CHECK_USER -> {
-                            viewModel.activeUser.value = listResult.user!!
-                        }
+                        TargetVar.VAR_CHECK_USER -> viewModel.activeUser.value = listResult.user!!
                         TargetVar.VAR_GET_EVENTS -> EventBus.getDefault().post(EventList(listResult.events!!))
                         TargetVar.VAR_CREATE_UPDATE_EVENT -> EventBus.getDefault().post(NavigationCode.NAVIGATE_BACK_TO_EVENTS_FRAGMENT)
                         TargetVar.VAR_CREATE_PARTICIPANT, TargetVar.VAR_DELETE_PARTICIPANT, TargetVar.VAR_GET_EVENT, TargetVar.VAR_REMOVE_EVENT_REPORT -> EventBus.getDefault().post(listResult.event)
@@ -136,6 +139,7 @@ class MainActivity : AppCompatActivity() {
                         TargetVar.VAR_REPORT_EVENT -> Toast.makeText(this@MainActivity, "Event reported!", Toast.LENGTH_LONG).show()
                         TargetVar.VAR_DELETE_EVENT -> EventBus.getDefault().post(DeleteEventRequest(listResult.withId!!))
                         TargetVar.VAR_DELETE_DATE -> EventBus.getDefault().post(DeleteDateRequest(listResult.withId!!))
+                        TargetVar.VAR_DELETE_USER -> EventBus.getDefault().post(DeleteUserRequest())
                     }
                 }
                 else handleResponseErrors(listResult.errorCode!!, listResult.errors!!)

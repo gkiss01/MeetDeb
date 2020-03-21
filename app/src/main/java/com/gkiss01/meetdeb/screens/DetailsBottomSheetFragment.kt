@@ -36,7 +36,7 @@ class DetailsBottomSheetFragment: SuperBottomSheetFragment() {
     }
 
     override fun getCornerRadius() = context!!.resources.getDimension(R.dimen.bottomsheet_corner_radius)
-
-    override fun getPeekHeight() = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 105F,
+    override fun getPeekHeight() = TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP, 105F,
         context!!.resources.displayMetrics).toInt()
 }
