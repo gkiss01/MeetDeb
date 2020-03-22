@@ -1,4 +1,4 @@
-package com.gkiss01.meetdeb.screens
+package com.gkiss01.meetdeb.screens.bottomsheet
 
 import android.os.Bundle
 import android.os.Handler
@@ -18,12 +18,12 @@ import com.gkiss01.meetdeb.data.adapterrequest.DeleteUserRequest
 import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.utils.getActiveUser
 import com.gkiss01.meetdeb.utils.setSavedUser
-import kotlinx.android.synthetic.main.delete_fragment_bottomsheet.*
+import kotlinx.android.synthetic.main.bottomsheet_profile_delete.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-class DeleteBottomSheetFragment: SuperBottomSheetFragment() {
+class DeleteBottomSheet: SuperBottomSheetFragment() {
     override fun onStart() {
         super.onStart()
         EventBus.getDefault().register(this)
@@ -50,7 +50,7 @@ class DeleteBottomSheetFragment: SuperBottomSheetFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        return inflater.inflate(R.layout.delete_fragment_bottomsheet, container, false)
+        return inflater.inflate(R.layout.bottomsheet_profile_delete, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

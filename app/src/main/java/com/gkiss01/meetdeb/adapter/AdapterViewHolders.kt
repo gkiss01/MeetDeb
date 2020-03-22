@@ -18,29 +18,11 @@ import com.gkiss01.meetdeb.utils.formatDate
 import com.gkiss01.meetdeb.utils.isActiveUserAdmin
 import com.mikepenz.fastadapter.FastAdapter
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.dates_list_item.view.*
-import kotlinx.android.synthetic.main.dates_list_picker.view.*
-import kotlinx.android.synthetic.main.events_list_item.view.*
-import kotlinx.android.synthetic.main.participants_list_item.view.*
+import kotlinx.android.synthetic.main.item_date.view.*
+import kotlinx.android.synthetic.main.item_date_picker.view.*
+import kotlinx.android.synthetic.main.item_event.view.*
+import kotlinx.android.synthetic.main.item_participant.view.*
 import org.threeten.bp.OffsetDateTime
-
-class HeaderViewHolder(view: View): RecyclerView.ViewHolder(view) {
-    companion object {
-        fun from(parent: ViewGroup): HeaderViewHolder {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.events_list_header, parent, false) as View
-            return HeaderViewHolder(view)
-        }
-    }
-}
-
-class LoaderViewHolder(view: View): RecyclerView.ViewHolder(view) {
-    companion object {
-        fun from(parent: ViewGroup): LoaderViewHolder {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.events_list_loader, parent, false) as View
-            return LoaderViewHolder(view)
-        }
-    }
-}
 
 class DatePickerViewHolder(private val view: View): FastAdapter.ViewHolder<DatePickerItem>(view) {
     private var expanded = false

@@ -6,9 +6,9 @@
 
     <fragment
         android:id="@+id/eventsFragment"
-        android:name="com.gkiss01.meetdeb.screens.EventsFragment"
+        android:name="com.gkiss01.meetdeb.screens.fragment.EventsFragment"
         android:label="EventsFragment"
-        tools:layout="@layout/events_fragment">
+        tools:layout="@layout/fragment_events">
         <action
             android:id="@+id/action_eventsFragment_to_datesDialogFragment"
             app:destination="@id/datesDialogFragment" />
@@ -21,64 +21,64 @@
     </fragment>
     <fragment
         android:id="@+id/createEventFragment"
-        android:name="com.gkiss01.meetdeb.screens.CreateEventFragment"
+        android:name="com.gkiss01.meetdeb.screens.fragment.EventCreateFragment"
         android:label="CreateEventFragment"
-        tools:layout="@layout/create_event_fragment">
+        tools:layout="@layout/fragment_event_create">
         <argument
             android:name="event"
             app:argType="com.gkiss01.meetdeb.data.fastadapter.Event" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
-        android:name="com.gkiss01.meetdeb.screens.RegisterFragment"
+        android:name="com.gkiss01.meetdeb.screens.fragment.RegisterFragment"
         android:label="RegisterFragment"
-        tools:layout="@layout/register_fragment" />
+        tools:layout="@layout/fragment_register" />
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.gkiss01.meetdeb.screens.LoginFragment"
+        android:name="com.gkiss01.meetdeb.screens.fragment.LoginFragment"
         android:label="LoginFragment"
-        tools:layout="@layout/login_fragment" />
+        tools:layout="@layout/fragment_login" />
     <fragment
         android:id="@+id/loadingFragment"
-        android:name="com.gkiss01.meetdeb.screens.LoadingFragment"
+        android:name="com.gkiss01.meetdeb.screens.fragment.LoadingFragment"
         android:label="LoadingFragment"
-        tools:layout="@layout/loading_fragment" />
+        tools:layout="@layout/fragment_loading" />
     <dialog
         android:id="@+id/datesDialogFragment"
-        android:name="com.gkiss01.meetdeb.screens.DatesDialogFragment"
+        android:name="com.gkiss01.meetdeb.screens.dialog.DatesDialogFragment"
         android:label="dates_fragment"
-        tools:layout="@layout/dates_fragment">
+        tools:layout="@layout/fragment_dates">
         <argument
             android:name="event"
             app:argType="com.gkiss01.meetdeb.data.fastadapter.Event" />
     </dialog>
     <dialog
         android:id="@+id/detailsBottomSheetFragment"
-        android:name="com.gkiss01.meetdeb.screens.DetailsBottomSheetFragment"
+        android:name="com.gkiss01.meetdeb.screens.bottomsheet.DetailsBottomSheet"
         android:label="DetailsBottomSheetFragment"
-        tools:layout="@layout/details_fragment_bottomsheet">
+        tools:layout="@layout/bottomsheet_event_details">
         <argument
             android:name="event"
             app:argType="com.gkiss01.meetdeb.data.fastadapter.Event" />
     </dialog>
     <dialog
         android:id="@+id/participantsDialogFragment"
-        android:name="com.gkiss01.meetdeb.screens.ParticipantsDialogFragment"
+        android:name="com.gkiss01.meetdeb.screens.dialog.ParticipantsDialogFragment"
         android:label="participants_fragment"
-        tools:layout="@layout/participants_fragment" />
+        tools:layout="@layout/fragment_participants" />
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.gkiss01.meetdeb.screens.ProfileFragment"
+        android:name="com.gkiss01.meetdeb.screens.fragment.ProfileFragment"
         android:label="profile_fragment"
-        tools:layout="@layout/profile_fragment" />
+        tools:layout="@layout/fragment_profile" />
     <dialog
         android:id="@+id/deleteBottomSheetFragment"
-        android:name="com.gkiss01.meetdeb.screens.DeleteBottomSheetFragment"
+        android:name="com.gkiss01.meetdeb.screens.bottomsheet.DeleteBottomSheet"
         android:label="DeleteBottomSheetFragment"
-        tools:layout="@layout/delete_fragment_bottomsheet" />
+        tools:layout="@layout/bottomsheet_profile_delete" />
     <dialog
         android:id="@+id/updateBottomSheetFragment"
-        android:name="com.gkiss01.meetdeb.screens.UpdateBottomSheetFragment"
+        android:name="com.gkiss01.meetdeb.screens.bottomsheet.UpdateBottomSheet"
         android:label="UpdateBottomSheetFragment"
-        tools:layout="@layout/update_fragment_bottomsheet"/>
+        tools:layout="@layout/bottomsheet_profile_update"/>
 </navigation>

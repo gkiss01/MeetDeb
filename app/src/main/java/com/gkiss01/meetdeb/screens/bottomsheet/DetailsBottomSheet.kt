@@ -1,4 +1,4 @@
-package com.gkiss01.meetdeb.screens
+package com.gkiss01.meetdeb.screens.bottomsheet
 
 import android.os.Bundle
 import android.util.TypedValue
@@ -11,12 +11,12 @@ import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.fastadapter.Event
 import com.gkiss01.meetdeb.utils.formatDate
-import kotlinx.android.synthetic.main.details_fragment_bottomsheet.*
+import kotlinx.android.synthetic.main.bottomsheet_event_details.*
 
-class DetailsBottomSheetFragment: SuperBottomSheetFragment() {
+class DetailsBottomSheet: SuperBottomSheetFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        return inflater.inflate(R.layout.details_fragment_bottomsheet, container, false)
+        return inflater.inflate(R.layout.bottomsheet_event_details, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -1,4 +1,4 @@
-package com.gkiss01.meetdeb.screens
+package com.gkiss01.meetdeb.screens.fragment
 
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -9,7 +9,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-class LoadingFragment : Fragment(R.layout.loading_fragment) {
+class LoadingFragment : Fragment(R.layout.fragment_loading) {
 
     override fun onStart() {
         super.onStart()

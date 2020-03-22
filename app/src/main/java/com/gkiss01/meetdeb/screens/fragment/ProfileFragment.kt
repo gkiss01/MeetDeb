@@ -1,4 +1,4 @@
-package com.gkiss01.meetdeb.screens
+package com.gkiss01.meetdeb.screens.fragment
 
 import android.os.Bundle
 import android.view.View
@@ -11,6 +11,7 @@ import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.utils.getActiveUser
 import com.gkiss01.meetdeb.utils.isActiveUserAdmin
 import com.gkiss01.meetdeb.utils.setSavedUser
+import com.gkiss01.meetdeb.viewmodels.ProfileViewModel
 import com.mikepenz.materialdrawer.holder.DimenHolder
 import com.mikepenz.materialdrawer.holder.ImageHolder
 import com.mikepenz.materialdrawer.holder.StringHolder
@@ -20,9 +21,9 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
 import com.mikepenz.materialdrawer.model.SectionDrawerItem
 import com.mikepenz.materialdrawer.model.interfaces.iconDrawable
 import com.mikepenz.materialdrawer.widget.AccountHeaderView
-import kotlinx.android.synthetic.main.profile_fragment.*
+import kotlinx.android.synthetic.main.fragment_profile.*
 
-class ProfileFragment : Fragment(R.layout.profile_fragment) {
+class ProfileFragment : Fragment(R.layout.fragment_profile) {
     private val viewModel: ProfileViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

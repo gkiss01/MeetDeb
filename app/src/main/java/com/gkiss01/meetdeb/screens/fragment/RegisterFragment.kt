@@ -1,4 +1,4 @@
-package com.gkiss01.meetdeb.screens
+package com.gkiss01.meetdeb.screens.fragment
 
 import android.graphics.Color
 import android.os.Bundle
@@ -18,14 +18,14 @@ import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.NavigationCode
 import com.gkiss01.meetdeb.network.moshi
 import com.gkiss01.meetdeb.utils.hideKeyboard
-import kotlinx.android.synthetic.main.register_fragment.*
+import kotlinx.android.synthetic.main.fragment_register.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-class RegisterFragment : Fragment(R.layout.register_fragment) {
+class RegisterFragment : Fragment(R.layout.fragment_register) {
     override fun onStart() {
         super.onStart()
         EventBus.getDefault().register(this)
@@ -46,7 +46,7 @@ class RegisterFragment : Fragment(R.layout.register_fragment) {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onNavigationReceived(navigationCode: NavigationCode) {
         if (navigationCode == NavigationCode.NAVIGATE_TO_LOGIN_FRAGMENT) {
-            rf_registerButton.hideProgress(R.string.register_created)
+            rf_registerButton.hideProgress(R.string.done)
             Handler().postDelayed({ findNavController().navigate(R.id.loginFragment) }, 500)
         }
     }

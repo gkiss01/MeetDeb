@@ -1,4 +1,4 @@
-package com.gkiss01.meetdeb.screens
+package com.gkiss01.meetdeb.screens.fragment
 
 import ScrollingViewOnApplyWindowInsetsListener
 import android.os.Bundle
@@ -23,6 +23,7 @@ import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.utils.getActiveUser
 import com.gkiss01.meetdeb.utils.isActiveUserAdmin
 import com.gkiss01.meetdeb.utils.setSavedUser
+import com.gkiss01.meetdeb.viewmodels.EventsViewModel
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericFastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
@@ -39,14 +40,14 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
 import com.mikepenz.materialdrawer.model.SectionDrawerItem
 import com.mikepenz.materialdrawer.model.interfaces.iconDrawable
 import com.mikepenz.materialdrawer.widget.AccountHeaderView
-import kotlinx.android.synthetic.main.events_fragment.*
-import kotlinx.android.synthetic.main.events_list_item.view.*
+import kotlinx.android.synthetic.main.fragment_events.*
+import kotlinx.android.synthetic.main.item_event.view.*
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-class EventsFragment : Fragment(R.layout.events_fragment) {
+class EventsFragment : Fragment(R.layout.fragment_events) {
     private val viewModel: EventsViewModel by activityViewModels()
 
     private val itemAdapter = ItemAdapter<Event>()
@@ -192,9 +193,7 @@ class EventsFragment : Fragment(R.layout.events_fragment) {
 
         itemAdapter.fastAdapter!!.addClickListener( {null}, { vh: EventViewHolder -> listOf<View>(vh.itemView.eli_descButton, vh.itemView.eli_acceptButton, vh.itemView.eli_anotherDateButton, vh.itemView.eli_moreButton) }) { v, position, _, item ->
             when (v.id) {
-                R.id.eli_descButton -> {
-                    findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToDetailsBottomSheetFragment(item))
-                }
+                R.id.eli_descButton -> findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToDetailsBottomSheetFragment(item))
                 R.id.eli_acceptButton -> {
                     MainActivity.instance.modifyParticipation(item.id, item.accepted)
 
@@ -250,8 +249,7 @@ class EventsFragment : Fragment(R.layout.events_fragment) {
                         MainActivity.instance.removeReport(event.id)
                     R.id.delete ->
                         MainActivity.instance.deleteEvent(event.id)
-                    R.id.update ->
-                        findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToCreateEventFragment(event))
+                    R.id.update -> findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToCreateEventFragment(event))
                 }
                 true
             }

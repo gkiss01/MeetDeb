@@ -1,4 +1,4 @@
-package com.gkiss01.meetdeb.screens
+package com.gkiss01.meetdeb.screens.fragment
 
 import android.Manifest
 import android.app.Activity.RESULT_OK
@@ -23,7 +23,7 @@ import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.fastadapter.Event
-import com.gkiss01.meetdeb.databinding.CreateEventFragmentBinding
+import com.gkiss01.meetdeb.databinding.FragmentEventCreateBinding
 import com.gkiss01.meetdeb.network.BASE_URL
 import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.NavigationCode
@@ -31,6 +31,8 @@ import com.gkiss01.meetdeb.utils.formatDate
 import com.gkiss01.meetdeb.utils.hideKeyboard
 import com.gkiss01.meetdeb.utils.isDate24HourFormat
 import com.gkiss01.meetdeb.utils.updateOffsetDateTime
+import com.gkiss01.meetdeb.viewmodels.CreateEventViewModel
+import com.gkiss01.meetdeb.viewmodels.ScreenType
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
@@ -40,14 +42,14 @@ import com.squareup.picasso.Picasso
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
 import com.zhihu.matisse.engine.impl.GlideEngine
-import kotlinx.android.synthetic.main.create_event_fragment.*
+import kotlinx.android.synthetic.main.fragment_event_create.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.threeten.bp.OffsetDateTime
 
-class CreateEventFragment : Fragment() {
-    private lateinit var binding: CreateEventFragmentBinding
+class EventCreateFragment : Fragment() {
+    private lateinit var binding: FragmentEventCreateBinding
     private val viewModel: CreateEventViewModel by viewModels()
 
     private val REQUEST_CODE_PICK_IMAGE = 1
@@ -72,7 +74,7 @@ class CreateEventFragment : Fragment() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onNavigationReceived(navigationCode: NavigationCode) {
         if (navigationCode == NavigationCode.NAVIGATE_BACK_TO_EVENTS_FRAGMENT) {
-            cef_createButton.hideProgress(if (viewModel.type.value == ScreenType.NEW) R.string.event_created else R.string.event_more_updated)
+            cef_createButton.hideProgress(R.string.done)
             Handler().postDelayed({ findNavController().popBackStack(R.id.eventsFragment, false) }, 500)
         }
         else if (navigationCode == NavigationCode.NAVIGATE_TO_IMAGE_PICKER) showImagePicker()
@@ -82,7 +84,7 @@ class CreateEventFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
 
-        binding = DataBindingUtil.inflate(inflater, R.layout.create_event_fragment, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_event_create, container, false)
         return binding.root
     }
 

@@ -15,7 +15,7 @@ data class Date(
     val accepted: Boolean): AbstractItem<DateViewHolder>() {
 
     override val layoutRes: Int
-        get() = R.layout.dates_list_item
+        get() = R.layout.item_date
     override val type: Int
         get() = R.id.dli_layout
 

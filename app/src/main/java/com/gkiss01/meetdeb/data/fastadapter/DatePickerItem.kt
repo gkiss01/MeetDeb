@@ -8,14 +8,14 @@ import com.gkiss01.meetdeb.adapter.DatePickerViewHolder
 import com.gkiss01.meetdeb.utils.isDate24HourFormat
 import com.gkiss01.meetdeb.utils.updateOffsetDateTime
 import com.mikepenz.fastadapter.items.AbstractItem
-import kotlinx.android.synthetic.main.dates_list_picker.view.*
+import kotlinx.android.synthetic.main.item_date_picker.view.*
 import org.threeten.bp.OffsetDateTime
 
 class DatePickerItem: AbstractItem<DatePickerViewHolder>() {
     var offsetDateTime: OffsetDateTime = OffsetDateTime.now()
 
     override val layoutRes: Int
-        get() = R.layout.dates_list_picker
+        get() = R.layout.item_date_picker
     override val type: Int
         get() = R.id.dlp_layout
 

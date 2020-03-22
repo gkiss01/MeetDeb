@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">meetDeb</string>
 
-    <string name="events_list_header">Események</string>
     <string name="done">Kész!</string>
 
     <string name="event_creator">Létrehozó:</string>
@@ -21,7 +20,6 @@
     <string name="event_image_select">Kép kiválasztása…</string>
     <string name="event_create_button">Létrehozás</string>
     <string name="event_create_waiting">Létrehozás…</string>
-    <string name="event_created">Kész!</string>
 
     <string name="participant_image_desc">Profile image</string>
 
@@ -43,29 +41,28 @@
     <string name="register_name_hint">Név</string>
     <string name="register_already_registered">Már regisztráltál?\nKattints a belépéshez</string>
     <string name="register_create_waiting">Létrehozás…</string>
-    <string name="register_created">Kész!</string>
 
     <string name="login_title">Bejelentkezés</string>
     <string name="login_not_registered">Még nem regisztráltál?\nKattints a regisztráláshoz</string>
     <string name="login_waiting">Belépés…</string>
 
     <string name="loader_screen_logo">Loader screen logo</string>
+
     <string name="event_more_button_desc">Event more button</string>
     <string name="event_more_delete">Törlés</string>
     <string name="event_more_report">Jelentés</string>
     <string name="event_more_remove_report">Jelentés törlése</string>
     <string name="event_more_update">Frissítés</string>
     <string name="event_more_update_waiting">Frissítés…</string>
-    <string name="event_more_updated">Kész!</string>
+
     <string name="profile_image_desc">Profile image</string>
+    <string name="profile_admin">Adminisztrátor</string>
+    <string name="profile_user">Felhasználó</string>
     <string name="profile_accepted">résztvett</string>
     <string name="profile_created">létrehozott</string>
     <string name="profile_identifier">Azonosító</string>
-
-    <string name="profile_admin">Adminisztrátor</string>
-    <string name="profile_user">Felhasználó</string>
-    <string name="profile_delete">Fiók törlése</string>
     <string name="profile_update">Adatok módosítása</string>
+    <string name="profile_delete">Fiók törlése</string>
 
     <string name="profile_delete_title">Figyelem!</string>
     <string name="profile_delete_info">Amennyiben törlöd a fiókod, minden adat véglegesen elveszlik. Ez magába foglalja az általad létrehozott múltbeli és jövőbeli eseményeket, más időpont ajánlásokat és az ezekre történő szavazatokat.</string>

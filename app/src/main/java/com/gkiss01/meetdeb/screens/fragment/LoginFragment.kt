@@ -1,4 +1,4 @@
-package com.gkiss01.meetdeb.screens
+package com.gkiss01.meetdeb.screens.fragment
 
 import android.graphics.Color
 import android.os.Bundle
@@ -15,12 +15,12 @@ import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.NavigationCode
 import com.gkiss01.meetdeb.utils.hideKeyboard
 import com.gkiss01.meetdeb.utils.setSavedUser
-import kotlinx.android.synthetic.main.login_fragment.*
+import kotlinx.android.synthetic.main.fragment_login.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-class LoginFragment : Fragment(R.layout.login_fragment) {
+class LoginFragment : Fragment(R.layout.fragment_login) {
     override fun onStart() {
         super.onStart()
         EventBus.getDefault().register(this)

@@ -1,4 +1,4 @@
-package com.gkiss01.meetdeb.screens
+package com.gkiss01.meetdeb.screens.dialog
 
 import android.app.Dialog
 import android.os.Bundle
@@ -15,12 +15,13 @@ import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.ParticipantList
 import com.gkiss01.meetdeb.data.fastadapter.Participant
 import com.gkiss01.meetdeb.network.ErrorCodes
+import com.gkiss01.meetdeb.viewmodels.ParticipantsDialogViewModel
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericFastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.diff.FastAdapterDiffUtil
 import com.mikepenz.fastadapter.ui.items.ProgressItem
-import kotlinx.android.synthetic.main.participants_fragment.*
+import kotlinx.android.synthetic.main.fragment_participants.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -56,7 +57,7 @@ class ParticipantsDialogFragment : DialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        return inflater.inflate(R.layout.participants_fragment, container, false)
+        return inflater.inflate(R.layout.fragment_participants, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

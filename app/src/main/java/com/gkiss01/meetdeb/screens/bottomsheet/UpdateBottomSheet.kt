@@ -1,4 +1,4 @@
-package com.gkiss01.meetdeb.screens
+package com.gkiss01.meetdeb.screens.bottomsheet
 
 import android.os.Bundle
 import android.util.TypedValue
@@ -8,10 +8,10 @@ import android.view.ViewGroup
 import com.andrefrsousa.superbottomsheet.SuperBottomSheetFragment
 import com.gkiss01.meetdeb.R
 
-class UpdateBottomSheetFragment: SuperBottomSheetFragment() {
+class UpdateBottomSheet: SuperBottomSheetFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        return inflater.inflate(R.layout.update_fragment_bottomsheet, container, false)
+        return inflater.inflate(R.layout.bottomsheet_profile_update, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

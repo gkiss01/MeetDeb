@@ -1,4 +1,4 @@
-package com.gkiss01.meetdeb.screens
+package com.gkiss01.meetdeb.screens.dialog
 
 import android.app.Dialog
 import android.content.DialogInterface
@@ -25,6 +25,7 @@ import com.gkiss01.meetdeb.data.fastadapter.DatePickerItem
 import com.gkiss01.meetdeb.data.fastadapter.Event
 import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.utils.isActiveUserAdmin
+import com.gkiss01.meetdeb.viewmodels.DatesDialogViewModel
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericFastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
@@ -32,9 +33,9 @@ import com.mikepenz.fastadapter.diff.FastAdapterDiffUtil
 import com.mikepenz.fastadapter.listeners.addClickListener
 import com.mikepenz.fastadapter.ui.items.ProgressItem
 import com.mikepenz.itemanimators.AlphaInAnimator
-import kotlinx.android.synthetic.main.dates_fragment.*
-import kotlinx.android.synthetic.main.dates_list_item.view.*
-import kotlinx.android.synthetic.main.dates_list_picker.view.*
+import kotlinx.android.synthetic.main.fragment_dates.*
+import kotlinx.android.synthetic.main.item_date.view.*
+import kotlinx.android.synthetic.main.item_date_picker.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -86,7 +87,7 @@ class DatesDialogFragment : DialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        return inflater.inflate(R.layout.dates_fragment, container, false)
+        return inflater.inflate(R.layout.fragment_dates, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

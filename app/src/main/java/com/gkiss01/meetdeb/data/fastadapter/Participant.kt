@@ -11,7 +11,7 @@ data class Participant(
     var username: String): AbstractItem<ParticipantViewHolder>() {
 
     override val layoutRes: Int
-        get() = R.layout.participants_list_item
+        get() = R.layout.item_participant
     override val type: Int
         get() = R.id.pli_layout
 
