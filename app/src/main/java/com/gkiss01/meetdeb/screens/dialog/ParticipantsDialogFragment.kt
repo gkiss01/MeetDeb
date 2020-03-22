@@ -15,7 +15,7 @@ import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.ParticipantList
 import com.gkiss01.meetdeb.data.fastadapter.Participant
 import com.gkiss01.meetdeb.network.ErrorCodes
-import com.gkiss01.meetdeb.viewmodels.ParticipantsDialogViewModel
+import com.gkiss01.meetdeb.viewmodels.ParticipantsViewModel
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericFastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
@@ -27,7 +27,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 class ParticipantsDialogFragment : DialogFragment() {
-    private val viewModel: ParticipantsDialogViewModel by viewModels()
+    private val viewModel: ParticipantsViewModel by viewModels()
 
     private val itemAdapter = ItemAdapter<Participant>()
     private val headerAdapter = ItemAdapter<ProgressItem>()

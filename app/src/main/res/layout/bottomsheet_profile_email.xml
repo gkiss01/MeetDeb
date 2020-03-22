@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:id="@+id/ubsf_profileUpdateBottomSheet"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="16dp"
+    app:layout_behavior="@string/bottom_sheet_behavior">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Email frissítése"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="8dp"
+        android:hint="Új email cím">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/bspe_newEmail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="8dp"
+        android:hint="Jelenlegi jelszó">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/bspe_oldPassword"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/bspe_updateButton"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/button_update_background"
+        android:text="Frissít"
+        android:textAllCaps="false"
+        android:textSize="17sp" />
+</LinearLayout>

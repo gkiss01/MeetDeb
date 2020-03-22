@@ -6,7 +6,7 @@ import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.data.fastadapter.Date
 import com.gkiss01.meetdeb.data.fastadapter.Event
 
-class DatesDialogViewModel : ViewModel() {
+class DatesViewModel : ViewModel() {
     val dates = MutableLiveData<List<Date>>()
     var isLoading = false
     lateinit var event: Event

@@ -5,27 +5,22 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.fragment.findNavController
 import com.andrefrsousa.superbottomsheet.SuperBottomSheetFragment
 import com.gkiss01.meetdeb.R
-import kotlinx.android.synthetic.main.bottomsheet_profile_update.*
+import kotlinx.android.synthetic.main.bottomsheet_profile_email.*
 
-class UpdateBottomSheet: SuperBottomSheetFragment() {
+class EmailBottomSheet: SuperBottomSheetFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        return inflater.inflate(R.layout.bottomsheet_profile_update, container, false)
+        return inflater.inflate(R.layout.bottomsheet_profile_email, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        bspu_emailButton.setOnClickListener {
-            this.dismiss()
-            findNavController().navigate(R.id.emailBottomSheet)
-        }
-//        ubsf_passwordButton.setOnClickListener {  }
+//        bspe_updateButton.setOnClickListener {  }
     }
 
     override fun getCornerRadius() = context!!.resources.getDimension(R.dimen.bottomsheet_corner_radius)
     override fun getPeekHeight() = TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_DIP, 225F,
+        TypedValue.COMPLEX_UNIT_DIP, 252F,
         context!!.resources.displayMetrics).toInt()
 }

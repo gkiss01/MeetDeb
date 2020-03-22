@@ -25,7 +25,7 @@ import com.gkiss01.meetdeb.data.fastadapter.DatePickerItem
 import com.gkiss01.meetdeb.data.fastadapter.Event
 import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.utils.isActiveUserAdmin
-import com.gkiss01.meetdeb.viewmodels.DatesDialogViewModel
+import com.gkiss01.meetdeb.viewmodels.DatesViewModel
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericFastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
@@ -42,7 +42,7 @@ import org.greenrobot.eventbus.ThreadMode
 import org.threeten.bp.OffsetDateTime
 
 class DatesDialogFragment : DialogFragment() {
-    private val viewModel: DatesDialogViewModel by viewModels()
+    private val viewModel: DatesViewModel by viewModels()
 
     private val itemAdapter = ItemAdapter<Date>()
     private val headerAdapter = ItemAdapter<ProgressItem>()
