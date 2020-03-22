@@ -85,7 +85,7 @@
             app:layout_constraintTop_toBottomOf="@+id/pf_headerView">
 
             <LinearLayout
-                android:layout_width="100dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -114,7 +114,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="100dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -191,15 +191,15 @@
             app:layout_constraintStart_toStartOf="@id/pf_headerView" />
 
         <TextView
-            android:id="@+id/pf_modifyLabel"
+            android:id="@+id/pf_updateLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:drawableStart="@drawable/ic_edit_large"
-            android:drawablePadding="10dp"
+            android:drawablePadding="14dp"
             android:gravity="center"
             android:includeFontPadding="false"
-            android:text="@string/profile_modify"
+            android:text="@string/profile_update"
             android:textColor="@color/white"
             android:textSize="17sp"
             app:layout_constraintBottom_toTopOf="@id/pf_deleteLabel"

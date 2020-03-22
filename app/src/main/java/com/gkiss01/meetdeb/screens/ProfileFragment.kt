@@ -88,8 +88,7 @@ class ProfileFragment : Fragment(R.layout.profile_fragment) {
         pf_acceptedEvents.text = "457"
         pf_id.setText(String.format("%07d", activeUser.id), TextView.BufferType.NORMAL)
 
-        pf_deleteLabel.setOnClickListener {
-            findNavController().navigate(R.id.deleteBottomSheetFragment)
-        }
+        pf_deleteLabel.setOnClickListener { findNavController().navigate(R.id.deleteBottomSheetFragment) }
+        pf_updateLabel.setOnClickListener { findNavController().navigate(R.id.updateBottomSheetFragment) }
     }
 }

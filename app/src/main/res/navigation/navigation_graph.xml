@@ -76,4 +76,9 @@
         android:name="com.gkiss01.meetdeb.screens.DeleteBottomSheetFragment"
         android:label="DeleteBottomSheetFragment"
         tools:layout="@layout/delete_fragment_bottomsheet" />
+    <dialog
+        android:id="@+id/updateBottomSheetFragment"
+        android:name="com.gkiss01.meetdeb.screens.UpdateBottomSheetFragment"
+        android:label="UpdateBottomSheetFragment"
+        tools:layout="@layout/update_fragment_bottomsheet"/>
 </navigation>

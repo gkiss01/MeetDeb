@@ -45,7 +45,7 @@ class DeleteBottomSheetFragment: SuperBottomSheetFragment() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onErrorReceived(errorCode: ErrorCodes) {
-        debsf_deleteButton.hideProgress(R.string.delete_account_yes)
+        debsf_deleteButton.hideProgress(R.string.profile_delete_yes)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -61,7 +61,7 @@ class DeleteBottomSheetFragment: SuperBottomSheetFragment() {
             MainActivity.instance.deleteUser(getActiveUser()!!.id)
 
             debsf_deleteButton.showProgress {
-                buttonTextRes = R.string.delete_account_yes
+                buttonTextRes = R.string.profile_delete_yes
                 progressColor = ContextCompat.getColor(context!!, R.color.black)
             }
         }

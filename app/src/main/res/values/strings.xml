@@ -65,9 +65,15 @@
     <string name="profile_admin">Adminisztrátor</string>
     <string name="profile_user">Felhasználó</string>
     <string name="profile_delete">Fiók törlése</string>
-    <string name="profile_modify">Adatok módosítása</string>
-    <string name="delete_account_info">Amennyiben törlöd a fiókod, minden adat véglegesen elveszlik. Ez magába foglalja az általad létrehozott múltbeli és jövőbeli eseményeket, más időpont ajánlásokat és az ezekre történő szavazatokat.</string>
-    <string name="delete_account_title">Figyelem!</string>
-    <string name="delete_account_yes">Igen, törlöm</string>
-    <string name="delete_account_no">Vissza</string>
+    <string name="profile_update">Adatok módosítása</string>
+
+    <string name="profile_delete_title">Figyelem!</string>
+    <string name="profile_delete_info">Amennyiben törlöd a fiókod, minden adat véglegesen elveszlik. Ez magába foglalja az általad létrehozott múltbeli és jövőbeli eseményeket, más időpont ajánlásokat és az ezekre történő szavazatokat.</string>
+    <string name="profile_delete_yes">Igen, törlöm</string>
+    <string name="profile_delete_no">Vissza</string>
+
+    <string name="profile_update_title">Válassz!</string>
+    <string name="profile_update_info">Mit szeretnél frissíteni?</string>
+    <string name="profile_update_email">Email cím</string>
+    <string name="profile_update_password">Jelszó</string>
 </resources>
