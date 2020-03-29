@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.adapter.EventViewHolder
@@ -49,6 +50,7 @@ import org.greenrobot.eventbus.ThreadMode
 
 class EventsFragment : Fragment(R.layout.fragment_events) {
     private val viewModel: EventsViewModel by activityViewModels()
+    private val activityViewModel: ActivityViewModel by activityViewModels()
 
     private val itemAdapter = ItemAdapter<Event>()
     private val footerAdapter = ItemAdapter<ProgressItem>()
@@ -114,53 +116,14 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        AccountHeaderView(context!!).apply {
-            attachToSliderView(ef_slider)
-            height = DimenHolder.fromDp(200)
-            headerBackground = ImageHolder(R.drawable.landscape)
-            addProfile(ProfileDrawerItem().apply {
-                name = StringHolder(getActiveUser()!!.name)
-                description = StringHolder(getActiveUser()!!.email)
-            }, 0)
-            selectionListEnabledForSingleProfile = false
-        }
+        val accountHeaderView = createAccountHeader()
+        addSliderItems()
+        addSliderNavigation()
 
-        ef_slider.itemAdapter.add(
-            PrimaryDrawerItem().apply {
-                identifier = 1
-                name = StringHolder("Események")
-                isSelected = true
-                isEnabled = false
-                iconDrawable = ContextCompat.getDrawable(context!!, R.drawable.ic_event)!!
-            },
-            PrimaryDrawerItem().apply {
-                identifier = 2
-                name = StringHolder("Profil")
-                iconDrawable = ContextCompat.getDrawable(context!!, R.drawable.ic_person)!!
-            },
-            SectionDrawerItem().apply {
-                name = StringHolder("Továbbiak")
-            },
-            SecondaryDrawerItem().apply {
-                identifier = 3
-                name = StringHolder("Kilépés")
-                iconDrawable = ContextCompat.getDrawable(context!!, R.drawable.ic_logout)!!
-            }
-        )
-
-        ef_slider.closeOnClick = true
-        ef_slider.onDrawerItemClickListener = { _, item, _ ->
-            when (item.identifier) {
-                2L -> {
-                    findNavController().navigate(R.id.profileFragment)
-                }
-                3L -> {
-                    setSavedUser(context!!, "null", "null")
-                    findNavController().navigate(R.id.registerFragment)
-                }
-            }
-            false
-        }
+        activityViewModel.activeUser.observe(viewLifecycleOwner, Observer {
+            accountHeaderView.currentProfileName.text = it.name
+            accountHeaderView.currentProfileEmail.text = it.email
+        })
 
         ef_addActionButton.setOnClickListener{ findNavController().navigate(R.id.createEventFragment) }
 
@@ -177,7 +140,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         val fastScroller = FastScrollerBuilder(ef_eventsRecyclerView).useMd2Style().build()
         ef_eventsRecyclerView.setOnApplyWindowInsetsListener(ScrollingViewOnApplyWindowInsetsListener(ef_eventsRecyclerView, fastScroller))
 
-        val layoutManager = LinearLayoutManager(context)
+        val layoutManager = LinearLayoutManager(context!!)
         ef_eventsRecyclerView.layoutManager = layoutManager
 
         ef_eventsRecyclerView.setHasFixedSize(true)
@@ -225,6 +188,57 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                 }
             }
         })
+    }
+
+    private fun createAccountHeader(): AccountHeaderView {
+        return AccountHeaderView(context!!).apply {
+            attachToSliderView(ef_slider)
+            height = DimenHolder.fromDp(200)
+            headerBackground = ImageHolder(R.drawable.landscape)
+            addProfile(ProfileDrawerItem(), 0)
+            selectionListEnabledForSingleProfile = false
+        }
+    }
+
+    private fun addSliderItems() {
+        ef_slider.itemAdapter.add(
+            PrimaryDrawerItem().apply {
+                identifier = 1
+                name = StringHolder(getString(R.string.drawer_events))
+                isSelected = true
+                isEnabled = false
+                iconDrawable = ContextCompat.getDrawable(context!!, R.drawable.ic_event)!!
+            },
+            PrimaryDrawerItem().apply {
+                identifier = 2
+                name = StringHolder(getString(R.string.drawer_profile))
+                iconDrawable = ContextCompat.getDrawable(context!!, R.drawable.ic_person)!!
+            },
+            SectionDrawerItem().apply {
+                name = StringHolder(getString(R.string.drawer_more))
+            },
+            SecondaryDrawerItem().apply {
+                identifier = 3
+                name = StringHolder(getString(R.string.drawer_logout))
+                iconDrawable = ContextCompat.getDrawable(context!!, R.drawable.ic_logout)!!
+            }
+        )
+    }
+
+    private fun addSliderNavigation() {
+        ef_slider.closeOnClick = true
+        ef_slider.onDrawerItemClickListener = { _, item, _ ->
+            when (item.identifier) {
+                2L -> {
+                    findNavController().navigate(R.id.profileFragment)
+                }
+                3L -> {
+                    setSavedUser(context!!, "null", "null")
+                    findNavController().navigate(R.id.registerFragment)
+                }
+            }
+            false
+        }
     }
 
     private fun createMoreActionMenu(view: View, event: Event) {

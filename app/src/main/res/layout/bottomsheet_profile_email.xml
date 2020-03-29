@@ -13,26 +13,27 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Email frissítése"
+        android:text="@string/profile_email_title"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="8dp"
-        android:hint="Új email cím">
+        android:hint="@string/profile_email_email">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/bspe_newEmail"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:inputType="textEmailAddress" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="8dp"
-        android:hint="Jelenlegi jelszó">
+        android:hint="@string/profile_email_password">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/bspe_oldPassword"
@@ -46,7 +47,8 @@
         android:layout_height="45dp"
         android:layout_marginTop="24dp"
         android:background="@drawable/button_update_background"
-        android:text="Frissít"
+        android:text="@string/profile_email_update"
         android:textAllCaps="false"
+        android:textColor="@color/white"
         android:textSize="17sp" />
 </LinearLayout>

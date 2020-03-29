@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">meetDeb</string>
 
+    <string name="drawer_events">Események</string>
+    <string name="drawer_profile">Profil</string>
+    <string name="drawer_more">Továbbiak</string>
+    <string name="drawer_logout">Kilépés</string>
+
     <string name="done">Kész!</string>
 
     <string name="event_creator">Létrehozó:</string>
@@ -73,4 +78,10 @@
     <string name="profile_update_info">Mit szeretnél frissíteni?</string>
     <string name="profile_update_email">Email cím</string>
     <string name="profile_update_password">Jelszó</string>
+
+    <string name="profile_email_title">Email frissítése</string>
+    <string name="profile_email_email">Új email cím</string>
+    <string name="profile_email_password">Jelenlegi jelszó</string>
+    <string name="profile_email_update">Frissítés</string>
+    <string name="profile_email_update_waiting">Frissítés…</string>
 </resources>

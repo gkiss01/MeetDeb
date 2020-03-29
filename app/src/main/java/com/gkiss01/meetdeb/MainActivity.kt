@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
             checkUser()
 
         viewModel.activeUser.observe(this, Observer {
-            EventBus.getDefault().post(NavigationCode.NAVIGATE_TO_EVENTS_FRAGMENT)
+            EventBus.getDefault().post(NavigationCode.ACTIVE_USER_UPDATED)
         })
     }
 
@@ -115,8 +115,12 @@ class MainActivity : AppCompatActivity() {
             makeRequest(WebApi.retrofitService.createParticipantAsync(viewModel.basic, eventId), TargetVar.VAR_CREATE_PARTICIPANT)
     }
 
-    fun uploadUser(user: RequestBody) {
+    fun createUser(user: RequestBody) {
         makeRequest(WebApi.retrofitService.createUserAsync(user), TargetVar.VAR_CREATE_USER)
+    }
+
+    fun updateUser(auth: String, user: RequestBody) {
+        makeRequest(WebApi.retrofitService.updateUserAsync(auth, user), TargetVar.VAR_UPDATE_USER)
     }
 
     fun deleteUser(userId: Long) {
@@ -131,7 +135,7 @@ class MainActivity : AppCompatActivity() {
                     when (targetVar) {
                         TargetVar.VAR_CHECK_USER -> viewModel.activeUser.value = listResult.user!!
                         TargetVar.VAR_GET_EVENTS -> EventBus.getDefault().post(EventList(listResult.events!!))
-                        TargetVar.VAR_CREATE_UPDATE_EVENT -> EventBus.getDefault().post(NavigationCode.NAVIGATE_BACK_TO_EVENTS_FRAGMENT)
+                        TargetVar.VAR_CREATE_UPDATE_EVENT -> EventBus.getDefault().post(NavigationCode.NAVIGATE_TO_EVENTS_FRAGMENT)
                         TargetVar.VAR_CREATE_PARTICIPANT, TargetVar.VAR_DELETE_PARTICIPANT, TargetVar.VAR_GET_EVENT, TargetVar.VAR_REMOVE_EVENT_REPORT -> EventBus.getDefault().post(listResult.event)
                         TargetVar.VAR_GET_DATES, TargetVar.VAR_CREATE_DATE, TargetVar.VAR_CREATE_VOTE -> EventBus.getDefault().post(DateList(listResult.dates ?: emptyList()))
                         TargetVar.VAR_CREATE_USER -> EventBus.getDefault().post(NavigationCode.NAVIGATE_TO_LOGIN_FRAGMENT)
@@ -140,6 +144,10 @@ class MainActivity : AppCompatActivity() {
                         TargetVar.VAR_DELETE_EVENT -> EventBus.getDefault().post(DeleteEventRequest(listResult.withId!!))
                         TargetVar.VAR_DELETE_DATE -> EventBus.getDefault().post(DeleteDateRequest(listResult.withId!!))
                         TargetVar.VAR_DELETE_USER -> EventBus.getDefault().post(DeleteUserRequest())
+                        TargetVar.VAR_UPDATE_USER -> {
+                            viewModel.activeUser.value = listResult.user!!
+                            viewModel.recalculateBasic(getSavedPassword(this@MainActivity))
+                        }
                     }
                 }
                 else handleResponseErrors(listResult.errorCode!!, listResult.errors!!)

@@ -73,7 +73,7 @@ class EventCreateFragment : Fragment() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onNavigationReceived(navigationCode: NavigationCode) {
-        if (navigationCode == NavigationCode.NAVIGATE_BACK_TO_EVENTS_FRAGMENT) {
+        if (navigationCode == NavigationCode.NAVIGATE_TO_EVENTS_FRAGMENT) {
             cef_createButton.hideProgress(R.string.done)
             Handler().postDelayed({ findNavController().popBackStack(R.id.eventsFragment, false) }, 500)
         }

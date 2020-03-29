@@ -30,7 +30,7 @@ class LoadingFragment : Fragment(R.layout.fragment_loading) {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onNavigationReceived(navigationCode: NavigationCode) {
-        if (navigationCode == NavigationCode.NAVIGATE_TO_EVENTS_FRAGMENT) {
+        if (navigationCode == NavigationCode.ACTIVE_USER_UPDATED) {
             findNavController().navigate(R.id.eventsFragment)
         }
     }

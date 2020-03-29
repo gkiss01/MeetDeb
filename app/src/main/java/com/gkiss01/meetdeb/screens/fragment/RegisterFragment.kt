@@ -14,6 +14,7 @@ import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.apirequest.UserRequest
+import com.gkiss01.meetdeb.data.apirequest.UserRequestType
 import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.NavigationCode
 import com.gkiss01.meetdeb.network.moshi
@@ -110,11 +111,11 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
 
                 hideKeyboard(context!!, view)
 
-                val userRequest = UserRequest(email, password, name)
+                val userRequest = UserRequest(email, password, name, UserRequestType.Create.ordinal)
                 val json = moshi.adapter(UserRequest::class.java).toJson(userRequest)
                 val user = json.toRequestBody("application/json".toMediaTypeOrNull())
 
-                MainActivity.instance.uploadUser(user)
+                MainActivity.instance.createUser(user)
             }
         }
     }

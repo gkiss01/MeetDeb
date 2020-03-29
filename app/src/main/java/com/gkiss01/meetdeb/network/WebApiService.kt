@@ -22,12 +22,12 @@ enum class TargetVar {
     VAR_GET_PARTICIPANTS, VAR_CREATE_PARTICIPANT, VAR_DELETE_PARTICIPANT,
     VAR_GET_DATES, VAR_CREATE_DATE, VAR_DELETE_DATE,
     VAR_CREATE_VOTE,
-    VAR_CREATE_USER, VAR_DELETE_USER, VAR_CHECK_USER
+    VAR_CREATE_USER, VAR_UPDATE_USER, VAR_DELETE_USER, VAR_CHECK_USER
 }
 
 enum class NavigationCode {
+    ACTIVE_USER_UPDATED,
     NAVIGATE_TO_EVENTS_FRAGMENT,
-    NAVIGATE_BACK_TO_EVENTS_FRAGMENT,
     NAVIGATE_TO_LOGIN_FRAGMENT,
     NAVIGATE_TO_IMAGE_PICKER
 }
@@ -121,6 +121,9 @@ interface WebApiService {
 
     @POST("dates/{eventId}")
     fun createDateAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long, @Query("date") date: OffsetDateTime): Deferred<GenericResponse>
+
+    @PUT("users")
+    fun updateUserAsync(@Header("Authorization") auth: String, @Body user: RequestBody): Deferred<GenericResponse>
 
     @DELETE("events/{eventId}")
     fun deleteEventAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): Deferred<GenericResponse>

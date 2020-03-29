@@ -5,6 +5,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.data.Role
+import com.gkiss01.meetdeb.data.User
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.format.DateTimeFormatter
 
@@ -12,6 +13,7 @@ val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("EEE, dd MMM 
 
 fun getActiveUser() = MainActivity.instance.getActiveUser()
 fun isActiveUserAdmin() = MainActivity.instance.getActiveUser()?.roles?.contains(Role.ROLE_ADMIN)
+fun isActiveUserAdmin(user: User) = user.roles.contains(Role.ROLE_ADMIN)
 
 fun getSavedUsername(context: Context, default: String = "unknown"): String {
     val sharedPref = context.getSharedPreferences("BASIC_AUTH_PREFS", Context.MODE_PRIVATE)
