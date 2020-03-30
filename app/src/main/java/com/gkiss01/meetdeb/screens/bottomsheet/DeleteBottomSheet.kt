@@ -7,16 +7,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.andrefrsousa.superbottomsheet.SuperBottomSheetFragment
 import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
+import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.adapterrequest.DeleteUserRequest
 import com.gkiss01.meetdeb.network.ErrorCodes
-import com.gkiss01.meetdeb.utils.getActiveUser
 import com.gkiss01.meetdeb.utils.setSavedUser
 import kotlinx.android.synthetic.main.bottomsheet_profile_delete.*
 import org.greenrobot.eventbus.EventBus
@@ -24,6 +25,8 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 class DeleteBottomSheet: SuperBottomSheetFragment() {
+    private val activityViewModel: ActivityViewModel by activityViewModels()
+
     override fun onStart() {
         super.onStart()
         EventBus.getDefault().register(this)
@@ -39,7 +42,11 @@ class DeleteBottomSheet: SuperBottomSheetFragment() {
     fun onDeleteRequestReceived(request: DeleteUserRequest) {
         debsf_deleteButton.hideProgress(R.string.done)
         Handler().postDelayed({
-            setSavedUser(context!!, "null", "null")
+            setSavedUser(context!!, "", "")
+            activityViewModel.activeUser.value = null
+            activityViewModel.tempPassword = null
+            activityViewModel.password = ""
+            activityViewModel.basic = ""
             findNavController().navigate(R.id.registerFragment)
         }, 500)
     }
@@ -60,7 +67,7 @@ class DeleteBottomSheet: SuperBottomSheetFragment() {
 
         debsf_deleteButton.attachTextChangeAnimator()
         debsf_deleteButton.setOnClickListener {
-            MainActivity.instance.deleteUser(getActiveUser()!!.id)
+            MainActivity.instance.deleteUser(activityViewModel.activeUser.value!!.id)
 
             debsf_deleteButton.showProgress {
                 buttonTextRes = R.string.profile_delete_yes

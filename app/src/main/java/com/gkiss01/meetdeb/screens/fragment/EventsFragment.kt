@@ -21,7 +21,6 @@ import com.gkiss01.meetdeb.data.adapterrequest.DeleteEventRequest
 import com.gkiss01.meetdeb.data.adapterrequest.UpdateEventRequest
 import com.gkiss01.meetdeb.data.fastadapter.Event
 import com.gkiss01.meetdeb.network.ErrorCodes
-import com.gkiss01.meetdeb.utils.getActiveUser
 import com.gkiss01.meetdeb.utils.isActiveUserAdmin
 import com.gkiss01.meetdeb.utils.setSavedUser
 import com.gkiss01.meetdeb.viewmodels.EventsViewModel
@@ -233,7 +232,11 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                     findNavController().navigate(R.id.profileFragment)
                 }
                 3L -> {
-                    setSavedUser(context!!, "null", "null")
+                    setSavedUser(context!!, "", "")
+                    activityViewModel.activeUser.value = null
+                    activityViewModel.tempPassword = null
+                    activityViewModel.password = ""
+                    activityViewModel.basic = ""
                     findNavController().navigate(R.id.registerFragment)
                 }
             }
@@ -243,12 +246,12 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
 
     private fun createMoreActionMenu(view: View, event: Event) {
         PopupMenu(context, view).apply {
-            if (isActiveUserAdmin()!!) {
-                if (event.userId == getActiveUser()!!.id) menu.add(0, R.id.update, 0, R.string.event_more_update)
+            if (isActiveUserAdmin()) {
+                if (event.userId == activityViewModel.activeUser.value!!.id) menu.add(0, R.id.update, 0, R.string.event_more_update)
                 if (event.reported) menu.add(0, R.id.removeReport, 0, R.string.event_more_remove_report)
                 menu.add(0, R.id.delete, 0, R.string.event_more_delete)
             } else {
-                if (event.userId == getActiveUser()!!.id) {
+                if (event.userId == activityViewModel.activeUser.value!!.id) {
                     menu.add(0, R.id.update, 0, R.string.event_more_update)
                     menu.add(0, R.id.delete, 0, R.string.event_more_delete)
                 }

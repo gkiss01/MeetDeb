@@ -17,8 +17,10 @@ import com.gkiss01.meetdeb.network.TargetVar
 import com.gkiss01.meetdeb.network.WebApi
 import com.gkiss01.meetdeb.utils.getSavedPassword
 import com.gkiss01.meetdeb.utils.getSavedUsername
+import com.gkiss01.meetdeb.utils.setSavedUser
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.launch
+import okhttp3.Credentials
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.greenrobot.eventbus.EventBus
@@ -36,10 +38,22 @@ class MainActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this).get(ActivityViewModel::class.java)
 
-        if (viewModel.activeUser.value == null)
-            checkUser()
+        if (viewModel.activeUser.value == null) {
+            val username = getSavedUsername(this)
+            val password = getSavedPassword(this)
+            viewModel.tempPassword = password
+            checkUser(Credentials.basic(username, password))
+        }
 
         viewModel.activeUser.observe(this, Observer {
+            if (viewModel.tempPassword != null) {
+                setSavedUser(this, it.email, viewModel.tempPassword!!)
+                viewModel.password = viewModel.tempPassword!!
+                viewModel.tempPassword = null
+            } else {
+                setSavedUser(this, it.email, viewModel.password)
+            }
+            viewModel.calculateBasic()
             EventBus.getDefault().post(NavigationCode.ACTIVE_USER_UPDATED)
         })
     }
@@ -55,17 +69,11 @@ class MainActivity : AppCompatActivity() {
     fun saveTempPassword(password: String) {
         viewModel.tempPassword = password
     }
-    fun getTempPassword(): String = viewModel.tempPassword
-
-    fun recalculateBasic() {
-        viewModel.recalculateBasic(getSavedUsername(this), getSavedPassword(this))
-    }
 
     fun getActiveUser(): User? = viewModel.activeUser.value
 
-    fun checkUser() {
-        recalculateBasic()
-        makeRequest(WebApi.retrofitService.checkUserAsync(viewModel.basic), TargetVar.VAR_CHECK_USER)
+    fun checkUser(basic: String) {
+        makeRequest(WebApi.retrofitService.checkUserAsync(basic), TargetVar.VAR_CHECK_USER)
     }
 
     fun getEvent(eventId: Long) {
@@ -152,10 +160,7 @@ class MainActivity : AppCompatActivity() {
                         TargetVar.VAR_DELETE_EVENT -> EventBus.getDefault().post(DeleteEventRequest(listResult.withId!!))
                         TargetVar.VAR_DELETE_DATE -> EventBus.getDefault().post(DeleteDateRequest(listResult.withId!!))
                         TargetVar.VAR_DELETE_USER -> EventBus.getDefault().post(DeleteUserRequest())
-                        TargetVar.VAR_UPDATE_USER -> {
-                            viewModel.activeUser.value = listResult.user!!
-                            viewModel.recalculateBasic(getSavedPassword(this@MainActivity))
-                        }
+                        TargetVar.VAR_UPDATE_USER -> viewModel.activeUser.value = listResult.user!!
                     }
                 }
                 else handleResponseErrors(listResult.errorCode!!, listResult.errors!!)

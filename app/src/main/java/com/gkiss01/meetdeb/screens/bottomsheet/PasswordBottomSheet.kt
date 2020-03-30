@@ -7,9 +7,11 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import com.andrefrsousa.superbottomsheet.SuperBottomSheetFragment
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
+import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.apirequest.UserRequest
@@ -17,9 +19,7 @@ import com.gkiss01.meetdeb.data.apirequest.UserRequestType
 import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.NavigationCode
 import com.gkiss01.meetdeb.network.moshi
-import com.gkiss01.meetdeb.utils.getSavedUsername
 import com.gkiss01.meetdeb.utils.hideKeyboard
-import com.gkiss01.meetdeb.utils.setSavedUser
 import kotlinx.android.synthetic.main.bottomsheet_profile_password.*
 import okhttp3.Credentials
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -29,6 +29,8 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 class PasswordBottomSheet: SuperBottomSheetFragment() {
+    private val activityViewModel: ActivityViewModel by activityViewModels()
+
     override fun onStart() {
         super.onStart()
         EventBus.getDefault().register(this)
@@ -48,9 +50,6 @@ class PasswordBottomSheet: SuperBottomSheetFragment() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onNavigationReceived(navigationCode: NavigationCode) {
         if (navigationCode == NavigationCode.ACTIVE_USER_UPDATED) {
-            setSavedUser(context!!, getSavedUsername(context!!), MainActivity.instance.getTempPassword())
-            MainActivity.instance.recalculateBasic()
-
             bspp_updateButton.hideProgress(R.string.done)
             Handler().postDelayed({ this.dismiss() }, 500)
         }
@@ -89,7 +88,7 @@ class PasswordBottomSheet: SuperBottomSheetFragment() {
                 val json = moshi.adapter(UserRequest::class.java).toJson(userRequest)
                 val user = json.toRequestBody("application/json".toMediaTypeOrNull())
 
-                val basic = Credentials.basic(getSavedUsername(context!!), password)
+                val basic = Credentials.basic(activityViewModel.activeUser.value!!.email, password)
 
                 MainActivity.instance.saveTempPassword(newPassword)
                 MainActivity.instance.updateUser(basic, user)

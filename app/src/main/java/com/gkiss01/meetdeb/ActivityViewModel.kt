@@ -7,14 +7,16 @@ import okhttp3.Credentials
 
 class ActivityViewModel : ViewModel() {
     val activeUser = MutableLiveData<User>()
+    lateinit var password: String
+    var tempPassword: String? = null
+
     lateinit var basic: String
-    lateinit var tempPassword: String
 
-    fun recalculateBasic(username: String, password: String) {
-        basic = Credentials.basic(username, password)
-    }
+//    val basic: LiveData<String> = Transformations.map(activeUser) {
+//        Credentials.basic(it.email, password)
+//    }
 
-    fun recalculateBasic(password: String) {
+    fun calculateBasic() {
         basic = Credentials.basic(activeUser.value!!.email, password)
     }
 }

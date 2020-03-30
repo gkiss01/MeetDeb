@@ -11,9 +11,8 @@ import org.threeten.bp.format.DateTimeFormatter
 
 val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy, HH:mm")
 
-fun getActiveUser() = MainActivity.instance.getActiveUser()
-fun isActiveUserAdmin() = MainActivity.instance.getActiveUser()?.roles?.contains(Role.ROLE_ADMIN)
 fun isActiveUserAdmin(user: User) = user.roles.contains(Role.ROLE_ADMIN)
+fun isActiveUserAdmin() = isActiveUserAdmin(MainActivity.instance.getActiveUser()!!)
 
 fun getSavedUsername(context: Context, default: String = "unknown"): String {
     val sharedPref = context.getSharedPreferences("BASIC_AUTH_PREFS", Context.MODE_PRIVATE)

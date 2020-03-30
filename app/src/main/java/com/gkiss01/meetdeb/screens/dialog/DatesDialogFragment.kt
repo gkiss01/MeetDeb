@@ -94,7 +94,7 @@ class DatesDialogFragment : DialogFragment() {
         viewModel.event = arguments!!.getSerializable("event") as Event
 
         fastAdapter = FastAdapter.with(listOf(headerAdapter, itemAdapter, footerAdapter))
-        if (!isActiveUserAdmin()!!) fastAdapter.attachDefaultListeners = false
+        if (!isActiveUserAdmin()) fastAdapter.attachDefaultListeners = false
         df_datesRecyclerView.adapter = fastAdapter
 
         val layoutManager = LinearLayoutManager(context)

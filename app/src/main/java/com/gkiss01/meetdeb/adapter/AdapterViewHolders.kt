@@ -119,7 +119,7 @@ class EventViewHolder(private val view: View): FastAdapter.ViewHolder<Event>(vie
         view.eli_eventLabel.text = item.name
         view.eli_creatorLabel.text = item.username
 
-        if (isActiveUserAdmin()!!)
+        if (isActiveUserAdmin())
             view.eli_creatorLabel.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_creator, 0, if (item.reported) R.drawable.ic_report else 0, 0)
 
         if (item.accepted) {

@@ -5,22 +5,26 @@ import android.os.Bundle
 import android.util.Patterns
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
+import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.NavigationCode
 import com.gkiss01.meetdeb.utils.hideKeyboard
-import com.gkiss01.meetdeb.utils.setSavedUser
 import kotlinx.android.synthetic.main.fragment_login.*
+import okhttp3.Credentials
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 class LoginFragment : Fragment(R.layout.fragment_login) {
+    private val activityViewModel: ActivityViewModel by activityViewModels()
+
     override fun onStart() {
         super.onStart()
         EventBus.getDefault().register(this)
@@ -75,8 +79,8 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                 hideKeyboard(context!!, view)
                 showAnimation()
 
-                setSavedUser(context!!, email, password)
-                MainActivity.instance.checkUser()
+                activityViewModel.tempPassword = password
+                MainActivity.instance.checkUser(Credentials.basic(email, password))
             }
         }
     }
