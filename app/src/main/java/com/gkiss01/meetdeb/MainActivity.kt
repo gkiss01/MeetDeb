@@ -19,7 +19,6 @@ import com.gkiss01.meetdeb.utils.getSavedPassword
 import com.gkiss01.meetdeb.utils.getSavedUsername
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.launch
-import okhttp3.Credentials
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.greenrobot.eventbus.EventBus
@@ -53,10 +52,19 @@ class MainActivity : AppCompatActivity() {
         instance = this
     }
 
+    fun saveTempPassword(password: String) {
+        viewModel.tempPassword = password
+    }
+    fun getTempPassword(): String = viewModel.tempPassword
+
+    fun recalculateBasic() {
+        viewModel.recalculateBasic(getSavedUsername(this), getSavedPassword(this))
+    }
+
     fun getActiveUser(): User? = viewModel.activeUser.value
 
     fun checkUser() {
-        viewModel.basic = Credentials.basic(getSavedUsername(this), getSavedPassword(this))
+        recalculateBasic()
         makeRequest(WebApi.retrofitService.checkUserAsync(viewModel.basic), TargetVar.VAR_CHECK_USER)
     }
 

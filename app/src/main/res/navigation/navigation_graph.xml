@@ -86,4 +86,9 @@
         android:name="com.gkiss01.meetdeb.screens.bottomsheet.EmailBottomSheet"
         android:label="EmailBottomSheet"
         tools:layout="@layout/bottomsheet_profile_email" />
+    <dialog
+        android:id="@+id/passwordBottomSheet"
+        android:name="com.gkiss01.meetdeb.screens.bottomsheet.PasswordBottomSheet"
+        android:label="PasswordBottomSheet"
+        tools:layout="@layout/bottomsheet_profile_password" />
 </navigation>

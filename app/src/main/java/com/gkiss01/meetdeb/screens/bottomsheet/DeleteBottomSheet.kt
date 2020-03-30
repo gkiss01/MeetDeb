@@ -34,6 +34,7 @@ class DeleteBottomSheet: SuperBottomSheetFragment() {
         super.onStop()
     }
 
+    @Suppress("unused_parameter")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onDeleteRequestReceived(request: DeleteUserRequest) {
         debsf_deleteButton.hideProgress(R.string.done)
@@ -43,6 +44,7 @@ class DeleteBottomSheet: SuperBottomSheetFragment() {
         }, 500)
     }
 
+    @Suppress("unused_parameter")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onErrorReceived(errorCode: ErrorCodes) {
         debsf_deleteButton.hideProgress(R.string.profile_delete_yes)

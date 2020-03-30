@@ -21,7 +21,10 @@ class UpdateBottomSheet: SuperBottomSheetFragment() {
             this.dismiss()
             findNavController().navigate(R.id.emailBottomSheet)
         }
-//        ubsf_passwordButton.setOnClickListener {  }
+        bspu_passwordButton.setOnClickListener {
+            this.dismiss()
+            findNavController().navigate(R.id.passwordBottomSheet)
+        }
     }
 
     override fun getCornerRadius() = context!!.resources.getDimension(R.dimen.bottomsheet_corner_radius)

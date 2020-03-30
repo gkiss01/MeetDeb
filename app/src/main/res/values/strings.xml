@@ -84,4 +84,7 @@
     <string name="profile_email_password">Jelenlegi jelszó</string>
     <string name="profile_email_update">Frissítés</string>
     <string name="profile_email_update_waiting">Frissítés…</string>
+
+    <string name="profile_password_title">Jelszó frissítése</string>
+    <string name="profile_password_password_new">Új jelszó</string>
 </resources>

@@ -3,7 +3,6 @@ package com.gkiss01.meetdeb.screens.bottomsheet
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
-import android.util.Patterns
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -18,8 +17,10 @@ import com.gkiss01.meetdeb.data.apirequest.UserRequestType
 import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.NavigationCode
 import com.gkiss01.meetdeb.network.moshi
-import com.gkiss01.meetdeb.utils.*
-import kotlinx.android.synthetic.main.bottomsheet_profile_email.*
+import com.gkiss01.meetdeb.utils.getSavedUsername
+import com.gkiss01.meetdeb.utils.hideKeyboard
+import com.gkiss01.meetdeb.utils.setSavedUser
+import kotlinx.android.synthetic.main.bottomsheet_profile_password.*
 import okhttp3.Credentials
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -27,7 +28,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-class EmailBottomSheet: SuperBottomSheetFragment() {
+class PasswordBottomSheet: SuperBottomSheetFragment() {
     override fun onStart() {
         super.onStart()
         EventBus.getDefault().register(this)
@@ -41,40 +42,42 @@ class EmailBottomSheet: SuperBottomSheetFragment() {
     @Suppress("unused_parameter")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onErrorReceived(errorCode: ErrorCodes) {
-        bspe_updateButton.hideProgress(R.string.profile_email_update)
+        bspp_updateButton.hideProgress(R.string.profile_email_update)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onNavigationReceived(navigationCode: NavigationCode) {
         if (navigationCode == NavigationCode.ACTIVE_USER_UPDATED) {
-            setSavedUser(context!!, getActiveUser()!!.email, getSavedPassword(context!!))
-            bspe_updateButton.hideProgress(R.string.done)
+            setSavedUser(context!!, getSavedUsername(context!!), MainActivity.instance.getTempPassword())
+            MainActivity.instance.recalculateBasic()
+
+            bspp_updateButton.hideProgress(R.string.done)
             Handler().postDelayed({ this.dismiss() }, 500)
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        return inflater.inflate(R.layout.bottomsheet_profile_email, container, false)
+        return inflater.inflate(R.layout.bottomsheet_profile_password, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        bspe_updateButton.setOnClickListener {
+        bspp_updateButton.setOnClickListener {
             var error = false
-            val email = bspe_newEmail.text.toString()
-            val password = bspe_oldPassword.text.toString()
+            val newPassword = bspp_newPassword.text.toString()
+            val password = bspp_oldPassword.text.toString()
 
-            if (email.isEmpty()) {
-                bspe_newEmail.error = "A mezőt kötelező kitölteni!"
+            if (newPassword.isEmpty()) {
+                bspp_newPassword.error = "A mezőt kötelező kitölteni!"
                 error = true
             }
-            else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                bspe_newEmail.error = "Az email cím nem valódi!"
+            else if (newPassword.length < 8) {
+                bspp_newPassword.error = "A jelszó min. 8 karakter lehet!"
                 error = true
             }
 
             if (password.isEmpty()) {
-                bspe_oldPassword.error = "A mezőt kötelező kitölteni!"
+                bspp_oldPassword.error = "A mezőt kötelező kitölteni!"
                 error = true
             }
 
@@ -82,12 +85,13 @@ class EmailBottomSheet: SuperBottomSheetFragment() {
                 hideKeyboard(context!!, view)
                 showAnimation()
 
-                val userRequest = UserRequest(email, "________", "________", UserRequestType.EmailUpdate.ordinal)
+                val userRequest = UserRequest("unnecessary@email.com", newPassword, "________", UserRequestType.PasswordUpdate.ordinal)
                 val json = moshi.adapter(UserRequest::class.java).toJson(userRequest)
                 val user = json.toRequestBody("application/json".toMediaTypeOrNull())
 
                 val basic = Credentials.basic(getSavedUsername(context!!), password)
 
+                MainActivity.instance.saveTempPassword(newPassword)
                 MainActivity.instance.updateUser(basic, user)
             }
         }
@@ -99,7 +103,7 @@ class EmailBottomSheet: SuperBottomSheetFragment() {
         context!!.resources.displayMetrics).toInt()
 
     private fun showAnimation() {
-        bspe_updateButton.showProgress {
+        bspp_updateButton.showProgress {
             buttonTextRes = R.string.profile_email_update_waiting
             progressColor = Color.WHITE
         }
