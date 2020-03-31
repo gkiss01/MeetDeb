@@ -37,7 +37,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
             pf_createdEvents.text = "137"
             pf_acceptedEvents.text = "457"
-            pf_id.setText(String.format("%07d", it.id), TextView.BufferType.NORMAL)
+            pf_id.editText?.setText(String.format("%07d", it.id), TextView.BufferType.NORMAL)
 
             if (isActiveUserAdmin(it)) {
                 val color = ContextCompat.getColor(context!!, R.color.yellow)
