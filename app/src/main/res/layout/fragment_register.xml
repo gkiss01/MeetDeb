@@ -32,35 +32,48 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.30">
 
-        <EditText
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/rf_email"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_email"
-            android:drawablePadding="5dp"
-            android:hint="@string/register_email_hint"
-            android:importantForAutofill="no"
-            android:inputType="textEmailAddress" />
+            android:layout_height="wrap_content">
 
-        <EditText
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_email"
+                android:drawablePadding="5dp"
+                android:hint="@string/register_email_hint"
+                android:inputType="textEmailAddress" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/rf_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_password"
-            android:drawablePadding="5dp"
-            android:hint="@string/register_password_hint"
-            android:importantForAutofill="no"
-            android:inputType="textPassword" />
+            app:passwordToggleEnabled="true">
 
-        <EditText
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_password"
+                android:drawablePadding="5dp"
+                android:hint="@string/register_password_hint"
+                android:inputType="textPassword" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/rf_name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_name"
-            android:drawablePadding="5dp"
-            android:hint="@string/register_name_hint"
-            android:importantForAutofill="no"
-            android:inputType="textPersonName" />
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_name"
+                android:drawablePadding="5dp"
+                android:hint="@string/register_name_hint"
+                android:inputType="textPersonName" />
+        </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
     <TextView

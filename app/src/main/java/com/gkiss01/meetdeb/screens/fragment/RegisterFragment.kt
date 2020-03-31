@@ -65,57 +65,87 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
 
         rf_registerButton.attachTextChangeAnimator()
         rf_registerButton.setOnClickListener {
-            var error = false
-            val email = rf_email.text.toString()
-            val password = rf_password.text.toString()
-            val name = rf_name.text.toString()
+            val isValidEmail = validateEmail()
+            val isValidPassword = validatePassword()
+            val isValidName = validateName()
 
-            if (email.isEmpty()) {
-                rf_email.error = "A mezőt kötelező kitölteni!"
-                error = true
-            }
-            else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                rf_email.error = "Az email cím nem valódi!"
-                error = true
-            }
+            if (isValidEmail && isValidPassword && isValidName) {
+                val email = rf_email.editText?.text.toString().trim()
+                val password = rf_password.editText?.text.toString().trim()
+                val name = rf_name.editText?.text.toString().trim()
 
-            if (password.isEmpty()) {
-                rf_password.error = "A mezőt kötelező kitölteni!"
-                error = true
-            }
-            else if (password.length < 8) {
-                rf_password.error = "A jelszó min. 8 karakter lehet!"
-                error = true
-            }
-
-            when {
-                name.isEmpty() -> {
-                    rf_name.error = "A mezőt kötelező kitölteni!"
-                    error = true
-                }
-                name.length < 4 -> {
-                    rf_name.error = "A név min. 4 karakter lehet!"
-                    error = true
-                }
-                name.length > 80 -> {
-                    rf_name.error = "A név max. 80 karakter lehet!"
-                    error = true
-                }
-            }
-
-            if (!error) {
+                hideKeyboard(context!!, view)
                 rf_registerButton.showProgress {
                     buttonTextRes = R.string.register_create_waiting
                     progressColor = Color.WHITE
                 }
-
-                hideKeyboard(context!!, view)
 
                 val userRequest = UserRequest(email, password, name, UserRequestType.Create.ordinal)
                 val json = moshi.adapter(UserRequest::class.java).toJson(userRequest)
                 val user = json.toRequestBody("application/json".toMediaTypeOrNull())
 
                 MainActivity.instance.createUser(user)
+            }
+        }
+    }
+
+    private fun validateEmail(): Boolean {
+        val email = rf_email.editText?.text.toString().trim()
+
+        return when {
+            email.isEmpty() -> {
+                rf_email.error = "A mezőt kötelező kitölteni!"
+                false
+            }
+            !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
+                rf_email.error = "Az email cím nem valódi!"
+                false
+            }
+            else -> {
+                rf_email.error = null
+                true
+            }
+        }
+    }
+
+    private fun validatePassword(): Boolean {
+        val password = rf_password.editText?.text.toString().trim()
+
+        return when {
+            password.isEmpty() -> {
+                rf_password.error = "A mezőt kötelező kitölteni!"
+                false
+            }
+            password.length < 8 -> {
+                rf_password.error = "A jelszó min. 8 karakter lehet!"
+                false
+            }
+            else -> {
+                rf_password.error = null
+                true
+            }
+        }
+    }
+
+    private fun validateName(): Boolean {
+        val name = rf_name.editText?.text.toString().trim()
+
+        return when {
+            name.isEmpty() -> {
+                rf_name.error = "A mezőt kötelező kitölteni!"
+                false
+            }
+            name.length < 4 -> {
+                rf_name.error = "A név min. 4 karakter lehet!"
+                false
+            }
+            name.length > 80 -> {
+                rf_name.error = "A név max. 80 karakter lehet!"
+                false
+            }
+            else -> {
+                rf_name.error = null
+                true
             }
         }
     }
