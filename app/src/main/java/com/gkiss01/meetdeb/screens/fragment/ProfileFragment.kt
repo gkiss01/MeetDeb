@@ -99,10 +99,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 }
                 3L -> {
                     setSavedUser(context!!, "", "")
-                    activityViewModel.activeUser.value = null
-                    activityViewModel.tempPassword = null
-                    activityViewModel.password = ""
-                    activityViewModel.basic = ""
+                    activityViewModel.clear()
                     findNavController().navigate(R.id.registerFragment)
                 }
             }

@@ -16,6 +16,13 @@ class ActivityViewModel : ViewModel() {
 //        Credentials.basic(it.email, password)
 //    }
 
+    fun clear() {
+        activeUser.value = null
+        tempPassword = null
+        password = ""
+        basic = ""
+    }
+
     fun calculateBasic() {
         basic = Credentials.basic(activeUser.value!!.email, password)
     }

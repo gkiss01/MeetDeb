@@ -43,10 +43,7 @@ class DeleteBottomSheet: SuperBottomSheetFragment() {
         debsf_deleteButton.hideProgress(R.string.done)
         Handler().postDelayed({
             setSavedUser(context!!, "", "")
-            activityViewModel.activeUser.value = null
-            activityViewModel.tempPassword = null
-            activityViewModel.password = ""
-            activityViewModel.basic = ""
+            activityViewModel.clear()
             findNavController().navigate(R.id.registerFragment)
         }, 500)
     }
