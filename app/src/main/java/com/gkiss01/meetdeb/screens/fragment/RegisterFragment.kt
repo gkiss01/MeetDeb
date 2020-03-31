@@ -75,15 +75,11 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
                 val name = rf_name.editText?.text.toString().trim()
 
                 hideKeyboard(context!!, view)
-                rf_registerButton.showProgress {
-                    buttonTextRes = R.string.register_create_waiting
-                    progressColor = Color.WHITE
-                }
+                showAnimation()
 
                 val userRequest = UserRequest(email, password, name, UserRequestType.Create.ordinal)
                 val json = moshi.adapter(UserRequest::class.java).toJson(userRequest)
                 val user = json.toRequestBody("application/json".toMediaTypeOrNull())
-
                 MainActivity.instance.createUser(user)
             }
         }
@@ -147,6 +143,13 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
                 rf_name.error = null
                 true
             }
+        }
+    }
+
+    private fun showAnimation() {
+        rf_registerButton.showProgress {
+            buttonTextRes = R.string.register_create_waiting
+            progressColor = Color.WHITE
         }
     }
 }

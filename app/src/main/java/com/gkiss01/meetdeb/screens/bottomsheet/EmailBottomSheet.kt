@@ -63,34 +63,21 @@ class EmailBottomSheet: SuperBottomSheetFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         bspe_updateButton.setOnClickListener {
-            var error = false
-            val email = bspe_newEmail.text.toString()
-            val password = bspe_oldPassword.text.toString()
+            val isValidEmail = validateEmail()
+            val isValidPassword = validatePassword()
 
-            if (email.isEmpty()) {
-                bspe_newEmail.error = "A mezőt kötelező kitölteni!"
-                error = true
-            }
-            else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                bspe_newEmail.error = "Az email cím nem valódi!"
-                error = true
-            }
+            if (isValidEmail && isValidPassword) {
+                val email = bspe_newEmail.editText?.text.toString().trim()
+                val password = bspe_oldPassword.editText?.text.toString().trim()
 
-            if (password.isEmpty()) {
-                bspe_oldPassword.error = "A mezőt kötelező kitölteni!"
-                error = true
-            }
-
-            if (!error) {
                 hideKeyboard(context!!, view)
                 showAnimation()
+
+                val basic = Credentials.basic(activityViewModel.activeUser.value!!.email, password)
 
                 val userRequest = UserRequest(email, "________", "________", UserRequestType.EmailUpdate.ordinal)
                 val json = moshi.adapter(UserRequest::class.java).toJson(userRequest)
                 val user = json.toRequestBody("application/json".toMediaTypeOrNull())
-
-                val basic = Credentials.basic(activityViewModel.activeUser.value!!.email, password)
-
                 MainActivity.instance.updateUser(basic, user)
             }
         }
@@ -98,8 +85,46 @@ class EmailBottomSheet: SuperBottomSheetFragment() {
 
     override fun getCornerRadius() = context!!.resources.getDimension(R.dimen.bottomsheet_corner_radius)
     override fun getPeekHeight() = TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_DIP, 252F,
+        TypedValue.COMPLEX_UNIT_DIP, 255F,
         context!!.resources.displayMetrics).toInt()
+
+    private fun validateEmail(): Boolean {
+        val email = bspe_newEmail.editText?.text.toString().trim()
+
+        return when {
+            email.isEmpty() -> {
+                bspe_newEmail.error = "A mezőt kötelező kitölteni!"
+                false
+            }
+            !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
+                bspe_newEmail.error = "Az email cím nem valódi!"
+                false
+            }
+            else -> {
+                bspe_newEmail.error = null
+                true
+            }
+        }
+    }
+
+    private fun validatePassword(): Boolean {
+        val password = bspe_oldPassword.editText?.text.toString().trim()
+
+        return when {
+            password.isEmpty() -> {
+                bspe_oldPassword.error = "A mezőt kötelező kitölteni!"
+                false
+            }
+            password.length < 8 -> {
+                bspe_oldPassword.error = "A jelszó min. 8 karakter lehet!"
+                false
+            }
+            else -> {
+                bspe_oldPassword.error = null
+                true
+            }
+        }
+    }
 
     private fun showAnimation() {
         bspe_updateButton.showProgress {

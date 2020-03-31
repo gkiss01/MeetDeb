@@ -17,7 +17,7 @@ class ActivityViewModel : ViewModel() {
 //    }
 
     fun clear() {
-        activeUser.value = null
+        //activeUser.postValue(null)
         tempPassword = null
         password = ""
         basic = ""

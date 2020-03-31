@@ -53,34 +53,56 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
         lf_loginButton.attachTextChangeAnimator()
         lf_loginButton.setOnClickListener {
-            var error = false
-            val email = lf_email.text.toString()
-            val password = lf_password.text.toString()
+            val isValidEmail = validateEmail()
+            val isValidPassword = validatePassword()
 
-            if (email.isEmpty()) {
-                lf_email.error = "A mezőt kötelező kitölteni!"
-                error = true
-            }
-            else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                lf_email.error = "Az email cím nem valódi!"
-                error = true
-            }
+            if (isValidEmail && isValidPassword) {
+                val email = lf_email.editText?.text.toString().trim()
+                val password = lf_password.editText?.text.toString().trim()
 
-            if (password.isEmpty()) {
-                lf_password.error = "A mezőt kötelező kitölteni!"
-                error = true
-            }
-            else if (password.length < 8) {
-                lf_password.error = "A jelszó min. 8 karakter lehet!"
-                error = true
-            }
-
-            if (!error) {
                 hideKeyboard(context!!, view)
                 showAnimation()
 
                 activityViewModel.tempPassword = password
                 MainActivity.instance.checkUser(Credentials.basic(email, password))
+            }
+        }
+    }
+
+    private fun validateEmail(): Boolean {
+        val email = lf_email.editText?.text.toString().trim()
+
+        return when {
+            email.isEmpty() -> {
+                lf_email.error = "A mezőt kötelező kitölteni!"
+                false
+            }
+            !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
+                lf_email.error = "Az email cím nem valódi!"
+                false
+            }
+            else -> {
+                lf_email.error = null
+                true
+            }
+        }
+    }
+
+    private fun validatePassword(): Boolean {
+        val password = lf_password.editText?.text.toString().trim()
+
+        return when {
+            password.isEmpty() -> {
+                lf_password.error = "A mezőt kötelező kitölteni!"
+                false
+            }
+            password.length < 8 -> {
+                lf_password.error = "A jelszó min. 8 karakter lehet!"
+                false
+            }
+            else -> {
+                lf_password.error = null
+                true
             }
         }
     }

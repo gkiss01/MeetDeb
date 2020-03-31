@@ -62,34 +62,21 @@ class PasswordBottomSheet: SuperBottomSheetFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         bspp_updateButton.setOnClickListener {
-            var error = false
-            val newPassword = bspp_newPassword.text.toString()
-            val password = bspp_oldPassword.text.toString()
+            val isValidPasswordNew = validatePasswordNew()
+            val isValidPasswordOld = validatePasswordOld()
 
-            if (newPassword.isEmpty()) {
-                bspp_newPassword.error = "A mezőt kötelező kitölteni!"
-                error = true
-            }
-            else if (newPassword.length < 8) {
-                bspp_newPassword.error = "A jelszó min. 8 karakter lehet!"
-                error = true
-            }
+            if (isValidPasswordNew && isValidPasswordOld) {
+                val newPassword = bspp_newPassword.editText?.text.toString().trim()
+                val oldPassword = bspp_oldPassword.editText?.text.toString().trim()
 
-            if (password.isEmpty()) {
-                bspp_oldPassword.error = "A mezőt kötelező kitölteni!"
-                error = true
-            }
-
-            if (!error) {
                 hideKeyboard(context!!, view)
                 showAnimation()
+
+                val basic = Credentials.basic(activityViewModel.activeUser.value!!.email, oldPassword)
 
                 val userRequest = UserRequest("unnecessary@email.com", newPassword, "________", UserRequestType.PasswordUpdate.ordinal)
                 val json = moshi.adapter(UserRequest::class.java).toJson(userRequest)
                 val user = json.toRequestBody("application/json".toMediaTypeOrNull())
-
-                val basic = Credentials.basic(activityViewModel.activeUser.value!!.email, password)
-
                 MainActivity.instance.saveTempPassword(newPassword)
                 MainActivity.instance.updateUser(basic, user)
             }
@@ -98,8 +85,46 @@ class PasswordBottomSheet: SuperBottomSheetFragment() {
 
     override fun getCornerRadius() = context!!.resources.getDimension(R.dimen.bottomsheet_corner_radius)
     override fun getPeekHeight() = TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_DIP, 252F,
+        TypedValue.COMPLEX_UNIT_DIP, 255F,
         context!!.resources.displayMetrics).toInt()
+
+    private fun validatePasswordNew(): Boolean {
+        val password = bspp_newPassword.editText?.text.toString().trim()
+
+        return when {
+            password.isEmpty() -> {
+                bspp_newPassword.error = "A mezőt kötelező kitölteni!"
+                false
+            }
+            password.length < 8 -> {
+                bspp_newPassword.error = "A jelszó min. 8 karakter lehet!"
+                false
+            }
+            else -> {
+                bspp_newPassword.error = null
+                true
+            }
+        }
+    }
+
+    private fun validatePasswordOld(): Boolean {
+        val password = bspp_oldPassword.editText?.text.toString().trim()
+
+        return when {
+            password.isEmpty() -> {
+                bspp_oldPassword.error = "A mezőt kötelező kitölteni!"
+                false
+            }
+            password.length < 8 -> {
+                bspp_oldPassword.error = "A jelszó min. 8 karakter lehet!"
+                false
+            }
+            else -> {
+                bspp_oldPassword.error = null
+                true
+            }
+        }
+    }
 
     private fun showAnimation() {
         bspp_updateButton.showProgress {
