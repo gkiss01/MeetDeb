@@ -21,29 +21,37 @@
             android:orientation="vertical"
             android:padding="20dp">
 
-            <EditText
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/cef_name"
-                style="@style/styleCreateEventText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/event_name_hint"
-                android:importantForAutofill="no"
-                android:inputType="textPersonName"
-                android:text="@={event.name}" />
+                android:theme="@style/TextInputLayoutWhite">
 
-            <EditText
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/event_name_hint"
+                    android:inputType="text"
+                    android:text="@={event.name}"
+                    android:textColor="@color/white" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/cef_description"
-                style="@style/styleCreateEventText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:hint="@string/event_desc_hint"
-                android:importantForAutofill="no"
-                android:inputType="textMultiLine"
-                android:maxLines="15"
-                android:minLines="1"
-                android:scrollbars="vertical"
-                android:text="@={event.description}" />
+                android:theme="@style/TextInputLayoutWhite">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/event_desc_hint"
+                    android:inputType="textPersonName|textMultiLine"
+                    android:maxLines="10"
+                    android:scrollbars="vertical"
+                    android:text="@={event.description}"
+                    android:textColor="@color/white" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:id="@+id/cef_dateTitle"
@@ -81,16 +89,21 @@
                     android:text="@string/event_time_set" />
             </LinearLayout>
 
-            <EditText
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/cef_venue"
-                style="@style/styleCreateEventText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:hint="@string/event_venue_hint"
-                android:importantForAutofill="no"
-                android:inputType="textPersonName"
-                android:text="@={event.venue}" />
+                android:theme="@style/TextInputLayoutWhite">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/event_venue_hint"
+                    android:inputType="text"
+                    android:text="@={event.venue}"
+                    android:textColor="@color/white" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Button
                 android:id="@+id/cef_imageButton"

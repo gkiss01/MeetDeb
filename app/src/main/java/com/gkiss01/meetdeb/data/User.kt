@@ -5,4 +5,5 @@ data class User(
     var email: String,
     var name: String,
     var enabled: Boolean,
-    var roles: Set<Role>)
+    var roles: Set<Role>
+)

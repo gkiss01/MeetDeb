@@ -84,58 +84,107 @@ interface WebApiService {
     fun checkUserAsync(@Header("Authorization") auth: String): Deferred<GenericResponse>
 
     @GET("events/{eventId}")
-    fun getEventAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): Deferred<GenericResponse>
+    fun getEventAsync(
+        @Header("Authorization") auth: String,
+        @Path("eventId") eventId: Long
+    ): Deferred<GenericResponse>
 
     @GET("events")
-    fun getEventsAsync(@Header("Authorization") auth: String, @Query("page") page: Int): Deferred<GenericResponse>
+    fun getEventsAsync(
+        @Header("Authorization") auth: String,
+        @Query("page") page: Int
+    ): Deferred<GenericResponse>
 
     @GET("events/reports-add/{eventId}")
-    fun reportEventAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): Deferred<GenericResponse>
+    fun reportEventAsync(
+        @Header("Authorization") auth: String,
+        @Path("eventId") eventId: Long
+    ): Deferred<GenericResponse>
 
     @GET("events/reports-remove/{eventId}")
-    fun removeReportAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): Deferred<GenericResponse>
+    fun removeReportAsync(
+        @Header("Authorization") auth: String,
+        @Path("eventId") eventId: Long
+    ): Deferred<GenericResponse>
 
     @GET("dates/{eventId}")
-    fun getDatesAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): Deferred<GenericResponse>
+    fun getDatesAsync(
+        @Header("Authorization") auth: String,
+        @Path("eventId") eventId: Long
+    ): Deferred<GenericResponse>
 
     @GET("participants/{eventId}")
-    fun getParticipantsAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): Deferred<GenericResponse>
+    fun getParticipantsAsync(
+        @Header("Authorization") auth: String,
+        @Path("eventId") eventId: Long
+    ): Deferred<GenericResponse>
 
     @POST("users")
     fun createUserAsync(@Body user: RequestBody): Deferred<GenericResponse>
 
     @Multipart
     @POST("events")
-    fun createEventAsync(@Header("Authorization") auth: String, @Part("event") event: RequestBody,
-                         @Part file: MultipartBody.Part?): Deferred<GenericResponse>
+    fun createEventAsync(
+        @Header("Authorization") auth: String, @Part("event") event: RequestBody,
+        @Part file: MultipartBody.Part?
+    ): Deferred<GenericResponse>
 
     @Multipart
     @POST("events/update/{eventId}")
-    fun updateEventAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long, @Part("event") event: RequestBody): Deferred<GenericResponse>
+    fun updateEventAsync(
+        @Header("Authorization") auth: String,
+        @Path("eventId") eventId: Long,
+        @Part("event") event: RequestBody
+    ): Deferred<GenericResponse>
 
     @POST("participants/{eventId}")
-    fun createParticipantAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): Deferred<GenericResponse>
+    fun createParticipantAsync(
+        @Header("Authorization") auth: String,
+        @Path("eventId") eventId: Long
+    ): Deferred<GenericResponse>
 
     @POST("votes/{dateId}")
-    fun createVoteAsync(@Header("Authorization") auth: String, @Path("dateId") dateId: Long): Deferred<GenericResponse>
+    fun createVoteAsync(
+        @Header("Authorization") auth: String,
+        @Path("dateId") dateId: Long
+    ): Deferred<GenericResponse>
 
     @POST("dates/{eventId}")
-    fun createDateAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long, @Query("date") date: OffsetDateTime): Deferred<GenericResponse>
+    fun createDateAsync(
+        @Header("Authorization") auth: String,
+        @Path("eventId") eventId: Long,
+        @Query("date") date: OffsetDateTime
+    ): Deferred<GenericResponse>
 
     @PUT("users")
-    fun updateUserAsync(@Header("Authorization") auth: String, @Body user: RequestBody): Deferred<GenericResponse>
+    fun updateUserAsync(
+        @Header("Authorization") auth: String,
+        @Body user: RequestBody
+    ): Deferred<GenericResponse>
 
     @DELETE("events/{eventId}")
-    fun deleteEventAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): Deferred<GenericResponse>
+    fun deleteEventAsync(
+        @Header("Authorization") auth: String,
+        @Path("eventId") eventId: Long
+    ): Deferred<GenericResponse>
 
     @DELETE("dates/{dateId}")
-    fun deleteDateAsync(@Header("Authorization") auth: String, @Path("dateId") dateId: Long): Deferred<GenericResponse>
+    fun deleteDateAsync(
+        @Header("Authorization") auth: String,
+        @Path("dateId") dateId: Long
+    ): Deferred<GenericResponse>
 
     @DELETE("participants/{eventId}")
-    fun deleteParticipantAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): Deferred<GenericResponse>
+    fun deleteParticipantAsync(
+        @Header("Authorization") auth: String,
+        @Path("eventId") eventId: Long
+    ): Deferred<GenericResponse>
 
     @DELETE("users/{userId}")
-    fun deleteUserAsync(@Header("Authorization") auth: String, @Path("userId") userId: Long): Deferred<GenericResponse>
+    fun deleteUserAsync(
+        @Header("Authorization") auth: String,
+        @Path("userId") userId: Long
+    ): Deferred<GenericResponse>
 
 //    @Multipart
 //    @POST("images/{eventId}")
@@ -143,6 +192,7 @@ interface WebApiService {
 }
 
 object WebApi {
-    val retrofitService : WebApiService by lazy {
-        retrofit.create(WebApiService::class.java) }
+    val retrofitService: WebApiService by lazy {
+        retrofit.create(WebApiService::class.java)
+    }
 }

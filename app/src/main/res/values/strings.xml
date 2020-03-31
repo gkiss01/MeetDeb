@@ -17,7 +17,7 @@
     <string name="event_image_desc">Event image</string>
 
     <string name="event_add_button">Új esemény</string>
-    <string name="event_name_hint">Add meg az esemény nevét…</string>
+    <string name="event_name_hint">Az esemény neve</string>
     <string name="event_desc_hint">Miről szól az esemény?</string>
     <string name="event_venue_hint">Hol lesz az esemény?</string>
     <string name="event_date_set">Dátum</string>

@@ -130,42 +130,25 @@ class EventCreateFragment : Fragment() {
 
         cef_createButton.attachTextChangeAnimator()
         cef_createButton.setOnClickListener {
-            var error = false
+            val isValidName = validateName()
+            val isValidDesc = validateDescription()
+            val isValidVenue = validateVenue()
+            val isValidDate = validateDate()
 
-            if (TextUtils.isEmpty(viewModel.event.name)) {
-                cef_name.error = "A mezőt kötelező kitölteni!"
-                error = true
-            }
-            else if (viewModel.event.name.length > 40) {
-                cef_name.error = "A név max. 40 karakter lehet!"
-                error = true
-            }
-
-            if (TextUtils.isEmpty(viewModel.event.description)) {
-                cef_description.error = "A mezőt kötelező kitölteni!"
-                error = true
-            }
-
-            if (TextUtils.isEmpty(viewModel.event.venue)) {
-                cef_venue.error = "A mezőt kötelező kitölteni!"
-                error = true
-            }
-
-            if (viewModel.event.date.isBefore(OffsetDateTime.now())) {
-                cef_dateTitle.error = "Jövőbeli dátumot adj meg!"
-                error = true
-            }
-            else cef_dateTitle.error = null
-
-            if (!error) {
+            if (isValidName && isValidDesc && isValidVenue && isValidDate) {
                 hideKeyboard(context!!, view)
+                showAnimation()
 
-                cef_createButton.showProgress {
-                    buttonTextRes = if (viewModel.type.value == ScreenType.NEW) R.string.event_create_waiting else R.string.event_more_update_waiting
-                    progressColor = Color.WHITE
-                }
                 viewModel.uploadEvent()
             }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_PICK_IMAGE && resultCode == RESULT_OK) {
+            viewModel.imageUrl = Matisse.obtainPathResult(data)[0]
+            cef_imagePreview.setImageURI(Matisse.obtainResult(data)[0])
         }
     }
 
@@ -197,11 +180,66 @@ class EventCreateFragment : Fragment() {
             .forResult(REQUEST_CODE_PICK_IMAGE)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CODE_PICK_IMAGE && resultCode == RESULT_OK) {
-            viewModel.imageUrl = Matisse.obtainPathResult(data)[0]
-            cef_imagePreview.setImageURI(Matisse.obtainResult(data)[0])
+    private fun validateName(): Boolean {
+        return when {
+            TextUtils.isEmpty(viewModel.event.name) -> {
+                cef_name.error = "A mezőt kötelező kitölteni!"
+                false
+            }
+            viewModel.event.name.length > 40 -> {
+                cef_name.error = "A név max. 40 karakter lehet!"
+                false
+            }
+            else -> {
+                cef_name.error = null
+                true
+            }
+        }
+    }
+
+    private fun validateDescription(): Boolean {
+        return when {
+            TextUtils.isEmpty(viewModel.event.description) -> {
+                cef_description.error = "A mezőt kötelező kitölteni!"
+                false
+            }
+            else -> {
+                cef_description.error = null
+                true
+            }
+        }
+    }
+
+    private fun validateVenue(): Boolean {
+        return when {
+            TextUtils.isEmpty(viewModel.event.venue) -> {
+                cef_venue.error = "A mezőt kötelező kitölteni!"
+                false
+            }
+            else -> {
+                cef_venue.error = null
+                true
+            }
+        }
+    }
+
+    private fun validateDate(): Boolean {
+        return when {
+            viewModel.event.date.isBefore(OffsetDateTime.now()) -> {
+                cef_dateTitle.error = "Jövőbeli dátumot adj meg!"
+                false
+            }
+            else -> {
+                cef_dateTitle.error = null
+                true
+            }
+        }
+    }
+
+    private fun showAnimation() {
+        cef_createButton.showProgress {
+            buttonTextRes = if (viewModel.type.value == ScreenType.NEW) R.string.event_create_waiting else R.string.event_more_update_waiting
+            progressColor = Color.WHITE
         }
     }
 }

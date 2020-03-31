@@ -8,4 +8,5 @@ data class UserRequest(
     private val email: String,
     private val password: String,
     private val name: String,
-    private val type: Int)
+    private val type: Int
+)
