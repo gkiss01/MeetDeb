@@ -102,7 +102,7 @@ class CreateEventFragment : Fragment() {
             .into(cef_imagePreview)
 
         cef_dateButton.setOnClickListener {
-            val datePickerDialog = DatePickerDialog(context!!, DatePickerDialog.OnDateSetListener { _, year, monthValue, dayOfMonth ->
+            val datePickerDialog = DatePickerDialog(requireContext(), DatePickerDialog.OnDateSetListener { _, year, monthValue, dayOfMonth ->
                 viewModel.event.date = updateOffsetDateTime(viewModel.event.date, year, monthValue + 1, dayOfMonth)
                 cef_dateTitle.text = formatDate(viewModel.event.date)
             }, viewModel.event.date.year, viewModel.event.date.monthValue - 1, viewModel.event.date.dayOfMonth)
@@ -113,7 +113,7 @@ class CreateEventFragment : Fragment() {
             val timePickerDialog = TimePickerDialog(context, TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
                 viewModel.event.date = updateOffsetDateTime(viewModel.event.date, hourOfDay, minute)
                 cef_dateTitle.text = formatDate(viewModel.event.date)
-            }, viewModel.event.date.hour, viewModel.event.date.minute, isDate24HourFormat(context!!))
+            }, viewModel.event.date.hour, viewModel.event.date.minute, isDate24HourFormat(requireContext()))
             timePickerDialog.show()
         }
 
@@ -156,7 +156,7 @@ class CreateEventFragment : Fragment() {
             else cef_dateTitle.error = null
 
             if (!error) {
-                hideKeyboard(context!!, view)
+                hideKeyboard(requireContext(), view)
 
                 cef_createButton.showProgress {
                     buttonTextRes = if (viewModel.type.value == ScreenType.NEW) R.string.event_create_waiting else R.string.event_more_update_waiting
@@ -168,7 +168,7 @@ class CreateEventFragment : Fragment() {
     }
 
     private fun requestStoragePermissions() {
-        Dexter.withActivity(activity)
+        Dexter.withContext(activity)
             .withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
             .withListener(object: MultiplePermissionsListener {
                 override fun onPermissionsChecked(report: MultiplePermissionsReport?) {

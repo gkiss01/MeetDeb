@@ -72,10 +72,10 @@ class LoginFragment : Fragment(R.layout.login_fragment) {
             }
 
             if (!error) {
-                hideKeyboard(context!!, view)
+                hideKeyboard(requireContext(), view)
                 showAnimation()
 
-                setSavedUser(context!!, email, password)
+                setSavedUser(requireContext(), email, password)
                 MainActivity.instance.checkUser()
             }
         }

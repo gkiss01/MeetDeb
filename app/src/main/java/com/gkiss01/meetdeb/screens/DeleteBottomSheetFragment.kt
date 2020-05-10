@@ -35,16 +35,16 @@ class DeleteBottomSheetFragment: SuperBottomSheetFragment() {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onDeleteRequestReceived(request: DeleteUserRequest) {
+    fun onDeleteRequestReceived(@Suppress("UNUSED_PARAMETER") request: DeleteUserRequest) {
         debsf_deleteButton.hideProgress(R.string.done)
         Handler().postDelayed({
-            setSavedUser(context!!, "null", "null")
+            setSavedUser(requireContext(), "null", "null")
             findNavController().navigate(R.id.registerFragment)
         }, 500)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onErrorReceived(errorCode: ErrorCodes) {
+    fun onErrorReceived(@Suppress("UNUSED_PARAMETER") errorCode: ErrorCodes) {
         debsf_deleteButton.hideProgress(R.string.delete_account_yes)
     }
 
@@ -62,14 +62,14 @@ class DeleteBottomSheetFragment: SuperBottomSheetFragment() {
 
             debsf_deleteButton.showProgress {
                 buttonTextRes = R.string.delete_account_yes
-                progressColor = ContextCompat.getColor(context!!, R.color.black)
+                progressColor = ContextCompat.getColor(requireContext(), R.color.black)
             }
         }
     }
 
-    override fun getCornerRadius() = context!!.resources.getDimension(R.dimen.bottomsheet_corner_radius)
+    override fun getCornerRadius() = requireContext().resources.getDimension(R.dimen.bottomsheet_corner_radius)
     override fun isSheetCancelableOnTouchOutside() = false
     override fun getPeekHeight() = TypedValue.applyDimension(
         TypedValue.COMPLEX_UNIT_DIP, 335F,
-        context!!.resources.displayMetrics).toInt()
+        requireContext().resources.displayMetrics).toInt()
 }

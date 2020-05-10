@@ -108,7 +108,7 @@ class RegisterFragment : Fragment(R.layout.register_fragment) {
                     progressColor = Color.WHITE
                 }
 
-                hideKeyboard(context!!, view)
+                hideKeyboard(requireContext(), view)
 
                 val userRequest = UserRequest(email, password, name)
                 val json = moshi.adapter(UserRequest::class.java).toJson(userRequest)

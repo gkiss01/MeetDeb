@@ -20,7 +20,7 @@ class DetailsBottomSheetFragment: SuperBottomSheetFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val event = arguments!!.getSerializable("event") as Event
+        val event = requireArguments().getSerializable("event") as Event
 
         dfbs_userNameValue.text = event.username
         dfbs_venueValue.text = event.venue
@@ -35,8 +35,11 @@ class DetailsBottomSheetFragment: SuperBottomSheetFragment() {
         }
     }
 
-    override fun getCornerRadius() = context!!.resources.getDimension(R.dimen.bottomsheet_corner_radius)
+    override fun getCornerRadius(): Float {
+        val dimension = requireContext().resources.getDimension(R.dimen.bottomsheet_corner_radius)
+        return dimension
+    }
     override fun getPeekHeight() = TypedValue.applyDimension(
         TypedValue.COMPLEX_UNIT_DIP, 105F,
-        context!!.resources.displayMetrics).toInt()
+        requireContext().resources.displayMetrics).toInt()
 }

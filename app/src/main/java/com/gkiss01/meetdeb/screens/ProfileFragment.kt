@@ -26,7 +26,7 @@ class ProfileFragment : Fragment(R.layout.profile_fragment) {
     private val viewModel: ProfileViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        AccountHeaderView(context!!).apply {
+        AccountHeaderView(requireContext()).apply {
             attachToSliderView(pf_slider)
             height = DimenHolder.fromDp(200)
             headerBackground = ImageHolder(R.drawable.landscape)
@@ -41,14 +41,14 @@ class ProfileFragment : Fragment(R.layout.profile_fragment) {
             PrimaryDrawerItem().apply {
                 identifier = 1
                 name = StringHolder("Események")
-                iconDrawable = ContextCompat.getDrawable(context!!, R.drawable.ic_event)!!
+                iconDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_event)!!
             },
             PrimaryDrawerItem().apply {
                 identifier = 2
                 name = StringHolder("Profil")
                 isSelected = true
                 isEnabled = false
-                iconDrawable = ContextCompat.getDrawable(context!!, R.drawable.ic_person)!!
+                iconDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_person)!!
             },
             SectionDrawerItem().apply {
                 name = StringHolder("Továbbiak")
@@ -56,7 +56,7 @@ class ProfileFragment : Fragment(R.layout.profile_fragment) {
             SecondaryDrawerItem().apply {
                 identifier = 3
                 name = StringHolder("Kilépés")
-                iconDrawable = ContextCompat.getDrawable(context!!, R.drawable.ic_logout)!!
+                iconDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_logout)!!
             }
         )
 
@@ -67,7 +67,7 @@ class ProfileFragment : Fragment(R.layout.profile_fragment) {
                     findNavController().navigate(R.id.eventsFragment)
                 }
                 3L -> {
-                    setSavedUser(context!!, "null", "null")
+                    setSavedUser(requireContext(), "null", "null")
                     findNavController().navigate(R.id.registerFragment)
                 }
             }
@@ -78,11 +78,11 @@ class ProfileFragment : Fragment(R.layout.profile_fragment) {
         pf_name.text = activeUser.name
         pf_email.text = activeUser.email
         if (isActiveUserAdmin()!!) {
-            val color = ContextCompat.getColor(context!!, R.color.yellow)
+            val color = ContextCompat.getColor(requireContext(), R.color.yellow)
 
             pf_rank.text = getString(R.string.profile_admin)
             pf_rank.setTextColor(color)
-            pf_profileImage.backgroundTintList = ContextCompat.getColorStateList(context!!, R.color.yellow)
+            pf_profileImage.backgroundTintList = ContextCompat.getColorStateList(requireContext(), R.color.yellow)
         } else pf_rank.text = getString(R.string.profile_user)
         pf_createdEvents.text = "137"
         pf_acceptedEvents.text = "457"

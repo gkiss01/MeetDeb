@@ -113,7 +113,7 @@ class EventsFragment : Fragment(R.layout.events_fragment) {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        AccountHeaderView(context!!).apply {
+        AccountHeaderView(requireContext()).apply {
             attachToSliderView(ef_slider)
             height = DimenHolder.fromDp(200)
             headerBackground = ImageHolder(R.drawable.landscape)
@@ -130,12 +130,12 @@ class EventsFragment : Fragment(R.layout.events_fragment) {
                 name = StringHolder("Események")
                 isSelected = true
                 isEnabled = false
-                iconDrawable = ContextCompat.getDrawable(context!!, R.drawable.ic_event)!!
+                iconDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_event)!!
             },
             PrimaryDrawerItem().apply {
                 identifier = 2
                 name = StringHolder("Profil")
-                iconDrawable = ContextCompat.getDrawable(context!!, R.drawable.ic_person)!!
+                iconDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_person)!!
             },
             SectionDrawerItem().apply {
                 name = StringHolder("Továbbiak")
@@ -143,7 +143,7 @@ class EventsFragment : Fragment(R.layout.events_fragment) {
             SecondaryDrawerItem().apply {
                 identifier = 3
                 name = StringHolder("Kilépés")
-                iconDrawable = ContextCompat.getDrawable(context!!, R.drawable.ic_logout)!!
+                iconDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_logout)!!
             }
         )
 
@@ -154,7 +154,7 @@ class EventsFragment : Fragment(R.layout.events_fragment) {
                     findNavController().navigate(R.id.profileFragment)
                 }
                 3L -> {
-                    setSavedUser(context!!, "null", "null")
+                    setSavedUser(requireContext(), "null", "null")
                     findNavController().navigate(R.id.registerFragment)
                 }
             }

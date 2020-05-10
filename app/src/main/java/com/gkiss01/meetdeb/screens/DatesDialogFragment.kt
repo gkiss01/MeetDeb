@@ -90,7 +90,7 @@ class DatesDialogFragment : DialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewModel.event = arguments!!.getSerializable("event") as Event
+        viewModel.event = requireArguments().getSerializable("event") as Event
 
         fastAdapter = FastAdapter.with(listOf(headerAdapter, itemAdapter, footerAdapter))
         if (!isActiveUserAdmin()!!) fastAdapter.attachDefaultListeners = false
