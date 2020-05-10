@@ -59,12 +59,12 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
 
     //Navigation
-    implementation "androidx.navigation:navigation-fragment-ktx:2.2.1"
-    implementation "androidx.navigation:navigation-ui-ktx:2.2.1"
+    implementation "androidx.navigation:navigation-fragment-ktx:2.2.2"
+    implementation "androidx.navigation:navigation-ui-ktx:2.2.2"
 
     //RecyclerView and FastAdapter
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
-    implementation "com.mikepenz:fastadapter:5.0.0"
+    implementation "com.mikepenz:fastadapter:5.0.1"
     implementation "com.mikepenz:fastadapter-extensions-diff:5.0.0"
     implementation "com.mikepenz:fastadapter-extensions-ui:5.0.0"
     implementation "com.mikepenz:itemanimators:1.1.0"
@@ -72,27 +72,27 @@ dependencies {
 
     implementation "com.google.android.material:material:1.1.0"
 
-    implementation "com.mikepenz:materialdrawer:8.0.0-rc01"
+    implementation "com.mikepenz:materialdrawer:8.0.2"
 
     //Coroutines
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.4"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.4"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.6"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.6"
 
     //Dexter
-    implementation 'com.karumi:dexter:6.0.2'
+    implementation 'com.karumi:dexter:6.1.2'
 
     //ThreeTenBP
-    implementation 'org.threeten:threetenbp:1.4.1'
+    implementation 'org.threeten:threetenbp:1.4.4'
 
     //FloatingActionButton
     implementation 'com.getbase:floatingactionbutton:1.10.1'
 
     //OkHttp3 (OkHttp4)
-    implementation 'com.squareup.okhttp3:okhttp:4.4.1'
+    implementation 'com.squareup.okhttp3:okhttp:4.6.0'
 
     //Retrofit
-    implementation 'com.squareup.retrofit2:retrofit:2.7.2'
-    implementation 'com.squareup.retrofit2:converter-moshi:2.7.2'
+    implementation 'com.squareup.retrofit2:retrofit:2.8.1'
+    implementation 'com.squareup.retrofit2:converter-moshi:2.8.1'
     implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2"
 
     //Moshi
