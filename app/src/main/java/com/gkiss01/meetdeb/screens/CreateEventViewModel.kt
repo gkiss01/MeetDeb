@@ -1,18 +1,18 @@
 package com.gkiss01.meetdeb.screens
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.data.apirequest.EventRequest
 import com.gkiss01.meetdeb.data.fastadapter.Event
-import com.gkiss01.meetdeb.network.moshi
-import id.zelory.compressor.Compressor
+import com.squareup.moshi.Moshi
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.dsl.module
 import org.threeten.bp.OffsetDateTime
 import java.io.File
 
@@ -20,7 +20,11 @@ enum class ScreenType {
     NONE, NEW, UPDATE
 }
 
-class CreateEventViewModel(application: Application): AndroidViewModel(application) {
+val createModule = module {
+    viewModel { CreateEventViewModel(get()) }
+}
+
+class CreateEventViewModel(private val moshi: Moshi): ViewModel() {
     var event: Event = Event("", OffsetDateTime.now(), "", "")
     var imageUrl: String = ""
     val type = MutableLiveData<ScreenType>()
@@ -30,7 +34,7 @@ class CreateEventViewModel(application: Application): AndroidViewModel(applicati
         var body: MultipartBody.Part? = null
 
         if (file.exists()) {
-            val compressedFile = Compressor(getApplication()).compressToFile(file)
+            val compressedFile = file//Compressor(getApplication()).compressToFile(file)
             val requestFile = compressedFile.asRequestBody("image/jpeg".toMediaTypeOrNull())
             body = MultipartBody.Part.createFormData("file", file.name, requestFile)
         }

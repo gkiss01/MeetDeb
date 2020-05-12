@@ -11,10 +11,10 @@ import com.gkiss01.meetdeb.data.*
 import com.gkiss01.meetdeb.data.adapterrequest.DeleteDateRequest
 import com.gkiss01.meetdeb.data.adapterrequest.DeleteEventRequest
 import com.gkiss01.meetdeb.data.adapterrequest.DeleteUserRequest
+import com.gkiss01.meetdeb.network.DataProvider
 import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.NavigationCode
 import com.gkiss01.meetdeb.network.TargetVar
-import com.gkiss01.meetdeb.network.WebApi
 import com.gkiss01.meetdeb.utils.getSavedPassword
 import com.gkiss01.meetdeb.utils.getSavedUsername
 import kotlinx.coroutines.Deferred
@@ -23,12 +23,14 @@ import okhttp3.Credentials
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.greenrobot.eventbus.EventBus
+import org.koin.android.ext.android.inject
 import org.threeten.bp.OffsetDateTime
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 
 class MainActivity : AppCompatActivity() {
     private lateinit var viewModel: ActivityViewModel
+    private val dataProvider: DataProvider by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
@@ -57,70 +59,70 @@ class MainActivity : AppCompatActivity() {
 
     fun checkUser() {
         viewModel.basic = Credentials.basic(getSavedUsername(this), getSavedPassword(this))
-        makeRequest(WebApi.retrofitService.checkUserAsync(viewModel.basic), TargetVar.VAR_CHECK_USER)
+        makeRequest(dataProvider.checkUserAsync(viewModel.basic), TargetVar.VAR_CHECK_USER)
     }
 
     fun getEvent(eventId: Long) {
-        makeRequest(WebApi.retrofitService.getEventAsync(viewModel.basic, eventId), TargetVar.VAR_GET_EVENT)
+        makeRequest(dataProvider.getEventAsync(viewModel.basic, eventId), TargetVar.VAR_GET_EVENT)
     }
 
     fun getEvents(page: Int = 1) {
-        makeRequest(WebApi.retrofitService.getEventsAsync(viewModel.basic, page), TargetVar.VAR_GET_EVENTS)
+        makeRequest(dataProvider.getEventsAsync(viewModel.basic, page), TargetVar.VAR_GET_EVENTS)
     }
 
     fun createEvent(event: RequestBody, image: MultipartBody.Part?) {
-        makeRequest(WebApi.retrofitService.createEventAsync(viewModel.basic, event, image), TargetVar.VAR_CREATE_UPDATE_EVENT)
+        makeRequest(dataProvider.createEventAsync(viewModel.basic, event, image), TargetVar.VAR_CREATE_UPDATE_EVENT)
     }
 
     fun updateEvent(eventId: Long, event: RequestBody) {
-        makeRequest(WebApi.retrofitService.updateEventAsync(viewModel.basic, eventId, event), TargetVar.VAR_CREATE_UPDATE_EVENT)
+        makeRequest(dataProvider.updateEventAsync(viewModel.basic, eventId, event), TargetVar.VAR_CREATE_UPDATE_EVENT)
     }
 
     fun deleteEvent(eventId: Long) {
-        makeRequest(WebApi.retrofitService.deleteEventAsync(viewModel.basic, eventId), TargetVar.VAR_DELETE_EVENT)
+        makeRequest(dataProvider.deleteEventAsync(viewModel.basic, eventId), TargetVar.VAR_DELETE_EVENT)
     }
 
     fun reportEvent(eventId: Long) {
-        makeRequest(WebApi.retrofitService.reportEventAsync(viewModel.basic, eventId), TargetVar.VAR_REPORT_EVENT)
+        makeRequest(dataProvider.reportEventAsync(viewModel.basic, eventId), TargetVar.VAR_REPORT_EVENT)
     }
 
     fun removeReport(eventId: Long) {
-        makeRequest(WebApi.retrofitService.removeReportAsync(viewModel.basic, eventId), TargetVar.VAR_REMOVE_EVENT_REPORT)
+        makeRequest(dataProvider.removeReportAsync(viewModel.basic, eventId), TargetVar.VAR_REMOVE_EVENT_REPORT)
     }
 
     fun showDates(eventId: Long) {
-        makeRequest(WebApi.retrofitService.getDatesAsync(viewModel.basic, eventId), TargetVar.VAR_GET_DATES)
+        makeRequest(dataProvider.getDatesAsync(viewModel.basic, eventId), TargetVar.VAR_GET_DATES)
     }
 
     fun createDate(eventId: Long, date: OffsetDateTime) {
-        makeRequest(WebApi.retrofitService.createDateAsync(viewModel.basic, eventId, date), TargetVar.VAR_CREATE_DATE)
+        makeRequest(dataProvider.createDateAsync(viewModel.basic, eventId, date), TargetVar.VAR_CREATE_DATE)
     }
 
     fun deleteDate(dateId: Long) {
-        makeRequest(WebApi.retrofitService.deleteDateAsync(viewModel.basic, dateId), TargetVar.VAR_DELETE_DATE)
+        makeRequest(dataProvider.deleteDateAsync(viewModel.basic, dateId), TargetVar.VAR_DELETE_DATE)
     }
 
     fun createVote(dateId: Long) {
-        makeRequest(WebApi.retrofitService.createVoteAsync(viewModel.basic, dateId), TargetVar.VAR_CREATE_VOTE)
+        makeRequest(dataProvider.createVoteAsync(viewModel.basic, dateId), TargetVar.VAR_CREATE_VOTE)
     }
 
     fun showParticipants(eventId: Long) {
-        makeRequest(WebApi.retrofitService.getParticipantsAsync(viewModel.basic, eventId), TargetVar.VAR_GET_PARTICIPANTS)
+        makeRequest(dataProvider.getParticipantsAsync(viewModel.basic, eventId), TargetVar.VAR_GET_PARTICIPANTS)
     }
 
     fun modifyParticipation(eventId: Long, eventAccepted: Boolean) {
         if (eventAccepted)
-            makeRequest(WebApi.retrofitService.deleteParticipantAsync(viewModel.basic, eventId), TargetVar.VAR_DELETE_PARTICIPANT)
+            makeRequest(dataProvider.deleteParticipantAsync(viewModel.basic, eventId), TargetVar.VAR_DELETE_PARTICIPANT)
         else
-            makeRequest(WebApi.retrofitService.createParticipantAsync(viewModel.basic, eventId), TargetVar.VAR_CREATE_PARTICIPANT)
+            makeRequest(dataProvider.createParticipantAsync(viewModel.basic, eventId), TargetVar.VAR_CREATE_PARTICIPANT)
     }
 
     fun uploadUser(user: RequestBody) {
-        makeRequest(WebApi.retrofitService.createUserAsync(user), TargetVar.VAR_CREATE_USER)
+        makeRequest(dataProvider.createUserAsync(user), TargetVar.VAR_CREATE_USER)
     }
 
     fun deleteUser(userId: Long) {
-        makeRequest(WebApi.retrofitService.deleteUserAsync(viewModel.basic, userId), TargetVar.VAR_DELETE_USER)
+        makeRequest(dataProvider.deleteUserAsync(viewModel.basic, userId), TargetVar.VAR_DELETE_USER)
     }
 
     private fun makeRequest(target: Deferred<GenericResponse>, targetVar: TargetVar) {
