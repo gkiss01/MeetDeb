@@ -9,6 +9,7 @@ import kotlinx.coroutines.Deferred
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody
+import org.koin.dsl.module
 import org.threeten.bp.OffsetDateTime
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -65,19 +66,28 @@ enum class ErrorCodes {
     COULD_NOT_CREATE_DIRECTORY;
 }
 
-val moshi: Moshi = Moshi.Builder()
-    .add(OffsetDateTimeAdapter())
-    .add(KotlinJsonAdapterFactory())
-    .build()
+val networkModule = module {
+    single { OkHttpClient() }
+    single { provideMoshi() }
+    single { provideRetrofit(get(), get()) }
+    factory { provideApi(get()) }
+}
 
-val okHttpClient = OkHttpClient()
+fun provideMoshi(): Moshi {
+    return Moshi.Builder()
+        .add(OffsetDateTimeAdapter())
+        .add(KotlinJsonAdapterFactory())
+        .build()
+}
 
-private val retrofit = Retrofit.Builder()
-    .addConverterFactory(MoshiConverterFactory.create(moshi))
-    .addCallAdapterFactory(CoroutineCallAdapterFactory())
-    .baseUrl(BASE_URL)
-    .client(okHttpClient)
-    .build()
+fun provideRetrofit(okHttpClient: OkHttpClient, moshi: Moshi): Retrofit {
+    return Retrofit.Builder().baseUrl(BASE_URL).client(okHttpClient)
+        .addConverterFactory(MoshiConverterFactory.create(moshi))
+        .addCallAdapterFactory(CoroutineCallAdapterFactory())
+        .build()
+}
+
+fun provideApi(retrofit: Retrofit): WebApiService = retrofit.create(WebApiService::class.java)
 
 interface WebApiService {
     @GET("users/check")
@@ -137,9 +147,4 @@ interface WebApiService {
 //    @Multipart
 //    @POST("images/{eventId}")
 //    fun uploadImageAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long, @Part file: MultipartBody.Part): Deferred<GenericResponse>
-}
-
-object WebApi {
-    val retrofitService : WebApiService by lazy {
-        retrofit.create(WebApiService::class.java) }
 }
