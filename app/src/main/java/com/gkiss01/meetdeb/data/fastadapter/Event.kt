@@ -8,16 +8,16 @@ import org.threeten.bp.OffsetDateTime
 import java.io.Serializable
 
 data class Event(
-    var id: Long,
-    var username: String,
-    var userId: Long,
+    val id: Long,
+    val username: String,
+    val userId: Long,
     var name: String,
     @com.gkiss01.meetdeb.adapter.OffsetDateTime
     var date: OffsetDateTime,
     var venue: String,
     var description: String,
-    var reported: Boolean,
-    var participants: Int,
+    val reported: Boolean,
+    val participants: Int,
     val accepted: Boolean,
     val voted: Boolean): Serializable, AbstractItem<EventViewHolder>() {
 

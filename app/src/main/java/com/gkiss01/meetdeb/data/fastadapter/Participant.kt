@@ -6,9 +6,9 @@ import com.gkiss01.meetdeb.adapter.ParticipantViewHolder
 import com.mikepenz.fastadapter.items.AbstractItem
 
 data class Participant(
-    var eventId: Long?,
-    var userId: Long,
-    var username: String): AbstractItem<ParticipantViewHolder>() {
+    val eventId: Long?,
+    val userId: Long,
+    val username: String): AbstractItem<ParticipantViewHolder>() {
 
     override val layoutRes: Int
         get() = R.layout.participants_list_item
