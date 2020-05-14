@@ -6,41 +6,50 @@ import org.koin.dsl.module
 import org.threeten.bp.OffsetDateTime
 
 val restModule = module {
-    factory { RestClient(get()) }
+    factory { ResourceHandler() }
+    factory { RestClient(get(), get()) }
 }
 
-class RestClient(private val dataProvider: DataProvider) {
-    suspend fun checkUserAsync(auth: String) = dataProvider.checkUserAsync(auth)
+class RestClient(private val dataProvider: DataProvider, private val resourceHandler: ResourceHandler) {
+    suspend fun checkUserAsync(auth: String) = handleRequest { dataProvider.checkUserAsync(auth) }
     
-    suspend fun getEventAsync(auth: String, eventId: Long) = dataProvider.getEventAsync(auth, eventId)
+    suspend fun getEventAsync(auth: String, eventId: Long) = handleRequest { dataProvider.getEventAsync(auth, eventId) }
     
-    suspend fun getEventsAsync(auth: String, page: Int) = dataProvider.getEventsAsync(auth, page)
+    suspend fun getEventsAsync(auth: String, page: Int) = handleRequest { dataProvider.getEventsAsync(auth, page) }
     
-    suspend fun reportEventAsync(auth: String, eventId: Long) = dataProvider.reportEventAsync(auth, eventId)
+    suspend fun reportEventAsync(auth: String, eventId: Long) = handleRequest { dataProvider.reportEventAsync(auth, eventId) }
     
-    suspend fun removeReportAsync(auth: String, eventId: Long) = dataProvider.removeReportAsync(auth, eventId)
+    suspend fun removeReportAsync(auth: String, eventId: Long) = handleRequest { dataProvider.removeReportAsync(auth, eventId) }
     
-    suspend fun getDatesAsync(auth: String, eventId: Long) = dataProvider.getDatesAsync(auth, eventId)
+    suspend fun getDatesAsync(auth: String, eventId: Long) = handleRequest { dataProvider.getDatesAsync(auth, eventId) }
     
-    suspend fun getParticipantsAsync(auth: String, eventId: Long) = dataProvider.getParticipantsAsync(auth, eventId)
+    suspend fun getParticipantsAsync(auth: String, eventId: Long) = handleRequest { dataProvider.getParticipantsAsync(auth, eventId) }
     
-    suspend fun createUserAsync(user: RequestBody) = dataProvider.createUserAsync(user)
+    suspend fun createUserAsync(user: RequestBody) = handleRequest { dataProvider.createUserAsync(user) }
 
-    suspend fun createEventAsync(auth: String, event: RequestBody, file: MultipartBody.Part?) = dataProvider.createEventAsync(auth, event, file)
+    suspend fun createEventAsync(auth: String, event: RequestBody, file: MultipartBody.Part?) = handleRequest { dataProvider.createEventAsync(auth, event, file) }
 
-    suspend fun updateEventAsync(auth: String, eventId: Long, event: RequestBody) = dataProvider.updateEventAsync(auth, eventId, event)
+    suspend fun updateEventAsync(auth: String, eventId: Long, event: RequestBody) = handleRequest { dataProvider.updateEventAsync(auth, eventId, event) }
     
-    suspend fun createParticipantAsync(auth: String, eventId: Long) = dataProvider.createParticipantAsync(auth, eventId)
+    suspend fun createParticipantAsync(auth: String, eventId: Long) = handleRequest { dataProvider.createParticipantAsync(auth, eventId) }
     
-    suspend fun createVoteAsync(auth: String, dateId: Long) = dataProvider.createVoteAsync(auth, dateId)
+    suspend fun createVoteAsync(auth: String, dateId: Long) = handleRequest { dataProvider.createVoteAsync(auth, dateId) }
     
-    suspend fun createDateAsync(auth: String, eventId: Long, date: OffsetDateTime) = dataProvider.createDateAsync(auth, eventId, date)
+    suspend fun createDateAsync(auth: String, eventId: Long, date: OffsetDateTime) = handleRequest { dataProvider.createDateAsync(auth, eventId, date) }
 
-    suspend fun deleteEventAsync(auth: String, eventId: Long) = dataProvider.deleteEventAsync(auth, eventId)
+    suspend fun deleteEventAsync(auth: String, eventId: Long) = handleRequest { dataProvider.deleteEventAsync(auth, eventId) }
 
-    suspend fun deleteDateAsync(auth: String, dateId: Long) = dataProvider.deleteDateAsync(auth, dateId)
+    suspend fun deleteDateAsync(auth: String, dateId: Long) = handleRequest { dataProvider.deleteDateAsync(auth, dateId) }
 
-    suspend fun deleteParticipantAsync(auth: String, eventId: Long) = dataProvider.deleteParticipantAsync(auth, eventId)
+    suspend fun deleteParticipantAsync(auth: String, eventId: Long) = handleRequest { dataProvider.deleteParticipantAsync(auth, eventId) }
 
-    suspend fun deleteUserAsync(auth: String, userId: Long) = dataProvider.deleteUserAsync(auth, userId)
+    suspend fun deleteUserAsync(auth: String, userId: Long) = handleRequest { dataProvider.deleteUserAsync(auth, userId) }
+
+    private suspend fun <T: Any> handleRequest(requestFunc: suspend () -> T): Resource<T> {
+        return try {
+            resourceHandler.handleSuccess(requestFunc.invoke())
+        } catch (e: Exception) {
+            resourceHandler.handleException(e)
+        }
+    }
 }

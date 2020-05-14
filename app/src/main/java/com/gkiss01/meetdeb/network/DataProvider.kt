@@ -1,6 +1,7 @@
 package com.gkiss01.meetdeb.network
 
 import com.gkiss01.meetdeb.data.GenericResponse
+import com.gkiss01.meetdeb.data.User
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.threeten.bp.OffsetDateTime
@@ -8,7 +9,7 @@ import retrofit2.http.*
 
 interface DataProvider {
     @GET("users/check")
-    suspend fun checkUserAsync(@Header("Authorization") auth: String): GenericResponse
+    suspend fun checkUserAsync(@Header("Authorization") auth: String): User
 
     @GET("events/{eventId}")
     suspend fun getEventAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): GenericResponse

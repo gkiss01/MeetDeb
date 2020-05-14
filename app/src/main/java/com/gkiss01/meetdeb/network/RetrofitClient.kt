@@ -1,7 +1,6 @@
 package com.gkiss01.meetdeb.network
 
 import com.gkiss01.meetdeb.adapter.OffsetDateTimeAdapter
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient
@@ -77,7 +76,6 @@ fun provideMoshi(): Moshi {
 fun provideRetrofit(okHttpClient: OkHttpClient, moshi: Moshi): Retrofit {
     return Retrofit.Builder().baseUrl(BASE_URL).client(okHttpClient)
         .addConverterFactory(MoshiConverterFactory.create(moshi))
-        .addCallAdapterFactory(CoroutineCallAdapterFactory())
         .build()
 }
 
