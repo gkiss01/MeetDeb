@@ -1,7 +1,6 @@
 package com.gkiss01.meetdeb.network
 
 import com.gkiss01.meetdeb.data.GenericResponse
-import kotlinx.coroutines.Deferred
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.threeten.bp.OffsetDateTime
@@ -9,60 +8,60 @@ import retrofit2.http.*
 
 interface DataProvider {
     @GET("users/check")
-    fun checkUserAsync(@Header("Authorization") auth: String): Deferred<GenericResponse>
+    suspend fun checkUserAsync(@Header("Authorization") auth: String): GenericResponse
 
     @GET("events/{eventId}")
-    fun getEventAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): Deferred<GenericResponse>
+    suspend fun getEventAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): GenericResponse
 
     @GET("events")
-    fun getEventsAsync(@Header("Authorization") auth: String, @Query("page") page: Int): Deferred<GenericResponse>
+    suspend fun getEventsAsync(@Header("Authorization") auth: String, @Query("page") page: Int): GenericResponse
 
     @GET("events/reports-add/{eventId}")
-    fun reportEventAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): Deferred<GenericResponse>
+    suspend fun reportEventAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): GenericResponse
 
     @GET("events/reports-remove/{eventId}")
-    fun removeReportAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): Deferred<GenericResponse>
+    suspend fun removeReportAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): GenericResponse
 
     @GET("dates/{eventId}")
-    fun getDatesAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): Deferred<GenericResponse>
+    suspend fun getDatesAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): GenericResponse
 
     @GET("participants/{eventId}")
-    fun getParticipantsAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): Deferred<GenericResponse>
+    suspend fun getParticipantsAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): GenericResponse
 
     @POST("users")
-    fun createUserAsync(@Body user: RequestBody): Deferred<GenericResponse>
+    suspend fun createUserAsync(@Body user: RequestBody): GenericResponse
 
     @Multipart
     @POST("events")
-    fun createEventAsync(@Header("Authorization") auth: String, @Part("event") event: RequestBody,
-                         @Part file: MultipartBody.Part?): Deferred<GenericResponse>
+    suspend fun createEventAsync(@Header("Authorization") auth: String, @Part("event") event: RequestBody,
+                         @Part file: MultipartBody.Part?): GenericResponse
 
     @Multipart
     @POST("events/update/{eventId}")
-    fun updateEventAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long, @Part("event") event: RequestBody): Deferred<GenericResponse>
+    suspend fun updateEventAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long, @Part("event") event: RequestBody): GenericResponse
 
     @POST("participants/{eventId}")
-    fun createParticipantAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): Deferred<GenericResponse>
+    suspend fun createParticipantAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): GenericResponse
 
     @POST("votes/{dateId}")
-    fun createVoteAsync(@Header("Authorization") auth: String, @Path("dateId") dateId: Long): Deferred<GenericResponse>
+    suspend fun createVoteAsync(@Header("Authorization") auth: String, @Path("dateId") dateId: Long): GenericResponse
 
     @POST("dates/{eventId}")
-    fun createDateAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long, @Query("date") date: OffsetDateTime): Deferred<GenericResponse>
+    suspend fun createDateAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long, @Query("date") date: OffsetDateTime): GenericResponse
 
     @DELETE("events/{eventId}")
-    fun deleteEventAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): Deferred<GenericResponse>
+    suspend fun deleteEventAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): GenericResponse
 
     @DELETE("dates/{dateId}")
-    fun deleteDateAsync(@Header("Authorization") auth: String, @Path("dateId") dateId: Long): Deferred<GenericResponse>
+    suspend fun deleteDateAsync(@Header("Authorization") auth: String, @Path("dateId") dateId: Long): GenericResponse
 
     @DELETE("participants/{eventId}")
-    fun deleteParticipantAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): Deferred<GenericResponse>
+    suspend fun deleteParticipantAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): GenericResponse
 
     @DELETE("users/{userId}")
-    fun deleteUserAsync(@Header("Authorization") auth: String, @Path("userId") userId: Long): Deferred<GenericResponse>
+    suspend fun deleteUserAsync(@Header("Authorization") auth: String, @Path("userId") userId: Long): GenericResponse
 
 //    @Multipart
 //    @POST("images/{eventId}")
-//    fun uploadImageAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long, @Part file: MultipartBody.Part): Deferred<GenericResponse>
+//    suspend fun uploadImageAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long, @Part file: MultipartBody.Part): GenericResponse
 }
