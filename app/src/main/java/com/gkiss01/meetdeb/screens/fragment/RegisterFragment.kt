@@ -17,16 +17,19 @@ import com.gkiss01.meetdeb.data.apirequest.UserRequest
 import com.gkiss01.meetdeb.data.apirequest.UserRequestType
 import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.NavigationCode
-import com.gkiss01.meetdeb.network.moshi
 import com.gkiss01.meetdeb.utils.hideKeyboard
+import com.squareup.moshi.Moshi
 import kotlinx.android.synthetic.main.fragment_register.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.koin.android.ext.android.inject
 
 class RegisterFragment : Fragment(R.layout.fragment_register) {
+    private val moshi: Moshi by inject()
+
     override fun onStart() {
         super.onStart()
         EventBus.getDefault().register(this)

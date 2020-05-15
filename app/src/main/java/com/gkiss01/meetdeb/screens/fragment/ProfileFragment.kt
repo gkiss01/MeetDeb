@@ -32,14 +32,14 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         addSliderNavigation()
 
         activityViewModel.activeUser.observe(viewLifecycleOwner, Observer {
-            pf_name.text = it.name
-            pf_email.text = it.email
+            pf_name.text = it.data?.name
+            pf_email.text = it.data?.email
 
             pf_createdEvents.text = "137"
             pf_acceptedEvents.text = "457"
-            pf_id.editText?.setText(String.format("%07d", it.id), TextView.BufferType.NORMAL)
+            pf_id.editText?.setText(String.format("%07d", it.data?.id), TextView.BufferType.NORMAL)
 
-            if (isActiveUserAdmin(it)) {
+            if (isActiveUserAdmin(it.data)) {
                 val color = ContextCompat.getColor(requireContext(), R.color.yellow)
 
                 pf_rank.text = getString(R.string.profile_admin)
@@ -47,8 +47,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 pf_profileImage.backgroundTintList = ContextCompat.getColorStateList(requireContext(), R.color.yellow)
             } else pf_rank.text = getString(R.string.profile_user)
 
-            accountHeaderView.currentProfileName.text = it.name
-            accountHeaderView.currentProfileEmail.text = it.email
+            accountHeaderView.currentProfileName.text = it.data?.name
+            accountHeaderView.currentProfileEmail.text = it.data?.email
         })
 
         pf_deleteLabel.setOnClickListener { findNavController().navigate(R.id.deleteBottomSheetFragment) }
@@ -99,7 +99,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 }
                 3L -> {
                     setSavedUser(requireContext(), "", "")
-                    activityViewModel.clear()
+                    //activityViewModel.clear()
                     findNavController().navigate(R.id.registerFragment)
                 }
             }

@@ -43,7 +43,7 @@ class DeleteBottomSheet: SuperBottomSheetFragment() {
         debsf_deleteButton.hideProgress(R.string.done)
         Handler().postDelayed({
             setSavedUser(requireContext(), "", "")
-            activityViewModel.clear()
+            //activityViewModel.clear()
             findNavController().navigate(R.id.registerFragment)
         }, 500)
     }
@@ -64,7 +64,7 @@ class DeleteBottomSheet: SuperBottomSheetFragment() {
 
         debsf_deleteButton.attachTextChangeAnimator()
         debsf_deleteButton.setOnClickListener {
-            MainActivity.instance.deleteUser(activityViewModel.activeUser.value!!.id)
+            MainActivity.instance.deleteUser(activityViewModel.activeUser.value!!.data!!.id)
 
             debsf_deleteButton.showProgress {
                 buttonTextRes = R.string.profile_delete_yes

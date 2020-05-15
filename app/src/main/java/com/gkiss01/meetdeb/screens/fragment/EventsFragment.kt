@@ -120,8 +120,8 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         addSliderNavigation()
 
         activityViewModel.activeUser.observe(viewLifecycleOwner, Observer {
-            accountHeaderView.currentProfileName.text = it.name
-            accountHeaderView.currentProfileEmail.text = it.email
+            accountHeaderView.currentProfileName.text = it.data?.name
+            accountHeaderView.currentProfileEmail.text = it.data?.email
         })
 
         ef_addActionButton.setOnClickListener{ findNavController().navigate(R.id.createEventFragment) }
@@ -233,7 +233,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                 }
                 3L -> {
                     setSavedUser(requireContext(), "", "")
-                    activityViewModel.clear()
+                    //activityViewModel.clear()
                     findNavController().navigate(R.id.registerFragment)
                 }
             }
@@ -244,11 +244,11 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
     private fun createMoreActionMenu(view: View, event: Event) {
         PopupMenu(context, view).apply {
             if (isActiveUserAdmin()) {
-                if (event.userId == activityViewModel.activeUser.value!!.id) menu.add(0, R.id.update, 0, R.string.event_more_update)
+                if (event.userId == activityViewModel.activeUser.value!!.data!!.id) menu.add(0, R.id.update, 0, R.string.event_more_update)
                 if (event.reported) menu.add(0, R.id.removeReport, 0, R.string.event_more_remove_report)
                 menu.add(0, R.id.delete, 0, R.string.event_more_delete)
             } else {
-                if (event.userId == activityViewModel.activeUser.value!!.id) {
+                if (event.userId == activityViewModel.activeUser.value!!.data!!.id) {
                     menu.add(0, R.id.update, 0, R.string.event_more_update)
                     menu.add(0, R.id.delete, 0, R.string.event_more_delete)
                 }

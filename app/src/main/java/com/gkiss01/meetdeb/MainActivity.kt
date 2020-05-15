@@ -5,56 +5,43 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import com.gkiss01.meetdeb.data.*
 import com.gkiss01.meetdeb.data.adapterrequest.DeleteDateRequest
 import com.gkiss01.meetdeb.data.adapterrequest.DeleteEventRequest
 import com.gkiss01.meetdeb.data.adapterrequest.DeleteUserRequest
 import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.NavigationCode
+import com.gkiss01.meetdeb.network.Status
 import com.gkiss01.meetdeb.network.TargetVar
-import com.gkiss01.meetdeb.network.WebApi
-import com.gkiss01.meetdeb.utils.getSavedPassword
-import com.gkiss01.meetdeb.utils.getSavedUsername
-import com.gkiss01.meetdeb.utils.setSavedUser
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.launch
-import okhttp3.Credentials
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.greenrobot.eventbus.EventBus
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.threeten.bp.OffsetDateTime
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var viewModel: ActivityViewModel
+    private val viewModelKoin: ActivityViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        viewModel = ViewModelProvider(this).get(ActivityViewModel::class.java)
-
-        if (viewModel.activeUser.value == null) {
-            val username = getSavedUsername(this)
-            val password = getSavedPassword(this)
-            viewModel.tempPassword = password
-            checkUser(Credentials.basic(username, password))
-        }
-
-        viewModel.activeUser.observe(this, Observer {
-            if (viewModel.tempPassword != null) {
-                setSavedUser(this, it.email, viewModel.tempPassword!!)
-                viewModel.password = viewModel.tempPassword!!
-                viewModel.tempPassword = null
-            } else {
-                setSavedUser(this, it.email, viewModel.password)
+        viewModelKoin.activeUser.observe(this, Observer {
+            when (it.status) {
+                Status.SUCCESS -> findNavController(R.id.nav_host_fragment).navigate(R.id.eventsFragment)
+                Status.ERROR -> {
+                    Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
+                    findNavController(R.id.nav_host_fragment).navigate(R.id.registerFragment)
+                }
+                Status.LOADING -> Log.d("MainActivity", "User is loading...")
             }
-            viewModel.calculateBasic()
-            EventBus.getDefault().post(NavigationCode.ACTIVE_USER_UPDATED)
         })
     }
 
@@ -66,81 +53,73 @@ class MainActivity : AppCompatActivity() {
         instance = this
     }
 
-    fun saveTempPassword(password: String) {
-        viewModel.tempPassword = password
-    }
-
-    fun getActiveUser(): User? = viewModel.activeUser.value
-
-    fun checkUser(basic: String) {
-        makeRequest(WebApi.retrofitService.checkUserAsync(basic), TargetVar.VAR_CHECK_USER)
-    }
+    fun getActiveUser(): User? = viewModelKoin.activeUser.value?.data
 
     fun getEvent(eventId: Long) {
-        makeRequest(WebApi.retrofitService.getEventAsync(viewModel.basic, eventId), TargetVar.VAR_GET_EVENT)
+        //makeRequest(dataProvider.getEventAsync(viewModelKoin.basic, eventId), TargetVar.VAR_GET_EVENT)
     }
 
     fun getEvents(page: Int = 1) {
-        makeRequest(WebApi.retrofitService.getEventsAsync(viewModel.basic, page), TargetVar.VAR_GET_EVENTS)
+        //makeRequest(dataProvider.getEventsAsync(viewModelKoin.basic, page), TargetVar.VAR_GET_EVENTS)
     }
 
     fun createEvent(event: RequestBody, image: MultipartBody.Part?) {
-        makeRequest(WebApi.retrofitService.createEventAsync(viewModel.basic, event, image), TargetVar.VAR_CREATE_UPDATE_EVENT)
+        //makeRequest(dataProvider.createEventAsync(viewModelKoin.basic, event, image), TargetVar.VAR_CREATE_UPDATE_EVENT)
     }
 
     fun updateEvent(eventId: Long, event: RequestBody) {
-        makeRequest(WebApi.retrofitService.updateEventAsync(viewModel.basic, eventId, event), TargetVar.VAR_CREATE_UPDATE_EVENT)
+        //makeRequest(dataProvider.updateEventAsync(viewModelKoin.basic, eventId, event), TargetVar.VAR_CREATE_UPDATE_EVENT)
     }
 
     fun deleteEvent(eventId: Long) {
-        makeRequest(WebApi.retrofitService.deleteEventAsync(viewModel.basic, eventId), TargetVar.VAR_DELETE_EVENT)
+        //makeRequest(dataProvider.deleteEventAsync(viewModelKoin.basic, eventId), TargetVar.VAR_DELETE_EVENT)
     }
 
     fun reportEvent(eventId: Long) {
-        makeRequest(WebApi.retrofitService.reportEventAsync(viewModel.basic, eventId), TargetVar.VAR_REPORT_EVENT)
+        //makeRequest(dataProvider.reportEventAsync(viewModelKoin.basic, eventId), TargetVar.VAR_REPORT_EVENT)
     }
 
     fun removeReport(eventId: Long) {
-        makeRequest(WebApi.retrofitService.removeReportAsync(viewModel.basic, eventId), TargetVar.VAR_REMOVE_EVENT_REPORT)
+        //makeRequest(dataProvider.removeReportAsync(viewModelKoin.basic, eventId), TargetVar.VAR_REMOVE_EVENT_REPORT)
     }
 
     fun showDates(eventId: Long) {
-        makeRequest(WebApi.retrofitService.getDatesAsync(viewModel.basic, eventId), TargetVar.VAR_GET_DATES)
+        //makeRequest(dataProvider.getDatesAsync(viewModelKoin.basic, eventId), TargetVar.VAR_GET_DATES)
     }
 
     fun createDate(eventId: Long, date: OffsetDateTime) {
-        makeRequest(WebApi.retrofitService.createDateAsync(viewModel.basic, eventId, date), TargetVar.VAR_CREATE_DATE)
+        //makeRequest(dataProvider.createDateAsync(viewModelKoin.basic, eventId, date), TargetVar.VAR_CREATE_DATE)
     }
 
     fun deleteDate(dateId: Long) {
-        makeRequest(WebApi.retrofitService.deleteDateAsync(viewModel.basic, dateId), TargetVar.VAR_DELETE_DATE)
+        //makeRequest(dataProvider.deleteDateAsync(viewModelKoin.basic, dateId), TargetVar.VAR_DELETE_DATE)
     }
 
     fun createVote(dateId: Long) {
-        makeRequest(WebApi.retrofitService.createVoteAsync(viewModel.basic, dateId), TargetVar.VAR_CREATE_VOTE)
+        //makeRequest(dataProvider.createVoteAsync(viewModelKoin.basic, dateId), TargetVar.VAR_CREATE_VOTE)
     }
 
     fun showParticipants(eventId: Long) {
-        makeRequest(WebApi.retrofitService.getParticipantsAsync(viewModel.basic, eventId), TargetVar.VAR_GET_PARTICIPANTS)
+        //makeRequest(dataProvider.getParticipantsAsync(viewModelKoin.basic, eventId), TargetVar.VAR_GET_PARTICIPANTS)
     }
 
     fun modifyParticipation(eventId: Long, eventAccepted: Boolean) {
-        if (eventAccepted)
-            makeRequest(WebApi.retrofitService.deleteParticipantAsync(viewModel.basic, eventId), TargetVar.VAR_DELETE_PARTICIPANT)
-        else
-            makeRequest(WebApi.retrofitService.createParticipantAsync(viewModel.basic, eventId), TargetVar.VAR_CREATE_PARTICIPANT)
+        //if (eventAccepted)
+            //makeRequest(dataProvider.deleteParticipantAsync(viewModelKoin.basic, eventId), TargetVar.VAR_DELETE_PARTICIPANT)
+        //else
+            //makeRequest(dataProvider.createParticipantAsync(viewModelKoin.basic, eventId), TargetVar.VAR_CREATE_PARTICIPANT)
     }
 
     fun createUser(user: RequestBody) {
-        makeRequest(WebApi.retrofitService.createUserAsync(user), TargetVar.VAR_CREATE_USER)
+        //makeRequest(WebApi.retrofitService.createUserAsync(user), TargetVar.VAR_CREATE_USER)
     }
 
     fun updateUser(auth: String, user: RequestBody) {
-        makeRequest(WebApi.retrofitService.updateUserAsync(auth, user), TargetVar.VAR_UPDATE_USER)
+        //makeRequest(WebApi.retrofitService.updateUserAsync(auth, user), TargetVar.VAR_UPDATE_USER)
     }
 
     fun deleteUser(userId: Long) {
-        makeRequest(WebApi.retrofitService.deleteUserAsync(viewModel.basic, userId), TargetVar.VAR_DELETE_USER)
+        //makeRequest(dataProvider.deleteUserAsync(viewModelKoin.basic, userId), TargetVar.VAR_DELETE_USER)
     }
 
     private fun makeRequest(target: Deferred<GenericResponse>, targetVar: TargetVar) {
@@ -149,7 +128,7 @@ class MainActivity : AppCompatActivity() {
                 val listResult = target.await()
                 if (!listResult.error) {
                     when (targetVar) {
-                        TargetVar.VAR_CHECK_USER -> viewModel.activeUser.value = listResult.user!!
+                        //TargetVar.VAR_CHECK_USER -> viewModelKoin.activeUser.value = listResult.user!!
                         TargetVar.VAR_GET_EVENTS -> EventBus.getDefault().post(EventList(listResult.events!!))
                         TargetVar.VAR_CREATE_UPDATE_EVENT -> EventBus.getDefault().post(NavigationCode.NAVIGATE_TO_EVENTS_FRAGMENT)
                         TargetVar.VAR_CREATE_PARTICIPANT, TargetVar.VAR_DELETE_PARTICIPANT, TargetVar.VAR_GET_EVENT, TargetVar.VAR_REMOVE_EVENT_REPORT -> EventBus.getDefault().post(listResult.event)
@@ -160,7 +139,7 @@ class MainActivity : AppCompatActivity() {
                         TargetVar.VAR_DELETE_EVENT -> EventBus.getDefault().post(DeleteEventRequest(listResult.withId!!))
                         TargetVar.VAR_DELETE_DATE -> EventBus.getDefault().post(DeleteDateRequest(listResult.withId!!))
                         TargetVar.VAR_DELETE_USER -> EventBus.getDefault().post(DeleteUserRequest())
-                        TargetVar.VAR_UPDATE_USER -> viewModel.activeUser.value = listResult.user!!
+                        //TargetVar.VAR_UPDATE_USER -> viewModelKoin.activeUser.value = listResult.user!!
                     }
                 }
                 else handleResponseErrors(listResult.errorCode!!, listResult.errors!!)

@@ -11,7 +11,7 @@ import org.threeten.bp.format.DateTimeFormatter
 
 val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy, HH:mm")
 
-fun isActiveUserAdmin(user: User) = user.roles.contains(Role.ROLE_ADMIN)
+fun isActiveUserAdmin(user: User?) = user?.roles?.contains(Role.ROLE_ADMIN) ?: false
 fun isActiveUserAdmin() = isActiveUserAdmin(MainActivity.instance.getActiveUser()!!)
 
 fun getSavedUsername(context: Context, default: String = "unknown"): String {

@@ -63,8 +63,8 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                 hideKeyboard(requireContext(), view)
                 showAnimation()
 
-                activityViewModel.tempPassword = password
-                MainActivity.instance.checkUser(Credentials.basic(email, password))
+                //activityViewModel.tempPassword = password
+                //MainActivity.instance.checkUser(Credentials.basic(email, password))
             }
         }
     }

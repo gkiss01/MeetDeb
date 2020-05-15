@@ -15,7 +15,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.github.razir.progressbutton.attachTextChangeAnimator
@@ -46,11 +45,12 @@ import kotlinx.android.synthetic.main.fragment_event_create.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.threeten.bp.OffsetDateTime
 
 class EventCreateFragment : Fragment() {
     private lateinit var binding: FragmentEventCreateBinding
-    private val viewModel: CreateEventViewModel by viewModels()
+    private val viewModelKoin: CreateEventViewModel by viewModel()
 
     private val REQUEST_CODE_PICK_IMAGE = 1
 
@@ -67,7 +67,7 @@ class EventCreateFragment : Fragment() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onErrorReceived(errorCode: ErrorCodes) {
         if (errorCode == ErrorCodes.UNKNOWN) {
-            cef_createButton.hideProgress(if (viewModel.type.value == ScreenType.NEW) R.string.event_create_button else R.string.event_more_update)
+            cef_createButton.hideProgress(if (viewModelKoin.type.value == ScreenType.NEW) R.string.event_create_button else R.string.event_more_update)
         }
     }
 
@@ -90,41 +90,41 @@ class EventCreateFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val argEvent = arguments?.getSerializable("event") as Event?
-        if (viewModel.type.value == ScreenType.NONE) {
+        if (viewModelKoin.type.value == ScreenType.NONE) {
             if (argEvent != null) {
-                viewModel.type.value = ScreenType.UPDATE
-                viewModel.event = argEvent
-            } else viewModel.type.value = ScreenType.NEW
+                viewModelKoin.type.value = ScreenType.UPDATE
+                viewModelKoin.event = argEvent
+            } else viewModelKoin.type.value = ScreenType.NEW
         }
 
-        binding.event = viewModel.event
+        binding.event = viewModelKoin.event
         Picasso.get()
-            .load("$BASE_URL/images/${viewModel.event.id}")
+            .load("$BASE_URL/images/${viewModelKoin.event.id}")
             .placeholder(R.drawable.placeholder)
             .into(cef_imagePreview)
 
         cef_dateButton.setOnClickListener {
             val datePickerDialog = DatePickerDialog(requireContext(), DatePickerDialog.OnDateSetListener { _, year, monthValue, dayOfMonth ->
-                viewModel.event.date = updateOffsetDateTime(viewModel.event.date, year, monthValue + 1, dayOfMonth)
-                cef_dateTitle.text = formatDate(viewModel.event.date)
-            }, viewModel.event.date.year, viewModel.event.date.monthValue - 1, viewModel.event.date.dayOfMonth)
+                viewModelKoin.event.date = updateOffsetDateTime(viewModelKoin.event.date, year, monthValue + 1, dayOfMonth)
+                cef_dateTitle.text = formatDate(viewModelKoin.event.date)
+            }, viewModelKoin.event.date.year, viewModelKoin.event.date.monthValue - 1, viewModelKoin.event.date.dayOfMonth)
             datePickerDialog.show()
         }
 
         cef_timeButton.setOnClickListener {
             val timePickerDialog = TimePickerDialog(context, TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
-                viewModel.event.date = updateOffsetDateTime(viewModel.event.date, hourOfDay, minute)
-                cef_dateTitle.text = formatDate(viewModel.event.date)
-            }, viewModel.event.date.hour, viewModel.event.date.minute, isDate24HourFormat(requireContext()))
+                viewModelKoin.event.date = updateOffsetDateTime(viewModelKoin.event.date, hourOfDay, minute)
+                cef_dateTitle.text = formatDate(viewModelKoin.event.date)
+            }, viewModelKoin.event.date.hour, viewModelKoin.event.date.minute, isDate24HourFormat(requireContext()))
             timePickerDialog.show()
         }
 
         cef_imageButton.setOnClickListener {
-            if (viewModel.type.value == ScreenType.NEW) requestStoragePermissions()
+            if (viewModelKoin.type.value == ScreenType.NEW) requestStoragePermissions()
             else Toast.makeText(context, "A képet nem tudod frissíteni!", Toast.LENGTH_LONG).show()
         }
 
-        viewModel.type.observe(viewLifecycleOwner, Observer {
+        viewModelKoin.type.observe(viewLifecycleOwner, Observer {
             cef_createButton.text = getString(if (it == ScreenType.NEW) R.string.event_create_button else R.string.event_more_update)
         })
 
@@ -139,7 +139,7 @@ class EventCreateFragment : Fragment() {
                 hideKeyboard(requireContext(), view)
                 showAnimation()
 
-                viewModel.uploadEvent()
+                viewModelKoin.uploadEvent()
             }
         }
     }
@@ -147,7 +147,7 @@ class EventCreateFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_PICK_IMAGE && resultCode == RESULT_OK) {
-            viewModel.imageUrl = Matisse.obtainPathResult(data)[0]
+            viewModelKoin.imageUrl = Matisse.obtainPathResult(data)[0]
             cef_imagePreview.setImageURI(Matisse.obtainResult(data)[0])
         }
     }
@@ -182,11 +182,11 @@ class EventCreateFragment : Fragment() {
 
     private fun validateName(): Boolean {
         return when {
-            TextUtils.isEmpty(viewModel.event.name) -> {
+            TextUtils.isEmpty(viewModelKoin.event.name) -> {
                 cef_name.error = "A mezőt kötelező kitölteni!"
                 false
             }
-            viewModel.event.name.length > 40 -> {
+            viewModelKoin.event.name.length > 40 -> {
                 cef_name.error = "A név max. 40 karakter lehet!"
                 false
             }
@@ -199,7 +199,7 @@ class EventCreateFragment : Fragment() {
 
     private fun validateDescription(): Boolean {
         return when {
-            TextUtils.isEmpty(viewModel.event.description) -> {
+            TextUtils.isEmpty(viewModelKoin.event.description) -> {
                 cef_description.error = "A mezőt kötelező kitölteni!"
                 false
             }
@@ -212,7 +212,7 @@ class EventCreateFragment : Fragment() {
 
     private fun validateVenue(): Boolean {
         return when {
-            TextUtils.isEmpty(viewModel.event.venue) -> {
+            TextUtils.isEmpty(viewModelKoin.event.venue) -> {
                 cef_venue.error = "A mezőt kötelező kitölteni!"
                 false
             }
@@ -225,7 +225,7 @@ class EventCreateFragment : Fragment() {
 
     private fun validateDate(): Boolean {
         return when {
-            viewModel.event.date.isBefore(OffsetDateTime.now()) -> {
+            viewModelKoin.event.date.isBefore(OffsetDateTime.now()) -> {
                 cef_dateTitle.error = "Jövőbeli dátumot adj meg!"
                 false
             }
@@ -238,7 +238,7 @@ class EventCreateFragment : Fragment() {
 
     private fun showAnimation() {
         cef_createButton.showProgress {
-            buttonTextRes = if (viewModel.type.value == ScreenType.NEW) R.string.event_create_waiting else R.string.event_more_update_waiting
+            buttonTextRes = if (viewModelKoin.type.value == ScreenType.NEW) R.string.event_create_waiting else R.string.event_more_update_waiting
             progressColor = Color.WHITE
         }
     }

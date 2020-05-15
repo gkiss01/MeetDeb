@@ -5,8 +5,7 @@ enum class UserRequestType {
 }
 
 data class UserRequest(
-    private val email: String,
-    private val password: String,
-    private val name: String,
-    private val type: Int
-)
+    val email: String,
+    val password: String,
+    val name: String,
+    val type: Int)

@@ -7,11 +7,11 @@ import com.mikepenz.fastadapter.items.AbstractItem
 import org.threeten.bp.OffsetDateTime
 
 data class Date(
-    var id: Long,
-    var eventId: Long,
+    val id: Long,
+    val eventId: Long,
     @com.gkiss01.meetdeb.adapter.OffsetDateTime
-    var date: OffsetDateTime,
-    var votes: Int,
+    val date: OffsetDateTime,
+    val votes: Int,
     val accepted: Boolean): AbstractItem<DateViewHolder>() {
 
     override val layoutRes: Int

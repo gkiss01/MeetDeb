@@ -1,29 +1,38 @@
 package com.gkiss01.meetdeb
 
-import androidx.lifecycle.MutableLiveData
+import android.app.Application
+import android.content.Context
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
 import com.gkiss01.meetdeb.data.User
+import com.gkiss01.meetdeb.network.Resource
+import com.gkiss01.meetdeb.network.RestClient
 import okhttp3.Credentials
+import org.koin.android.ext.koin.androidApplication
+import org.koin.dsl.module
 
-class ActivityViewModel : ViewModel() {
-    val activeUser = MutableLiveData<User>()
-    lateinit var password: String
-    var tempPassword: String? = null
+val activityModule = module {
+    factory { ActivityViewModel(get(), androidApplication()) }
+}
 
-    lateinit var basic: String
+class ActivityViewModel(private val restClient: RestClient, application: Application) : ViewModel() {
+    private val username = application.getSavedUsername()
+    private val password = application.getSavedPassword()
+    private val basic = Credentials.basic(username, password)
 
-//    val basic: LiveData<String> = Transformations.map(activeUser) {
-//        Credentials.basic(it.email, password)
-//    }
-
-    fun clear() {
-        //activeUser.postValue(null)
-        tempPassword = null
-        password = ""
-        basic = ""
+    val activeUser: LiveData<Resource<User>> = liveData {
+        emit(Resource.loading(null))
+        emit(restClient.checkUserAsync(basic))
     }
+}
 
-    fun calculateBasic() {
-        basic = Credentials.basic(activeUser.value!!.email, password)
-    }
+fun Context.getSavedUsername(default: String = "unknown"): String {
+    val sharedPref = this.getSharedPreferences("BASIC_AUTH_PREFS", Context.MODE_PRIVATE)
+    return sharedPref.getString("OPTION_EMAIL", default)!!
+}
+
+fun Context.getSavedPassword(default: String = "unknown"): String {
+    val sharedPref = this.getSharedPreferences("BASIC_AUTH_PREFS", Context.MODE_PRIVATE)
+    return sharedPref.getString("OPTION_PASSWORD", default)!!
 }

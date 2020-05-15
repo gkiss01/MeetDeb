@@ -18,8 +18,8 @@ import com.gkiss01.meetdeb.data.apirequest.UserRequest
 import com.gkiss01.meetdeb.data.apirequest.UserRequestType
 import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.NavigationCode
-import com.gkiss01.meetdeb.network.moshi
 import com.gkiss01.meetdeb.utils.hideKeyboard
+import com.squareup.moshi.Moshi
 import kotlinx.android.synthetic.main.bottomsheet_profile_password.*
 import okhttp3.Credentials
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -27,8 +27,10 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.koin.android.ext.android.inject
 
 class PasswordBottomSheet: SuperBottomSheetFragment() {
+    private val moshi: Moshi by inject()
     private val activityViewModel: ActivityViewModel by activityViewModels()
 
     override fun onStart() {
@@ -72,12 +74,12 @@ class PasswordBottomSheet: SuperBottomSheetFragment() {
                 hideKeyboard(requireContext(), view)
                 showAnimation()
 
-                val basic = Credentials.basic(activityViewModel.activeUser.value!!.email, oldPassword)
+                val basic = Credentials.basic(activityViewModel.activeUser.value!!.data!!.email, oldPassword)
 
                 val userRequest = UserRequest("unnecessary@email.com", newPassword, "________", UserRequestType.PasswordUpdate.ordinal)
                 val json = moshi.adapter(UserRequest::class.java).toJson(userRequest)
                 val user = json.toRequestBody("application/json".toMediaTypeOrNull())
-                MainActivity.instance.saveTempPassword(newPassword)
+                //MainActivity.instance.saveTempPassword(newPassword)
                 MainActivity.instance.updateUser(basic, user)
             }
         }
