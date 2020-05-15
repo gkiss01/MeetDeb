@@ -14,16 +14,6 @@ val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("EEE, dd MMM 
 fun isActiveUserAdmin(user: User?) = user?.roles?.contains(Role.ROLE_ADMIN) ?: false
 fun isActiveUserAdmin() = isActiveUserAdmin(MainActivity.instance.getActiveUser()!!)
 
-fun getSavedUsername(context: Context, default: String = "unknown"): String {
-    val sharedPref = context.getSharedPreferences("BASIC_AUTH_PREFS", Context.MODE_PRIVATE)
-    return sharedPref.getString("OPTION_EMAIL", default)!!
-}
-
-fun getSavedPassword(context: Context, default: String = "unknown"): String {
-    val sharedPref = context.getSharedPreferences("BASIC_AUTH_PREFS", Context.MODE_PRIVATE)
-    return sharedPref.getString("OPTION_PASSWORD", default)!!
-}
-
 fun setSavedUser(context: Context, username: String, password: String) {
     val sharedPref = context.getSharedPreferences("BASIC_AUTH_PREFS", Context.MODE_PRIVATE)
     sharedPref.edit().putString("OPTION_EMAIL", username).putString("OPTION_PASSWORD", password).apply()

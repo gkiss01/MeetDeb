@@ -23,7 +23,7 @@ val activityModule = module {
     factory { ActivityViewModel(get(), get(), androidApplication()) }
 }
 
-class ActivityViewModel(private val moshi: Moshi, private val restClient: RestClient, application: Application) : ViewModel() {
+class ActivityViewModel(private val moshi: Moshi, private val restClient: RestClient, private val application: Application) : ViewModel() {
     private val username = application.getSavedUsername()
     private val password = application.getSavedPassword()
     private lateinit var basic: String
@@ -53,8 +53,11 @@ class ActivityViewModel(private val moshi: Moshi, private val restClient: RestCl
     }
 
     fun resetLiveData() {
+        saveUserCredentials("", "")
         _activeUser.postValue(Resource.pending(null))
     }
+
+    fun saveUserCredentials(username: String, password: String) = application.setSavedUser(username, password)
 }
 
 fun Context.getSavedUsername(default: String = "unknown"): String {
@@ -65,4 +68,9 @@ fun Context.getSavedUsername(default: String = "unknown"): String {
 fun Context.getSavedPassword(default: String = "unknown"): String {
     val sharedPref = this.getSharedPreferences("BASIC_AUTH_PREFS", Context.MODE_PRIVATE)
     return sharedPref.getString("OPTION_PASSWORD", default)!!
+}
+
+fun Context.setSavedUser(username: String, password: String) {
+    val sharedPref = this.getSharedPreferences("BASIC_AUTH_PREFS", Context.MODE_PRIVATE)
+    sharedPref.edit().putString("OPTION_EMAIL", username).putString("OPTION_PASSWORD", password).apply()
 }

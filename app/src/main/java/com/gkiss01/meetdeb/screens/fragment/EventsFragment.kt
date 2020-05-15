@@ -2,6 +2,7 @@ package com.gkiss01.meetdeb.screens.fragment
 
 import ScrollingViewOnApplyWindowInsetsListener
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.PopupMenu
 import androidx.activity.addCallback
@@ -20,9 +21,9 @@ import com.gkiss01.meetdeb.data.EventList
 import com.gkiss01.meetdeb.data.adapterrequest.DeleteEventRequest
 import com.gkiss01.meetdeb.data.adapterrequest.UpdateEventRequest
 import com.gkiss01.meetdeb.data.fastadapter.Event
+import com.gkiss01.meetdeb.data.isAdmin
 import com.gkiss01.meetdeb.network.ErrorCodes
-import com.gkiss01.meetdeb.utils.isActiveUserAdmin
-import com.gkiss01.meetdeb.utils.setSavedUser
+import com.gkiss01.meetdeb.network.Status
 import com.gkiss01.meetdeb.viewmodels.EventsViewModel
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericFastAdapter
@@ -46,10 +47,11 @@ import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class EventsFragment : Fragment(R.layout.fragment_events) {
     private val viewModel: EventsViewModel by activityViewModels()
-    private val activityViewModel: ActivityViewModel by activityViewModels()
+    private val viewModelActivityKoin: ActivityViewModel by sharedViewModel()
 
     private val itemAdapter = ItemAdapter<Event>()
     private val footerAdapter = ItemAdapter<ProgressItem>()
@@ -119,9 +121,15 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         addSliderItems()
         addSliderNavigation()
 
-        activityViewModel.activeUser.observe(viewLifecycleOwner, Observer {
-            accountHeaderView.currentProfileName.text = it.data?.name
-            accountHeaderView.currentProfileEmail.text = it.data?.email
+        viewModelActivityKoin.activeUser.observe(viewLifecycleOwner, Observer {
+            when (it.status) {
+                Status.SUCCESS -> {
+                    accountHeaderView.currentProfileName.text = it.data?.name
+                    accountHeaderView.currentProfileEmail.text = it.data?.email
+                }
+                Status.PENDING -> findNavController().navigate(R.id.registerFragment)
+                else -> Log.e("MeetDebLog_EventsFragment", "User is null...")
+            }
         })
 
         ef_addActionButton.setOnClickListener{ findNavController().navigate(R.id.createEventFragment) }
@@ -228,46 +236,42 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         ef_slider.closeOnClick = true
         ef_slider.onDrawerItemClickListener = { _, item, _ ->
             when (item.identifier) {
-                2L -> {
-                    findNavController().navigate(R.id.profileFragment)
-                }
-                3L -> {
-                    setSavedUser(requireContext(), "", "")
-                    //activityViewModel.clear()
-                    findNavController().navigate(R.id.registerFragment)
-                }
+                2L -> findNavController().navigate(R.id.profileFragment)
+                3L -> viewModelActivityKoin.resetLiveData()
             }
             false
         }
     }
 
     private fun createMoreActionMenu(view: View, event: Event) {
-        PopupMenu(context, view).apply {
-            if (isActiveUserAdmin()) {
-                if (event.userId == activityViewModel.activeUser.value!!.data!!.id) menu.add(0, R.id.update, 0, R.string.event_more_update)
-                if (event.reported) menu.add(0, R.id.removeReport, 0, R.string.event_more_remove_report)
-                menu.add(0, R.id.delete, 0, R.string.event_more_delete)
-            } else {
-                if (event.userId == activityViewModel.activeUser.value!!.data!!.id) {
-                    menu.add(0, R.id.update, 0, R.string.event_more_update)
+        viewModelActivityKoin.activeUser.value?.data?.let {
+            PopupMenu(context, view).apply {
+                if (it.isAdmin()) {
+                    if (event.userId == it.id) menu.add(0, R.id.update, 0, R.string.event_more_update)
+                    if (event.reported) menu.add(0, R.id.removeReport, 0, R.string.event_more_remove_report)
                     menu.add(0, R.id.delete, 0, R.string.event_more_delete)
+                } else {
+                    if (event.userId == it.id) {
+                        menu.add(0, R.id.update, 0, R.string.event_more_update)
+                        menu.add(0, R.id.delete, 0, R.string.event_more_delete)
+                    }
+                    else menu.add(0, R.id.report, 0, R.string.event_more_report)
                 }
-                else menu.add(0, R.id.report, 0, R.string.event_more_report)
-            }
 
-            setOnMenuItemClickListener {
-                when (it.itemId) {
-                    R.id.report ->
-                        MainActivity.instance.reportEvent(event.id)
-                    R.id.removeReport ->
-                        MainActivity.instance.removeReport(event.id)
-                    R.id.delete ->
-                        MainActivity.instance.deleteEvent(event.id)
-                    R.id.update -> findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToCreateEventFragment(event))
+                setOnMenuItemClickListener {
+                    when (it.itemId) {
+                        R.id.report ->
+                            MainActivity.instance.reportEvent(event.id)
+                        R.id.removeReport ->
+                            MainActivity.instance.removeReport(event.id)
+                        R.id.delete ->
+                            MainActivity.instance.deleteEvent(event.id)
+                        R.id.update -> findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToCreateEventFragment(event))
+                    }
+                    true
                 }
-                true
+                show()
             }
-            show()
         }
     }
 }

@@ -6,3 +6,5 @@ data class User(
     val name: String,
     val enabled: Boolean,
     val roles: Set<Role>)
+
+fun User.isAdmin() = this.roles.contains(Role.ROLE_ADMIN)

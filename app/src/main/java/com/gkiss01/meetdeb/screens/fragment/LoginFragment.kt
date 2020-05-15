@@ -22,6 +22,8 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class LoginFragment : Fragment(R.layout.fragment_login) {
     private val viewModelKoin: ActivityViewModel by sharedViewModel()
+    private lateinit var email: String
+    private lateinit var password: String
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         lf_notRegistered.setOnClickListener { findNavController().popBackStack() }
@@ -32,8 +34,8 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             val isValidPassword = validatePassword()
 
             if (isValidEmail && isValidPassword) {
-                val email = lf_email.editText?.text.toString().trim()
-                val password = lf_password.editText?.text.toString().trim()
+                email = lf_email.editText?.text.toString().trim()
+                password = lf_password.editText?.text.toString().trim()
                 val basic = Credentials.basic(email, password)
 
                 hideKeyboard(requireContext(), view)
@@ -44,7 +46,10 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
         viewModelKoin.activeUser.observe(viewLifecycleOwner, Observer {
             when (it.status) {
-                Status.SUCCESS -> findNavController().navigate(R.id.eventsFragment)
+                Status.SUCCESS -> {
+                    viewModelKoin.saveUserCredentials(email, password)
+                    findNavController().navigate(R.id.eventsFragment)
+                }
                 Status.ERROR -> {
                     viewModelKoin.resetLiveData()
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
