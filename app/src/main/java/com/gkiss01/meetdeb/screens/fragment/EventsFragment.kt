@@ -139,7 +139,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         val fastScroller = FastScrollerBuilder(ef_eventsRecyclerView).useMd2Style().build()
         ef_eventsRecyclerView.setOnApplyWindowInsetsListener(ScrollingViewOnApplyWindowInsetsListener(ef_eventsRecyclerView, fastScroller))
 
-        val layoutManager = LinearLayoutManager(context!!)
+        val layoutManager = LinearLayoutManager(requireContext())
         ef_eventsRecyclerView.layoutManager = layoutManager
 
         ef_eventsRecyclerView.setHasFixedSize(true)
@@ -190,7 +190,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
     }
 
     private fun createAccountHeader(): AccountHeaderView {
-        return AccountHeaderView(context!!).apply {
+        return AccountHeaderView(requireContext()).apply {
             attachToSliderView(ef_slider)
             height = DimenHolder.fromDp(200)
             headerBackground = ImageHolder(R.drawable.landscape)
@@ -206,12 +206,12 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                 name = StringHolder(getString(R.string.drawer_events))
                 isSelected = true
                 isEnabled = false
-                iconDrawable = ContextCompat.getDrawable(context!!, R.drawable.ic_event)!!
+                iconDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_event)!!
             },
             PrimaryDrawerItem().apply {
                 identifier = 2
                 name = StringHolder(getString(R.string.drawer_profile))
-                iconDrawable = ContextCompat.getDrawable(context!!, R.drawable.ic_person)!!
+                iconDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_person)!!
             },
             SectionDrawerItem().apply {
                 name = StringHolder(getString(R.string.drawer_more))
@@ -219,7 +219,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             SecondaryDrawerItem().apply {
                 identifier = 3
                 name = StringHolder(getString(R.string.drawer_logout))
-                iconDrawable = ContextCompat.getDrawable(context!!, R.drawable.ic_logout)!!
+                iconDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_logout)!!
             }
         )
     }
@@ -232,7 +232,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                     findNavController().navigate(R.id.profileFragment)
                 }
                 3L -> {
-                    setSavedUser(context!!, "", "")
+                    setSavedUser(requireContext(), "", "")
                     activityViewModel.clear()
                     findNavController().navigate(R.id.registerFragment)
                 }

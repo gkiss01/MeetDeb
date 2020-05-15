@@ -74,7 +74,7 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
                 val password = rf_password.editText?.text.toString().trim()
                 val name = rf_name.editText?.text.toString().trim()
 
-                hideKeyboard(context!!, view)
+                hideKeyboard(requireContext(), view)
                 showAnimation()
 
                 val userRequest = UserRequest(email, password, name, UserRequestType.Create.ordinal)

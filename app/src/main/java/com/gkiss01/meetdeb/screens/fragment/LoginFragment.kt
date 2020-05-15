@@ -60,7 +60,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                 val email = lf_email.editText?.text.toString().trim()
                 val password = lf_password.editText?.text.toString().trim()
 
-                hideKeyboard(context!!, view)
+                hideKeyboard(requireContext(), view)
                 showAnimation()
 
                 activityViewModel.tempPassword = password

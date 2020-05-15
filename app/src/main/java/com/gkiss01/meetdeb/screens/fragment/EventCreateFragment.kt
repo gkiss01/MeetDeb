@@ -104,7 +104,7 @@ class EventCreateFragment : Fragment() {
             .into(cef_imagePreview)
 
         cef_dateButton.setOnClickListener {
-            val datePickerDialog = DatePickerDialog(context!!, DatePickerDialog.OnDateSetListener { _, year, monthValue, dayOfMonth ->
+            val datePickerDialog = DatePickerDialog(requireContext(), DatePickerDialog.OnDateSetListener { _, year, monthValue, dayOfMonth ->
                 viewModel.event.date = updateOffsetDateTime(viewModel.event.date, year, monthValue + 1, dayOfMonth)
                 cef_dateTitle.text = formatDate(viewModel.event.date)
             }, viewModel.event.date.year, viewModel.event.date.monthValue - 1, viewModel.event.date.dayOfMonth)
@@ -115,7 +115,7 @@ class EventCreateFragment : Fragment() {
             val timePickerDialog = TimePickerDialog(context, TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
                 viewModel.event.date = updateOffsetDateTime(viewModel.event.date, hourOfDay, minute)
                 cef_dateTitle.text = formatDate(viewModel.event.date)
-            }, viewModel.event.date.hour, viewModel.event.date.minute, isDate24HourFormat(context!!))
+            }, viewModel.event.date.hour, viewModel.event.date.minute, isDate24HourFormat(requireContext()))
             timePickerDialog.show()
         }
 
@@ -136,7 +136,7 @@ class EventCreateFragment : Fragment() {
             val isValidDate = validateDate()
 
             if (isValidName && isValidDesc && isValidVenue && isValidDate) {
-                hideKeyboard(context!!, view)
+                hideKeyboard(requireContext(), view)
                 showAnimation()
 
                 viewModel.uploadEvent()
@@ -153,7 +153,7 @@ class EventCreateFragment : Fragment() {
     }
 
     private fun requestStoragePermissions() {
-        Dexter.withActivity(activity)
+        Dexter.withContext(activity)
             .withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
             .withListener(object: MultiplePermissionsListener {
                 override fun onPermissionsChecked(report: MultiplePermissionsReport?) {

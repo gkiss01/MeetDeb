@@ -40,11 +40,11 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             pf_id.editText?.setText(String.format("%07d", it.id), TextView.BufferType.NORMAL)
 
             if (isActiveUserAdmin(it)) {
-                val color = ContextCompat.getColor(context!!, R.color.yellow)
+                val color = ContextCompat.getColor(requireContext(), R.color.yellow)
 
                 pf_rank.text = getString(R.string.profile_admin)
                 pf_rank.setTextColor(color)
-                pf_profileImage.backgroundTintList = ContextCompat.getColorStateList(context!!, R.color.yellow)
+                pf_profileImage.backgroundTintList = ContextCompat.getColorStateList(requireContext(), R.color.yellow)
             } else pf_rank.text = getString(R.string.profile_user)
 
             accountHeaderView.currentProfileName.text = it.name
@@ -56,7 +56,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     }
 
     private fun createAccountHeader(): AccountHeaderView {
-        return AccountHeaderView(context!!).apply {
+        return AccountHeaderView(requireContext()).apply {
             attachToSliderView(pf_slider)
             height = DimenHolder.fromDp(200)
             headerBackground = ImageHolder(R.drawable.landscape)
@@ -70,14 +70,14 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             PrimaryDrawerItem().apply {
                 identifier = 1
                 name = StringHolder(getString(R.string.drawer_events))
-                iconDrawable = ContextCompat.getDrawable(context!!, R.drawable.ic_event)!!
+                iconDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_event)!!
             },
             PrimaryDrawerItem().apply {
                 identifier = 2
                 name = StringHolder(getString(R.string.drawer_profile))
                 isSelected = true
                 isEnabled = false
-                iconDrawable = ContextCompat.getDrawable(context!!, R.drawable.ic_person)!!
+                iconDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_person)!!
             },
             SectionDrawerItem().apply {
                 name = StringHolder(getString(R.string.drawer_more))
@@ -85,7 +85,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             SecondaryDrawerItem().apply {
                 identifier = 3
                 name = StringHolder(getString(R.string.drawer_logout))
-                iconDrawable = ContextCompat.getDrawable(context!!, R.drawable.ic_logout)!!
+                iconDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_logout)!!
             }
         )
     }
@@ -98,7 +98,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                     findNavController().navigate(R.id.eventsFragment)
                 }
                 3L -> {
-                    setSavedUser(context!!, "", "")
+                    setSavedUser(requireContext(), "", "")
                     activityViewModel.clear()
                     findNavController().navigate(R.id.registerFragment)
                 }

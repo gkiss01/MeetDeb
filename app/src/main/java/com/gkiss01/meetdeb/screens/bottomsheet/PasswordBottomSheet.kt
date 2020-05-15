@@ -69,7 +69,7 @@ class PasswordBottomSheet: SuperBottomSheetFragment() {
                 val newPassword = bspp_newPassword.editText?.text.toString().trim()
                 val oldPassword = bspp_oldPassword.editText?.text.toString().trim()
 
-                hideKeyboard(context!!, view)
+                hideKeyboard(requireContext(), view)
                 showAnimation()
 
                 val basic = Credentials.basic(activityViewModel.activeUser.value!!.email, oldPassword)
@@ -83,10 +83,10 @@ class PasswordBottomSheet: SuperBottomSheetFragment() {
         }
     }
 
-    override fun getCornerRadius() = context!!.resources.getDimension(R.dimen.bottomsheet_corner_radius)
+    override fun getCornerRadius() = requireContext().resources.getDimension(R.dimen.bottomsheet_corner_radius)
     override fun getPeekHeight() = TypedValue.applyDimension(
         TypedValue.COMPLEX_UNIT_DIP, 255F,
-        context!!.resources.displayMetrics).toInt()
+        requireContext().resources.displayMetrics).toInt()
 
     private fun validatePasswordNew(): Boolean {
         val password = bspp_newPassword.editText?.text.toString().trim()
