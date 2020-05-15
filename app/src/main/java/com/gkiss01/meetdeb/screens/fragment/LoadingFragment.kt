@@ -22,10 +22,12 @@ class LoadingFragment : Fragment(R.layout.fragment_loading) {
             when (it.status) {
                 Status.SUCCESS -> findNavController().navigate(R.id.eventsFragment)
                 Status.ERROR -> {
+                    viewModelKoin.resetLiveData()
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
                     findNavController().navigate(R.id.registerFragment)
                 }
                 Status.LOADING -> Log.d("MeetDebLog_LoadingFragment", "User is loading...")
+                else -> {}
             }
         })
     }

@@ -59,6 +59,7 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
                     Handler().postDelayed({ findNavController().navigate(R.id.loginFragment) }, 500)
                 }
                 Status.ERROR -> {
+                    viewModelKoin.resetLiveData()
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
                     rf_registerButton.hideProgress(R.string.register_title)
                 }
@@ -66,6 +67,7 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
                     Log.d("MeetDebLog_RegisterFragment", "Creating user...")
                     showAnimation()
                 }
+                else -> {}
             }
         })
     }

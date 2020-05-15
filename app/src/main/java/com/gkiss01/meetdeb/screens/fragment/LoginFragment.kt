@@ -46,6 +46,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             when (it.status) {
                 Status.SUCCESS -> findNavController().navigate(R.id.eventsFragment)
                 Status.ERROR -> {
+                    viewModelKoin.resetLiveData()
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
                     lf_loginButton.hideProgress(R.string.login_title)
                 }
@@ -53,6 +54,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                     Log.d("MeetDebLog_LoginFragment", "User is loading...")
                     showAnimation()
                 }
+                else -> {}
             }
         })
     }

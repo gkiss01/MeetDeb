@@ -32,11 +32,6 @@ class ActivityViewModel(private val moshi: Moshi, private val restClient: RestCl
     val activeUser: LiveData<Resource<User>>
         get() = _activeUser
 
-//    val activeUser: LiveData<Resource<User>> = liveData(Dispatchers.IO) {
-//        emit(Resource.loading(null))
-//        emit(restClient.checkUserAsync(basic))
-//    }
-
     fun getCurrentUser(basic: String = Credentials.basic(username, password)) {
         this.basic = basic
 
@@ -55,6 +50,10 @@ class ActivityViewModel(private val moshi: Moshi, private val restClient: RestCl
         viewModelScope.launch {
             _activeUser.postValue(restClient.createUserAsync(user))
         }
+    }
+
+    fun resetLiveData() {
+        _activeUser.postValue(Resource.pending(null))
     }
 }
 

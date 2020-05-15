@@ -6,7 +6,8 @@ import java.net.SocketTimeoutException
 enum class Status {
     SUCCESS,
     ERROR,
-    LOADING
+    LOADING,
+    PENDING
 }
 
 data class Resource<out T>(val status: Status, val data: T?, val message: String?) {
@@ -21,6 +22,10 @@ data class Resource<out T>(val status: Status, val data: T?, val message: String
 
         fun <T> loading(data: T?): Resource<T> {
             return Resource(Status.LOADING, data, null)
+        }
+
+        fun <T> pending(data: T?): Resource<T> {
+            return Resource(Status.PENDING, data, null)
         }
     }
 }
