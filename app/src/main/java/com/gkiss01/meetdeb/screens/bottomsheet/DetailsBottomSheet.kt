@@ -35,10 +35,7 @@ class DetailsBottomSheet: SuperBottomSheetFragment() {
         }
     }
 
-    override fun getCornerRadius(): Float {
-        val dimension = requireContext().resources.getDimension(R.dimen.bottomsheet_corner_radius)
-        return dimension
-    }
+    override fun getCornerRadius() = requireContext().resources.getDimension(R.dimen.bottomsheet_corner_radius)
     override fun getPeekHeight() = TypedValue.applyDimension(
         TypedValue.COMPLEX_UNIT_DIP, 105F,
         requireContext().resources.displayMetrics).toInt()
