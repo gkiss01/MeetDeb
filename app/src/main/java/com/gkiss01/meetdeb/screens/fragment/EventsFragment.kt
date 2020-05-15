@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.View
 import android.widget.PopupMenu
 import androidx.activity.addCallback
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -32,15 +31,6 @@ import com.mikepenz.fastadapter.diff.FastAdapterDiffUtil
 import com.mikepenz.fastadapter.listeners.addClickListener
 import com.mikepenz.fastadapter.ui.items.ProgressItem
 import com.mikepenz.itemanimators.AlphaInAnimator
-import com.mikepenz.materialdrawer.holder.DimenHolder
-import com.mikepenz.materialdrawer.holder.ImageHolder
-import com.mikepenz.materialdrawer.holder.StringHolder
-import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
-import com.mikepenz.materialdrawer.model.ProfileDrawerItem
-import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
-import com.mikepenz.materialdrawer.model.SectionDrawerItem
-import com.mikepenz.materialdrawer.model.interfaces.iconDrawable
-import com.mikepenz.materialdrawer.widget.AccountHeaderView
 import kotlinx.android.synthetic.main.fragment_events.*
 import kotlinx.android.synthetic.main.item_event.view.*
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
@@ -117,8 +107,8 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val accountHeaderView = createAccountHeader()
-        addSliderItems()
+        val accountHeaderView = createSliderHeader(ef_slider)
+        addSliderItems(ef_slider, 1)
         addSliderNavigation()
 
         viewModelActivityKoin.activeUser.observe(viewLifecycleOwner, Observer {
@@ -197,43 +187,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         })
     }
 
-    private fun createAccountHeader(): AccountHeaderView {
-        return AccountHeaderView(requireContext()).apply {
-            attachToSliderView(ef_slider)
-            height = DimenHolder.fromDp(200)
-            headerBackground = ImageHolder(R.drawable.landscape)
-            addProfile(ProfileDrawerItem(), 0)
-            selectionListEnabledForSingleProfile = false
-        }
-    }
-
-    private fun addSliderItems() {
-        ef_slider.itemAdapter.add(
-            PrimaryDrawerItem().apply {
-                identifier = 1
-                name = StringHolder(getString(R.string.drawer_events))
-                isSelected = true
-                isEnabled = false
-                iconDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_event)!!
-            },
-            PrimaryDrawerItem().apply {
-                identifier = 2
-                name = StringHolder(getString(R.string.drawer_profile))
-                iconDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_person)!!
-            },
-            SectionDrawerItem().apply {
-                name = StringHolder(getString(R.string.drawer_more))
-            },
-            SecondaryDrawerItem().apply {
-                identifier = 3
-                name = StringHolder(getString(R.string.drawer_logout))
-                iconDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_logout)!!
-            }
-        )
-    }
-
     private fun addSliderNavigation() {
-        ef_slider.closeOnClick = true
         ef_slider.onDrawerItemClickListener = { _, item, _ ->
             when (item.identifier) {
                 2L -> findNavController().navigate(R.id.profileFragment)
