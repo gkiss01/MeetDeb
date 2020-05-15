@@ -2,51 +2,26 @@ package com.gkiss01.meetdeb.screens.fragment
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.util.Patterns
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.ActivityViewModel
-import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
-import com.gkiss01.meetdeb.network.ErrorCodes
-import com.gkiss01.meetdeb.network.NavigationCode
+import com.gkiss01.meetdeb.network.Status
 import com.gkiss01.meetdeb.utils.hideKeyboard
 import kotlinx.android.synthetic.main.fragment_login.*
 import okhttp3.Credentials
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class LoginFragment : Fragment(R.layout.fragment_login) {
-    private val activityViewModel: ActivityViewModel by activityViewModels()
-
-    override fun onStart() {
-        super.onStart()
-        EventBus.getDefault().register(this)
-    }
-
-    override fun onStop() {
-        EventBus.getDefault().unregister(this)
-        super.onStop()
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onErrorReceived(errorCode: ErrorCodes) {
-        if (errorCode == ErrorCodes.USER_DISABLED_OR_NOT_VALID) {
-            lf_loginButton.hideProgress(R.string.login_title)
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onNavigationReceived(navigationCode: NavigationCode) {
-        if (navigationCode == NavigationCode.ACTIVE_USER_UPDATED)
-            findNavController().navigate(R.id.eventsFragment)
-    }
+    private val viewModelKoin: ActivityViewModel by sharedViewModel()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         lf_notRegistered.setOnClickListener { findNavController().popBackStack() }
@@ -59,14 +34,27 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             if (isValidEmail && isValidPassword) {
                 val email = lf_email.editText?.text.toString().trim()
                 val password = lf_password.editText?.text.toString().trim()
+                val basic = Credentials.basic(email, password)
 
                 hideKeyboard(requireContext(), view)
-                showAnimation()
 
-                //activityViewModel.tempPassword = password
-                //MainActivity.instance.checkUser(Credentials.basic(email, password))
+                viewModelKoin.getCurrentUser(basic)
             }
         }
+
+        viewModelKoin.activeUser.observe(viewLifecycleOwner, Observer {
+            when (it.status) {
+                Status.SUCCESS -> findNavController().navigate(R.id.eventsFragment)
+                Status.ERROR -> {
+                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+                    lf_loginButton.hideProgress(R.string.login_title)
+                }
+                Status.LOADING -> {
+                    Log.d("MeetDebLog_LoginFragment", "User is loading...")
+                    showAnimation()
+                }
+            }
+        })
     }
 
     private fun validateEmail(): Boolean {

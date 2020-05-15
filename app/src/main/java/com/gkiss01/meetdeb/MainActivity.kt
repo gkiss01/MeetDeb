@@ -4,16 +4,13 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.findNavController
 import com.gkiss01.meetdeb.data.*
 import com.gkiss01.meetdeb.data.adapterrequest.DeleteDateRequest
 import com.gkiss01.meetdeb.data.adapterrequest.DeleteEventRequest
 import com.gkiss01.meetdeb.data.adapterrequest.DeleteUserRequest
 import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.NavigationCode
-import com.gkiss01.meetdeb.network.Status
 import com.gkiss01.meetdeb.network.TargetVar
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.launch
@@ -32,17 +29,6 @@ class MainActivity : AppCompatActivity() {
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        viewModelKoin.activeUser.observe(this, Observer {
-            when (it.status) {
-                Status.SUCCESS -> findNavController(R.id.nav_host_fragment).navigate(R.id.eventsFragment)
-                Status.ERROR -> {
-                    Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
-                    findNavController(R.id.nav_host_fragment).navigate(R.id.registerFragment)
-                }
-                Status.LOADING -> Log.d("MainActivity", "User is loading...")
-            }
-        })
     }
 
     companion object {
@@ -108,10 +94,6 @@ class MainActivity : AppCompatActivity() {
             //makeRequest(dataProvider.deleteParticipantAsync(viewModelKoin.basic, eventId), TargetVar.VAR_DELETE_PARTICIPANT)
         //else
             //makeRequest(dataProvider.createParticipantAsync(viewModelKoin.basic, eventId), TargetVar.VAR_CREATE_PARTICIPANT)
-    }
-
-    fun createUser(user: RequestBody) {
-        //makeRequest(WebApi.retrofitService.createUserAsync(user), TargetVar.VAR_CREATE_USER)
     }
 
     fun updateUser(auth: String, user: RequestBody) {

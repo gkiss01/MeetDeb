@@ -30,7 +30,7 @@ interface DataProvider {
     suspend fun getParticipantsAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): GenericResponse
 
     @POST("users")
-    suspend fun createUserAsync(@Body user: RequestBody): GenericResponse
+    suspend fun createUserAsync(@Body user: RequestBody): User
 
     @Multipart
     @POST("events")

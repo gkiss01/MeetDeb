@@ -3,57 +3,26 @@ package com.gkiss01.meetdeb.screens.fragment
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.util.Patterns
 import android.view.View
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
-import com.gkiss01.meetdeb.MainActivity
+import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
-import com.gkiss01.meetdeb.data.apirequest.UserRequest
-import com.gkiss01.meetdeb.data.apirequest.UserRequestType
-import com.gkiss01.meetdeb.network.ErrorCodes
-import com.gkiss01.meetdeb.network.NavigationCode
+import com.gkiss01.meetdeb.network.Status
 import com.gkiss01.meetdeb.utils.hideKeyboard
-import com.squareup.moshi.Moshi
 import kotlinx.android.synthetic.main.fragment_register.*
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody.Companion.toRequestBody
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
-import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class RegisterFragment : Fragment(R.layout.fragment_register) {
-    private val moshi: Moshi by inject()
-
-    override fun onStart() {
-        super.onStart()
-        EventBus.getDefault().register(this)
-    }
-
-    override fun onStop() {
-        EventBus.getDefault().unregister(this)
-        super.onStop()
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onErrorReceived(errorCode: ErrorCodes) {
-        if (errorCode == ErrorCodes.EMAIL_ALREADY_IN_USE || errorCode == ErrorCodes.BAD_REQUEST_FORMAT) {
-            rf_registerButton.hideProgress(R.string.register_title)
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onNavigationReceived(navigationCode: NavigationCode) {
-        if (navigationCode == NavigationCode.NAVIGATE_TO_LOGIN_FRAGMENT) {
-            rf_registerButton.hideProgress(R.string.done)
-            Handler().postDelayed({ findNavController().navigate(R.id.loginFragment) }, 500)
-        }
-    }
+    private val viewModelKoin: ActivityViewModel by sharedViewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,14 +47,27 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
                 val name = rf_name.editText?.text.toString().trim()
 
                 hideKeyboard(requireContext(), view)
-                showAnimation()
 
-                val userRequest = UserRequest(email, password, name, UserRequestType.Create.ordinal)
-                val json = moshi.adapter(UserRequest::class.java).toJson(userRequest)
-                val user = json.toRequestBody("application/json".toMediaTypeOrNull())
-                MainActivity.instance.createUser(user)
+                viewModelKoin.createUser(email, password, name)
             }
         }
+
+        viewModelKoin.activeUser.observe(viewLifecycleOwner, Observer {
+            when (it.status) {
+                Status.SUCCESS -> {
+                    rf_registerButton.hideProgress(R.string.done)
+                    Handler().postDelayed({ findNavController().navigate(R.id.loginFragment) }, 500)
+                }
+                Status.ERROR -> {
+                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+                    rf_registerButton.hideProgress(R.string.register_title)
+                }
+                Status.LOADING -> {
+                    Log.d("MeetDebLog_RegisterFragment", "Creating user...")
+                    showAnimation()
+                }
+            }
+        })
     }
 
     private fun validateEmail(): Boolean {
