@@ -1,28 +1,58 @@
 package com.gkiss01.meetdeb.viewmodels
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.gkiss01.meetdeb.MainActivity
+import androidx.lifecycle.*
 import com.gkiss01.meetdeb.data.fastadapter.Date
 import com.gkiss01.meetdeb.data.fastadapter.Event
+import com.gkiss01.meetdeb.network.Resource
+import com.gkiss01.meetdeb.network.RestClient
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import org.koin.dsl.module
+import org.threeten.bp.OffsetDateTime
 
-class DatesViewModel : ViewModel() {
-    val dates = MutableLiveData<List<Date>>()
-    var isLoading = false
+val datesModule = module {
+    factory { (basic: String) -> DatesViewModel(get(), basic) }
+}
+
+class DatesViewModel(private val restClient: RestClient, private val basic: String) : ViewModel() {
+    private var isLoading = false
     lateinit var event: Event
 
-    fun setDates(dateList: List<Date>) {
-        dates.value = dateList
+    private var _dates = MutableLiveData<Resource<List<Date>>>()
+    val dates: LiveData<Resource<List<Date>>>
+        get() = _dates
+
+    fun getDates() {
+        _dates.postValue(Resource.loading(null))
+        viewModelScope.launch {
+            _dates.postValue(restClient.getDatesAsync(basic, event.id))
+        }
     }
 
-    fun deleteDate(dateId: Long) {
-        dates.value = dates.value!!.filterNot { it.id == dateId }
+    fun createDate(date: OffsetDateTime) {
+        _dates.postValue(Resource.loading(null))
+        viewModelScope.launch {
+            _dates.postValue(restClient.createDateAsync(basic, event.id, date))
+        }
+    }
+
+    fun deleteDate(dateId: Long) = liveData(Dispatchers.IO) {
+        emit(Resource.loading(null))
+        emit(restClient.deleteDateAsync(basic, dateId))
     }
 
     fun createVote(dateId: Long) {
-        if (!isLoading) {
-            MainActivity.instance.createVote(dateId)
-            isLoading = true
+        if (isLoading) return
+        isLoading = true
+        viewModelScope.launch {
+            _dates.postValue(restClient.createVoteAsync(basic, dateId))
+            isLoading = false
         }
+    }
+
+    fun isLoadingActive() = this.isLoading
+
+    fun removeDateFromList(dateId: Long) {
+        _dates.postValue(Resource.success(_dates.value?.data?.filterNot { it.id == dateId }))
     }
 }

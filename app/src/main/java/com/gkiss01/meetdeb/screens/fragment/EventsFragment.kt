@@ -157,7 +157,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                     footerAdapter.clear()
                 }
                 Status.LOADING -> {
-                    Log.d("MeetDebLog_EventsFragment", "Events is loading...")
+                    Log.d("MeetDebLog_EventsFragment", "Events are loading...")
                     footerAdapter.clear()
                     footerAdapter.add(ProgressItem())
                 }
@@ -174,14 +174,8 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                     val itemView = ef_eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventViewHolder
                     itemView.showJoinAnimation()
                 }
-                R.id.eli_anotherDateButton -> {
-                    MainActivity.instance.showDates(item.id)
-
-                    findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToDatesDialogFragment(item))
-                }
-                R.id.eli_moreButton -> {
-                    createMoreActionMenu(v, item)
-                }
+                R.id.eli_anotherDateButton -> findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToDatesDialogFragment(item))
+                R.id.eli_moreButton -> createMoreActionMenu(v, item)
             }
         }
 

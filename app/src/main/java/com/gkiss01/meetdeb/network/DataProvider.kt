@@ -1,7 +1,9 @@
 package com.gkiss01.meetdeb.network
 
 import com.gkiss01.meetdeb.data.GenericResponse
+import com.gkiss01.meetdeb.data.SuccessResponse
 import com.gkiss01.meetdeb.data.User
+import com.gkiss01.meetdeb.data.fastadapter.Date
 import com.gkiss01.meetdeb.data.fastadapter.Event
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -25,7 +27,7 @@ interface DataProvider {
     suspend fun removeReportAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): GenericResponse
 
     @GET("dates/{eventId}")
-    suspend fun getDatesAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): GenericResponse
+    suspend fun getDatesAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): List<Date>
 
     @GET("participants/{eventId}")
     suspend fun getParticipantsAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): GenericResponse
@@ -46,16 +48,16 @@ interface DataProvider {
     suspend fun createParticipantAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): GenericResponse
 
     @POST("votes/{dateId}")
-    suspend fun createVoteAsync(@Header("Authorization") auth: String, @Path("dateId") dateId: Long): GenericResponse
+    suspend fun createVoteAsync(@Header("Authorization") auth: String, @Path("dateId") dateId: Long): List<Date>
 
     @POST("dates/{eventId}")
-    suspend fun createDateAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long, @Query("date") date: OffsetDateTime): GenericResponse
+    suspend fun createDateAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long, @Query("date") date: OffsetDateTime): List<Date>
 
     @DELETE("events/{eventId}")
     suspend fun deleteEventAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): GenericResponse
 
     @DELETE("dates/{dateId}")
-    suspend fun deleteDateAsync(@Header("Authorization") auth: String, @Path("dateId") dateId: Long): GenericResponse
+    suspend fun deleteDateAsync(@Header("Authorization") auth: String, @Path("dateId") dateId: Long): SuccessResponse<Long>
 
     @DELETE("participants/{eventId}")
     suspend fun deleteParticipantAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): GenericResponse
