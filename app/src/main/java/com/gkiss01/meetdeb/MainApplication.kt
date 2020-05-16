@@ -4,6 +4,7 @@ import android.app.Application
 import com.gkiss01.meetdeb.network.networkModule
 import com.gkiss01.meetdeb.network.restModule
 import com.gkiss01.meetdeb.viewmodels.createModule
+import com.gkiss01.meetdeb.viewmodels.eventsModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -15,7 +16,7 @@ class MainApplication: Application() {
         startKoin {
             androidLogger()
             androidContext(this@MainApplication)
-            modules(listOf(networkModule, restModule, activityModule, createModule))
+            modules(listOf(networkModule, restModule, activityModule, eventsModule, createModule))
         }
     }
 }

@@ -5,9 +5,9 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -38,10 +38,12 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 class EventsFragment : Fragment(R.layout.fragment_events) {
-    private val viewModel: EventsViewModel by activityViewModels()
     private val viewModelActivityKoin: ActivityViewModel by sharedViewModel()
+    private val viewModelKoin: EventsViewModel by viewModel { parametersOf(viewModelActivityKoin.getBasic()) }
 
     private val itemAdapter = ItemAdapter<Event>()
     private val footerAdapter = ItemAdapter<ProgressItem>()
@@ -59,17 +61,17 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventReceived(event: Event) {
-        viewModel.updateEvent(event)
+        //viewModelKoin.updateEvent(event)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventsReceived(events: EventList) {
-        viewModel.addEvents(events.events)
+        //viewModelKoin.addEvents(events.events)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onDeleteRequestReceived(request: DeleteEventRequest) {
-        viewModel.deleteEvent(request.eventId)
+        //viewModelKoin.deleteEvent(request.eventId)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -78,7 +80,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         val view = ef_eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventViewHolder
 
         view.showVoteAnimation()
-        viewModel.selectedEvent = request.eventId
+        viewModelKoin.selectedEvent = request.eventId
 
         MainActivity.instance.getEvent(request.eventId)
     }
@@ -86,12 +88,11 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onErrorReceived(errorCode: ErrorCodes) {
         if (errorCode == ErrorCodes.UNKNOWN || errorCode == ErrorCodes.NO_EVENTS_FOUND) {
-            if (viewModel.selectedEvent != Long.MIN_VALUE) {
-                fastAdapter.notifyAdapterItemChanged(itemAdapter.getAdapterPosition(viewModel.selectedEvent))
-                viewModel.selectedEvent = Long.MIN_VALUE
+            if (viewModelKoin.selectedEvent != Long.MIN_VALUE) {
+                fastAdapter.notifyAdapterItemChanged(itemAdapter.getAdapterPosition(viewModelKoin.selectedEvent))
+                viewModelKoin.selectedEvent = Long.MIN_VALUE
             }
-            if (viewModel.isMoreLoading) {
-                viewModel.isMoreLoading = false
+            if (footerAdapter.adapterItemCount != 0) {
                 footerAdapter.clear()
             }
             ef_swipeRefreshLayout.isRefreshing = false
@@ -125,8 +126,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         ef_addActionButton.setOnClickListener{ findNavController().navigate(R.id.createEventFragment) }
 
         ef_swipeRefreshLayout.setOnRefreshListener {
-            if (!viewModel.isMoreLoading)
-                viewModel.refreshEvents()
+            if (footerAdapter.adapterItemCount == 0) viewModelKoin.refreshEvents()
             else ef_swipeRefreshLayout.isRefreshing = false
         }
 
@@ -144,11 +144,25 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         ef_eventsRecyclerView.setItemViewCacheSize(6)
         ef_eventsRecyclerView.itemAnimator = AlphaInAnimator()
 
-        viewModel.events.observe(viewLifecycleOwner, Observer {
-            FastAdapterDiffUtil[itemAdapter] = it
-            ef_swipeRefreshLayout.isRefreshing = false
-            viewModel.isMoreLoading = false // félős
-            footerAdapter.clear()
+        viewModelKoin.events.observe(viewLifecycleOwner, Observer {
+            when (it.status) {
+                Status.SUCCESS -> {
+                    FastAdapterDiffUtil[itemAdapter] = it.data!!
+                    ef_swipeRefreshLayout.isRefreshing = false
+                    footerAdapter.clear()
+                }
+                Status.ERROR -> {
+                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+                    ef_swipeRefreshLayout.isRefreshing = false
+                    footerAdapter.clear()
+                }
+                Status.LOADING -> {
+                    Log.d("MeetDebLog_EventsFragment", "Events is loading...")
+                    footerAdapter.clear()
+                    footerAdapter.add(ProgressItem())
+                }
+                else -> {}
+            }
         })
 
         itemAdapter.fastAdapter!!.addClickListener( {null}, { vh: EventViewHolder -> listOf<View>(vh.itemView.eli_descButton, vh.itemView.eli_acceptButton, vh.itemView.eli_anotherDateButton, vh.itemView.eli_moreButton) }) { v, position, _, item ->
@@ -175,12 +189,9 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
 
-                if (dy > 0 && !viewModel.isMoreLoading) {
+                if (dy > 0 && footerAdapter.adapterItemCount == 0) {
                     if (layoutManager.itemCount <= (layoutManager.findLastVisibleItemPosition() + 1)) {
-                        footerAdapter.clear()
-                        footerAdapter.add(ProgressItem())
-
-                        viewModel.loadMoreEvents()
+                        viewModelKoin.getMoreEvents()
                     }
                 }
             }
