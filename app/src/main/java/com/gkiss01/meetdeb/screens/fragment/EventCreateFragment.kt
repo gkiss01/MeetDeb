@@ -27,7 +27,6 @@ import com.gkiss01.meetdeb.network.BASE_URL
 import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.NavigationCode
 import com.gkiss01.meetdeb.utils.formatDate
-import com.gkiss01.meetdeb.utils.hideKeyboard
 import com.gkiss01.meetdeb.utils.isDate24HourFormat
 import com.gkiss01.meetdeb.utils.updateOffsetDateTime
 import com.gkiss01.meetdeb.viewmodels.CreateEventViewModel
@@ -136,7 +135,7 @@ class EventCreateFragment : Fragment() {
             val isValidDate = validateDate()
 
             if (isValidName && isValidDesc && isValidVenue && isValidDate) {
-                hideKeyboard(requireContext(), view)
+                hideKeyboard()
                 showAnimation()
 
                 viewModelKoin.uploadEvent()

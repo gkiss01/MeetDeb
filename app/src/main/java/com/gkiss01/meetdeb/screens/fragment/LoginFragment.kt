@@ -15,7 +15,6 @@ import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.network.Status
-import com.gkiss01.meetdeb.utils.hideKeyboard
 import kotlinx.android.synthetic.main.fragment_login.*
 import okhttp3.Credentials
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -38,7 +37,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                 password = lf_password.editText?.text.toString().trim()
                 val basic = Credentials.basic(email, password)
 
-                hideKeyboard(requireContext(), view)
+                hideKeyboard()
 
                 viewModelKoin.getCurrentUser(basic)
             }

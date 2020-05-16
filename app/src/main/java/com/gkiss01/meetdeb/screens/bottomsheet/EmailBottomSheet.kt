@@ -19,7 +19,7 @@ import com.gkiss01.meetdeb.data.apirequest.UserRequest
 import com.gkiss01.meetdeb.data.apirequest.UserRequestType
 import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.NavigationCode
-import com.gkiss01.meetdeb.utils.hideKeyboard
+import com.gkiss01.meetdeb.screens.fragment.hideKeyboard
 import com.squareup.moshi.Moshi
 import kotlinx.android.synthetic.main.bottomsheet_profile_email.*
 import okhttp3.Credentials
@@ -72,7 +72,7 @@ class EmailBottomSheet: SuperBottomSheetFragment() {
                 val email = bspe_newEmail.editText?.text.toString().trim()
                 val password = bspe_oldPassword.editText?.text.toString().trim()
 
-                hideKeyboard(requireContext(), view)
+                hideKeyboard()
                 showAnimation()
 
                 val basic = Credentials.basic(activityViewModel.activeUser.value!!.data!!.email, password)

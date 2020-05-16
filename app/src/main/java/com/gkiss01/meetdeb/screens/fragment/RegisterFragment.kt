@@ -1,11 +1,13 @@
 package com.gkiss01.meetdeb.screens.fragment
 
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.util.Patterns
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
@@ -17,7 +19,6 @@ import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.network.Status
-import com.gkiss01.meetdeb.utils.hideKeyboard
 import kotlinx.android.synthetic.main.fragment_register.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
@@ -46,7 +47,7 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
                 val password = rf_password.editText?.text.toString().trim()
                 val name = rf_name.editText?.text.toString().trim()
 
-                hideKeyboard(requireContext(), view)
+                hideKeyboard()
 
                 viewModelKoin.createUser(email, password, name)
             }
@@ -139,4 +140,9 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
             progressColor = Color.WHITE
         }
     }
+}
+
+fun Fragment.hideKeyboard() {
+    val inputMethodManager = this.requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    inputMethodManager.hideSoftInputFromWindow(this.view?.windowToken, 0)
 }

@@ -1,8 +1,6 @@
 package com.gkiss01.meetdeb.utils
 
 import android.content.Context
-import android.view.View
-import android.view.inputmethod.InputMethodManager
 import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.data.Role
 import com.gkiss01.meetdeb.data.User
@@ -17,11 +15,6 @@ fun isActiveUserAdmin() = isActiveUserAdmin(MainActivity.instance.getActiveUser(
 fun setSavedUser(context: Context, username: String, password: String) {
     val sharedPref = context.getSharedPreferences("BASIC_AUTH_PREFS", Context.MODE_PRIVATE)
     sharedPref.edit().putString("OPTION_EMAIL", username).putString("OPTION_PASSWORD", password).apply()
-}
-
-fun hideKeyboard(context: Context, view: View) {
-    val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-    inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
 }
 
 fun formatDate(offsetDateTime: OffsetDateTime): String = offsetDateTime.format(dateFormatter)
