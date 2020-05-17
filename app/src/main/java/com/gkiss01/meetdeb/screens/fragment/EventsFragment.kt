@@ -123,6 +123,10 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             }
         })
 
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Long>("eventId")?.observe(viewLifecycleOwner, Observer {
+            viewModelKoin.updateEvent(it)
+        })
+
         ef_addActionButton.setOnClickListener{ findNavController().navigate(R.id.createEventFragment) }
 
         ef_swipeRefreshLayout.setOnRefreshListener {

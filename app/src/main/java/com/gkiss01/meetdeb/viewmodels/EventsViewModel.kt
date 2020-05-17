@@ -1,5 +1,6 @@
 package com.gkiss01.meetdeb.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -37,6 +38,10 @@ class EventsViewModel(private val restClient: RestClient, private val basic: Str
         viewModelScope.launch {
             _events.postValue(restClient.getEventsAsync(basic, page))
         }
+    }
+
+    fun updateEvent(eventId: Long) {
+        Log.d("MeetDebLog_EventsFragment", "Updating event...")
     }
 
     init {

@@ -1,6 +1,7 @@
 package com.gkiss01.meetdeb.screens.dialog
 
 import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,6 +13,7 @@ import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
@@ -144,7 +146,6 @@ class DatesDialogFragment : DialogFragment() {
                 false
             }
         }
-
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -154,14 +155,19 @@ class DatesDialogFragment : DialogFragment() {
     }
 
     override fun onResume() {
-        dialog!!.window!!.setLayout((resources.displayMetrics.widthPixels * 0.9).toInt(), FrameLayout.LayoutParams.WRAP_CONTENT)
+        dialog?.setCanceledOnTouchOutside(false)
+        dialog?.window?.setLayout((resources.displayMetrics.widthPixels * 0.9).toInt(), FrameLayout.LayoutParams.WRAP_CONTENT)
         super.onResume()
     }
 
-//    override fun onDismiss(dialog: DialogInterface) {
-//        super.onDismiss(dialog)
-//        if ((viewModelKoin.dates.value!!.any { it.accepted } && !viewModelKoin.event.voted) ||
-//            (!viewModelKoin.dates.value!!.any { it.accepted } && viewModelKoin.event.voted))
-//            EventBus.getDefault().post(UpdateEventRequest(viewModelKoin.event.id))
-//    }
+    override fun onDismiss(dialog: DialogInterface) {
+        viewModelKoin.dates.value?.data?.let { dates ->
+            if ((dates.any { it.accepted } && !viewModelKoin.event.voted) ||
+                (!dates.any { it.accepted } && viewModelKoin.event.voted)) {
+                findNavController().previousBackStackEntry?.savedStateHandle?.set("eventId", viewModelKoin.event.id)
+
+            }
+        }
+        super.onDismiss(dialog)
+    }
 }
