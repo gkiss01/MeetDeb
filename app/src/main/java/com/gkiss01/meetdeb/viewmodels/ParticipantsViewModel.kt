@@ -1,13 +1,31 @@
 package com.gkiss01.meetdeb.viewmodels
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.gkiss01.meetdeb.data.fastadapter.Event
 import com.gkiss01.meetdeb.data.fastadapter.Participant
+import com.gkiss01.meetdeb.network.Resource
+import com.gkiss01.meetdeb.network.RestClient
+import kotlinx.coroutines.launch
+import org.koin.dsl.module
 
-class ParticipantsViewModel : ViewModel() {
-    val participants = MutableLiveData<List<Participant>>()
+val participantsModule = module {
+    factory { (basic: String) -> ParticipantsViewModel(get(), basic) }
+}
 
-    fun setParticipants(participantList: List<Participant>) {
-        participants.value = participantList
+class ParticipantsViewModel(private val restClient: RestClient, private val basic: String) : ViewModel() {
+    lateinit var event: Event
+
+    private var _participants = MutableLiveData<Resource<List<Participant>>>()
+    val participants: LiveData<Resource<List<Participant>>>
+        get() = _participants
+
+    fun getParticipants() {
+        _participants.postValue(Resource.loading(null))
+        viewModelScope.launch {
+            _participants.postValue(restClient.getParticipantsAsync(basic, event.id))
+        }
     }
 }

@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.andrefrsousa.superbottomsheet.SuperBottomSheetFragment
-import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.fastadapter.Event
 import com.gkiss01.meetdeb.utils.formatDate
@@ -28,11 +27,7 @@ class DetailsBottomSheet: SuperBottomSheetFragment() {
         dfbs_descriptionValue.text = event.description
         dfbs_participants.text = "Ott lesz ${event.participants} ember"
 
-        dfbs_participantsCheck.setOnClickListener {
-            MainActivity.instance.showParticipants(event.id)
-
-            findNavController().navigate(R.id.participantsDialogFragment)
-        }
+        dfbs_participantsCheck.setOnClickListener { findNavController().navigate(DetailsBottomSheetDirections.actionDetailsBottomSheetFragmentToParticipantsDialogFragment(event)) }
     }
 
     override fun getCornerRadius() = requireContext().resources.getDimension(R.dimen.bottomsheet_corner_radius)

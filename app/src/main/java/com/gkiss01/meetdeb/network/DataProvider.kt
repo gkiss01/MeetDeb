@@ -5,6 +5,7 @@ import com.gkiss01.meetdeb.data.SuccessResponse
 import com.gkiss01.meetdeb.data.User
 import com.gkiss01.meetdeb.data.fastadapter.Date
 import com.gkiss01.meetdeb.data.fastadapter.Event
+import com.gkiss01.meetdeb.data.fastadapter.Participant
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.threeten.bp.OffsetDateTime
@@ -30,7 +31,7 @@ interface DataProvider {
     suspend fun getDatesAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): List<Date>
 
     @GET("participants/{eventId}")
-    suspend fun getParticipantsAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): GenericResponse
+    suspend fun getParticipantsAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): List<Participant>
 
     @POST("users")
     suspend fun createUserAsync(@Body user: RequestBody): User

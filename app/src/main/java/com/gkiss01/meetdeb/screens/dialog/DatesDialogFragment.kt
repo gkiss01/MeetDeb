@@ -165,7 +165,6 @@ class DatesDialogFragment : DialogFragment() {
             if ((dates.any { it.accepted } && !viewModelKoin.event.voted) ||
                 (!dates.any { it.accepted } && viewModelKoin.event.voted)) {
                 findNavController().previousBackStackEntry?.savedStateHandle?.set("eventId", viewModelKoin.event.id)
-
             }
         }
         super.onDismiss(dialog)
