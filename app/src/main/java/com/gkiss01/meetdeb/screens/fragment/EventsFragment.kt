@@ -16,9 +16,10 @@ import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.adapter.EventViewHolder
-import com.gkiss01.meetdeb.data.adapterrequest.DeleteEventRequest
+import com.gkiss01.meetdeb.data.SuccessResponse
 import com.gkiss01.meetdeb.data.fastadapter.Event
 import com.gkiss01.meetdeb.data.isAdmin
+import com.gkiss01.meetdeb.network.Resource
 import com.gkiss01.meetdeb.network.Status
 import com.gkiss01.meetdeb.viewmodels.EventsViewModel
 import com.mikepenz.fastadapter.FastAdapter
@@ -31,8 +32,6 @@ import com.mikepenz.itemanimators.AlphaInAnimator
 import kotlinx.android.synthetic.main.fragment_events.*
 import kotlinx.android.synthetic.main.item_event.view.*
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -44,11 +43,6 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
     private val itemAdapter = ItemAdapter<Event>()
     private val footerAdapter = ItemAdapter<ProgressItem>()
     private lateinit var fastAdapter: GenericFastAdapter
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onDeleteRequestReceived(request: DeleteEventRequest) {
-        //viewModelKoin.deleteEvent(request.eventId)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -141,6 +135,15 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             }
         })
 
+        val deleteObserver = Observer<Resource<SuccessResponse<Long>>> {
+            when (it.status) {
+                Status.SUCCESS -> it.data?.withId?.let { eventId -> viewModelKoin.removeEventFromList(eventId) }
+                Status.ERROR -> Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+                Status.LOADING -> Log.d("MeetDebLog_EventsFragment", "Deleting event...")
+                else -> {}
+            }
+        }
+
         itemAdapter.fastAdapter!!.addClickListener( {null}, { vh: EventViewHolder -> listOf<View>(vh.itemView.eli_descButton, vh.itemView.eli_acceptButton, vh.itemView.eli_anotherDateButton, vh.itemView.eli_moreButton) }) { v, position, _, item ->
             when (v.id) {
                 R.id.eli_descButton -> findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToDetailsBottomSheetFragment(item))
@@ -152,7 +155,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                     viewModelKoin.modifyParticipation(item.id)
                 }
                 R.id.eli_anotherDateButton -> findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToDatesDialogFragment(item))
-                R.id.eli_moreButton -> createMoreActionMenu(v, item)
+                R.id.eli_moreButton -> createMoreActionMenu(v, item, deleteObserver)
             }
         }
 
@@ -179,7 +182,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         }
     }
 
-    private fun createMoreActionMenu(view: View, event: Event) {
+    private fun createMoreActionMenu(view: View, event: Event, deleteObserver: Observer<Resource<SuccessResponse<Long>>>) {
         viewModelActivityKoin.activeUser.value?.data?.let {
             PopupMenu(context, view).apply {
                 if (it.isAdmin()) {
@@ -200,8 +203,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                             MainActivity.instance.reportEvent(event.id)
                         R.id.removeReport ->
                             MainActivity.instance.removeReport(event.id)
-                        R.id.delete ->
-                            MainActivity.instance.deleteEvent(event.id)
+                        R.id.delete -> viewModelKoin.deleteEvent(event.id).observe(viewLifecycleOwner, deleteObserver)
                         R.id.update -> findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToCreateEventFragment(event))
                     }
                     true

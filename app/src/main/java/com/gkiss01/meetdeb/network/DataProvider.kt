@@ -1,6 +1,5 @@
 package com.gkiss01.meetdeb.network
 
-import com.gkiss01.meetdeb.data.GenericResponse
 import com.gkiss01.meetdeb.data.SuccessResponse
 import com.gkiss01.meetdeb.data.User
 import com.gkiss01.meetdeb.data.fastadapter.Date
@@ -22,10 +21,10 @@ interface DataProvider {
     suspend fun getEventsAsync(@Header("Authorization") auth: String, @Query("page") page: Int): List<Event>
 
     @GET("events/reports-add/{eventId}")
-    suspend fun reportEventAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): GenericResponse
+    suspend fun reportEventAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): SuccessResponse<Long>
 
     @GET("events/reports-remove/{eventId}")
-    suspend fun removeReportAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): GenericResponse
+    suspend fun removeReportAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): SuccessResponse<Long>
 
     @GET("dates/{eventId}")
     suspend fun getDatesAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): List<Date>
@@ -39,11 +38,11 @@ interface DataProvider {
     @Multipart
     @POST("events")
     suspend fun createEventAsync(@Header("Authorization") auth: String, @Part("event") event: RequestBody,
-                         @Part file: MultipartBody.Part?): GenericResponse
+                         @Part file: MultipartBody.Part?): Event
 
     @Multipart
     @POST("events/update/{eventId}")
-    suspend fun updateEventAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long, @Part("event") event: RequestBody): GenericResponse
+    suspend fun updateEventAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long, @Part("event") event: RequestBody): Event
 
     @POST("participants/{eventId}")
     suspend fun modifyParticipation(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): Event
@@ -55,13 +54,13 @@ interface DataProvider {
     suspend fun createDateAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long, @Query("date") date: OffsetDateTime): List<Date>
 
     @DELETE("events/{eventId}")
-    suspend fun deleteEventAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): GenericResponse
+    suspend fun deleteEventAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): SuccessResponse<Long>
 
     @DELETE("dates/{dateId}")
     suspend fun deleteDateAsync(@Header("Authorization") auth: String, @Path("dateId") dateId: Long): SuccessResponse<Long>
 
     @DELETE("users/{userId}")
-    suspend fun deleteUserAsync(@Header("Authorization") auth: String, @Path("userId") userId: Long): GenericResponse
+    suspend fun deleteUserAsync(@Header("Authorization") auth: String, @Path("userId") userId: Long): SuccessResponse<Long>
 
 //    @Multipart
 //    @POST("images/{eventId}")

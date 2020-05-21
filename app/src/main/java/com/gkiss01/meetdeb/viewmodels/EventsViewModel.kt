@@ -1,12 +1,10 @@
 package com.gkiss01.meetdeb.viewmodels
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.gkiss01.meetdeb.data.fastadapter.Event
 import com.gkiss01.meetdeb.network.Resource
 import com.gkiss01.meetdeb.network.RestClient
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.dsl.module
 
@@ -55,6 +53,11 @@ class EventsViewModel(private val restClient: RestClient, private val basic: Str
         viewModelScope.launch {
             _event.postValue(restClient.modifyParticipation(basic, eventId))
         }
+    }
+
+    fun deleteEvent(eventId: Long) = liveData(Dispatchers.IO) {
+        emit(Resource.loading(null))
+        emit(restClient.deleteEventAsync(basic, eventId))
     }
 
     fun resetLiveData() {
