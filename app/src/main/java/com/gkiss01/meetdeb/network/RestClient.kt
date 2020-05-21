@@ -31,7 +31,7 @@ class RestClient(private val dataProvider: DataProvider, private val resourceHan
 
     suspend fun updateEventAsync(auth: String, eventId: Long, event: RequestBody) = handleRequest { dataProvider.updateEventAsync(auth, eventId, event) }
     
-    suspend fun createParticipantAsync(auth: String, eventId: Long) = handleRequest { dataProvider.createParticipantAsync(auth, eventId) }
+    suspend fun modifyParticipation(auth: String, eventId: Long) = handleRequest { dataProvider.modifyParticipation(auth, eventId) }
     
     suspend fun createVoteAsync(auth: String, dateId: Long) = handleRequest { dataProvider.createVoteAsync(auth, dateId) }
     
@@ -40,8 +40,6 @@ class RestClient(private val dataProvider: DataProvider, private val resourceHan
     suspend fun deleteEventAsync(auth: String, eventId: Long) = handleRequest { dataProvider.deleteEventAsync(auth, eventId) }
 
     suspend fun deleteDateAsync(auth: String, dateId: Long) = handleRequest { dataProvider.deleteDateAsync(auth, dateId) }
-
-    suspend fun deleteParticipantAsync(auth: String, eventId: Long) = handleRequest { dataProvider.deleteParticipantAsync(auth, eventId) }
 
     suspend fun deleteUserAsync(auth: String, userId: Long) = handleRequest { dataProvider.deleteUserAsync(auth, userId) }
 

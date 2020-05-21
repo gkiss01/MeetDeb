@@ -46,7 +46,7 @@ interface DataProvider {
     suspend fun updateEventAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long, @Part("event") event: RequestBody): GenericResponse
 
     @POST("participants/{eventId}")
-    suspend fun createParticipantAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): GenericResponse
+    suspend fun modifyParticipation(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): Event
 
     @POST("votes/{dateId}")
     suspend fun createVoteAsync(@Header("Authorization") auth: String, @Path("dateId") dateId: Long): List<Date>
@@ -59,9 +59,6 @@ interface DataProvider {
 
     @DELETE("dates/{dateId}")
     suspend fun deleteDateAsync(@Header("Authorization") auth: String, @Path("dateId") dateId: Long): SuccessResponse<Long>
-
-    @DELETE("participants/{eventId}")
-    suspend fun deleteParticipantAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): GenericResponse
 
     @DELETE("users/{userId}")
     suspend fun deleteUserAsync(@Header("Authorization") auth: String, @Path("userId") userId: Long): GenericResponse

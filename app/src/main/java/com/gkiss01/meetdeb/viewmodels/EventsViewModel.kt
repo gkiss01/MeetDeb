@@ -1,6 +1,5 @@
 package com.gkiss01.meetdeb.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,6 +17,10 @@ val eventsModule = module {
 class EventsViewModel(private val restClient: RestClient, private val basic: String) : ViewModel() {
     var selectedEvent = Long.MIN_VALUE
     private var currentPage: Int = 1
+
+    private var _event = MutableLiveData<Resource<Event>>()
+    val event: LiveData<Resource<Event>>
+        get() = _event
 
     private var _events = MutableLiveData<Resource<List<Event>>>()
     val events: LiveData<Resource<List<Event>>>
@@ -41,7 +44,22 @@ class EventsViewModel(private val restClient: RestClient, private val basic: Str
     }
 
     fun updateEvent(eventId: Long) {
-        Log.d("MeetDebLog_EventsFragment", "Updating event...")
+        _event.postValue(Resource.loading(null))
+        viewModelScope.launch {
+            _event.postValue(restClient.getEventAsync(basic, eventId))
+        }
+    }
+
+    fun modifyParticipation(eventId: Long) {
+        _event.postValue(Resource.loading(null))
+        viewModelScope.launch {
+            _event.postValue(restClient.modifyParticipation(basic, eventId))
+        }
+    }
+
+    fun resetLiveData() {
+        selectedEvent = Long.MIN_VALUE
+        _event.postValue(Resource.pending(null))
     }
 
     init {
@@ -53,11 +71,12 @@ class EventsViewModel(private val restClient: RestClient, private val basic: Str
 //        else events.value = eventList
 //    }
 //
-//    fun updateEvent(event: Event) {
-//        events.value = events.value!!.map { if (it.id == event.id) event else it }
-//    }
-//
-//    fun deleteEvent(eventId: Long) {
-//        events.value = events.value!!.filterNot { it.id == eventId }
-//    }
+
+    fun updateEventInList(event: Event) {
+        _events.postValue(Resource.success(_events.value?.data?.map { if (it.id == event.id) event else it }))
+    }
+
+    fun removeEventFromList(eventId: Long) {
+        _events.postValue(Resource.success(_events.value?.data?.filterNot { it.id == eventId }))
+    }
 }

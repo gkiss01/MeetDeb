@@ -16,12 +16,9 @@ import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.adapter.EventViewHolder
-import com.gkiss01.meetdeb.data.EventList
 import com.gkiss01.meetdeb.data.adapterrequest.DeleteEventRequest
-import com.gkiss01.meetdeb.data.adapterrequest.UpdateEventRequest
 import com.gkiss01.meetdeb.data.fastadapter.Event
 import com.gkiss01.meetdeb.data.isAdmin
-import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.Status
 import com.gkiss01.meetdeb.viewmodels.EventsViewModel
 import com.mikepenz.fastadapter.FastAdapter
@@ -34,7 +31,6 @@ import com.mikepenz.itemanimators.AlphaInAnimator
 import kotlinx.android.synthetic.main.fragment_events.*
 import kotlinx.android.synthetic.main.item_event.view.*
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
-import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -49,54 +45,9 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
     private val footerAdapter = ItemAdapter<ProgressItem>()
     private lateinit var fastAdapter: GenericFastAdapter
 
-    override fun onStart() {
-        super.onStart()
-        EventBus.getDefault().register(this)
-    }
-
-    override fun onStop() {
-        EventBus.getDefault().unregister(this)
-        super.onStop()
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onEventReceived(event: Event) {
-        //viewModelKoin.updateEvent(event)
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onEventsReceived(events: EventList) {
-        //viewModelKoin.addEvents(events.events)
-    }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onDeleteRequestReceived(request: DeleteEventRequest) {
         //viewModelKoin.deleteEvent(request.eventId)
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onUpdateRequestReceived(request: UpdateEventRequest) {
-        val position = itemAdapter.getAdapterPosition(request.eventId)
-        val view = ef_eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventViewHolder
-
-        view.showVoteAnimation()
-        viewModelKoin.selectedEvent = request.eventId
-
-        MainActivity.instance.getEvent(request.eventId)
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onErrorReceived(errorCode: ErrorCodes) {
-        if (errorCode == ErrorCodes.UNKNOWN || errorCode == ErrorCodes.NO_EVENTS_FOUND) {
-            if (viewModelKoin.selectedEvent != Long.MIN_VALUE) {
-                fastAdapter.notifyAdapterItemChanged(itemAdapter.getAdapterPosition(viewModelKoin.selectedEvent))
-                viewModelKoin.selectedEvent = Long.MIN_VALUE
-            }
-            if (footerAdapter.adapterItemCount != 0) {
-                footerAdapter.clear()
-            }
-            ef_swipeRefreshLayout.isRefreshing = false
-        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -123,8 +74,12 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             }
         })
 
-        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Long>("eventId")?.observe(viewLifecycleOwner, Observer {
-            viewModelKoin.updateEvent(it)
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Long>("eventId")?.observe(viewLifecycleOwner, Observer { eventId ->
+            val itemView = ef_eventsRecyclerView.findViewHolderForAdapterPosition(itemAdapter.getAdapterPosition(eventId)) as? EventViewHolder
+            itemView?.showVoteAnimation()
+
+            viewModelKoin.selectedEvent = eventId
+            viewModelKoin.updateEvent(eventId)
         })
 
         ef_addActionButton.setOnClickListener{ findNavController().navigate(R.id.createEventFragment) }
@@ -147,6 +102,23 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         ef_eventsRecyclerView.setHasFixedSize(true)
         ef_eventsRecyclerView.setItemViewCacheSize(6)
         ef_eventsRecyclerView.itemAnimator = AlphaInAnimator()
+
+        viewModelKoin.event.observe(viewLifecycleOwner, Observer {
+            when (it.status) {
+                Status.SUCCESS -> {
+                    it.data?.let { event -> viewModelKoin.updateEventInList(event) }
+                    viewModelKoin.resetLiveData()
+                }
+                Status.ERROR -> {
+                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+                    if (viewModelKoin.selectedEvent != Long.MIN_VALUE)
+                        fastAdapter.notifyAdapterItemChanged(itemAdapter.getAdapterPosition(viewModelKoin.selectedEvent))
+                    viewModelKoin.resetLiveData()
+                }
+                Status.LOADING -> Log.d("MeetDebLog_EventsFragment", "Updating event...")
+                else -> {}
+            }
+        })
 
         viewModelKoin.events.observe(viewLifecycleOwner, Observer {
             when (it.status) {
@@ -173,10 +145,11 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             when (v.id) {
                 R.id.eli_descButton -> findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToDetailsBottomSheetFragment(item))
                 R.id.eli_acceptButton -> {
-                    MainActivity.instance.modifyParticipation(item.id, item.accepted)
+                    val itemView = ef_eventsRecyclerView.findViewHolderForAdapterPosition(position) as? EventViewHolder
+                    itemView?.showJoinAnimation()
 
-                    val itemView = ef_eventsRecyclerView.findViewHolderForAdapterPosition(position) as EventViewHolder
-                    itemView.showJoinAnimation()
+                    viewModelKoin.selectedEvent = item.id
+                    viewModelKoin.modifyParticipation(item.id)
                 }
                 R.id.eli_anotherDateButton -> findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToDatesDialogFragment(item))
                 R.id.eli_moreButton -> createMoreActionMenu(v, item)
