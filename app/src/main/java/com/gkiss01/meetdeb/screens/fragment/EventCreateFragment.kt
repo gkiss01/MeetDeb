@@ -9,6 +9,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,16 +21,16 @@ import androidx.navigation.fragment.findNavController
 import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
+import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.fastadapter.Event
 import com.gkiss01.meetdeb.databinding.FragmentEventCreateBinding
 import com.gkiss01.meetdeb.network.BASE_URL
-import com.gkiss01.meetdeb.network.ErrorCodes
-import com.gkiss01.meetdeb.network.NavigationCode
+import com.gkiss01.meetdeb.network.Status
 import com.gkiss01.meetdeb.utils.formatDate
 import com.gkiss01.meetdeb.utils.isDate24HourFormat
 import com.gkiss01.meetdeb.utils.updateOffsetDateTime
-import com.gkiss01.meetdeb.viewmodels.CreateEventViewModel
+import com.gkiss01.meetdeb.viewmodels.EventCreateViewModel
 import com.gkiss01.meetdeb.viewmodels.ScreenType
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
@@ -41,43 +42,17 @@ import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
 import com.zhihu.matisse.engine.impl.GlideEngine
 import kotlinx.android.synthetic.main.fragment_event_create.*
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 import org.threeten.bp.OffsetDateTime
 
 class EventCreateFragment : Fragment() {
     private lateinit var binding: FragmentEventCreateBinding
-    private val viewModelKoin: CreateEventViewModel by viewModel()
+    private val viewModelActivityKoin: ActivityViewModel by sharedViewModel()
+    private val viewModelKoin: EventCreateViewModel by viewModel { parametersOf(viewModelActivityKoin.getBasic()) }
 
     private val REQUEST_CODE_PICK_IMAGE = 1
-
-    override fun onStart() {
-        super.onStart()
-        EventBus.getDefault().register(this)
-    }
-
-    override fun onStop() {
-        EventBus.getDefault().unregister(this)
-        super.onStop()
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onErrorReceived(errorCode: ErrorCodes) {
-        if (errorCode == ErrorCodes.UNKNOWN) {
-            cef_createButton.hideProgress(if (viewModelKoin.type.value == ScreenType.NEW) R.string.event_create_button else R.string.event_more_update)
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onNavigationReceived(navigationCode: NavigationCode) {
-        if (navigationCode == NavigationCode.NAVIGATE_TO_EVENTS_FRAGMENT) {
-            cef_createButton.hideProgress(R.string.done)
-            Handler().postDelayed({ findNavController().popBackStack(R.id.eventsFragment, false) }, 500)
-        }
-        else if (navigationCode == NavigationCode.NAVIGATE_TO_IMAGE_PICKER) showImagePicker()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -88,33 +63,37 @@ class EventCreateFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val argEvent = arguments?.getSerializable("event") as Event?
+        val argEvent = requireArguments().getSerializable("event") as Event?
         if (viewModelKoin.type.value == ScreenType.NONE) {
             if (argEvent != null) {
                 viewModelKoin.type.value = ScreenType.UPDATE
-                viewModelKoin.event = argEvent
+                viewModelKoin.eventLocal = argEvent
             } else viewModelKoin.type.value = ScreenType.NEW
         }
 
-        binding.event = viewModelKoin.event
+        binding.event = viewModelKoin.eventLocal
         Picasso.get()
-            .load("$BASE_URL/images/${viewModelKoin.event.id}")
+            .load("$BASE_URL/images/${viewModelKoin.eventLocal.id}")
             .placeholder(R.drawable.placeholder)
             .into(cef_imagePreview)
 
+        val onDateListener = DatePickerDialog.OnDateSetListener { _, year, monthValue, dayOfMonth ->
+            viewModelKoin.eventLocal.date = updateOffsetDateTime(viewModelKoin.eventLocal.date, year, monthValue + 1, dayOfMonth)
+            cef_dateTitle.text = formatDate(viewModelKoin.eventLocal.date)
+        }
+
+        val onTimeListener = TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
+            viewModelKoin.eventLocal.date = updateOffsetDateTime(viewModelKoin.eventLocal.date, hourOfDay, minute)
+            cef_dateTitle.text = formatDate(viewModelKoin.eventLocal.date)
+        }
+
         cef_dateButton.setOnClickListener {
-            val datePickerDialog = DatePickerDialog(requireContext(), DatePickerDialog.OnDateSetListener { _, year, monthValue, dayOfMonth ->
-                viewModelKoin.event.date = updateOffsetDateTime(viewModelKoin.event.date, year, monthValue + 1, dayOfMonth)
-                cef_dateTitle.text = formatDate(viewModelKoin.event.date)
-            }, viewModelKoin.event.date.year, viewModelKoin.event.date.monthValue - 1, viewModelKoin.event.date.dayOfMonth)
+            val datePickerDialog = DatePickerDialog(requireContext(), onDateListener, viewModelKoin.eventLocal.date.year, viewModelKoin.eventLocal.date.monthValue - 1, viewModelKoin.eventLocal.date.dayOfMonth)
             datePickerDialog.show()
         }
 
         cef_timeButton.setOnClickListener {
-            val timePickerDialog = TimePickerDialog(context, TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
-                viewModelKoin.event.date = updateOffsetDateTime(viewModelKoin.event.date, hourOfDay, minute)
-                cef_dateTitle.text = formatDate(viewModelKoin.event.date)
-            }, viewModelKoin.event.date.hour, viewModelKoin.event.date.minute, isDate24HourFormat(requireContext()))
+            val timePickerDialog = TimePickerDialog(context, onTimeListener, viewModelKoin.eventLocal.date.hour, viewModelKoin.eventLocal.date.minute, isDate24HourFormat(requireContext()))
             timePickerDialog.show()
         }
 
@@ -136,11 +115,29 @@ class EventCreateFragment : Fragment() {
 
             if (isValidName && isValidDesc && isValidVenue && isValidDate) {
                 hideKeyboard()
-                showAnimation()
 
                 viewModelKoin.uploadEvent()
             }
         }
+
+        viewModelKoin.event.observe(viewLifecycleOwner, Observer {
+            when (it.status) {
+                Status.SUCCESS -> {
+                    cef_createButton.hideProgress(R.string.done)
+                    Handler().postDelayed({ findNavController().popBackStack(R.id.eventsFragment, false) }, 500)
+                }
+                Status.ERROR -> {
+                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+                    cef_createButton.hideProgress(if (viewModelKoin.type.value == ScreenType.NEW) R.string.event_create_button else R.string.event_more_update)
+                    viewModelKoin.resetLiveData()
+                }
+                Status.LOADING -> {
+                    Log.d("MeetDebLog_EventCreateFragment", "Creating/updating event...")
+                    showAnimation()
+                }
+                else -> {}
+            }
+        })
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -157,7 +154,7 @@ class EventCreateFragment : Fragment() {
             .withListener(object: MultiplePermissionsListener {
                 override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
                     report?.let {
-                        if(report.areAllPermissionsGranted()) showImagePicker()
+                        if(it.areAllPermissionsGranted()) showImagePicker()
                     }
                 }
                 override fun onPermissionRationaleShouldBeShown(permissions: MutableList<PermissionRequest>?, token: PermissionToken?) {
@@ -181,11 +178,11 @@ class EventCreateFragment : Fragment() {
 
     private fun validateName(): Boolean {
         return when {
-            TextUtils.isEmpty(viewModelKoin.event.name) -> {
+            TextUtils.isEmpty(viewModelKoin.eventLocal.name) -> {
                 cef_name.error = "A mezőt kötelező kitölteni!"
                 false
             }
-            viewModelKoin.event.name.length > 40 -> {
+            viewModelKoin.eventLocal.name.length > 40 -> {
                 cef_name.error = "A név max. 40 karakter lehet!"
                 false
             }
@@ -198,7 +195,7 @@ class EventCreateFragment : Fragment() {
 
     private fun validateDescription(): Boolean {
         return when {
-            TextUtils.isEmpty(viewModelKoin.event.description) -> {
+            TextUtils.isEmpty(viewModelKoin.eventLocal.description) -> {
                 cef_description.error = "A mezőt kötelező kitölteni!"
                 false
             }
@@ -211,7 +208,7 @@ class EventCreateFragment : Fragment() {
 
     private fun validateVenue(): Boolean {
         return when {
-            TextUtils.isEmpty(viewModelKoin.event.venue) -> {
+            TextUtils.isEmpty(viewModelKoin.eventLocal.venue) -> {
                 cef_venue.error = "A mezőt kötelező kitölteni!"
                 false
             }
@@ -224,7 +221,7 @@ class EventCreateFragment : Fragment() {
 
     private fun validateDate(): Boolean {
         return when {
-            viewModelKoin.event.date.isBefore(OffsetDateTime.now()) -> {
+            viewModelKoin.eventLocal.date.isBefore(OffsetDateTime.now()) -> {
                 cef_dateTitle.error = "Jövőbeli dátumot adj meg!"
                 false
             }

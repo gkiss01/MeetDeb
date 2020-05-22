@@ -84,7 +84,8 @@ class EventsViewModel(private val restClient: RestClient, private val basic: Str
     }
 
     fun restoreEventsIfNeeded() {
-        _events.postValue(Resource.success(eventsBackup))
+        if (::eventsBackup.isInitialized) _events.postValue(Resource.success(eventsBackup))
+        else _events.postValue(Resource.success(emptyList()))
     }
 
     init {

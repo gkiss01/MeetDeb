@@ -1,13 +1,17 @@
 package com.gkiss01.meetdeb.viewmodels
 
 import android.app.Application
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.gkiss01.meetdeb.MainActivity
+import androidx.lifecycle.viewModelScope
 import com.gkiss01.meetdeb.data.apirequest.EventRequest
 import com.gkiss01.meetdeb.data.fastadapter.Event
+import com.gkiss01.meetdeb.network.Resource
+import com.gkiss01.meetdeb.network.RestClient
 import com.squareup.moshi.Moshi
 import id.zelory.compressor.Compressor
+import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -24,13 +28,17 @@ enum class ScreenType {
 }
 
 val createModule = module {
-    viewModel { CreateEventViewModel(get(), androidApplication()) }
+    viewModel { (basic: String) -> EventCreateViewModel(get(), basic, get(), androidApplication()) }
 }
 
-class CreateEventViewModel(private val moshi: Moshi, private val application: Application): ViewModel() {
-    var event: Event = Event("", OffsetDateTime.now(), "", "")
+class EventCreateViewModel(private val restClient: RestClient, private val basic: String, private val moshi: Moshi, private val application: Application): ViewModel() {
+    var eventLocal: Event = Event("", OffsetDateTime.now(), "", "")
     var imageUrl: String = ""
     val type = MutableLiveData<ScreenType>()
+
+    private var _event = MutableLiveData<Resource<Event>>()
+    val event: LiveData<Resource<Event>>
+        get() = _event
 
     fun uploadEvent() {
         val file = File(imageUrl)
@@ -42,12 +50,30 @@ class CreateEventViewModel(private val moshi: Moshi, private val application: Ap
             body = MultipartBody.Part.createFormData("file", file.name, requestFile)
         }
 
-        val eventRequest = EventRequest(event.name, event.date, event.venue, event.description)
+        val eventRequest = EventRequest(eventLocal.name, eventLocal.date, eventLocal.venue, eventLocal.description)
         val json = moshi.adapter(EventRequest::class.java).toJson(eventRequest)
         val eventJson: RequestBody = json.toRequestBody("application/json".toMediaTypeOrNull())
 
-        if (type.value == ScreenType.NEW) MainActivity.instance.createEvent(eventJson, body)
-        else MainActivity.instance.updateEvent(event.id, eventJson)
+        if (type.value == ScreenType.NEW) createEvent(eventJson, body)
+        else updateEvent(eventLocal.id, eventJson)
+    }
+
+    private fun createEvent(event: RequestBody, image: MultipartBody.Part?) {
+        _event.postValue(Resource.loading(null))
+        viewModelScope.launch {
+            _event.postValue(restClient.createEventAsync(basic, event, image))
+        }
+    }
+
+    private fun updateEvent(eventId: Long, event: RequestBody) {
+        _event.postValue(Resource.loading(null))
+        viewModelScope.launch {
+            _event.postValue(restClient.updateEventAsync(basic, eventId, event))
+        }
+    }
+
+    fun resetLiveData() {
+        _event.postValue(Resource.pending(null))
     }
 
     init {
