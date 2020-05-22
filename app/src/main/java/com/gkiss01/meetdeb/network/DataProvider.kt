@@ -59,8 +59,8 @@ interface DataProvider {
     @DELETE("dates/{dateId}")
     suspend fun deleteDateAsync(@Header("Authorization") auth: String, @Path("dateId") dateId: Long): SuccessResponse<Long>
 
-    @DELETE("users/{userId}")
-    suspend fun deleteUserAsync(@Header("Authorization") auth: String, @Path("userId") userId: Long): SuccessResponse<Long>
+    @DELETE("users")
+    suspend fun deleteUserAsync(@Header("Authorization") auth: String): SuccessResponse<Long>
 
 //    @Multipart
 //    @POST("images/{eventId}")

@@ -91,7 +91,7 @@ class DatesDialogFragment : DialogFragment() {
                     }
                 }
                 Status.LOADING -> {
-                    Log.d("MeetDebLog_DatesFragment", "Dates are loading...")
+                    Log.d("MeetDebLog_DatesDialogFragment", "Dates are loading...")
                     headerAdapter.clear()
                     headerAdapter.add(ProgressItem())
                 }
@@ -103,7 +103,7 @@ class DatesDialogFragment : DialogFragment() {
             when (it.status) {
                 Status.SUCCESS -> it.data?.withId?.let { dateId -> viewModelKoin.removeDateFromList(dateId) }
                 Status.ERROR -> Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
-                Status.LOADING -> Log.d("MeetDebLog_DatesFragment", "Deleting date...")
+                Status.LOADING -> Log.d("MeetDebLog_DatesDialogFragment", "Deleting date...")
                 else -> {}
             }
         }

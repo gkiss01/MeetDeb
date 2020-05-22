@@ -2,16 +2,14 @@ package com.gkiss01.meetdeb
 
 import android.app.Application
 import android.content.Context
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.gkiss01.meetdeb.data.User
 import com.gkiss01.meetdeb.data.apirequest.UserRequest
 import com.gkiss01.meetdeb.data.apirequest.UserRequestType
 import com.gkiss01.meetdeb.network.Resource
 import com.gkiss01.meetdeb.network.RestClient
 import com.squareup.moshi.Moshi
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.Credentials
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -50,6 +48,11 @@ class ActivityViewModel(private val moshi: Moshi, private val restClient: RestCl
         viewModelScope.launch {
             _activeUser.postValue(restClient.createUserAsync(user))
         }
+    }
+
+    fun deleteUser() = liveData(Dispatchers.IO) {
+        emit(Resource.loading(null))
+        emit(restClient.deleteUserAsync(basic))
     }
 
     fun resetLiveData() {

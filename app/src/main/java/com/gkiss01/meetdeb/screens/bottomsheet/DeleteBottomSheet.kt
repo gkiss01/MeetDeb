@@ -1,58 +1,29 @@
 package com.gkiss01.meetdeb.screens.bottomsheet
 
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
-import androidx.fragment.app.activityViewModels
+import android.widget.Toast
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.andrefrsousa.superbottomsheet.SuperBottomSheetFragment
 import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.ActivityViewModel
-import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
-import com.gkiss01.meetdeb.data.adapterrequest.DeleteUserRequest
-import com.gkiss01.meetdeb.network.ErrorCodes
-import com.gkiss01.meetdeb.utils.setSavedUser
+import com.gkiss01.meetdeb.network.Status
+import com.gkiss01.meetdeb.screens.fragment.SuccessObserver
 import kotlinx.android.synthetic.main.bottomsheet_profile_delete.*
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class DeleteBottomSheet: SuperBottomSheetFragment() {
-    private val activityViewModel: ActivityViewModel by activityViewModels()
-
-    override fun onStart() {
-        super.onStart()
-        EventBus.getDefault().register(this)
-    }
-
-    override fun onStop() {
-        EventBus.getDefault().unregister(this)
-        super.onStop()
-    }
-
-    @Suppress("unused_parameter")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onDeleteRequestReceived(request: DeleteUserRequest) {
-        debsf_deleteButton.hideProgress(R.string.done)
-        Handler().postDelayed({
-            setSavedUser(requireContext(), "", "")
-            //activityViewModel.clear()
-            findNavController().navigate(R.id.registerFragment)
-        }, 500)
-    }
-
-    @Suppress("unused_parameter")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onErrorReceived(errorCode: ErrorCodes) {
-        debsf_deleteButton.hideProgress(R.string.profile_delete_yes)
-    }
+    private val viewModelActivityKoin: ActivityViewModel by sharedViewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
@@ -62,14 +33,41 @@ class DeleteBottomSheet: SuperBottomSheetFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         debsf_cancelButton.setOnClickListener { this.dismiss() }
 
+        viewModelActivityKoin.activeUser.observe(viewLifecycleOwner, Observer {
+            when (it.status) {
+                Status.PENDING -> findNavController().navigate(R.id.registerFragment)
+                else -> {}
+            }
+        })
+
+        val deleteObserver = SuccessObserver {
+            when (it.status) {
+                Status.SUCCESS -> {
+                    debsf_deleteButton.hideProgress(R.string.done)
+                    Handler().postDelayed({ viewModelActivityKoin.resetLiveData() }, 500)
+                }
+                Status.ERROR -> {
+                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+                    debsf_deleteButton.hideProgress(R.string.profile_delete_yes)
+                }
+                Status.LOADING -> {
+                    Log.d("MeetDebLog_DeleteBottomSheet", "Deleting user...")
+                    showAnimation()
+                }
+                else -> {}
+            }
+        }
+
         debsf_deleteButton.attachTextChangeAnimator()
         debsf_deleteButton.setOnClickListener {
-            MainActivity.instance.deleteUser(activityViewModel.activeUser.value!!.data!!.id)
+            viewModelActivityKoin.deleteUser().observe(viewLifecycleOwner, deleteObserver)
+        }
+    }
 
-            debsf_deleteButton.showProgress {
-                buttonTextRes = R.string.profile_delete_yes
-                progressColor = ContextCompat.getColor(requireContext(), R.color.black)
-            }
+    private fun showAnimation() {
+        debsf_deleteButton.showProgress {
+            buttonTextRes = R.string.profile_delete_yes
+            progressColor = Color.BLACK
         }
     }
 

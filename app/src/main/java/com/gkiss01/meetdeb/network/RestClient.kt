@@ -41,7 +41,7 @@ class RestClient(private val dataProvider: DataProvider, private val resourceHan
 
     suspend fun deleteDateAsync(auth: String, dateId: Long) = handleRequest { dataProvider.deleteDateAsync(auth, dateId) }
 
-    suspend fun deleteUserAsync(auth: String, userId: Long) = handleRequest { dataProvider.deleteUserAsync(auth, userId) }
+    suspend fun deleteUserAsync(auth: String) = handleRequest { dataProvider.deleteUserAsync(auth) }
 
     private suspend fun <T: Any> handleRequest(requestFunc: suspend () -> T): Resource<T> {
         return try {

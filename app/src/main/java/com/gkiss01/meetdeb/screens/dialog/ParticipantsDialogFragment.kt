@@ -67,7 +67,7 @@ class ParticipantsDialogFragment : DialogFragment() {
                     headerAdapter.clear()
                 }
                 Status.LOADING -> {
-                    Log.d("MeetDebLog_ParticipantsFragment", "Participants are loading...")
+                    Log.d("MeetDebLog_ParticipantsDialogFragment", "Participants are loading...")
                     headerAdapter.clear()
                     headerAdapter.add(ProgressItem())
                 }
