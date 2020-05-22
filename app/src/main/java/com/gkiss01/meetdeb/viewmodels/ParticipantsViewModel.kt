@@ -17,6 +17,7 @@ val participantsModule = module {
 
 class ParticipantsViewModel(private val restClient: RestClient, private val basic: String) : ViewModel() {
     lateinit var event: Event
+    fun isEventInitialized() = ::event.isInitialized
 
     private var _participants = MutableLiveData<Resource<List<Participant>>>()
     val participants: LiveData<Resource<List<Participant>>>

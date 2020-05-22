@@ -42,8 +42,10 @@ class ParticipantsDialogFragment : DialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewModelKoin.event = requireArguments().getSerializable("event") as Event
-        viewModelKoin.getParticipants()
+        if (!viewModelKoin.isEventInitialized()) {
+            viewModelKoin.event = requireArguments().getSerializable("event") as Event
+            viewModelKoin.getParticipants()
+        }
 
         fastAdapter = FastAdapter.with(listOf(headerAdapter, itemAdapter))
         fastAdapter.attachDefaultListeners = false

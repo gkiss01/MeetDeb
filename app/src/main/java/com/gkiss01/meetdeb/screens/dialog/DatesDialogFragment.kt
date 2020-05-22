@@ -19,13 +19,12 @@ import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.adapter.DatePickerViewHolder
 import com.gkiss01.meetdeb.adapter.DateViewHolder
-import com.gkiss01.meetdeb.data.SuccessResponse
 import com.gkiss01.meetdeb.data.fastadapter.Date
 import com.gkiss01.meetdeb.data.fastadapter.DatePickerItem
 import com.gkiss01.meetdeb.data.fastadapter.Event
 import com.gkiss01.meetdeb.data.isAdmin
-import com.gkiss01.meetdeb.network.Resource
 import com.gkiss01.meetdeb.network.Status
+import com.gkiss01.meetdeb.screens.fragment.SuccessObserver
 import com.gkiss01.meetdeb.utils.isActiveUserAdmin
 import com.gkiss01.meetdeb.viewmodels.DatesViewModel
 import com.mikepenz.fastadapter.FastAdapter
@@ -58,8 +57,10 @@ class DatesDialogFragment : DialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewModelKoin.event = requireArguments().getSerializable("event") as Event
-        viewModelKoin.getDates()
+        if (!viewModelKoin.isEventInitialized()) {
+            viewModelKoin.event = requireArguments().getSerializable("event") as Event
+            viewModelKoin.getDates()
+        }
 
         fastAdapter = FastAdapter.with(listOf(headerAdapter, itemAdapter, footerAdapter))
         if (!isActiveUserAdmin()) fastAdapter.attachDefaultListeners = false
@@ -98,7 +99,7 @@ class DatesDialogFragment : DialogFragment() {
             }
         })
 
-        val deleteObserver = Observer<Resource<SuccessResponse<Long>>> {
+        val deleteObserver = SuccessObserver {
             when (it.status) {
                 Status.SUCCESS -> it.data?.withId?.let { dateId -> viewModelKoin.removeDateFromList(dateId) }
                 Status.ERROR -> Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()

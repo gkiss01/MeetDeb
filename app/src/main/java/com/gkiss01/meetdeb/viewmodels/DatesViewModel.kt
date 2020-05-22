@@ -17,6 +17,7 @@ val datesModule = module {
 class DatesViewModel(private val restClient: RestClient, private val basic: String) : ViewModel() {
     private var isLoading = false
     lateinit var event: Event
+    fun isEventInitialized() = ::event.isInitialized
 
     private var _dates = MutableLiveData<Resource<List<Date>>>()
     val dates: LiveData<Resource<List<Date>>>
