@@ -126,6 +126,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
                     ef_swipeRefreshLayout.isRefreshing = false
                     footerAdapter.clear()
+                    viewModelKoin.restoreEventsIfNeeded()
                 }
                 Status.LOADING -> {
                     Log.d("MeetDebLog_EventsFragment", "Events are loading...")

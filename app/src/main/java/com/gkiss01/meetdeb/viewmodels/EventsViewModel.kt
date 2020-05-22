@@ -15,6 +15,7 @@ val eventsModule = module {
 class EventsViewModel(private val restClient: RestClient, private val basic: String) : ViewModel() {
     var selectedEvent = Long.MIN_VALUE
     private var currentPage: Int = 1
+    private lateinit var eventsBackup: List<Event>
 
     private var _event = MutableLiveData<Resource<Event>>()
     val event: LiveData<Resource<Event>>
@@ -36,6 +37,7 @@ class EventsViewModel(private val restClient: RestClient, private val basic: Str
 
     private fun getEvents(page: Int) {
         _events.postValue(Resource.loading(null))
+        backupEvents()
         viewModelScope.launch {
             _events.postValue(restClient.getEventsAsync(basic, page))
         }
@@ -73,6 +75,16 @@ class EventsViewModel(private val restClient: RestClient, private val basic: Str
     fun resetLiveData() {
         selectedEvent = Long.MIN_VALUE
         _event.postValue(Resource.pending(null))
+    }
+
+    private fun backupEvents() {
+        events.value?.data?.let {
+            eventsBackup = it
+        }
+    }
+
+    fun restoreEventsIfNeeded() {
+        _events.postValue(Resource.success(eventsBackup))
     }
 
     init {
