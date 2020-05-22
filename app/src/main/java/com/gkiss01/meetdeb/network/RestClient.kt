@@ -17,9 +17,9 @@ class RestClient(private val dataProvider: DataProvider, private val resourceHan
     
     suspend fun getEventsAsync(auth: String, page: Int) = handleRequest { dataProvider.getEventsAsync(auth, page) }
     
-    suspend fun reportEventAsync(auth: String, eventId: Long) = handleRequest { dataProvider.reportEventAsync(auth, eventId) }
+    suspend fun createReportAsync(auth: String, eventId: Long) = handleRequest { dataProvider.createReportAsync(auth, eventId) }
     
-    suspend fun removeReportAsync(auth: String, eventId: Long) = handleRequest { dataProvider.removeReportAsync(auth, eventId) }
+    suspend fun deleteReportAsync(auth: String, eventId: Long) = handleRequest { dataProvider.deleteReportAsync(auth, eventId) }
     
     suspend fun getDatesAsync(auth: String, eventId: Long) = handleRequest { dataProvider.getDatesAsync(auth, eventId) }
     

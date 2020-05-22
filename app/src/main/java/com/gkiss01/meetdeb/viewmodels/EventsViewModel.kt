@@ -48,6 +48,11 @@ class EventsViewModel(private val restClient: RestClient, private val basic: Str
         }
     }
 
+    fun deleteEvent(eventId: Long) = liveData(Dispatchers.IO) {
+        emit(Resource.loading(null))
+        emit(restClient.deleteEventAsync(basic, eventId))
+    }
+
     fun modifyParticipation(eventId: Long) {
         _event.postValue(Resource.loading(null))
         viewModelScope.launch {
@@ -55,9 +60,14 @@ class EventsViewModel(private val restClient: RestClient, private val basic: Str
         }
     }
 
-    fun deleteEvent(eventId: Long) = liveData(Dispatchers.IO) {
+    fun createReport(eventId: Long) = liveData(Dispatchers.IO) {
         emit(Resource.loading(null))
-        emit(restClient.deleteEventAsync(basic, eventId))
+        emit(restClient.createReportAsync(basic, eventId))
+    }
+
+    fun deleteReport(eventId: Long) = liveData(Dispatchers.IO) {
+        emit(Resource.loading(null))
+        emit(restClient.deleteReportAsync(basic, eventId))
     }
 
     fun resetLiveData() {
@@ -81,5 +91,13 @@ class EventsViewModel(private val restClient: RestClient, private val basic: Str
 
     fun removeEventFromList(eventId: Long) {
         _events.postValue(Resource.success(_events.value?.data?.filterNot { it.id == eventId }))
+    }
+
+    fun addEventReportToList(eventId: Long) {
+        _events.value?.data?.find { it.id == eventId }?.reported = true
+    }
+
+    fun removeEventReportFromList(eventId: Long) {
+        _events.value?.data?.find { it.id == eventId }?.reported = false
     }
 }

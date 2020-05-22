@@ -21,10 +21,10 @@ interface DataProvider {
     suspend fun getEventsAsync(@Header("Authorization") auth: String, @Query("page") page: Int): List<Event>
 
     @GET("events/reports-add/{eventId}")
-    suspend fun reportEventAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): SuccessResponse<Long>
+    suspend fun createReportAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): SuccessResponse<Long>
 
     @GET("events/reports-remove/{eventId}")
-    suspend fun removeReportAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): SuccessResponse<Long>
+    suspend fun deleteReportAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): SuccessResponse<Long>
 
     @GET("dates/{eventId}")
     suspend fun getDatesAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): List<Date>

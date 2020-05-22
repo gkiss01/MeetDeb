@@ -16,7 +16,7 @@ data class Event(
     var date: OffsetDateTime,
     var venue: String,
     var description: String,
-    val reported: Boolean,
+    var reported: Boolean,
     val participants: Int,
     val accepted: Boolean,
     val voted: Boolean): Serializable, AbstractItem<EventViewHolder>() {
