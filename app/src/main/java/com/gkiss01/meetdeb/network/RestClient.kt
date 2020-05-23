@@ -27,6 +27,8 @@ class RestClient(private val dataProvider: DataProvider, private val resourceHan
     
     suspend fun createUserAsync(user: RequestBody) = handleRequest { dataProvider.createUserAsync(user) }
 
+    suspend fun updateUserAsync(auth: String, user: RequestBody) = handleRequest { dataProvider.updateUserAsync(auth, user) }
+
     suspend fun createEventAsync(auth: String, event: RequestBody, file: MultipartBody.Part?) = handleRequest { dataProvider.createEventAsync(auth, event, file) }
 
     suspend fun updateEventAsync(auth: String, eventId: Long, event: RequestBody) = handleRequest { dataProvider.updateEventAsync(auth, eventId, event) }

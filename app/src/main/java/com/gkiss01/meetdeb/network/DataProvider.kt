@@ -35,6 +35,9 @@ interface DataProvider {
     @POST("users")
     suspend fun createUserAsync(@Body user: RequestBody): User
 
+    @PUT("users")
+    suspend fun updateUserAsync(@Header("Authorization") auth: String, @Body user: RequestBody): User
+
     @Multipart
     @POST("events")
     suspend fun createEventAsync(@Header("Authorization") auth: String, @Part("event") event: RequestBody,

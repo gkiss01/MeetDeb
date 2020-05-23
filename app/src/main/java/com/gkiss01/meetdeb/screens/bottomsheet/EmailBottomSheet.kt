@@ -3,60 +3,28 @@ package com.gkiss01.meetdeb.screens.bottomsheet
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.util.Patterns
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import com.andrefrsousa.superbottomsheet.SuperBottomSheetFragment
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.ActivityViewModel
-import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
-import com.gkiss01.meetdeb.data.apirequest.UserRequest
-import com.gkiss01.meetdeb.data.apirequest.UserRequestType
-import com.gkiss01.meetdeb.network.ErrorCodes
-import com.gkiss01.meetdeb.network.NavigationCode
+import com.gkiss01.meetdeb.data.User
+import com.gkiss01.meetdeb.network.Resource
+import com.gkiss01.meetdeb.network.Status
 import com.gkiss01.meetdeb.screens.fragment.hideKeyboard
-import com.squareup.moshi.Moshi
 import kotlinx.android.synthetic.main.bottomsheet_profile_email.*
-import okhttp3.Credentials
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody.Companion.toRequestBody
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
-import org.koin.android.ext.android.inject
 
 class EmailBottomSheet: SuperBottomSheetFragment() {
-    private val moshi: Moshi by inject()
     private val activityViewModel: ActivityViewModel by activityViewModels()
-
-    override fun onStart() {
-        super.onStart()
-        EventBus.getDefault().register(this)
-    }
-
-    override fun onStop() {
-        EventBus.getDefault().unregister(this)
-        super.onStop()
-    }
-
-    @Suppress("unused_parameter")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onErrorReceived(errorCode: ErrorCodes) {
-        bspe_updateButton.hideProgress(R.string.profile_email_update)
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onNavigationReceived(navigationCode: NavigationCode) {
-        if (navigationCode == NavigationCode.ACTIVE_USER_UPDATED) {
-            bspe_updateButton.hideProgress(R.string.done)
-            Handler().postDelayed({ this.dismiss() }, 500)
-        }
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
@@ -64,23 +32,36 @@ class EmailBottomSheet: SuperBottomSheetFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val updateObserver = Observer<Resource<User>> {
+            when (it.status) {
+                Status.SUCCESS -> {
+                    bspe_updateButton.hideProgress(R.string.done)
+                    it.data?.let { user -> activityViewModel.setActiveUser(user) }
+                    Handler().postDelayed({ this.dismiss() }, 500)
+                }
+                Status.ERROR -> {
+                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+                    bspe_updateButton.hideProgress(R.string.profile_email_update)
+                }
+                Status.LOADING -> {
+                    Log.d("MeetDebLog_EmailBottomSheet", "Updating user email...")
+                    showAnimation()
+                }
+                else -> {}
+            }
+        }
+
         bspe_updateButton.setOnClickListener {
             val isValidEmail = validateEmail()
             val isValidPassword = validatePassword()
 
             if (isValidEmail && isValidPassword) {
                 val email = bspe_newEmail.editText?.text.toString().trim()
-                val password = bspe_oldPassword.editText?.text.toString().trim()
+                val currentPassword = bspe_oldPassword.editText?.text.toString().trim()
 
                 hideKeyboard()
-                showAnimation()
 
-                val basic = Credentials.basic(activityViewModel.activeUser.value!!.data!!.email, password)
-
-                val userRequest = UserRequest(email, "________", "________", UserRequestType.EmailUpdate.ordinal)
-                val json = moshi.adapter(UserRequest::class.java).toJson(userRequest)
-                val user = json.toRequestBody("application/json".toMediaTypeOrNull())
-                MainActivity.instance.updateUser(basic, user)
+                activityViewModel.updateUser(currentPassword, email, null).observe(viewLifecycleOwner, updateObserver)
             }
         }
     }

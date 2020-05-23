@@ -15,7 +15,6 @@ import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.apirequest.UserRequest
-import com.gkiss01.meetdeb.data.apirequest.UserRequestType
 import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.NavigationCode
 import com.gkiss01.meetdeb.screens.fragment.hideKeyboard
@@ -76,11 +75,11 @@ class PasswordBottomSheet: SuperBottomSheetFragment() {
 
                 val basic = Credentials.basic(activityViewModel.activeUser.value!!.data!!.email, oldPassword)
 
-                val userRequest = UserRequest("unnecessary@email.com", newPassword, "________", UserRequestType.PasswordUpdate.ordinal)
-                val json = moshi.adapter(UserRequest::class.java).toJson(userRequest)
-                val user = json.toRequestBody("application/json".toMediaTypeOrNull())
-                //MainActivity.instance.saveTempPassword(newPassword)
-                MainActivity.instance.updateUser(basic, user)
+//                val userRequest = UserRequest("unnecessary@email.com", newPassword, "________", UserRequestType.PasswordUpdate.ordinal)
+//                val json = moshi.adapter(UserRequest::class.java).toJson(userRequest)
+//                val user = json.toRequestBody("application/json".toMediaTypeOrNull())
+//                //MainActivity.instance.saveTempPassword(newPassword)
+//                MainActivity.instance.updateUser(basic, user)
             }
         }
     }

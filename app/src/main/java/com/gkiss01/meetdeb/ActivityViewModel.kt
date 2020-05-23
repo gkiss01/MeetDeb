@@ -5,7 +5,6 @@ import android.content.Context
 import androidx.lifecycle.*
 import com.gkiss01.meetdeb.data.User
 import com.gkiss01.meetdeb.data.apirequest.UserRequest
-import com.gkiss01.meetdeb.data.apirequest.UserRequestType
 import com.gkiss01.meetdeb.network.Resource
 import com.gkiss01.meetdeb.network.RestClient
 import com.squareup.moshi.Moshi
@@ -40,7 +39,7 @@ class ActivityViewModel(private val moshi: Moshi, private val restClient: RestCl
     }
 
     fun createUser(email: String, password: String, name: String) {
-        val userRequest = UserRequest(email, password, name, UserRequestType.Create.ordinal)
+        val userRequest = UserRequest(email, password, name)
         val json = moshi.adapter(UserRequest::class.java).toJson(userRequest)
         val user = json.toRequestBody("application/json".toMediaTypeOrNull())
 
@@ -50,9 +49,24 @@ class ActivityViewModel(private val moshi: Moshi, private val restClient: RestCl
         }
     }
 
+    fun updateUser(currentPassword: String, email: String?, password: String?) = liveData(Dispatchers.IO) {
+        val basic = Credentials.basic(activeUser.value?.data?.email ?: "", currentPassword)
+
+        val userRequest = UserRequest(email, password, null)
+        val json = moshi.adapter(UserRequest::class.java).toJson(userRequest)
+        val user = json.toRequestBody("application/json".toMediaTypeOrNull())
+
+        emit(Resource.loading(null))
+        emit(restClient.updateUserAsync(basic, user))
+    }
+
     fun deleteUser() = liveData(Dispatchers.IO) {
         emit(Resource.loading(null))
         emit(restClient.deleteUserAsync(basic))
+    }
+
+    fun setActiveUser(user: User) {
+        _activeUser.postValue(Resource.success(user))
     }
 
     fun resetLiveData() {
