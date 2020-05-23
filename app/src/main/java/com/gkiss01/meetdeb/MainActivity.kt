@@ -23,27 +23,4 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun getActiveUser(): User? = viewModelKoin.activeUser.value?.data
-
-//    private fun handleErrors(e: Exception) {
-//        val errors = when (e) {
-//            is SocketTimeoutException -> "Connection error! (server)"
-//            is ConnectException -> "Connection error! (client)"
-//            else -> e.message
-//        }
-//        Log.d("MainActivityApiCall", "Failure: $errors")
-//        Log.d("MainActivityApiCall", "$e")
-//        Toast.makeText(this, errors, Toast.LENGTH_LONG).show()
-//    }
-//
-//    private fun handleResponseErrors(errorCode: ErrorCodes, errors: List<String>) {
-//        var errorsMsg = ""
-//        Log.d("MainActivityApiCall", "Failure: ${errors.size} errors:")
-//        errors.forEachIndexed { index, e  ->
-//            run {
-//                Log.d("MainActivityApiCall", e)
-//                errorsMsg = errorsMsg.plus(if (index == 0) "" else "\n").plus(e)
-//            }
-//        }
-//        Toast.makeText(this, errorsMsg, Toast.LENGTH_LONG).show()
-//    }
 }

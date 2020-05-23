@@ -81,10 +81,7 @@ class ParticipantViewHolder(private val view: View): FastAdapter.ViewHolder<Part
 }
 
 class DateViewHolder(private val view: View): FastAdapter.ViewHolder<Date>(view) {
-    var dateId = Long.MIN_VALUE
-
     override fun bindView(item: Date, payloads: List<Any>) {
-        dateId = item.id
         view.dli_dateValue.text = formatDate(item.date)
         view.dli_votes.text = "Szavazatok: ${item.votes}"
         view.dli_voteButton.isChecked = item.accepted
@@ -93,7 +90,6 @@ class DateViewHolder(private val view: View): FastAdapter.ViewHolder<Date>(view)
     }
 
     override fun unbindView(item: Date) {
-        dateId = Long.MIN_VALUE
         view.dli_dateValue.text = null
         view.dli_votes.text = null
         view.dli_voteButton.isChecked = false

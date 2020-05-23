@@ -1,6 +1,5 @@
 package com.gkiss01.meetdeb.screens.fragment
 
-import ScrollingViewOnApplyWindowInsetsListener
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -20,6 +19,7 @@ import com.gkiss01.meetdeb.data.fastadapter.Event
 import com.gkiss01.meetdeb.data.isAdmin
 import com.gkiss01.meetdeb.network.Resource
 import com.gkiss01.meetdeb.network.Status
+import com.gkiss01.meetdeb.utils.ScrollingViewOnApplyWindowInsetsListener
 import com.gkiss01.meetdeb.viewmodels.EventsViewModel
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericFastAdapter
@@ -89,7 +89,9 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         ef_eventsRecyclerView.adapter = fastAdapter
 
         val fastScroller = FastScrollerBuilder(ef_eventsRecyclerView).useMd2Style().build()
-        ef_eventsRecyclerView.setOnApplyWindowInsetsListener(ScrollingViewOnApplyWindowInsetsListener(ef_eventsRecyclerView, fastScroller))
+        ef_eventsRecyclerView.setOnApplyWindowInsetsListener(
+            ScrollingViewOnApplyWindowInsetsListener(ef_eventsRecyclerView, fastScroller)
+        )
 
         val layoutManager = LinearLayoutManager(requireContext())
         ef_eventsRecyclerView.layoutManager = layoutManager
