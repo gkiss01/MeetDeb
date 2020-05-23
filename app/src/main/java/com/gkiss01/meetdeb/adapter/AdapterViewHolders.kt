@@ -12,7 +12,6 @@ import com.gkiss01.meetdeb.data.fastadapter.Event
 import com.gkiss01.meetdeb.data.fastadapter.Participant
 import com.gkiss01.meetdeb.network.BASE_URL
 import com.gkiss01.meetdeb.utils.formatDate
-import com.gkiss01.meetdeb.utils.isActiveUserAdmin
 import com.mikepenz.fastadapter.FastAdapter
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_date.view.*
@@ -111,7 +110,7 @@ class DateViewHolder(private val view: View): FastAdapter.ViewHolder<Date>(view)
     }
 }
 
-class EventViewHolder(private val view: View): FastAdapter.ViewHolder<Event>(view) {
+class EventViewHolder(private val view: View, private val isAdmin: Boolean): FastAdapter.ViewHolder<Event>(view) {
     lateinit var event: Event
 
     override fun bindView(item: Event, payloads: List<Any>) {
@@ -119,7 +118,7 @@ class EventViewHolder(private val view: View): FastAdapter.ViewHolder<Event>(vie
         view.eli_eventLabel.text = item.name
         view.eli_creatorLabel.text = item.username
 
-        if (isActiveUserAdmin())
+        if (isAdmin)
             view.eli_creatorLabel.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_creator, 0, if (item.reported) R.drawable.ic_report else 0, 0)
 
         if (item.accepted) {

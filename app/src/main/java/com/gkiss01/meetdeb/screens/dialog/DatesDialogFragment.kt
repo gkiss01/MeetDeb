@@ -25,7 +25,6 @@ import com.gkiss01.meetdeb.data.fastadapter.Event
 import com.gkiss01.meetdeb.data.isAdmin
 import com.gkiss01.meetdeb.network.Status
 import com.gkiss01.meetdeb.screens.fragment.SuccessObserver
-import com.gkiss01.meetdeb.utils.isActiveUserAdmin
 import com.gkiss01.meetdeb.viewmodels.DatesViewModel
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericFastAdapter
@@ -63,7 +62,7 @@ class DatesDialogFragment : DialogFragment() {
         }
 
         fastAdapter = FastAdapter.with(listOf(headerAdapter, itemAdapter, footerAdapter))
-        if (!isActiveUserAdmin()) fastAdapter.attachDefaultListeners = false
+        if (viewModelActivityKoin.activeUser.value?.data?.isAdmin() == false) fastAdapter.attachDefaultListeners = false
         df_datesRecyclerView.adapter = fastAdapter
 
         val layoutManager = LinearLayoutManager(context)
