@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import com.andrefrsousa.superbottomsheet.SuperBottomSheetFragment
+import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.ActivityViewModel
@@ -51,6 +52,7 @@ class EmailBottomSheet: SuperBottomSheetFragment() {
             }
         }
 
+        bspe_updateButton.attachTextChangeAnimator()
         bspe_updateButton.setOnClickListener {
             val isValidEmail = validateEmail()
             val isValidPassword = validatePassword()
