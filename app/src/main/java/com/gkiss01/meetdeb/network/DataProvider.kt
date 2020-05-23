@@ -67,5 +67,5 @@ interface DataProvider {
 
 //    @Multipart
 //    @POST("images/{eventId}")
-//    suspend fun uploadImageAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long, @Part file: MultipartBody.Part): GenericResponse
+//    suspend fun uploadImageAsync(@Header("Authorization") auth: String, @Path("eventId") eventId: Long, @Part file: MultipartBody.Part): SuccessResponse<Long>
 }

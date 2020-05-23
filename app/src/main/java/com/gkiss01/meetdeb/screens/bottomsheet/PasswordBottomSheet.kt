@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import com.andrefrsousa.superbottomsheet.SuperBottomSheetFragment
 import com.github.razir.progressbutton.attachTextChangeAnimator
@@ -22,9 +21,10 @@ import com.gkiss01.meetdeb.network.Resource
 import com.gkiss01.meetdeb.network.Status
 import com.gkiss01.meetdeb.screens.fragment.hideKeyboard
 import kotlinx.android.synthetic.main.bottomsheet_profile_password.*
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class PasswordBottomSheet: SuperBottomSheetFragment() {
-    private val activityViewModel: ActivityViewModel by activityViewModels()
+    private val viewModelActivityKoin: ActivityViewModel by sharedViewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
@@ -36,7 +36,7 @@ class PasswordBottomSheet: SuperBottomSheetFragment() {
             when (it.status) {
                 Status.SUCCESS -> {
                     bspp_updateButton.hideProgress(R.string.done)
-                    it.data?.let { user -> activityViewModel.setActiveUser(user) }
+                    it.data?.let { user -> viewModelActivityKoin.setActiveUser(user) }
                     Handler().postDelayed({ this.dismiss() }, 500)
                 }
                 Status.ERROR -> {
@@ -62,7 +62,7 @@ class PasswordBottomSheet: SuperBottomSheetFragment() {
 
                 hideKeyboard()
 
-                activityViewModel.updateUser(currentPassword, null, newPassword).observe(viewLifecycleOwner, updateObserver)
+                viewModelActivityKoin.updateUser(currentPassword, null, newPassword).observe(viewLifecycleOwner, updateObserver)
             }
         }
     }
