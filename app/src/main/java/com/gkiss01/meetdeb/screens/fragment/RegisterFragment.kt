@@ -58,11 +58,12 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
                 Status.SUCCESS -> {
                     rf_registerButton.hideProgress(R.string.done)
                     Handler().postDelayed({ findNavController().navigate(R.id.loginFragment) }, 500)
+                    viewModelKoin.resetLiveData()
                 }
                 Status.ERROR -> {
-                    viewModelKoin.resetLiveData()
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
                     rf_registerButton.hideProgress(R.string.register_title)
+                    viewModelKoin.resetLiveData()
                 }
                 Status.LOADING -> {
                     Log.d("MeetDebLog_RegisterFragment", "Creating user...")

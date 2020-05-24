@@ -210,7 +210,10 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         ef_slider.onDrawerItemClickListener = { _, item, _ ->
             when (item.identifier) {
                 2L -> findNavController().navigate(R.id.profileFragment)
-                3L -> viewModelActivityKoin.resetLiveData()
+                3L -> {
+                    viewModelActivityKoin.resetUserCredentials()
+                    viewModelActivityKoin.resetLiveData()
+                }
             }
             false
         }

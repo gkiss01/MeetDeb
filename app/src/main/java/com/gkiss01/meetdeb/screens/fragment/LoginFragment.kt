@@ -46,13 +46,13 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         viewModelKoin.activeUser.observe(viewLifecycleOwner, Observer {
             when (it.status) {
                 Status.SUCCESS -> {
-                    viewModelKoin.saveUserCredentials(email, password)
+                    viewModelKoin.setUserCredentials(email, password)
                     findNavController().navigate(R.id.eventsFragment)
                 }
                 Status.ERROR -> {
-                    viewModelKoin.resetLiveData()
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
                     lf_loginButton.hideProgress(R.string.login_title)
+                    viewModelKoin.resetLiveData()
                 }
                 Status.LOADING -> {
                     Log.d("MeetDebLog_LoginFragment", "User is loading...")

@@ -21,8 +21,8 @@ val activityModule = module {
 }
 
 class ActivityViewModel(private val moshi: Moshi, private val restClient: RestClient, private val application: Application) : ViewModel() {
-    private val username = application.getSavedUsername()
-    private val password = application.getSavedPassword()
+    private var username = application.getSavedUsername()
+    private var password = application.getSavedPassword()
     private lateinit var basic: String
 
     private var _activeUser = MutableLiveData<Resource<User>>()
@@ -69,18 +69,25 @@ class ActivityViewModel(private val moshi: Moshi, private val restClient: RestCl
         _activeUser.postValue(Resource.success(user))
     }
 
+    fun setUserCredentials(username: String?, password: String?) {
+        username?.let { this.username = it }
+        password?.let { this.password = it }
+        basic = Credentials.basic(this.username, this.password)
+        application.setSavedUser(this.username, this.password)
+    }
+
     fun resetLiveData() {
-        saveUserCredentials("", "")
         _activeUser.postValue(Resource.pending(null))
     }
 
-    fun saveUserCredentials(username: String, password: String) = application.setSavedUser(username, password)
+    fun resetUserCredentials() {
+        username = ""
+        password = ""
+        basic = ""
+        application.setSavedUser("",  "")
+    }
 
     fun getBasic() = basic
-
-    fun setBasic(basic: String) {
-        this.basic = basic
-    }
 }
 
 fun Context.getSavedUsername(default: String = "unknown"): String {

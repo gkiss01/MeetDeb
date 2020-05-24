@@ -68,7 +68,10 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         pf_slider.onDrawerItemClickListener = { _, item, _ ->
             when (item.identifier) {
                 1L -> findNavController().navigate(R.id.eventsFragment)
-                3L -> viewModelActivityKoin.resetLiveData()
+                3L -> {
+                    viewModelActivityKoin.resetUserCredentials()
+                    viewModelActivityKoin.resetLiveData()
+                }
             }
             false
         }
