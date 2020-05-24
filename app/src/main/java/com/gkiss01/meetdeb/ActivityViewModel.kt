@@ -77,6 +77,10 @@ class ActivityViewModel(private val moshi: Moshi, private val restClient: RestCl
     fun saveUserCredentials(username: String, password: String) = application.setSavedUser(username, password)
 
     fun getBasic() = basic
+
+    fun setBasic(basic: String) {
+        this.basic = basic
+    }
 }
 
 fun Context.getSavedUsername(default: String = "unknown"): String {

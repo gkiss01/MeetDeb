@@ -22,10 +22,12 @@ import com.gkiss01.meetdeb.network.Resource
 import com.gkiss01.meetdeb.network.Status
 import com.gkiss01.meetdeb.screens.fragment.hideKeyboard
 import kotlinx.android.synthetic.main.bottomsheet_profile_email.*
+import okhttp3.Credentials
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class EmailBottomSheet: SuperBottomSheetFragment() {
     private val viewModelActivityKoin: ActivityViewModel by sharedViewModel()
+    private lateinit var basic: String
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
@@ -37,7 +39,10 @@ class EmailBottomSheet: SuperBottomSheetFragment() {
             when (it.status) {
                 Status.SUCCESS -> {
                     bspe_updateButton.hideProgress(R.string.done)
-                    it.data?.let { user -> viewModelActivityKoin.setActiveUser(user) }
+                    it.data?.let { user ->
+                        viewModelActivityKoin.setActiveUser(user)
+                        viewModelActivityKoin.setBasic(basic)
+                    }
                     Handler().postDelayed({ this.dismiss() }, 500)
                 }
                 Status.ERROR -> {
@@ -60,6 +65,7 @@ class EmailBottomSheet: SuperBottomSheetFragment() {
             if (isValidEmail && isValidPassword) {
                 val email = bspe_newEmail.editText?.text.toString().trim()
                 val currentPassword = bspe_oldPassword.editText?.text.toString().trim()
+                basic = Credentials.basic(email, currentPassword)
 
                 hideKeyboard()
 

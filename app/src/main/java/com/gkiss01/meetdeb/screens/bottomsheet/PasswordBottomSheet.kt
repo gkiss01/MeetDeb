@@ -21,10 +21,12 @@ import com.gkiss01.meetdeb.network.Resource
 import com.gkiss01.meetdeb.network.Status
 import com.gkiss01.meetdeb.screens.fragment.hideKeyboard
 import kotlinx.android.synthetic.main.bottomsheet_profile_password.*
+import okhttp3.Credentials
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class PasswordBottomSheet: SuperBottomSheetFragment() {
     private val viewModelActivityKoin: ActivityViewModel by sharedViewModel()
+    private lateinit var basic: String
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
@@ -36,7 +38,10 @@ class PasswordBottomSheet: SuperBottomSheetFragment() {
             when (it.status) {
                 Status.SUCCESS -> {
                     bspp_updateButton.hideProgress(R.string.done)
-                    it.data?.let { user -> viewModelActivityKoin.setActiveUser(user) }
+                    it.data?.let { user ->
+                        viewModelActivityKoin.setActiveUser(user)
+                        viewModelActivityKoin.setBasic(basic)
+                    }
                     Handler().postDelayed({ this.dismiss() }, 500)
                 }
                 Status.ERROR -> {
@@ -59,6 +64,7 @@ class PasswordBottomSheet: SuperBottomSheetFragment() {
             if (isValidPasswordNew && isValidPasswordOld) {
                 val newPassword = bspp_newPassword.editText?.text.toString().trim()
                 val currentPassword = bspp_oldPassword.editText?.text.toString().trim()
+                basic = Credentials.basic(viewModelActivityKoin.activeUser.value?.data?.email ?: "", newPassword)
 
                 hideKeyboard()
 
