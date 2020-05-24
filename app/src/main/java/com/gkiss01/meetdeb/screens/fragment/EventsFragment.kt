@@ -2,7 +2,9 @@ package com.gkiss01.meetdeb.screens.fragment
 
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.activity.addCallback
@@ -32,14 +34,13 @@ import kotlinx.android.synthetic.main.fragment_events.*
 import kotlinx.android.synthetic.main.item_event.view.*
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
 typealias SuccessObserver = Observer<Resource<SuccessResponse<Long>>>
 
 class EventsFragment : Fragment(R.layout.fragment_events) {
     private val viewModelActivityKoin: ActivityViewModel by sharedViewModel()
-    private val viewModelKoin: EventsViewModel by viewModel { parametersOf(viewModelActivityKoin.getBasic()) }
+    private val viewModelKoin: EventsViewModel by sharedViewModel { parametersOf(viewModelActivityKoin.getBasic()) }
 
     private val itemAdapter = ItemAdapter<Event>()
     private val footerAdapter = ItemAdapter<ProgressItem>()
@@ -51,6 +52,11 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         requireActivity().onBackPressedDispatcher.addCallback(this) {
             requireActivity().finishAffinity()
         }
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        viewModelKoin.updateBasic(viewModelActivityKoin.getBasic())
+        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

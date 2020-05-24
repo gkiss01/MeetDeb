@@ -12,7 +12,7 @@ val eventsModule = module {
     factory { (basic: String) -> EventsViewModel(get(), basic) }
 }
 
-class EventsViewModel(private val restClient: RestClient, private val basic: String) : ViewModel() {
+class EventsViewModel(private val restClient: RestClient, private var basic: String) : ViewModel() {
     var selectedEvent = Long.MIN_VALUE
     private var currentPage: Int = 1
     private lateinit var eventsBackup: List<Event>
@@ -24,6 +24,10 @@ class EventsViewModel(private val restClient: RestClient, private val basic: Str
     private var _events = MutableLiveData<Resource<List<Event>>>()
     val events: LiveData<Resource<List<Event>>>
         get() = _events
+
+    fun updateBasic(basic: String) {
+        this.basic = basic
+    }
 
     fun refreshEvents() {
         currentPage = 1
