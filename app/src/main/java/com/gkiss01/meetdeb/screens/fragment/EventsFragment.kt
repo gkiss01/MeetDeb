@@ -37,6 +37,7 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.core.parameter.parametersOf
 
 typealias SuccessObserver = Observer<Resource<SuccessResponse<Long>>>
+typealias EventsObserver = Observer<Resource<List<Event>>>
 
 class EventsFragment : Fragment(R.layout.fragment_events) {
     private val viewModelActivityKoin: ActivityViewModel by sharedViewModel()
@@ -75,58 +76,10 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             }
         })
 
-        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Long>("eventId")?.observe(viewLifecycleOwner, Observer { eventId ->
-            val itemView = ef_eventsRecyclerView.findViewHolderForAdapterPosition(itemAdapter.getAdapterPosition(eventId)) as? EventViewHolder
-            itemView?.showVoteAnimation()
-
-            viewModelKoin.selectedEvent = eventId
-            viewModelKoin.updateEvent(eventId)
-        })
-
-        ef_addActionButton.setOnClickListener{ findNavController().navigate(R.id.createEventFragment) }
-
-        ef_swipeRefreshLayout.setOnRefreshListener {
-            if (footerAdapter.adapterItemCount == 0) viewModelKoin.refreshEvents()
-            else ef_swipeRefreshLayout.isRefreshing = false
-        }
-
-        fastAdapter = FastAdapter.with(listOf(itemAdapter, footerAdapter))
-        fastAdapter.attachDefaultListeners = false
-        ef_eventsRecyclerView.adapter = fastAdapter
-
-        val fastScroller = FastScrollerBuilder(ef_eventsRecyclerView).useMd2Style().build()
-        ef_eventsRecyclerView.setOnApplyWindowInsetsListener(
-            ScrollingViewOnApplyWindowInsetsListener(ef_eventsRecyclerView, fastScroller)
-        )
-
-        val layoutManager = LinearLayoutManager(requireContext())
-        ef_eventsRecyclerView.layoutManager = layoutManager
-
-        ef_eventsRecyclerView.setHasFixedSize(true)
-        ef_eventsRecyclerView.setItemViewCacheSize(6)
-        ef_eventsRecyclerView.itemAnimator = AlphaInAnimator()
-
-        viewModelKoin.event.observe(viewLifecycleOwner, Observer {
+        val eventsObserver = EventsObserver {
             when (it.status) {
                 Status.SUCCESS -> {
-                    it.data?.let { event -> viewModelKoin.updateEventInList(event) }
-                    viewModelKoin.resetLiveData()
-                }
-                Status.ERROR -> {
-                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
-                    if (viewModelKoin.selectedEvent != Long.MIN_VALUE)
-                        fastAdapter.notifyAdapterItemChanged(itemAdapter.getAdapterPosition(viewModelKoin.selectedEvent))
-                    viewModelKoin.resetLiveData()
-                }
-                Status.LOADING -> Log.d("MeetDebLog_EventsFragment", "Updating event...")
-                else -> {}
-            }
-        })
-
-        viewModelKoin.events.observe(viewLifecycleOwner, Observer {
-            when (it.status) {
-                Status.SUCCESS -> {
-                    FastAdapterDiffUtil[itemAdapter] = it.data!!
+                    viewModelKoin.addEventsToList(it.data!!)
                     ef_swipeRefreshLayout.isRefreshing = false
                     footerAdapter.clear()
                 }
@@ -134,7 +87,6 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
                     ef_swipeRefreshLayout.isRefreshing = false
                     footerAdapter.clear()
-                    viewModelKoin.restoreEventsIfNeeded()
                 }
                 Status.LOADING -> {
                     Log.d("MeetDebLog_EventsFragment", "Events are loading...")
@@ -143,7 +95,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                 }
                 else -> {}
             }
-        })
+        }
 
         val deleteObserver = SuccessObserver {
             when (it.status) {
@@ -184,6 +136,63 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             }
         }
 
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Long>("eventId")?.observe(viewLifecycleOwner, Observer { eventId ->
+            val itemView = ef_eventsRecyclerView.findViewHolderForAdapterPosition(itemAdapter.getAdapterPosition(eventId)) as? EventViewHolder
+            itemView?.showVoteAnimation()
+
+            viewModelKoin.selectedEvent = eventId
+            viewModelKoin.updateEvent(eventId)
+        })
+
+        ef_addActionButton.setOnClickListener{ findNavController().navigate(R.id.createEventFragment) }
+
+        ef_swipeRefreshLayout.setOnRefreshListener {
+            if (!viewModelKoin.eventsIsLoading) viewModelKoin.refreshEvents().observe(viewLifecycleOwner, eventsObserver)
+            else ef_swipeRefreshLayout.isRefreshing = false
+        }
+
+        if (viewModelKoin.events.value?.isEmpty() != false)
+            viewModelKoin.refreshEvents().observe(viewLifecycleOwner, eventsObserver)
+
+        fastAdapter = FastAdapter.with(listOf(itemAdapter, footerAdapter))
+        fastAdapter.attachDefaultListeners = false
+        ef_eventsRecyclerView.adapter = fastAdapter
+
+        val fastScroller = FastScrollerBuilder(ef_eventsRecyclerView).useMd2Style().build()
+        ef_eventsRecyclerView.setOnApplyWindowInsetsListener(
+            ScrollingViewOnApplyWindowInsetsListener(ef_eventsRecyclerView, fastScroller)
+        )
+
+        val layoutManager = LinearLayoutManager(requireContext())
+        ef_eventsRecyclerView.layoutManager = layoutManager
+
+        ef_eventsRecyclerView.setHasFixedSize(true)
+        ef_eventsRecyclerView.setItemViewCacheSize(6)
+        ef_eventsRecyclerView.itemAnimator = AlphaInAnimator()
+
+        viewModelKoin.event.observe(viewLifecycleOwner, Observer {
+            when (it.status) {
+                Status.SUCCESS -> {
+                    it.data?.let { event -> viewModelKoin.updateEventInList(event) }
+                    viewModelKoin.resetLiveData()
+                }
+                Status.ERROR -> {
+                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+                    if (viewModelKoin.selectedEvent != Long.MIN_VALUE)
+                        fastAdapter.notifyAdapterItemChanged(itemAdapter.getAdapterPosition(viewModelKoin.selectedEvent))
+                    viewModelKoin.resetLiveData()
+                    viewModelKoin.eventsIsLoading = false
+                }
+                Status.LOADING -> Log.d("MeetDebLog_EventsFragment", "Updating event...")
+                else -> {}
+            }
+        })
+
+        viewModelKoin.events.observe(viewLifecycleOwner, Observer {
+            FastAdapterDiffUtil[itemAdapter] = it
+            viewModelKoin.eventsIsLoading = false
+        })
+
         itemAdapter.fastAdapter!!.addClickListener( {null}, { vh: EventViewHolder -> listOf<View>(vh.itemView.eli_descButton, vh.itemView.eli_acceptButton, vh.itemView.eli_anotherDateButton, vh.itemView.eli_moreButton) }) { v, position, _, item ->
             when (v.id) {
                 R.id.eli_descButton -> findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToDetailsBottomSheetFragment(item))
@@ -203,9 +212,9 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
 
-                if (dy > 0 && footerAdapter.adapterItemCount == 0) {
+                if (dy > 0 && !viewModelKoin.eventsIsLoading) {
                     if (layoutManager.itemCount <= (layoutManager.findLastVisibleItemPosition() + 1)) {
-                        viewModelKoin.getMoreEvents()
+                        viewModelKoin.getMoreEvents().observe(viewLifecycleOwner, eventsObserver)
                     }
                 }
             }

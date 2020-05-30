@@ -31,11 +31,11 @@ class RestClient(private val dataProvider: DataProvider, private val resourceHan
 
     suspend fun createEventAsync(auth: String, event: RequestBody, file: MultipartBody.Part?) = handleRequest { dataProvider.createEventAsync(auth, event, file) }
 
-    suspend fun updateEventAsync(auth: String, eventId: Long, event: RequestBody) = handleRequest { dataProvider.updateEventAsync(auth, eventId, event) }
+    suspend fun updateEventAsync(auth: String, event: RequestBody) = handleRequest { dataProvider.updateEventAsync(auth, event) }
     
     suspend fun modifyParticipation(auth: String, eventId: Long) = handleRequest { dataProvider.modifyParticipation(auth, eventId) }
     
-    suspend fun createVoteAsync(auth: String, dateId: Long) = handleRequest { dataProvider.createVoteAsync(auth, dateId) }
+    suspend fun changeVoteAsync(auth: String, dateId: Long) = handleRequest { dataProvider.changeVoteAsync(auth, dateId) }
     
     suspend fun createDateAsync(auth: String, eventId: Long, date: OffsetDateTime) = handleRequest { dataProvider.createDateAsync(auth, eventId, date) }
 

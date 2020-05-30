@@ -14,37 +14,36 @@ val eventsModule = module {
 
 class EventsViewModel(private val restClient: RestClient, private var basic: String) : ViewModel() {
     var selectedEvent = Long.MIN_VALUE
+    var eventsIsLoading = false
     private var currentPage: Int = 1
-    private lateinit var eventsBackup: List<Event>
 
     private var _event = MutableLiveData<Resource<Event>>()
     val event: LiveData<Resource<Event>>
         get() = _event
 
-    private var _events = MutableLiveData<Resource<List<Event>>>()
-    val events: LiveData<Resource<List<Event>>>
+    private var _events = MutableLiveData<List<Event>>()
+    val events: LiveData<List<Event>>
         get() = _events
 
     fun updateBasic(basic: String) {
         this.basic = basic
     }
 
-    fun refreshEvents() {
+    fun refreshEvents(): LiveData<Resource<List<Event>>> {
         currentPage = 1
-        getEvents(currentPage)
+        eventsIsLoading = true
+        return getEvents(currentPage)
     }
 
-    fun getMoreEvents() {
-        currentPage++
-        getEvents(currentPage)
+    fun getMoreEvents(): LiveData<Resource<List<Event>>> {
+        currentPage = ((_events.value?.size ?: 0) / 25) + 1
+        eventsIsLoading = true
+        return getEvents(currentPage)
     }
 
-    private fun getEvents(page: Int) {
-        _events.postValue(Resource.loading(null))
-        backupEvents()
-        viewModelScope.launch {
-            _events.postValue(restClient.getEventsAsync(basic, page))
-        }
+    private fun getEvents(page: Int) = liveData(Dispatchers.IO) {
+        emit(Resource.loading(null))
+        emit(restClient.getEventsAsync(basic, page))
     }
 
     fun updateEvent(eventId: Long) {
@@ -81,40 +80,24 @@ class EventsViewModel(private val restClient: RestClient, private var basic: Str
         _event.postValue(Resource.pending(null))
     }
 
-    private fun backupEvents() {
-        events.value?.data?.let {
-            eventsBackup = it
-        }
+    fun addEventsToList(events: List<Event>) {
+        if (currentPage > 1) _events.value = _events.value?.union(events)?.toList()
+        else _events.value = events
     }
-
-    fun restoreEventsIfNeeded() {
-        if (::eventsBackup.isInitialized) _events.postValue(Resource.success(eventsBackup))
-        else _events.postValue(Resource.success(emptyList()))
-    }
-
-    init {
-        refreshEvents()
-    }
-
-//    fun addEvents(eventList: List<Event>) {
-//        if (currentPage > 1) events.value = events.value?.union(eventList)?.toList()
-//        else events.value = eventList
-//    }
-//
 
     fun updateEventInList(event: Event) {
-        _events.postValue(Resource.success(_events.value?.data?.map { if (it.id == event.id) event else it }))
+        _events.postValue(_events.value?.map { if (it.id == event.id) event else it })
     }
 
     fun removeEventFromList(eventId: Long) {
-        _events.postValue(Resource.success(_events.value?.data?.filterNot { it.id == eventId }))
+        _events.postValue(_events.value?.filterNot { it.id == eventId })
     }
 
     fun addEventReportToList(eventId: Long) {
-        _events.value?.data?.find { it.id == eventId }?.reported = true
+        _events.value?.find { it.id == eventId }?.reported = true
     }
 
     fun removeEventReportFromList(eventId: Long) {
-        _events.value?.data?.find { it.id == eventId }?.reported = false
+        _events.value?.find { it.id == eventId }?.reported = false
     }
 }

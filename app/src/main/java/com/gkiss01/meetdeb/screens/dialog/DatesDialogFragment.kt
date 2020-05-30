@@ -128,7 +128,7 @@ class DatesDialogFragment : DialogFragment() {
             else if (!item.accepted) {
                 itemView?.showAnimation()
 
-                viewModelKoin.createVote(item.id)
+                viewModelKoin.changeVote(item.id)
             }
         }
 

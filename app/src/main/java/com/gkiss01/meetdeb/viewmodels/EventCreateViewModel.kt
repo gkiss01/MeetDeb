@@ -50,12 +50,13 @@ class EventCreateViewModel(private val restClient: RestClient, private val basic
             body = MultipartBody.Part.createFormData("file", file.name, requestFile)
         }
 
-        val eventRequest = EventRequest(eventLocal.name, eventLocal.date, eventLocal.venue, eventLocal.description)
+        val eventId = if (type.value == ScreenType.NEW) null else eventLocal.id
+        val eventRequest = EventRequest(eventId, eventLocal.name, eventLocal.date, eventLocal.venue, eventLocal.description)
         val json = moshi.adapter(EventRequest::class.java).toJson(eventRequest)
         val eventJson: RequestBody = json.toRequestBody("application/json".toMediaTypeOrNull())
 
         if (type.value == ScreenType.NEW) createEvent(eventJson, body)
-        else updateEvent(eventLocal.id, eventJson)
+        else updateEvent(eventJson)
     }
 
     private fun createEvent(event: RequestBody, image: MultipartBody.Part?) {
@@ -65,10 +66,10 @@ class EventCreateViewModel(private val restClient: RestClient, private val basic
         }
     }
 
-    private fun updateEvent(eventId: Long, event: RequestBody) {
+    private fun updateEvent(event: RequestBody) {
         _event.postValue(Resource.loading(null))
         viewModelScope.launch {
-            _event.postValue(restClient.updateEventAsync(basic, eventId, event))
+            _event.postValue(restClient.updateEventAsync(basic, event))
         }
     }
 

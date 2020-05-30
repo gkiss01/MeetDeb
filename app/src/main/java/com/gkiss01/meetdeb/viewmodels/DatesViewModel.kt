@@ -42,11 +42,11 @@ class DatesViewModel(private val restClient: RestClient, private val basic: Stri
         emit(restClient.deleteDateAsync(basic, dateId))
     }
 
-    fun createVote(dateId: Long) {
+    fun changeVote(dateId: Long) {
         if (isLoading) return
         isLoading = true
         viewModelScope.launch {
-            _dates.postValue(restClient.createVoteAsync(basic, dateId))
+            _dates.postValue(restClient.changeVoteAsync(basic, dateId))
             isLoading = false
         }
     }
