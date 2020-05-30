@@ -11,39 +11,27 @@ val restModule = module {
 }
 
 class RestClient(private val dataProvider: DataProvider, private val resourceHandler: ResourceHandler) {
-    suspend fun checkUserAsync(auth: String) = handleRequest { dataProvider.checkUserAsync(auth) }
-    
-    suspend fun getEventAsync(auth: String, eventId: Long) = handleRequest { dataProvider.getEventAsync(auth, eventId) }
-    
-    suspend fun getEventsAsync(auth: String, page: Int) = handleRequest { dataProvider.getEventsAsync(auth, page) }
-    
-    suspend fun createReportAsync(auth: String, eventId: Long) = handleRequest { dataProvider.createReportAsync(auth, eventId) }
-    
-    suspend fun deleteReportAsync(auth: String, eventId: Long) = handleRequest { dataProvider.deleteReportAsync(auth, eventId) }
-    
-    suspend fun getDatesAsync(auth: String, eventId: Long) = handleRequest { dataProvider.getDatesAsync(auth, eventId) }
-    
-    suspend fun getParticipantsAsync(auth: String, eventId: Long) = handleRequest { dataProvider.getParticipantsAsync(auth, eventId) }
-    
-    suspend fun createUserAsync(user: RequestBody) = handleRequest { dataProvider.createUserAsync(user) }
+    suspend fun createUser(user: RequestBody) = handleRequest { dataProvider.createUser(user) }
+    suspend fun updateUser(auth: String, user: RequestBody) = handleRequest { dataProvider.updateUser(auth, user) }
+    suspend fun deleteUser(auth: String) = handleRequest { dataProvider.deleteUser(auth) }
+    suspend fun checkUser(auth: String) = handleRequest { dataProvider.checkUser(auth) }
 
-    suspend fun updateUserAsync(auth: String, user: RequestBody) = handleRequest { dataProvider.updateUserAsync(auth, user) }
+    suspend fun createEvent(auth: String, event: RequestBody, file: MultipartBody.Part?) = handleRequest { dataProvider.createEvent(auth, event, file) }
+    suspend fun updateEvent(auth: String, event: RequestBody) = handleRequest { dataProvider.updateEvent(auth, event) }
+    suspend fun deleteEvent(auth: String, eventId: Long) = handleRequest { dataProvider.deleteEvent(auth, eventId) }
+    suspend fun getEvent(auth: String, eventId: Long) = handleRequest { dataProvider.getEvent(auth, eventId) }
+    suspend fun getEvents(auth: String, page: Int) = handleRequest { dataProvider.getEvents(auth, page) }
+    suspend fun createReport(auth: String, eventId: Long) = handleRequest { dataProvider.createReport(auth, eventId) }
+    suspend fun deleteReport(auth: String, eventId: Long) = handleRequest { dataProvider.deleteReport(auth, eventId) }
 
-    suspend fun createEventAsync(auth: String, event: RequestBody, file: MultipartBody.Part?) = handleRequest { dataProvider.createEventAsync(auth, event, file) }
-
-    suspend fun updateEventAsync(auth: String, event: RequestBody) = handleRequest { dataProvider.updateEventAsync(auth, event) }
-    
     suspend fun modifyParticipation(auth: String, eventId: Long) = handleRequest { dataProvider.modifyParticipation(auth, eventId) }
-    
-    suspend fun changeVoteAsync(auth: String, dateId: Long) = handleRequest { dataProvider.changeVoteAsync(auth, dateId) }
-    
-    suspend fun createDateAsync(auth: String, eventId: Long, date: OffsetDateTime) = handleRequest { dataProvider.createDateAsync(auth, eventId, date) }
+    suspend fun getParticipants(auth: String, eventId: Long) = handleRequest { dataProvider.getParticipants(auth, eventId) }
 
-    suspend fun deleteEventAsync(auth: String, eventId: Long) = handleRequest { dataProvider.deleteEventAsync(auth, eventId) }
+    suspend fun createDate(auth: String, eventId: Long, date: OffsetDateTime) = handleRequest { dataProvider.createDate(auth, eventId, date) }
+    suspend fun deleteDate(auth: String, dateId: Long) = handleRequest { dataProvider.deleteDate(auth, dateId) }
+    suspend fun getDates(auth: String, eventId: Long) = handleRequest { dataProvider.getDates(auth, eventId) }
 
-    suspend fun deleteDateAsync(auth: String, dateId: Long) = handleRequest { dataProvider.deleteDateAsync(auth, dateId) }
-
-    suspend fun deleteUserAsync(auth: String) = handleRequest { dataProvider.deleteUserAsync(auth) }
+    suspend fun changeVote(auth: String, dateId: Long) = handleRequest { dataProvider.changeVote(auth, dateId) }
 
     private suspend fun <T: Any> handleRequest(requestFunc: suspend () -> T): Resource<T> {
         return try {

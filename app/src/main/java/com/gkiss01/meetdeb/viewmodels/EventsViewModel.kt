@@ -43,19 +43,19 @@ class EventsViewModel(private val restClient: RestClient, private var basic: Str
 
     private fun getEvents(page: Int) = liveData(Dispatchers.IO) {
         emit(Resource.loading(null))
-        emit(restClient.getEventsAsync(basic, page))
+        emit(restClient.getEvents(basic, page))
     }
 
     fun updateEvent(eventId: Long) {
         _event.postValue(Resource.loading(null))
         viewModelScope.launch {
-            _event.postValue(restClient.getEventAsync(basic, eventId))
+            _event.postValue(restClient.getEvent(basic, eventId))
         }
     }
 
     fun deleteEvent(eventId: Long) = liveData(Dispatchers.IO) {
         emit(Resource.loading(null))
-        emit(restClient.deleteEventAsync(basic, eventId))
+        emit(restClient.deleteEvent(basic, eventId))
     }
 
     fun modifyParticipation(eventId: Long) {
@@ -67,12 +67,12 @@ class EventsViewModel(private val restClient: RestClient, private var basic: Str
 
     fun createReport(eventId: Long) = liveData(Dispatchers.IO) {
         emit(Resource.loading(null))
-        emit(restClient.createReportAsync(basic, eventId))
+        emit(restClient.createReport(basic, eventId))
     }
 
     fun deleteReport(eventId: Long) = liveData(Dispatchers.IO) {
         emit(Resource.loading(null))
-        emit(restClient.deleteReportAsync(basic, eventId))
+        emit(restClient.deleteReport(basic, eventId))
     }
 
     fun resetLiveData() {

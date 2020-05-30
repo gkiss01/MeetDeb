@@ -34,7 +34,7 @@ class ActivityViewModel(private val moshi: Moshi, private val restClient: RestCl
 
         _activeUser.postValue(Resource.loading(null))
         viewModelScope.launch {
-            _activeUser.postValue(restClient.checkUserAsync(basic))
+            _activeUser.postValue(restClient.checkUser(basic))
         }
     }
 
@@ -45,7 +45,7 @@ class ActivityViewModel(private val moshi: Moshi, private val restClient: RestCl
 
         _activeUser.postValue(Resource.loading(null))
         viewModelScope.launch {
-            _activeUser.postValue(restClient.createUserAsync(user))
+            _activeUser.postValue(restClient.createUser(user))
         }
     }
 
@@ -57,12 +57,12 @@ class ActivityViewModel(private val moshi: Moshi, private val restClient: RestCl
         val user = json.toRequestBody("application/json".toMediaTypeOrNull())
 
         emit(Resource.loading(null))
-        emit(restClient.updateUserAsync(basic, user))
+        emit(restClient.updateUser(basic, user))
     }
 
     fun deleteUser() = liveData(Dispatchers.IO) {
         emit(Resource.loading(null))
-        emit(restClient.deleteUserAsync(basic))
+        emit(restClient.deleteUser(basic))
     }
 
     fun setActiveUser(user: User) {

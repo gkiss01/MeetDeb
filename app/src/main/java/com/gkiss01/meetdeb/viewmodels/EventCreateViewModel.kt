@@ -62,14 +62,14 @@ class EventCreateViewModel(private val restClient: RestClient, private val basic
     private fun createEvent(event: RequestBody, image: MultipartBody.Part?) {
         _event.postValue(Resource.loading(null))
         viewModelScope.launch {
-            _event.postValue(restClient.createEventAsync(basic, event, image))
+            _event.postValue(restClient.createEvent(basic, event, image))
         }
     }
 
     private fun updateEvent(event: RequestBody) {
         _event.postValue(Resource.loading(null))
         viewModelScope.launch {
-            _event.postValue(restClient.updateEventAsync(basic, event))
+            _event.postValue(restClient.updateEvent(basic, event))
         }
     }
 

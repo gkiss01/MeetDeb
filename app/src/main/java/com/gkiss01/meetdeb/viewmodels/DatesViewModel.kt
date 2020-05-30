@@ -26,27 +26,27 @@ class DatesViewModel(private val restClient: RestClient, private val basic: Stri
     fun getDates() {
         _dates.postValue(Resource.loading(null))
         viewModelScope.launch {
-            _dates.postValue(restClient.getDatesAsync(basic, event.id))
+            _dates.postValue(restClient.getDates(basic, event.id))
         }
     }
 
     fun createDate(date: OffsetDateTime) {
         _dates.postValue(Resource.loading(null))
         viewModelScope.launch {
-            _dates.postValue(restClient.createDateAsync(basic, event.id, date))
+            _dates.postValue(restClient.createDate(basic, event.id, date))
         }
     }
 
     fun deleteDate(dateId: Long) = liveData(Dispatchers.IO) {
         emit(Resource.loading(null))
-        emit(restClient.deleteDateAsync(basic, dateId))
+        emit(restClient.deleteDate(basic, dateId))
     }
 
     fun changeVote(dateId: Long) {
         if (isLoading) return
         isLoading = true
         viewModelScope.launch {
-            _dates.postValue(restClient.changeVoteAsync(basic, dateId))
+            _dates.postValue(restClient.changeVote(basic, dateId))
             isLoading = false
         }
     }

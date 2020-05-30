@@ -26,7 +26,7 @@ class ParticipantsViewModel(private val restClient: RestClient, private val basi
     fun getParticipants() {
         _participants.postValue(Resource.loading(null))
         viewModelScope.launch {
-            _participants.postValue(restClient.getParticipantsAsync(basic, event.id))
+            _participants.postValue(restClient.getParticipants(basic, event.id))
         }
     }
 }
