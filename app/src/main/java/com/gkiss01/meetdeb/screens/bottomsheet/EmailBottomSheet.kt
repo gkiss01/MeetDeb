@@ -18,6 +18,7 @@ import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.User
+import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.Resource
 import com.gkiss01.meetdeb.network.Status
 import com.gkiss01.meetdeb.screens.fragment.hideKeyboard
@@ -45,7 +46,8 @@ class EmailBottomSheet: SuperBottomSheetFragment() {
                     Handler().postDelayed({ this.dismiss() }, 500)
                 }
                 Status.ERROR -> {
-                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+                    val errorMessage = if (it.errorCode == ErrorCodes.USER_DISABLED_OR_NOT_VALID) getString(R.string.invalid_current_password) else it.errorMessage
+                    Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_LONG).show()
                     bspe_updateButton.hideProgress(R.string.profile_email_update)
                 }
                 Status.LOADING -> {

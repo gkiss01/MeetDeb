@@ -18,6 +18,7 @@ import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
+import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.Status
 import kotlinx.android.synthetic.main.fragment_register.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -61,7 +62,8 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
                     viewModelKoin.resetLiveData()
                 }
                 Status.ERROR -> {
-                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+                    if (it.errorCode != ErrorCodes.USER_DISABLED_OR_NOT_VALID)
+                        Toast.makeText(requireContext(), it.errorMessage, Toast.LENGTH_LONG).show()
                     rf_registerButton.hideProgress(R.string.register_title)
                     viewModelKoin.resetLiveData()
                 }

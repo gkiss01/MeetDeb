@@ -80,7 +80,7 @@ class DatesDialogFragment : DialogFragment() {
                     itemView?.clearAnimation(true)
                 }
                 Status.ERROR -> {
-                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), it.errorMessage, Toast.LENGTH_LONG).show()
                     headerAdapter.clear()
                     val itemView = df_datesRecyclerView.findViewHolderForAdapterPosition(layoutManager.itemCount - 1) as? DatePickerViewHolder
                     itemView?.clearAnimation(false)
@@ -101,7 +101,7 @@ class DatesDialogFragment : DialogFragment() {
         val deleteObserver = SuccessObserver {
             when (it.status) {
                 Status.SUCCESS -> it.data?.withId?.let { dateId -> viewModelKoin.removeDateFromList(dateId) }
-                Status.ERROR -> Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+                Status.ERROR -> Toast.makeText(requireContext(), it.errorMessage, Toast.LENGTH_LONG).show()
                 Status.LOADING -> Log.d("MeetDebLog_DatesDialogFragment", "Deleting date...")
                 else -> {}
             }

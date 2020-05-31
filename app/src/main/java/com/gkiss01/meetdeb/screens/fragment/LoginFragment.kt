@@ -14,6 +14,7 @@ import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
+import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.Status
 import kotlinx.android.synthetic.main.fragment_login.*
 import okhttp3.Credentials
@@ -50,7 +51,8 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                     findNavController().navigate(R.id.eventsFragment)
                 }
                 Status.ERROR -> {
-                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+                    val errorMessage = if (it.errorCode == ErrorCodes.USER_DISABLED_OR_NOT_VALID) getString(R.string.invalid_credentials) else it.errorMessage
+                    Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_LONG).show()
                     lf_loginButton.hideProgress(R.string.login_title)
                     viewModelKoin.resetLiveData()
                 }

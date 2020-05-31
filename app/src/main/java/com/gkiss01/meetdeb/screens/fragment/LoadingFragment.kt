@@ -9,6 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
+import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.Status
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
@@ -22,7 +23,8 @@ class LoadingFragment : Fragment(R.layout.fragment_loading) {
             when (it.status) {
                 Status.SUCCESS -> findNavController().navigate(R.id.eventsFragment)
                 Status.ERROR -> {
-                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+                    if (it.errorCode != ErrorCodes.USER_DISABLED_OR_NOT_VALID)
+                        Toast.makeText(requireContext(), it.errorMessage, Toast.LENGTH_LONG).show()
                     viewModelKoin.resetLiveData()
                     findNavController().navigate(R.id.registerFragment)
                 }

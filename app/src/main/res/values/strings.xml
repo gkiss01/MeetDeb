@@ -87,4 +87,7 @@
 
     <string name="profile_password_title">Jelszó frissítése</string>
     <string name="profile_password_password_new">Új jelszó</string>
+
+    <string name="invalid_credentials">Hibás felhasználónév vagy jelszó!</string>
+    <string name="invalid_current_password">Hibás jelenlegi jelszó!</string>
 </resources>

@@ -84,7 +84,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                     footerAdapter.clear()
                 }
                 Status.ERROR -> {
-                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), it.errorMessage, Toast.LENGTH_LONG).show()
                     ef_swipeRefreshLayout.isRefreshing = false
                     footerAdapter.clear()
                 }
@@ -100,7 +100,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         val deleteObserver = SuccessObserver {
             when (it.status) {
                 Status.SUCCESS -> it.data?.withId?.let { eventId -> viewModelKoin.removeEventFromList(eventId) }
-                Status.ERROR -> Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+                Status.ERROR -> Toast.makeText(requireContext(), it.errorMessage, Toast.LENGTH_LONG).show()
                 Status.LOADING -> Log.d("MeetDebLog_EventsFragment", "Deleting event...")
                 else -> {}
             }
@@ -115,7 +115,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                         fastAdapter.notifyAdapterItemChanged(itemAdapter.getAdapterPosition(eventId))
                     }
                 }
-                Status.ERROR -> Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+                Status.ERROR -> Toast.makeText(requireContext(), it.errorMessage, Toast.LENGTH_LONG).show()
                 Status.LOADING -> Log.d("MeetDebLog_EventsFragment", "Creating event report...")
                 else -> {}
             }
@@ -130,7 +130,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                         fastAdapter.notifyAdapterItemChanged(itemAdapter.getAdapterPosition(eventId))
                     }
                 }
-                Status.ERROR -> Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+                Status.ERROR -> Toast.makeText(requireContext(), it.errorMessage, Toast.LENGTH_LONG).show()
                 Status.LOADING -> Log.d("MeetDebLog_EventsFragment", "Deleting event report...")
                 else -> {}
             }
@@ -177,7 +177,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                     viewModelKoin.resetLiveData()
                 }
                 Status.ERROR -> {
-                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), it.errorMessage, Toast.LENGTH_LONG).show()
                     if (viewModelKoin.selectedEvent != Long.MIN_VALUE)
                         fastAdapter.notifyAdapterItemChanged(itemAdapter.getAdapterPosition(viewModelKoin.selectedEvent))
                     viewModelKoin.resetLiveData()

@@ -127,7 +127,7 @@ class EventCreateFragment : Fragment() {
                     Handler().postDelayed({ findNavController().popBackStack(R.id.eventsFragment, false) }, 500)
                 }
                 Status.ERROR -> {
-                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), it.errorMessage, Toast.LENGTH_LONG).show()
                     cef_createButton.hideProgress(if (viewModelKoin.type.value == ScreenType.NEW) R.string.event_create_button else R.string.event_more_update)
                     viewModelKoin.resetLiveData()
                 }

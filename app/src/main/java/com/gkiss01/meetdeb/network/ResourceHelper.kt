@@ -48,22 +48,22 @@ enum class ErrorCodes {
     COULD_NOT_CREATE_DIRECTORY;
 }
 
-data class Resource<out T>(val status: Status, val data: T?, val message: String?) {
+data class Resource<out T>(val status: Status, val data: T?, val errorCode: ErrorCodes?, val errorMessage: String?) {
     companion object {
         fun <T> success(data: T?): Resource<T> {
-            return Resource(Status.SUCCESS, data, null)
+            return Resource(Status.SUCCESS, data, null, null)
         }
 
-        fun <T> error(msg: String, data: T?): Resource<T> {
-            return Resource(Status.ERROR, data, msg)
+        fun <T> error(code: ErrorCodes, msg: String, data: T?): Resource<T> {
+            return Resource(Status.ERROR, data, code, msg)
         }
 
         fun <T> loading(data: T?): Resource<T> {
-            return Resource(Status.LOADING, data, null)
+            return Resource(Status.LOADING, data, null, null)
         }
 
         fun <T> pending(data: T?): Resource<T> {
-            return Resource(Status.PENDING, data, null)
+            return Resource(Status.PENDING, data, null, null)
         }
     }
 }
@@ -77,11 +77,11 @@ open class ResourceHandler(private val moshi: Moshi) {
         return when (e) {
             is HttpException -> {
                 val errorResponse = convertErrorBody(e)
-                Resource.error(convertErrorMessage(errorResponse, e.code() >= 500), null)
+                Resource.error(errorResponse?.errorCode ?: ErrorCodes.UNKNOWN, convertErrorMessage(errorResponse, e.code() >= 500), null)
             }
-            is SocketTimeoutException -> Resource.error(getErrorString(ErrorCodes.TIMEOUT), null)
-            is ConnectException -> Resource.error(getErrorString(ErrorCodes.CONNECT), null)
-            else -> Resource.error(getErrorString(null), null)
+            is SocketTimeoutException -> Resource.error(ErrorCodes.TIMEOUT, getErrorString(ErrorCodes.TIMEOUT), null)
+            is ConnectException -> Resource.error(ErrorCodes.CONNECT, getErrorString(ErrorCodes.CONNECT), null)
+            else -> Resource.error(ErrorCodes.UNKNOWN, getErrorString(null), null)
         }
     }
 

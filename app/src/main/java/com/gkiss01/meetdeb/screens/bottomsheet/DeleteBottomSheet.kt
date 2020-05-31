@@ -47,7 +47,7 @@ class DeleteBottomSheet: SuperBottomSheetFragment() {
                     Handler().postDelayed({ viewModelActivityKoin.resetLiveData() }, 500)
                 }
                 Status.ERROR -> {
-                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), it.errorMessage, Toast.LENGTH_LONG).show()
                     debsf_deleteButton.hideProgress(R.string.profile_delete_yes)
                 }
                 Status.LOADING -> {

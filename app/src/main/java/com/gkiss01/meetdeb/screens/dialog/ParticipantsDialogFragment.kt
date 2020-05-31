@@ -63,7 +63,7 @@ class ParticipantsDialogFragment : DialogFragment() {
                     headerAdapter.clear()
                 }
                 Status.ERROR -> {
-                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), it.errorMessage, Toast.LENGTH_LONG).show()
                     headerAdapter.clear()
                 }
                 Status.LOADING -> {
