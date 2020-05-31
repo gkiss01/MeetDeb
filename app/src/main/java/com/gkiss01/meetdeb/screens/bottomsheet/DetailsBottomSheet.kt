@@ -25,7 +25,7 @@ class DetailsBottomSheet: SuperBottomSheetFragment() {
         dfbs_venueValue.text = event.venue
         dfbs_dateValue.text = formatDate(event.date)
         dfbs_descriptionValue.text = event.description
-        dfbs_participants.text = "Ott lesz ${event.participants} ember"
+        dfbs_participants.text = getString(R.string.event_participants, event.participants)
 
         dfbs_participantsCheck.setOnClickListener { findNavController().navigate(DetailsBottomSheetDirections.actionDetailsBottomSheetFragmentToParticipantsDialogFragment(event)) }
     }

@@ -60,6 +60,9 @@
     <string name="event_more_update">Frissítés</string>
     <string name="event_more_update_waiting">Frissítés…</string>
 
+    <string name="event_votes">Szavazatok: %1$d</string>
+    <string name="event_participants">"Ott lesz %1$d ember"</string>
+
     <string name="profile_image_desc">Profile image</string>
     <string name="profile_admin">Adminisztrátor</string>
     <string name="profile_user">Felhasználó</string>

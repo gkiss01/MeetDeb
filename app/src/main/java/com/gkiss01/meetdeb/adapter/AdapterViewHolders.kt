@@ -3,7 +3,6 @@ package com.gkiss01.meetdeb.adapter
 import android.graphics.Color
 import android.view.View
 import com.github.razir.progressbutton.hideProgress
-import com.github.razir.progressbutton.isProgressActive
 import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.fastadapter.Date
@@ -64,10 +63,6 @@ class DatePickerViewHolder(private val view: View): FastAdapter.ViewHolder<DateP
             view.dlp_downArrow.animate().setDuration(200).rotation(0F)
         }
     }
-
-    fun isProgressActive(): Boolean {
-        return view.dlp_createButton.isProgressActive()
-    }
 }
 
 class ParticipantViewHolder(private val view: View): FastAdapter.ViewHolder<Participant>(view) {
@@ -83,7 +78,7 @@ class ParticipantViewHolder(private val view: View): FastAdapter.ViewHolder<Part
 class DateViewHolder(private val view: View): FastAdapter.ViewHolder<Date>(view) {
     override fun bindView(item: Date, payloads: List<Any>) {
         view.dli_dateValue.text = formatDate(item.date)
-        view.dli_votes.text = "Szavazatok: ${item.votes}"
+        view.dli_votes.text = view.context.getString(R.string.event_votes, item.votes)
         view.dli_voteButton.isChecked = item.accepted
 
         view.dli_voteButton.hideProgress()
