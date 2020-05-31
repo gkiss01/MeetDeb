@@ -20,28 +20,20 @@ val networkModule = module {
     factory { provideApi(get()) }
 }
 
-fun provideInterceptor(): Interceptor {
-    return Interceptor {
-        val request: Request = it.request().newBuilder().addHeader("Accept", "application/json").build()
-        it.proceed(request)
-    }
+fun provideInterceptor(): Interceptor = Interceptor {
+    val request: Request = it.request().newBuilder().addHeader("Accept", "application/json").build()
+    it.proceed(request)
 }
 
-fun provideOkHttpClient(interceptor: Interceptor): OkHttpClient {
-    return OkHttpClient.Builder().addInterceptor(interceptor).build()
-}
+fun provideOkHttpClient(interceptor: Interceptor): OkHttpClient = OkHttpClient.Builder().addInterceptor(interceptor).build()
 
-fun provideMoshi(): Moshi {
-    return Moshi.Builder()
-        .add(OffsetDateTimeAdapter())
-        .add(KotlinJsonAdapterFactory())
-        .build()
-}
+fun provideMoshi(): Moshi = Moshi.Builder()
+    .add(OffsetDateTimeAdapter())
+    .add(KotlinJsonAdapterFactory())
+    .build()
 
-fun provideRetrofit(okHttpClient: OkHttpClient, moshi: Moshi): Retrofit {
-    return Retrofit.Builder().baseUrl(BASE_URL).client(okHttpClient)
-        .addConverterFactory(MoshiConverterFactory.create(moshi))
-        .build()
-}
+fun provideRetrofit(okHttpClient: OkHttpClient, moshi: Moshi): Retrofit = Retrofit.Builder().baseUrl(BASE_URL).client(okHttpClient)
+    .addConverterFactory(MoshiConverterFactory.create(moshi))
+    .build()
 
 fun provideApi(retrofit: Retrofit): DataProvider = retrofit.create(DataProvider::class.java)

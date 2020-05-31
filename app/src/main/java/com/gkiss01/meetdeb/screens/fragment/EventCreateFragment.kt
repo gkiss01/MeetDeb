@@ -24,12 +24,12 @@ import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.fastadapter.Event
+import com.gkiss01.meetdeb.data.fastadapter.format
+import com.gkiss01.meetdeb.data.fastadapter.isTimeIn24HourFormat
+import com.gkiss01.meetdeb.data.fastadapter.update
 import com.gkiss01.meetdeb.databinding.FragmentEventCreateBinding
 import com.gkiss01.meetdeb.network.BASE_URL
 import com.gkiss01.meetdeb.network.Status
-import com.gkiss01.meetdeb.utils.formatDate
-import com.gkiss01.meetdeb.utils.isDate24HourFormat
-import com.gkiss01.meetdeb.utils.updateOffsetDateTime
 import com.gkiss01.meetdeb.viewmodels.EventCreateViewModel
 import com.gkiss01.meetdeb.viewmodels.ScreenType
 import com.karumi.dexter.Dexter
@@ -78,13 +78,13 @@ class EventCreateFragment : Fragment() {
             .into(cef_imagePreview)
 
         val onDateListener = DatePickerDialog.OnDateSetListener { _, year, monthValue, dayOfMonth ->
-            viewModelKoin.eventLocal.date = updateOffsetDateTime(viewModelKoin.eventLocal.date, year, monthValue + 1, dayOfMonth)
-            cef_dateTitle.text = formatDate(viewModelKoin.eventLocal.date)
+            viewModelKoin.eventLocal.date = viewModelKoin.eventLocal.date.update(year, monthValue + 1, dayOfMonth)
+            cef_dateTitle.text = viewModelKoin.eventLocal.date.format()
         }
 
         val onTimeListener = TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
-            viewModelKoin.eventLocal.date = updateOffsetDateTime(viewModelKoin.eventLocal.date, hourOfDay, minute)
-            cef_dateTitle.text = formatDate(viewModelKoin.eventLocal.date)
+            viewModelKoin.eventLocal.date = viewModelKoin.eventLocal.date.update(hourOfDay, minute)
+            cef_dateTitle.text = viewModelKoin.eventLocal.date.format()
         }
 
         cef_dateButton.setOnClickListener {
@@ -93,7 +93,7 @@ class EventCreateFragment : Fragment() {
         }
 
         cef_timeButton.setOnClickListener {
-            val timePickerDialog = TimePickerDialog(context, onTimeListener, viewModelKoin.eventLocal.date.hour, viewModelKoin.eventLocal.date.minute, isDate24HourFormat(requireContext()))
+            val timePickerDialog = TimePickerDialog(context, onTimeListener, viewModelKoin.eventLocal.date.hour, viewModelKoin.eventLocal.date.minute, requireContext().isTimeIn24HourFormat())
             timePickerDialog.show()
         }
 

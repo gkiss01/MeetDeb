@@ -9,7 +9,7 @@ import androidx.navigation.fragment.findNavController
 import com.andrefrsousa.superbottomsheet.SuperBottomSheetFragment
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.fastadapter.Event
-import com.gkiss01.meetdeb.utils.formatDate
+import com.gkiss01.meetdeb.data.fastadapter.format
 import kotlinx.android.synthetic.main.bottomsheet_event_details.*
 
 class DetailsBottomSheet: SuperBottomSheetFragment() {
@@ -23,7 +23,7 @@ class DetailsBottomSheet: SuperBottomSheetFragment() {
 
         dfbs_userNameValue.text = event.username
         dfbs_venueValue.text = event.venue
-        dfbs_dateValue.text = formatDate(event.date)
+        dfbs_dateValue.text = event.date.format()
         dfbs_descriptionValue.text = event.description
         dfbs_participants.text = getString(R.string.event_participants, event.participants)
 

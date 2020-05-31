@@ -5,12 +5,8 @@ import android.view.View
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.R
-import com.gkiss01.meetdeb.data.fastadapter.Date
-import com.gkiss01.meetdeb.data.fastadapter.DatePickerItem
-import com.gkiss01.meetdeb.data.fastadapter.Event
-import com.gkiss01.meetdeb.data.fastadapter.Participant
+import com.gkiss01.meetdeb.data.fastadapter.*
 import com.gkiss01.meetdeb.network.BASE_URL
-import com.gkiss01.meetdeb.utils.formatDate
 import com.mikepenz.fastadapter.FastAdapter
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_date.view.*
@@ -35,7 +31,7 @@ class DatePickerViewHolder(private val view: View): FastAdapter.ViewHolder<DateP
     }
 
     fun updateSelectedDate(offsetDateTime: OffsetDateTime) {
-        view.dlp_dateTitle.text = formatDate(offsetDateTime)
+        view.dlp_dateTitle.text = offsetDateTime.format()
     }
 
     fun setError(error: String?) {
@@ -77,7 +73,7 @@ class ParticipantViewHolder(private val view: View): FastAdapter.ViewHolder<Part
 
 class DateViewHolder(private val view: View): FastAdapter.ViewHolder<Date>(view) {
     override fun bindView(item: Date, payloads: List<Any>) {
-        view.dli_dateValue.text = formatDate(item.date)
+        view.dli_dateValue.text = item.date.format()
         view.dli_votes.text = view.context.getString(R.string.event_votes, item.votes)
         view.dli_voteButton.isChecked = item.accepted
 
