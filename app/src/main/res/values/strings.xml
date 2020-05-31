@@ -90,4 +90,28 @@
 
     <string name="invalid_credentials">Hibás felhasználónév vagy jelszó!</string>
     <string name="invalid_current_password">Hibás jelenlegi jelszó!</string>
+
+    <string name="user_not_found">A felhasználó nem található!</string>
+    <string name="no_users_found">Nem található felhasználó!</string>
+    <string name="confirmation_token_not_found">A megerősítő token nem található!</string>
+    <string name="email_already_in_use">Az email cím már használatban van!</string>
+    <string name="user_already_verified">A felhasználó már meg lett erősítve!</string>
+    <string name="event_not_found">Az esemény nem található!</string>
+    <string name="no_events_found">Nem található esemény!</string>
+    <string name="participant_not_found">A jelentkezés nem található!</string>
+    <string name="date_not_found">A dátum ajánlás nem található!</string>
+    <string name="no_dates_found">Nem található dátum ajánlás!</string>
+    <string name="date_already_created">A dátum ajánlás már létre lett hozva!</string>
+    <string name="file_not_found">A fájl nem található!</string>
+    <string name="filename_invalid">A fájlnév nem megfelelő!</string>
+    <string name="could_not_convert_image">A kép nem konvertálható!</string>
+    <string name="file_size_limit_exceeded">Maximális feltöltési méret meghaladva!</string>
+    <string name="upload_failed">Feltöltés sikertelen!</string>
+    <string name="could_not_create_directory">Nem hozható létre a könyvtár!</string>
+    <string name="bad_request_format">Rossz kérés formázás!</string>
+    <string name="access_denied">Hozzáférés megtagadva!</string>
+    <string name="user_disabled_or_not_valid">A felhasználó nem létezik, vagy fel lett függesztve!</string>
+    <string name="timeout_error">Időtúllépés!</string>
+    <string name="connect_error">Csatlakozási hiba!</string>
+    <string name="unknown_error">Valami hiba történt!</string>
 </resources>

@@ -31,14 +31,10 @@ enum class ErrorCodes {
     NO_EVENTS_FOUND,
 
     PARTICIPANT_NOT_FOUND,
-    PARTICIPANT_ALREADY_CREATED,
 
     DATE_NOT_FOUND,
     NO_DATES_FOUND,
     DATE_ALREADY_CREATED,
-
-    VOTE_NOT_FOUND,
-    VOTE_ALREADY_CREATED,
 
     FILE_NOT_FOUND,
     FILENAME_INVALID,
@@ -120,12 +116,9 @@ open class ResourceHandler(private val moshi: Moshi) {
             ErrorCodes.EVENT_NOT_FOUND -> "Event is not found!"
             ErrorCodes.NO_EVENTS_FOUND -> "No events found!"
             ErrorCodes.PARTICIPANT_NOT_FOUND -> "Participant is not found!"
-            ErrorCodes.PARTICIPANT_ALREADY_CREATED -> "Participant is already created!"
             ErrorCodes.DATE_NOT_FOUND -> "Date is not found!"
             ErrorCodes.NO_DATES_FOUND -> "No dates found!"
             ErrorCodes.DATE_ALREADY_CREATED -> "Date is already created!"
-            ErrorCodes.VOTE_NOT_FOUND -> "Vote is not found!"
-            ErrorCodes.VOTE_ALREADY_CREATED -> "Vote is already created!"
             ErrorCodes.FILE_NOT_FOUND -> "File is not found!"
             ErrorCodes.FILENAME_INVALID -> "Filename is invalid!"
             ErrorCodes.COULD_NOT_CONVERT_IMAGE -> "Could not convert image!"
