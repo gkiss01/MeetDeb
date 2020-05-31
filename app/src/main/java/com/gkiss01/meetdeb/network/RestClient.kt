@@ -6,7 +6,7 @@ import org.koin.dsl.module
 import org.threeten.bp.OffsetDateTime
 
 val restModule = module {
-    factory { ResourceHandler() }
+    factory { ResourceHandler(get()) }
     factory { RestClient(get(), get()) }
 }
 
