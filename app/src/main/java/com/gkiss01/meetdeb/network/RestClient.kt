@@ -2,11 +2,12 @@ package com.gkiss01.meetdeb.network
 
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module
 import org.threeten.bp.OffsetDateTime
 
 val restModule = module {
-    factory { ResourceHandler(get()) }
+    factory { ResourceHandler(get(), androidApplication()) }
     factory { RestClient(get(), get()) }
 }
 
