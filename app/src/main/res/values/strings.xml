@@ -8,6 +8,15 @@
 
     <string name="done">Kész!</string>
 
+    <string name="field_required">A mezőt kötelező kitölteni!</string>
+    <string name="invalid_email">Az email cím nem érvényes!</string>
+    <string name="min_password_length">A jelszó min. 8 karakter lehet!</string>
+    <string name="min_name_length">A név min. 4 karakter lehet!</string>
+    <string name="max_name_length">A név max. 80 karakter lehet!</string>
+    <string name="future_date_required">Nem adhatsz meg múltbeli dátumot!</string>
+    <string name="cannot_update_image">A képet nem lehet frissíteni!</string>
+    <string name="max_event_name_length">A név max. 40 karakter lehet!</string>
+
     <string name="event_creator">Létrehozó:</string>
     <string name="event_venue">Helyszín:</string>
     <string name="event_date">Időpont:</string>
@@ -31,8 +40,10 @@
     <string name="event_date_add">Más időpont</string>
 
     <string name="event_accepted">Elfogadva!</string>
-    <string name="event_not_accepted">Ott leszek!</string>
+    <string name="event_not_accepted">Ott leszek</string>
     <string name="event_accept_waiting">Várj</string>
+    <string name="event_reported">Esemény jelentve!</string>
+    <string name="event_report_removed">Esemény jelentés törölve!</string>
 
     <string name="date_add_button">Új időpont</string>
     <string name="date_add_button_desc">Plus sign on add date button</string>

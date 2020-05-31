@@ -99,7 +99,7 @@ class EventCreateFragment : Fragment() {
 
         cef_imageButton.setOnClickListener {
             if (viewModelKoin.type.value == ScreenType.NEW) requestStoragePermissions()
-            else Toast.makeText(context, "A képet nem tudod frissíteni!", Toast.LENGTH_LONG).show()
+            else Toast.makeText(context, getString(R.string.cannot_update_image), Toast.LENGTH_LONG).show()
         }
 
         viewModelKoin.type.observe(viewLifecycleOwner, Observer {
@@ -179,11 +179,11 @@ class EventCreateFragment : Fragment() {
     private fun validateName(): Boolean {
         return when {
             TextUtils.isEmpty(viewModelKoin.eventLocal.name) -> {
-                cef_name.error = "A mezőt kötelező kitölteni!"
+                cef_name.error = getString(R.string.field_required)
                 false
             }
             viewModelKoin.eventLocal.name.length > 40 -> {
-                cef_name.error = "A név max. 40 karakter lehet!"
+                cef_name.error = getString(R.string.max_event_name_length)
                 false
             }
             else -> {
@@ -196,7 +196,7 @@ class EventCreateFragment : Fragment() {
     private fun validateDescription(): Boolean {
         return when {
             TextUtils.isEmpty(viewModelKoin.eventLocal.description) -> {
-                cef_description.error = "A mezőt kötelező kitölteni!"
+                cef_description.error = getString(R.string.field_required)
                 false
             }
             else -> {
@@ -209,7 +209,7 @@ class EventCreateFragment : Fragment() {
     private fun validateVenue(): Boolean {
         return when {
             TextUtils.isEmpty(viewModelKoin.eventLocal.venue) -> {
-                cef_venue.error = "A mezőt kötelező kitölteni!"
+                cef_venue.error = getString(R.string.field_required)
                 false
             }
             else -> {
@@ -222,7 +222,7 @@ class EventCreateFragment : Fragment() {
     private fun validateDate(): Boolean {
         return when {
             viewModelKoin.eventLocal.date.isBefore(OffsetDateTime.now()) -> {
-                cef_dateTitle.error = "Jövőbeli dátumot adj meg!"
+                cef_dateTitle.error = getString(R.string.future_date_required)
                 false
             }
             else -> {

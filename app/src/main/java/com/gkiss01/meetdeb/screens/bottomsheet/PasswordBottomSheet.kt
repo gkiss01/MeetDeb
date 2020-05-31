@@ -83,11 +83,11 @@ class PasswordBottomSheet: SuperBottomSheetFragment() {
 
         return when {
             password.isEmpty() -> {
-                bspp_newPassword.error = "A mezőt kötelező kitölteni!"
+                bspp_newPassword.error = getString(R.string.field_required)
                 false
             }
             password.length < 8 -> {
-                bspp_newPassword.error = "A jelszó min. 8 karakter lehet!"
+                bspp_newPassword.error = getString(R.string.min_password_length)
                 false
             }
             else -> {
@@ -102,11 +102,11 @@ class PasswordBottomSheet: SuperBottomSheetFragment() {
 
         return when {
             password.isEmpty() -> {
-                bspp_oldPassword.error = "A mezőt kötelező kitölteni!"
+                bspp_oldPassword.error = getString(R.string.field_required)
                 false
             }
             password.length < 8 -> {
-                bspp_oldPassword.error = "A jelszó min. 8 karakter lehet!"
+                bspp_oldPassword.error = getString(R.string.min_password_length)
                 false
             }
             else -> {

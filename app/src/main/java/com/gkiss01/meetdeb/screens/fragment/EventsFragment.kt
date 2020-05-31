@@ -109,7 +109,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         val createReportObserver = SuccessObserver {
             when (it.status) {
                 Status.SUCCESS -> {
-                    Toast.makeText(requireContext(), "Event reported!", Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), getString(R.string.event_reported), Toast.LENGTH_LONG).show()
                     it.data?.withId?.let { eventId ->
                         viewModelKoin.addEventReportToList(eventId)
                         fastAdapter.notifyAdapterItemChanged(itemAdapter.getAdapterPosition(eventId))
@@ -124,7 +124,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         val deleteReportObserver = SuccessObserver {
             when (it.status) {
                 Status.SUCCESS -> {
-                    Toast.makeText(requireContext(), "Event report removed!", Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), getString(R.string.event_report_removed), Toast.LENGTH_LONG).show()
                     it.data?.withId?.let { eventId ->
                         viewModelKoin.removeEventReportFromList(eventId)
                         fastAdapter.notifyAdapterItemChanged(itemAdapter.getAdapterPosition(eventId))

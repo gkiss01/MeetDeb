@@ -81,11 +81,11 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
 
         return when {
             email.isEmpty() -> {
-                rf_email.error = "A mezőt kötelező kitölteni!"
+                rf_email.error = getString(R.string.field_required)
                 false
             }
             !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
-                rf_email.error = "Az email cím nem valódi!"
+                rf_email.error = getString(R.string.invalid_email)
                 false
             }
             else -> {
@@ -100,11 +100,11 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
 
         return when {
             password.isEmpty() -> {
-                rf_password.error = "A mezőt kötelező kitölteni!"
+                rf_password.error = getString(R.string.field_required)
                 false
             }
             password.length < 8 -> {
-                rf_password.error = "A jelszó min. 8 karakter lehet!"
+                rf_password.error = getString(R.string.min_password_length)
                 false
             }
             else -> {
@@ -119,15 +119,15 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
 
         return when {
             name.isEmpty() -> {
-                rf_name.error = "A mezőt kötelező kitölteni!"
+                rf_name.error = getString(R.string.field_required)
                 false
             }
             name.length < 4 -> {
-                rf_name.error = "A név min. 4 karakter lehet!"
+                rf_name.error = getString(R.string.min_name_length)
                 false
             }
             name.length > 80 -> {
-                rf_name.error = "A név max. 80 karakter lehet!"
+                rf_name.error = getString(R.string.max_name_length)
                 false
             }
             else -> {

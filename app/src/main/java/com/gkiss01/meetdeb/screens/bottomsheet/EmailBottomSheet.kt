@@ -84,11 +84,11 @@ class EmailBottomSheet: SuperBottomSheetFragment() {
 
         return when {
             email.isEmpty() -> {
-                bspe_newEmail.error = "A mezőt kötelező kitölteni!"
+                bspe_newEmail.error = getString(R.string.field_required)
                 false
             }
             !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
-                bspe_newEmail.error = "Az email cím nem valódi!"
+                bspe_newEmail.error = getString(R.string.invalid_email)
                 false
             }
             else -> {
@@ -103,11 +103,11 @@ class EmailBottomSheet: SuperBottomSheetFragment() {
 
         return when {
             password.isEmpty() -> {
-                bspe_oldPassword.error = "A mezőt kötelező kitölteni!"
+                bspe_oldPassword.error = getString(R.string.field_required)
                 false
             }
             password.length < 8 -> {
-                bspe_oldPassword.error = "A jelszó min. 8 karakter lehet!"
+                bspe_oldPassword.error = getString(R.string.min_password_length)
                 false
             }
             else -> {

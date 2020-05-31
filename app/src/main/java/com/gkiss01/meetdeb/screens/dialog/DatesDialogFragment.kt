@@ -112,7 +112,7 @@ class DatesDialogFragment : DialogFragment() {
             val itemView = df_datesRecyclerView.findViewHolderForAdapterPosition(position) as? DatePickerViewHolder
 
             if (item.offsetDateTime.isBefore(OffsetDateTime.now()))
-                itemView?.setError("Jövőbeli dátumot adj meg!")
+                itemView?.setError(getString(R.string.future_date_required))
             else {
                 itemView?.setError(null)
                 itemView?.showAnimation()

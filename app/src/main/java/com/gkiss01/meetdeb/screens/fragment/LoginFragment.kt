@@ -70,11 +70,11 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
         return when {
             email.isEmpty() -> {
-                lf_email.error = "A mezőt kötelező kitölteni!"
+                lf_email.error = getString(R.string.field_required)
                 false
             }
             !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
-                lf_email.error = "Az email cím nem valódi!"
+                lf_email.error = getString(R.string.invalid_email)
                 false
             }
             else -> {
@@ -89,11 +89,11 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
         return when {
             password.isEmpty() -> {
-                lf_password.error = "A mezőt kötelező kitölteni!"
+                lf_password.error = getString(R.string.field_required)
                 false
             }
             password.length < 8 -> {
-                lf_password.error = "A jelszó min. 8 karakter lehet!"
+                lf_password.error = getString(R.string.min_password_length)
                 false
             }
             else -> {
