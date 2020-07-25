@@ -68,7 +68,7 @@
         android:id="@+id/participantsDialogFragment"
         android:name="com.gkiss01.meetdeb.screens.dialog.ParticipantsDialogFragment"
         android:label="participants_fragment"
-        tools:layout="@layout/fragment_participants" >
+        tools:layout="@layout/fragment_participants">
         <argument
             android:name="event"
             app:argType="com.gkiss01.meetdeb.data.fastadapter.Event" />
