@@ -5,8 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gkiss01.meetdeb.data.apirequest.EventRequest
 import com.gkiss01.meetdeb.data.fastadapter.Event
+import com.gkiss01.meetdeb.data.request.EventRequest
 import com.gkiss01.meetdeb.network.Resource
 import com.gkiss01.meetdeb.network.RestClient
 import com.squareup.moshi.Moshi

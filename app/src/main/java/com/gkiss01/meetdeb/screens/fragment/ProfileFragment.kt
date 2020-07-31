@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -42,8 +43,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                     pf_name.text = it.data?.name
                     pf_email.text = it.data?.email
 
-                    pf_createdEvents.text = "137"
-                    pf_acceptedEvents.text = "457"
                     pf_id.editText?.setText(String.format("%07d", it.data?.id), TextView.BufferType.NORMAL)
 
                     if (it.data?.isAdmin() == true) {
@@ -57,6 +56,18 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 }
                 Status.PENDING -> findNavController().navigate(R.id.registerFragment)
                 else -> Log.e("MeetDebLog_ProfileFragment", "User is null...")
+            }
+        })
+
+        viewModelActivityKoin.getEventsSummary().observe(viewLifecycleOwner, Observer {
+            when (it.status) {
+                Status.SUCCESS -> {
+                    pf_createdEvents.text = it.data?.eventsCreated.toString()
+                    pf_acceptedEvents.text = it.data?.eventsInvolved.toString()
+                }
+                Status.ERROR -> Toast.makeText(requireContext(), it.errorMessage, Toast.LENGTH_LONG).show()
+                Status.LOADING -> Log.d("MeetDebLog_ProfileFragment", "Loading events summary...")
+                else -> {}
             }
         })
 

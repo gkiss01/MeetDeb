@@ -4,7 +4,7 @@ import android.app.Application
 import android.content.Context
 import androidx.lifecycle.*
 import com.gkiss01.meetdeb.data.User
-import com.gkiss01.meetdeb.data.apirequest.UserRequest
+import com.gkiss01.meetdeb.data.request.UserRequest
 import com.gkiss01.meetdeb.network.Resource
 import com.gkiss01.meetdeb.network.RestClient
 import com.squareup.moshi.Moshi
@@ -63,6 +63,11 @@ class ActivityViewModel(private val moshi: Moshi, private val restClient: RestCl
     fun deleteUser() = liveData(Dispatchers.IO) {
         emit(Resource.loading(null))
         emit(restClient.deleteUser(basic))
+    }
+
+    fun getEventsSummary() = liveData(Dispatchers.IO) {
+        emit(Resource.loading(null))
+        emit(restClient.getEventsSummary(basic))
     }
 
     fun setActiveUser(user: User) {

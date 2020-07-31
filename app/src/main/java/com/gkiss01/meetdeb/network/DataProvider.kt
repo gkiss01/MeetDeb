@@ -5,6 +5,7 @@ import com.gkiss01.meetdeb.data.User
 import com.gkiss01.meetdeb.data.fastadapter.Date
 import com.gkiss01.meetdeb.data.fastadapter.Event
 import com.gkiss01.meetdeb.data.fastadapter.Participant
+import com.gkiss01.meetdeb.data.response.EventSummary
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.threeten.bp.OffsetDateTime
@@ -24,6 +25,9 @@ interface DataProvider {
 
     @GET("users/me")
     suspend fun checkUser(@Header("Authorization") auth: String): User
+
+    @GET("users/summary/events")
+    suspend fun getEventsSummary(@Header("Authorization") auth: String): EventSummary
 
     // MARK - Events -
 

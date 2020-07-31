@@ -1,4 +1,4 @@
-package com.gkiss01.meetdeb.data.apirequest
+package com.gkiss01.meetdeb.data.request
 
 data class UserRequest(
     val email: String?,

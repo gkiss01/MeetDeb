@@ -16,6 +16,7 @@ class RestClient(private val dataProvider: DataProvider, private val resourceHan
     suspend fun updateUser(auth: String, user: RequestBody) = handleRequest { dataProvider.updateUser(auth, user) }
     suspend fun deleteUser(auth: String) = handleRequest { dataProvider.deleteUser(auth) }
     suspend fun checkUser(auth: String) = handleRequest { dataProvider.checkUser(auth) }
+    suspend fun getEventsSummary(auth: String) = handleRequest { dataProvider.getEventsSummary(auth) }
 
     suspend fun createEvent(auth: String, event: RequestBody, file: MultipartBody.Part?) = handleRequest { dataProvider.createEvent(auth, event, file) }
     suspend fun updateEvent(auth: String, event: RequestBody) = handleRequest { dataProvider.updateEvent(auth, event) }
