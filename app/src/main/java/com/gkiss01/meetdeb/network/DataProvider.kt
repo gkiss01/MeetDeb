@@ -47,7 +47,7 @@ interface DataProvider {
     suspend fun getEvent(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): Event
 
     @GET("events")
-    suspend fun getEvents(@Header("Authorization") auth: String, @Query("page") page: Int): List<Event>
+    suspend fun getEvents(@Header("Authorization") auth: String, @Query("page") page: Int, @Query("page") limit: Int): List<Event>
 
     @GET("events/reports/add/{eventId}")
     suspend fun createReport(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): SuccessResponse<Long>

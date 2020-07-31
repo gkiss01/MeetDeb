@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.adapter.EventViewHolder
@@ -24,10 +23,10 @@ import com.gkiss01.meetdeb.network.Status
 import com.gkiss01.meetdeb.utils.ScrollingViewOnApplyWindowInsetsListener
 import com.gkiss01.meetdeb.viewmodels.EventsViewModel
 import com.mikepenz.fastadapter.FastAdapter
-import com.mikepenz.fastadapter.GenericFastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.diff.FastAdapterDiffUtil
 import com.mikepenz.fastadapter.listeners.addClickListener
+import com.mikepenz.fastadapter.scroll.EndlessRecyclerOnScrollListener
 import com.mikepenz.fastadapter.ui.items.ProgressItem
 import com.mikepenz.itemanimators.AlphaInAnimator
 import kotlinx.android.synthetic.main.fragment_events.*
@@ -45,7 +44,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
 
     private val itemAdapter = ItemAdapter<Event>()
     private val footerAdapter = ItemAdapter<ProgressItem>()
-    private lateinit var fastAdapter: GenericFastAdapter
+    private val fastAdapter = FastAdapter.with(listOf(itemAdapter, footerAdapter))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -154,7 +153,6 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         if (viewModelKoin.events.value?.isEmpty() != false)
             viewModelKoin.refreshEvents().observe(viewLifecycleOwner, eventsObserver)
 
-        fastAdapter = FastAdapter.with(listOf(itemAdapter, footerAdapter))
         fastAdapter.attachDefaultListeners = false
         ef_eventsRecyclerView.adapter = fastAdapter
 
@@ -208,15 +206,9 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             }
         }
 
-        ef_eventsRecyclerView.addOnScrollListener(object: RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-
-                if (dy > 0 && !viewModelKoin.eventsIsLoading) {
-                    if (layoutManager.itemCount <= (layoutManager.findLastVisibleItemPosition() + 1)) {
-                        viewModelKoin.getMoreEvents().observe(viewLifecycleOwner, eventsObserver)
-                    }
-                }
+        ef_eventsRecyclerView.addOnScrollListener(object : EndlessRecyclerOnScrollListener(footerAdapter) {
+            override fun onLoadMore(currentPage: Int) {
+                viewModelKoin.getMoreEvents().observe(viewLifecycleOwner, eventsObserver)
             }
         })
     }

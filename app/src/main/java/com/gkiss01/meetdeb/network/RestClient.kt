@@ -22,7 +22,7 @@ class RestClient(private val dataProvider: DataProvider, private val resourceHan
     suspend fun updateEvent(auth: String, event: RequestBody) = handleRequest { dataProvider.updateEvent(auth, event) }
     suspend fun deleteEvent(auth: String, eventId: Long) = handleRequest { dataProvider.deleteEvent(auth, eventId) }
     suspend fun getEvent(auth: String, eventId: Long) = handleRequest { dataProvider.getEvent(auth, eventId) }
-    suspend fun getEvents(auth: String, page: Int) = handleRequest { dataProvider.getEvents(auth, page) }
+    suspend fun getEvents(auth: String, page: Int) = handleRequest { dataProvider.getEvents(auth, page, PAGE_SIZE) }
     suspend fun createReport(auth: String, eventId: Long) = handleRequest { dataProvider.createReport(auth, eventId) }
     suspend fun deleteReport(auth: String, eventId: Long) = handleRequest { dataProvider.deleteReport(auth, eventId) }
 

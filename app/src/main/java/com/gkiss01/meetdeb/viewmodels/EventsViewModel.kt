@@ -2,6 +2,7 @@ package com.gkiss01.meetdeb.viewmodels
 
 import androidx.lifecycle.*
 import com.gkiss01.meetdeb.data.fastadapter.Event
+import com.gkiss01.meetdeb.network.PAGE_SIZE
 import com.gkiss01.meetdeb.network.Resource
 import com.gkiss01.meetdeb.network.RestClient
 import kotlinx.coroutines.Dispatchers
@@ -36,7 +37,7 @@ class EventsViewModel(private val restClient: RestClient, private var basic: Str
     }
 
     fun getMoreEvents(): LiveData<Resource<List<Event>>> {
-        currentPage = ((_events.value?.size ?: 0) / 25) + 1
+        currentPage = ((_events.value?.size ?: 0) / PAGE_SIZE) + 1
         eventsIsLoading = true
         return getEvents(currentPage)
     }
