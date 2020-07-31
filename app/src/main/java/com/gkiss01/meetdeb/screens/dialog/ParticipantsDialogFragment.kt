@@ -19,7 +19,6 @@ import com.gkiss01.meetdeb.data.fastadapter.Participant
 import com.gkiss01.meetdeb.network.Status
 import com.gkiss01.meetdeb.viewmodels.ParticipantsViewModel
 import com.mikepenz.fastadapter.FastAdapter
-import com.mikepenz.fastadapter.GenericFastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.diff.FastAdapterDiffUtil
 import com.mikepenz.fastadapter.ui.items.ProgressItem
@@ -34,7 +33,7 @@ class ParticipantsDialogFragment : DialogFragment() {
 
     private val itemAdapter = ItemAdapter<Participant>()
     private val headerAdapter = ItemAdapter<ProgressItem>()
-    private lateinit var fastAdapter: GenericFastAdapter
+    private val fastAdapter = FastAdapter.with(listOf(headerAdapter, itemAdapter))
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
@@ -47,7 +46,6 @@ class ParticipantsDialogFragment : DialogFragment() {
             viewModelKoin.getParticipants()
         }
 
-        fastAdapter = FastAdapter.with(listOf(headerAdapter, itemAdapter))
         fastAdapter.attachDefaultListeners = false
         pf_participantsRecyclerView.adapter = fastAdapter
 

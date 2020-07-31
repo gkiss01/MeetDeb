@@ -27,7 +27,6 @@ import com.gkiss01.meetdeb.network.Status
 import com.gkiss01.meetdeb.screens.fragment.SuccessObserver
 import com.gkiss01.meetdeb.viewmodels.DatesViewModel
 import com.mikepenz.fastadapter.FastAdapter
-import com.mikepenz.fastadapter.GenericFastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.diff.FastAdapterDiffUtil
 import com.mikepenz.fastadapter.listeners.addClickListener
@@ -48,7 +47,7 @@ class DatesDialogFragment : DialogFragment() {
     private val itemAdapter = ItemAdapter<Date>()
     private val headerAdapter = ItemAdapter<ProgressItem>()
     private val footerAdapter = ItemAdapter<DatePickerItem>()
-    private lateinit var fastAdapter: GenericFastAdapter
+    private val fastAdapter = FastAdapter.with(listOf(headerAdapter, itemAdapter, footerAdapter))
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
@@ -61,7 +60,6 @@ class DatesDialogFragment : DialogFragment() {
             viewModelKoin.getDates()
         }
 
-        fastAdapter = FastAdapter.with(listOf(headerAdapter, itemAdapter, footerAdapter))
         if (viewModelActivityKoin.activeUser.value?.data?.isAdmin() == false) fastAdapter.attachDefaultListeners = false
         df_datesRecyclerView.adapter = fastAdapter
 
