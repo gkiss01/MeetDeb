@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#37474F</color>
-    <color name="colorPrimaryDark">#36464e</color>
-    <color name="colorAccent">#628884</color>
+    <color name="juniperGreen">#628884</color>
+    <color name="limedSpruceBlueDark">#37474F</color>
 
-    <color name="colorEventsBackground">#37474F</color>
-    <color name="colorFabNormal">#607D8B</color>
-    <color name="colorFabPressed">#546E7A</color>
-    <color name="colorFabMiniNormal">#fafafa</color>
-    <color name="colorFabMiniPressed">#f1f1f1</color>
+    <color name="lynchBlue">#607D8B</color>
+    <color name="lynchBlueDark">#546E7A</color>
+    <color name="opalBlue">#B0C5C2</color>
 
-    <color name="colorCreateEventText">#ffffff</color>
-    <color name="colorCreateEventButton">#557771</color>
-    <color name="colorEventButtonText">#000000</color>
+    <color name="alabasterWhite">#fafafa</color>
+    <color name="alabasterWhiteDark">#f1f1f1</color>
 
-    <color name="white">#fff</color>
-    <color name="yellow">#d9a343</color>
-    <color name="red">#ec4b4b</color>
+    <color name="anzacYellow">#d9a343</color>
+    <color name="cinnabarRed">#ec4b4b</color>
+
+    <color name="tuataraGray">#3C3C3B</color>
+    <color name="siroccoGray">#73808080</color>
+    <color name="boulderGray">#757575</color>
 </resources>

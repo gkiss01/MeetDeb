@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/pli_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -16,7 +17,8 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:contentDescription="@string/participant_image_desc"
-        android:src="@drawable/ic_name" />
+        android:src="@drawable/ic_creator"
+        app:tint="?attr/colorOnSurface" />
 
     <TextView
         android:id="@+id/pli_name"
@@ -25,5 +27,6 @@
         android:layout_centerVertical="true"
         android:layout_marginStart="10dp"
         android:layout_toEndOf="@id/pli_profilePicture"
-        android:fontFamily="@font/muli_extrabold" />
+        android:fontFamily="@font/muli_extrabold"
+        android:textColor="?attr/colorOnSurface" />
 </RelativeLayout>

@@ -4,6 +4,7 @@
 
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?attr/colorSurface"
     android:orientation="vertical"
     android:padding="16dp"
     app:layout_behavior="@string/bottom_sheet_behavior">
@@ -11,61 +12,73 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawableStart="@drawable/ic_name"
         android:drawablePadding="5dp"
         android:fontFamily="@font/muli_extrabold"
-        android:text="@string/event_creator" />
+        android:gravity="center_vertical"
+        android:text="@string/event_creator"
+        android:textColor="?attr/colorOnSurface"
+        app:drawableStartCompat="@drawable/ic_creator"
+        app:drawableTint="?attr/colorOnSurface" />
 
     <TextView
         android:id="@+id/dfbs_userNameValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/muli" />
+        android:textColor="?attr/colorOnSurface" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:drawableStart="@drawable/ic_venue"
         android:drawablePadding="5dp"
         android:fontFamily="@font/muli_extrabold"
-        android:text="@string/event_venue" />
+        android:gravity="center_vertical"
+        android:text="@string/event_venue"
+        android:textColor="?attr/colorOnSurface"
+        app:drawableStartCompat="@drawable/ic_venue"
+        app:drawableTint="?attr/colorOnSurface" />
 
     <TextView
         android:id="@+id/dfbs_venueValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/muli" />
+        android:textColor="?attr/colorOnSurface" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:drawableStart="@drawable/ic_date"
         android:drawablePadding="5dp"
         android:fontFamily="@font/muli_extrabold"
-        android:text="@string/event_date" />
+        android:gravity="center_vertical"
+        android:text="@string/event_date"
+        android:textColor="?attr/colorOnSurface"
+        app:drawableStartCompat="@drawable/ic_date"
+        app:drawableTint="?attr/colorOnSurface" />
 
     <TextView
         android:id="@+id/dfbs_dateValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/muli" />
+        android:textColor="?attr/colorOnSurface" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:drawableStart="@drawable/ic_description"
         android:drawablePadding="5dp"
         android:fontFamily="@font/muli_extrabold"
-        android:text="@string/event_description" />
+        android:gravity="center_vertical"
+        android:text="@string/event_description"
+        android:textColor="?attr/colorOnSurface"
+        app:drawableStartCompat="@drawable/ic_description"
+        app:drawableTint="?attr/colorOnSurface" />
 
     <TextView
         android:id="@+id/dfbs_descriptionValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/muli" />
+        android:textColor="?attr/colorOnSurface" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -76,7 +89,8 @@
             android:id="@+id/dfbs_participants"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/muli_extrabold" />
+            android:fontFamily="@font/muli_extrabold"
+            android:textColor="?attr/colorOnSurface" />
 
         <TextView
             android:id="@+id/dfbs_participantsCheck"
@@ -84,6 +98,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:text="@string/event_participants_button"
-            android:textColor="#445963" />
+            android:textColor="?attr/colorOnSurface" />
     </LinearLayout>
 </LinearLayout>

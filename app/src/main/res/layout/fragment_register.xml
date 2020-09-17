@@ -4,7 +4,7 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary">
+    android:background="?attr/colorPrimary">
 
     <TextView
         android:layout_width="wrap_content"
@@ -12,7 +12,7 @@
         android:layout_marginBottom="10dp"
         android:text="@string/register_title"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
-        android:textColor="#e4e4e4"
+        android:textColor="?attr/colorInputTextField"
         app:layout_constraintBottom_toTopOf="@id/rf_linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:background="#e4e4e4"
+        android:background="?attr/colorSurface"
         android:orientation="vertical"
         android:padding="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -35,13 +35,15 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/rf_email"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:theme="@style/WidgetInputTextFieldDark">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_email"
                 android:drawablePadding="5dp"
+                android:drawableTint="?attr/colorOnSurface"
                 android:hint="@string/register_email_hint"
                 android:inputType="textEmailAddress" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -50,6 +52,7 @@
             android:id="@+id/rf_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:theme="@style/WidgetInputTextFieldDark"
             app:passwordToggleEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -57,6 +60,7 @@
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_password"
                 android:drawablePadding="5dp"
+                android:drawableTint="?attr/colorOnSurface"
                 android:hint="@string/register_password_hint"
                 android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -64,13 +68,15 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/rf_name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:theme="@style/WidgetInputTextFieldDark">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_name"
+                android:drawableStart="@drawable/ic_creator"
                 android:drawablePadding="5dp"
+                android:drawableTint="?attr/colorOnSurface"
                 android:hint="@string/register_name_hint"
                 android:inputType="textPersonName" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -86,20 +92,18 @@
         android:text="@string/register_already_registered"
         android:textAlignment="center"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-        android:textColor="#e4e4e4"
+        android:textColor="?attr/colorInputTextField"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/rf_linearLayout" />
 
     <Button
         android:id="@+id/rf_registerButton"
+        style="@style/WidgetButtonRegister"
         android:layout_width="180dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
-        android:background="#173033"
         android:text="@string/register_title"
-        android:textAllCaps="false"
-        android:textColor="#e4e4e4"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

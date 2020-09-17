@@ -46,11 +46,11 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                     pf_id.editText?.setText(String.format("%07d", it.data?.id), TextView.BufferType.NORMAL)
 
                     if (it.data?.isAdmin() == true) {
-                        val color = ContextCompat.getColor(requireContext(), R.color.yellow)
+                        val color = ContextCompat.getColor(requireContext(), R.color.anzacYellow)
 
                         pf_rank.text = getString(R.string.profile_admin)
                         pf_rank.setTextColor(color)
-                        pf_profileImage.backgroundTintList = ContextCompat.getColorStateList(requireContext(), R.color.yellow)
+                        pf_profileImage.backgroundTintList = ContextCompat.getColorStateList(requireContext(), R.color.anzacYellow)
                     }
                     else pf_rank.text = getString(R.string.profile_user)
                 }

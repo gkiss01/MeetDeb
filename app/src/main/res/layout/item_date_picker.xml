@@ -19,8 +19,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:contentDescription="@string/date_add_button_desc"
-            android:src="@drawable/ic_add_pink"
-            android:tint="#FFFFFF"
+            android:src="@drawable/ic_add"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -29,8 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:text="@string/date_add_button"
-            android:textAllCaps="false"
-            android:textColor="#FFFFFF"
+            android:textColor="?attr/colorOnPrimary"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@id/dlp_plusSign"
             app:layout_constraintStart_toEndOf="@id/dlp_plusSign"
@@ -42,7 +40,6 @@
             android:layout_height="32dp"
             android:contentDescription="@string/date_add_button_arrow_desc"
             android:src="@drawable/ic_arrow_down"
-            android:tint="#ffffff"
             app:layout_constraintBottom_toBottomOf="@id/dlp_plusSign"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/dlp_plusSign" />
@@ -61,12 +58,10 @@
 
         <TextView
             android:id="@+id/dlp_dateTitle"
-            style="@style/styleCreateEventText"
+            style="@style/WidgetLabelSelectedDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="17dp"
-            android:padding="2dp"
-            android:textSize="18sp" />
+            android:layout_marginTop="17dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -77,7 +72,7 @@
 
             <Button
                 android:id="@+id/dlp_dateButton"
-                style="@style/styleSetterButton"
+                style="@style/WidgetButtonPicker"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:layout_marginEnd="5dp"
@@ -86,7 +81,7 @@
 
             <Button
                 android:id="@+id/dlp_timeButton"
-                style="@style/styleSetterButton"
+                style="@style/WidgetButtonPicker"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:layout_marginStart="5dp"
@@ -96,7 +91,7 @@
 
         <Button
             android:id="@+id/dlp_createButton"
-            style="@style/styleFabLabel"
+            style="@style/WidgetButtonAction"
             android:layout_width="wrap_content"
             android:layout_height="35dp"
             android:layout_gravity="end"

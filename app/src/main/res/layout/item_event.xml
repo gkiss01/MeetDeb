@@ -12,12 +12,12 @@
         android:id="@+id/eli_creatorLabel"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:drawableStart="@drawable/ic_creator"
         android:drawablePadding="5dp"
         android:gravity="center_vertical"
         android:includeFontPadding="false"
-        android:textColor="@color/white"
+        android:textColor="?attr/colorOnPrimary"
         android:textSize="22sp"
+        app:drawableStartCompat="@drawable/ic_creator"
         app:layout_constraintBottom_toBottomOf="@id/eli_moreButton"
         app:layout_constraintEnd_toStartOf="@id/eli_moreButton"
         app:layout_constraintStart_toStartOf="parent"
@@ -48,14 +48,9 @@
 
     <TextView
         android:id="@+id/eli_eventLabel"
+        style="@style/WidgetLabelEventName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#73808080"
-        android:paddingStart="3dp"
-        android:paddingEnd="3dp"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="35sp"
         app:layout_constraintBottom_toBottomOf="@id/eli_eventImage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -63,7 +58,7 @@
 
     <Button
         android:id="@+id/eli_descButton"
-        style="@style/styleFabLabel"
+        style="@style/WidgetButtonAction"
         android:layout_width="wrap_content"
         android:layout_height="35dp"
         android:layout_marginTop="16dp"
@@ -82,7 +77,7 @@
 
         <Button
             android:id="@+id/eli_anotherDateButton"
-            style="@style/styleEventButton"
+            style="@style/WidgetButtonDynamicBackground"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
@@ -93,7 +88,7 @@
 
         <Button
             android:id="@+id/eli_acceptButton"
-            style="@style/styleEventButton"
+            style="@style/WidgetButtonDynamicBackground"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"

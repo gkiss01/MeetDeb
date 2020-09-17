@@ -9,7 +9,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorEventsBackground"
+        android:background="?attr/colorPrimary"
         tools:context=".screens.fragment.ProfileFragment">
 
         <View
@@ -18,7 +18,7 @@
             android:layout_height="150dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:background="#455a64"
+            android:background="?attr/colorPrimaryVariant"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -30,6 +30,7 @@
             android:layout_width="0dp"
             android:layout_height="110dp"
             android:background="@drawable/profile_background"
+            android:backgroundTint="?attr/colorPrimaryVariant"
             android:contentDescription="@string/profile_image_desc"
             android:src="@drawable/profile"
             app:layout_constraintBottom_toTopOf="@id/pf_headerView"
@@ -43,7 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:textColor="@color/white"
+            android:textColor="?attr/colorInputTextField"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="@id/pf_profileImage"
@@ -54,7 +55,7 @@
             android:id="@+id/pf_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
+            android:textColor="?attr/colorInputTextField"
             android:textSize="16sp"
             android:textStyle="italic"
             app:layout_constraintEnd_toEndOf="@id/pf_name"
@@ -94,7 +95,7 @@
                     android:id="@+id/pf_createdEvents"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
+                    android:textColor="?attr/colorInputTextField"
                     android:textSize="22sp"
                     android:textStyle="bold" />
 
@@ -102,7 +103,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/profile_created"
-                    android:textColor="@color/white"
+                    android:textColor="?attr/colorInputTextField"
                     android:textSize="17sp" />
 
                 <View
@@ -123,7 +124,7 @@
                     android:id="@+id/pf_acceptedEvents"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
+                    android:textColor="?attr/colorInputTextField"
                     android:textSize="22sp"
                     android:textStyle="bold" />
 
@@ -131,7 +132,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/profile_accepted"
-                    android:textColor="@color/white"
+                    android:textColor="?attr/colorInputTextField"
                     android:textSize="17sp" />
 
                 <View
@@ -157,7 +158,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:theme="@style/TextInputLayoutWhite"
+            android:theme="@style/WidgetInputTextFieldLight"
             app:layout_constraintEnd_toEndOf="@id/pf_headerView"
             app:layout_constraintStart_toStartOf="@id/pf_headerView"
             app:layout_constraintTop_toBottomOf="@id/pf_lineView">
@@ -169,7 +170,7 @@
                 android:enabled="false"
                 android:hint="@string/profile_identifier"
                 android:inputType="text"
-                android:textColor="@color/white" />
+                android:textColor="?attr/colorInputTextField" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
@@ -177,14 +178,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:drawableStart="@drawable/ic_delete_large"
             android:drawablePadding="10dp"
-            android:drawableTint="@color/red"
             android:gravity="center"
             android:includeFontPadding="false"
             android:text="@string/profile_delete"
-            android:textColor="@color/red"
+            android:textColor="?attr/colorError"
             android:textSize="17sp"
+            app:drawableStartCompat="@drawable/ic_delete_large"
+            app:drawableTint="?attr/colorError"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@id/pf_headerView" />
 
@@ -193,13 +194,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:drawableStart="@drawable/ic_edit_large"
             android:drawablePadding="14dp"
             android:gravity="center"
             android:includeFontPadding="false"
             android:text="@string/profile_update"
-            android:textColor="@color/white"
+            android:textColor="?attr/colorInputTextField"
             android:textSize="17sp"
+            app:drawableStartCompat="@drawable/ic_edit_large"
+            app:drawableTint="?attr/colorInputTextField"
             app:layout_constraintBottom_toTopOf="@id/pf_deleteLabel"
             app:layout_constraintStart_toStartOf="@id/pf_headerView" />
 

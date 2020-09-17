@@ -4,14 +4,40 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
 
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/limedSpruceBlueDark</item>
+        <item name="colorOnPrimary">@color/alabasterWhite</item>
+        <item name="colorPrimaryVariant">#455a64</item> <!-- TODO -->
 
-        <item name="materialDrawerStyle">@style/Widget.MaterialDrawerStyleCustom</item>
-        <item name="materialDrawerHeaderStyle">@style/Widget.MaterialDrawerHeaderStyleCustom</item>
+        <item name="colorSurface">@color/alabasterWhiteDark</item>
+        <item name="colorOnSurface">@color/tuataraGray</item>
+        <item name="colorOnSurfaceSecondary">@color/boulderGray</item>
+
+        <item name="colorError">@color/cinnabarRed</item>
+        <item name="colorWarning">@color/anzacYellow</item>
+
+        <item name="colorBackgroundButtonAction">@color/tuataraGray</item>
+        <item name="colorOnBackgroundButtonAction">@color/alabasterWhiteDark</item>
+
+        <item name="colorBackgroundButtonPicker">@color/juniperGreen</item>
+        <item name="colorOnBackgroundButtonPicker">@color/alabasterWhiteDark</item>
+
+        <item name="colorControlNormalFab">@color/lynchBlue</item>
+        <item name="colorControlActivatedFab">@color/lynchBlueDark</item>
+
+        <item name="colorControlNormalFabMini">@color/alabasterWhite</item>
+        <item name="colorControlActivatedFabMini">@color/alabasterWhiteDark</item>
+
+        <item name="colorBackgroundButtonDeleteStart">@color/anzacYellow</item>
+        <item name="colorBackgroundButtonDeleteEnd">@color/cinnabarRed</item>
+
+        <item name="colorInputTextField">@color/alabasterWhite</item>
+
+        <item name="colorPrimaryDark">@color/limedSpruceBlueDark</item>
+        <item name="colorAccent">@color/juniperGreen</item>
 
         <item name="android:fontFamily">@font/muli</item>
+        <item name="materialDrawerStyle">@style/Widget.MaterialDrawerStyleCustom</item>
+        <item name="materialDrawerHeaderStyle">@style/Widget.MaterialDrawerHeaderStyleCustom</item>
     </style>
 
     <style name="AppTheme.Launcher">
@@ -21,87 +47,140 @@
     <style name="Widget.MaterialDrawerStyleCustom" parent="Widget.MaterialDrawerStyle">
         <item name="materialDrawerInsetForeground">#4000</item>
 
-        <item name="materialDrawerBackground">@color/colorPrimary</item>
-        <item name="materialDrawerPrimaryText">@color/white</item>
-        <item name="materialDrawerPrimaryIcon">@color/white</item>
-        <item name="materialDrawerSecondaryText">@color/white</item>
-        <item name="materialDrawerSecondaryIcon">@color/white</item>
-        <item name="materialDrawerDividerColor">@color/white</item>
-        <item name="materialDrawerSelectedBackgroundColor">@color/white</item>
+        <item name="materialDrawerBackground">?attr/colorPrimary</item>
+        <item name="materialDrawerPrimaryText">?attr/colorOnPrimary</item>
+        <item name="materialDrawerPrimaryIcon">?attr/colorOnPrimary</item>
+        <item name="materialDrawerSecondaryText">?attr/colorOnPrimary</item>
+        <item name="materialDrawerSecondaryIcon">?attr/colorOnPrimary</item>
+        <item name="materialDrawerDividerColor">?attr/colorOnPrimary</item>
+        <item name="materialDrawerSelectedBackgroundColor">?attr/colorOnPrimary</item>
     </style>
 
-    <style name="Widget.MaterialDrawerHeaderStyleCustom" parent="">
+    <style name="Widget.MaterialDrawerHeaderStyleCustom" parent="Widget.MaterialDrawerHeaderStyle">
         <item name="materialDrawerCompactStyle">true</item>
-        <item name="materialDrawerHeaderSelectionText">@color/white</item>
-        <item name="materialDrawerHeaderSelectionSubtext">@color/white</item>
+        <item name="materialDrawerHeaderSelectionText">?attr/colorOnPrimary</item>
+        <item name="materialDrawerHeaderSelectionSubtext">?attr/colorOnPrimary</item>
     </style>
 
-    <style name="styleCreateEventText">
-        <item name="android:textColor">@color/colorCreateEventText</item>
-        <item name="android:textColorHint">@color/colorCreateEventText</item>
-        <item name="android:backgroundTint">@color/colorCreateEventText</item>
-        <item name="android:ems">10</item>
-    </style>
-
-    <style name="styleFabLabel">
-        <item name="android:background">@drawable/fab_label_background</item>
-        <item name="android:textColor">@color/colorCreateEventText</item>
-    </style>
-
-    <style name="styleSetterButton">
-        <item name="android:background">@color/colorCreateEventButton</item>
-        <item name="android:textColor">@color/colorCreateEventText</item>
-    </style>
-
-    <style name="styleEventButton">
+    <style name="WidgetButtonDynamicBackground">
         <item name="android:background">@null</item>
-        <item name="android:textColor">@color/colorEventButtonText</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:fontFamily">sans-serif-condensed-medium</item>
     </style>
 
-    <style name="styleMatisseDark" parent="Matisse.Dracula">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="toolbar">@color/colorPrimary</item>
-
-        <item name="album.dropdown.title.color">#FFFFFF</item>
-        <item name="album.dropdown.count.color">#FFFFFF</item>
-
-        <item name="bottomToolbar.bg">#000000</item>
-        <item name="bottomToolbar.preview.textColor">#FFFFFF</item>
-        <item name="bottomToolbar.apply.textColor">#FFFFFF</item>
-        <item name="preview.bottomToolbar.back.textColor">#FFFFFF</item>
-        <item name="preview.bottomToolbar.apply.textColor">#FFFFFF</item>
-
-        <item name="android:listPopupWindowStyle">@style/stylePopup</item>
-        <item name="listPopupWindowStyle">@style/stylePopup</item>
-
-        <item name="capture.textColor">#FFFFFF</item>
+    <style name="WidgetButtonAction">
+        <item name="android:background">@drawable/button_action_background</item>
+        <item name="android:textColor">?attr/colorOnBackgroundButtonAction</item>
     </style>
 
-    <style name="stylePopup" parent="Widget.AppCompat.ListPopupWindow">
-        <item name="android:popupBackground">@color/colorPrimary</item>
+    <style name="WidgetButtonPicker">
+        <item name="android:background">?attr/colorBackgroundButtonPicker</item>
+        <item name="android:textColor">?attr/colorOnBackgroundButtonPicker</item>
     </style>
 
-    <style name="TextInputErrorText" parent="TextAppearance.AppCompat">
-        <item name="android:textColor">@color/red</item>
+    <style name="WidgetButtonRegister">
+        <item name="android:background">?attr/colorPrimaryVariant</item>
+        <item name="android:textColor">?attr/colorInputTextField</item>
+        <item name="textAllCaps">false</item>
+    </style>
+
+    <style name="WidgetButtonBottomSheetBase">
+        <item name="android:background">@drawable/button_update_background</item>
+        <item name="android:textColor">?attr/colorInputTextField</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textSize">17sp</item>
+    </style>
+
+    <style name="WidgetButtonBottomSheetDelete">
+        <item name="android:background">@drawable/button_delete_background</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textSize">17sp</item>
+    </style>
+
+    <style name="WidgetButtonBottomSheetCancel">
+        <item name="android:background">@drawable/button_cancel_background</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textSize">17sp</item>
+    </style>
+
+    <style name="WidgetLabelEventName">
+        <item name="android:background">@color/siroccoGray</item>
+        <item name="android:textColor">@color/alabasterWhite</item>
+        <item name="android:textSize">35sp</item>
+        <item name="android:paddingStart">3dp</item>
+        <item name="android:paddingEnd">3dp</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
+    <style name="WidgetLabelSelectedDate">
+        <item name="android:textColor">?attr/colorInputTextField</item>
+        <!--        <item name="android:textColorHint">?attr/colorInputTextField</item>-->
+        <!--        <item name="android:backgroundTint">?attr/colorInputTextField</item>-->
+        <item name="android:ems">10</item>
+        <item name="android:padding">2dp</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <!--    <style name="styleMatisseDark" parent="Matisse.Dracula">-->
+    <!--        <item name="colorPrimary">@color/colorPrimary</item>-->
+    <!--        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
+    <!--        <item name="toolbar">@color/colorPrimary</item>-->
+
+    <!--        <item name="album.dropdown.title.color">#FFFFFF</item>-->
+    <!--        <item name="album.dropdown.count.color">#FFFFFF</item>-->
+
+    <!--        <item name="bottomToolbar.bg">#000000</item>-->
+    <!--        <item name="bottomToolbar.preview.textColor">#FFFFFF</item>-->
+    <!--        <item name="bottomToolbar.apply.textColor">#FFFFFF</item>-->
+    <!--        <item name="preview.bottomToolbar.back.textColor">#FFFFFF</item>-->
+    <!--        <item name="preview.bottomToolbar.apply.textColor">#FFFFFF</item>-->
+
+    <!--        <item name="android:listPopupWindowStyle">@style/stylePopup</item>-->
+    <!--        <item name="listPopupWindowStyle">@style/stylePopup</item>-->
+
+    <!--        <item name="capture.textColor">#FFFFFF</item>-->
+    <!--    </style>-->
+
+    <!--    <style name="stylePopup" parent="Widget.AppCompat.ListPopupWindow">-->
+    <!--        <item name="android:popupBackground">@color/colorPrimary</item>-->
+    <!--    </style>-->
+
+    <style name="WidgetInputTextFieldError" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">?attr/colorError</item>
         <item name="android:textSize">16sp</item>
     </style>
 
-    <style name="TextInputHintText" parent="TextAppearance.AppCompat">
-        <item name="android:textColor">@color/white</item>
+    <style name="WidgetInputTextFieldLightHint" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">?attr/colorInputTextField</item>
         <item name="android:textSize">14sp</item>
     </style>
 
-    <style name="TextInputLayoutWhite" parent="Widget.Design.TextInputLayout">
+    <style name="WidgetInputTextFieldLight" parent="Widget.Design.TextInputLayout">
+        <item name="hintTextAppearance">@style/WidgetInputTextFieldLightHint</item>
+        <item name="errorTextAppearance">@style/WidgetInputTextFieldError</item>
 
-        <item name="hintTextAppearance">@style/TextInputHintText</item>
-        <item name="errorTextAppearance">@style/TextInputErrorText</item>
+        <item name="android:textColor">?attr/colorInputTextField</item>
+        <item name="android:textColorHint">?attr/colorInputTextField</item>
+        <item name="colorControlNormal">?attr/colorInputTextField</item>
+        <item name="colorControlActivated">?attr/colorInputTextField</item>
+        <item name="colorControlHighlight">?attr/colorInputTextField</item>
+    </style>
 
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textColorHint">@color/white</item>
-        <item name="colorControlNormal">@color/white</item>
-        <item name="colorControlActivated">@color/white</item>
-        <item name="colorControlHighlight">@color/white</item>
+    <style name="WidgetInputTextFieldDarkHint" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="WidgetInputTextFieldDark" parent="Widget.Design.TextInputLayout">
+        <item name="hintTextAppearance">@style/WidgetInputTextFieldDarkHint</item>
+        <item name="errorTextAppearance">@style/WidgetInputTextFieldError</item>
+
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textColorHint">?attr/colorOnSurface</item>
+        <item name="colorControlNormal">?attr/colorOnSurface</item>
+        <item name="colorControlActivated">?attr/colorOnSurface</item>
+        <item name="colorControlHighlight">?attr/colorOnSurface</item>
     </style>
 </resources>

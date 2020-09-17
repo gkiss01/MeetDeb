@@ -4,7 +4,7 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorEventsBackground"
+    android:background="?attr/colorPrimary"
     tools:context=".screens.dialog.DatesDialogFragment">
 
     <androidx.recyclerview.widget.RecyclerView

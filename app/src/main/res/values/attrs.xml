@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="colorWarning" format="color" />
+    <attr name="colorOnSurfaceSecondary" format="color" />
+
+    <attr name="colorBackgroundButtonAction" format="color" />
+    <attr name="colorOnBackgroundButtonAction" format="color" />
+
+    <attr name="colorBackgroundButtonPicker" format="color" />
+    <attr name="colorOnBackgroundButtonPicker" format="color" />
+
+    <attr name="colorControlNormalFab" format="color" />
+    <attr name="colorControlActivatedFab" format="color" />
+
+    <attr name="colorControlNormalFabMini" format="color" />
+    <attr name="colorControlActivatedFabMini" format="color" />
+
+    <attr name="colorBackgroundButtonDeleteStart" format="color" />
+    <attr name="colorBackgroundButtonDeleteEnd" format="color" />
+
+    <attr name="colorInputTextField" format="color" />
+</resources>

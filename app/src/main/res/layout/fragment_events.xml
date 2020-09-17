@@ -9,7 +9,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorEventsBackground"
+        android:background="?attr/colorPrimary"
         android:orientation="vertical">
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -30,17 +30,17 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:layout_margin="10dp"
-            app:fab_addButtonColorNormal="@color/colorFabNormal"
-            app:fab_addButtonColorPressed="@color/colorFabPressed"
-            app:fab_labelStyle="@style/styleFabLabel">
+            app:fab_addButtonColorNormal="?attr/colorControlNormalFab"
+            app:fab_addButtonColorPressed="?attr/colorControlActivatedFab"
+            app:fab_labelStyle="@style/WidgetButtonAction">
 
             <com.getbase.floatingactionbutton.FloatingActionButton
                 android:id="@+id/ef_addActionButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:fab_colorNormal="@color/colorFabMiniNormal"
-                app:fab_colorPressed="@color/colorFabMiniPressed"
-                app:fab_icon="@drawable/ic_add_pink"
+                app:fab_colorNormal="?attr/colorControlNormalFabMini"
+                app:fab_colorPressed="?attr/colorControlActivatedFabMini"
+                app:fab_icon="@drawable/ic_add"
                 app:fab_size="mini"
                 app:fab_title="@string/event_add_button" />
         </com.getbase.floatingactionbutton.FloatingActionsMenu>

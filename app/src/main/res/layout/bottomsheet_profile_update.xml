@@ -4,6 +4,7 @@
 
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?attr/colorSurface"
     android:gravity="center"
     android:orientation="vertical"
     android:padding="16dp"
@@ -13,7 +14,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/profile_update_title"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline" />
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="24sp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -21,27 +23,22 @@
         android:layout_marginTop="8dp"
         android:text="@string/profile_update_info"
         android:textAlignment="center"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+        android:textColor="?attr/colorOnSurfaceSecondary"
+        android:textSize="18sp" />
 
     <Button
         android:id="@+id/bspu_emailButton"
+        style="@style/WidgetButtonBottomSheetBase"
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_marginTop="16dp"
-        android:background="@drawable/button_update_background"
-        android:text="@string/profile_update_email"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:textSize="17sp" />
+        android:text="@string/profile_update_email" />
 
     <Button
         android:id="@+id/bspu_passwordButton"
+        style="@style/WidgetButtonBottomSheetBase"
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_marginTop="16dp"
-        android:background="@drawable/button_update_background"
-        android:text="@string/profile_update_password"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:textSize="17sp" />
+        android:text="@string/profile_update_password" />
 </LinearLayout>

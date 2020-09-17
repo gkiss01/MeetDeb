@@ -4,6 +4,7 @@
 
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?attr/colorSurface"
     android:gravity="center"
     android:orientation="vertical"
     android:padding="16dp"
@@ -13,7 +14,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/profile_delete_title"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline" />
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="24sp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -21,25 +23,22 @@
         android:layout_marginTop="8dp"
         android:text="@string/profile_delete_info"
         android:textAlignment="center"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+        android:textColor="?attr/colorOnSurfaceSecondary"
+        android:textSize="18sp" />
 
     <Button
         android:id="@+id/debsf_deleteButton"
+        style="@style/WidgetButtonBottomSheetDelete"
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_marginTop="16dp"
-        android:background="@drawable/button_delete_background"
-        android:text="@string/profile_delete_yes"
-        android:textAllCaps="false"
-        android:textSize="17sp" />
+        android:text="@string/profile_delete_yes" />
 
     <Button
         android:id="@+id/debsf_cancelButton"
+        style="@style/WidgetButtonBottomSheetCancel"
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_marginTop="16dp"
-        android:background="@drawable/button_cancel_background"
-        android:text="@string/profile_delete_no"
-        android:textAllCaps="false"
-        android:textSize="17sp" />
+        android:text="@string/profile_delete_no" />
 </LinearLayout>
