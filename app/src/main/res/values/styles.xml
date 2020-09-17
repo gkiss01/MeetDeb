@@ -6,7 +6,7 @@
 
         <item name="colorPrimary">@color/limedSpruceBlueDark</item>
         <item name="colorOnPrimary">@color/alabasterWhite</item>
-        <item name="colorPrimaryVariant">#455a64</item> <!-- TODO -->
+        <item name="colorPrimaryVariant">@color/limedSpruceBlue</item>
 
         <item name="colorSurface">@color/alabasterWhiteDark</item>
         <item name="colorOnSurface">@color/tuataraGray</item>
@@ -15,7 +15,7 @@
         <item name="colorError">@color/cinnabarRed</item>
         <item name="colorWarning">@color/anzacYellow</item>
 
-        <item name="colorBackgroundButtonAction">@color/tuataraGray</item>
+        <item name="colorBackgroundButtonAction">@color/blackGray</item>
         <item name="colorOnBackgroundButtonAction">@color/alabasterWhiteDark</item>
 
         <item name="colorBackgroundButtonPicker">@color/juniperGreen</item>
@@ -24,8 +24,8 @@
         <item name="colorControlNormalFab">@color/lynchBlue</item>
         <item name="colorControlActivatedFab">@color/lynchBlueDark</item>
 
-        <item name="colorControlNormalFabMini">@color/alabasterWhite</item>
-        <item name="colorControlActivatedFabMini">@color/alabasterWhiteDark</item>
+        <item name="colorControlNormalFabMini">@color/lynchBlue</item>
+        <item name="colorControlActivatedFabMini">@color/lynchBlueDark</item>
 
         <item name="colorBackgroundButtonDeleteStart">@color/anzacYellow</item>
         <item name="colorBackgroundButtonDeleteEnd">@color/cinnabarRed</item>

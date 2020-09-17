@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="juniperGreen">#628884</color>
+    <color name="limedSpruceBlue">#455a64</color>
     <color name="limedSpruceBlueDark">#37474F</color>
 
     <color name="lynchBlue">#607D8B</color>
@@ -16,4 +17,5 @@
     <color name="tuataraGray">#3C3C3B</color>
     <color name="siroccoGray">#73808080</color>
     <color name="boulderGray">#757575</color>
+    <color name="blackGray">#B2000000</color>
 </resources>
