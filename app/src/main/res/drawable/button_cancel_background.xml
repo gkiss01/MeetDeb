@@ -4,7 +4,7 @@
 
     <stroke
         android:width="2dp"
-        android:color="?colorBackgroundButtonNormalStart" />
+        android:color="?colorOnSurfaceButtonNormalStart" />
     <solid android:color="@android:color/transparent" />
     <corners android:radius="5dp" />
 </shape>

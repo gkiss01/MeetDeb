@@ -18,23 +18,23 @@
         <item name="colorWarning">@color/anzacYellow</item>
 
         <!-- Button colors (on primary) -->
-        <item name="colorBackgroundButtonAction">@color/blackGray</item>
-        <item name="colorOnBackgroundButtonAction">@color/alabasterWhiteDark</item>
+        <item name="colorOnPrimaryButtonActionBg">@color/blackGray</item>
+        <item name="colorOnPrimaryButtonActionText">@color/alabasterWhiteDark</item>
 
-        <item name="colorBackgroundButtonPicker">@color/juniperGreen</item>
-        <item name="colorOnBackgroundButtonPicker">@color/alabasterWhiteDark</item>
+        <item name="colorOnPrimaryButtonPickerBg">@color/juniperGreen</item>
+        <item name="colorOnPrimaryButtonPickerText">@color/alabasterWhiteDark</item>
 
         <!-- Fab colors (on primary) -->
-        <item name="colorControlNormalFab">@color/lynchBlue</item>
-        <item name="colorControlActivatedFab">@color/lynchBlueDark</item>
-        <item name="colorControlNormalFabMini">@color/lynchBlue</item>
-        <item name="colorControlActivatedFabMini">@color/lynchBlueDark</item>
+        <item name="colorOnPrimaryFabNormal">@color/lynchBlue</item>
+        <item name="colorOnPrimaryFabActivated">@color/lynchBlueDark</item>
+        <item name="colorOnPrimaryFabMiniNormal">@color/lynchBlue</item>
+        <item name="colorOnPrimaryFabMiniActivated">@color/lynchBlueDark</item>
 
         <!-- Button gradients (on surface) -->
-        <item name="colorBackgroundButtonDeleteStart">@color/anzacYellow</item>
-        <item name="colorBackgroundButtonDeleteEnd">@color/cinnabarRed</item>
-        <item name="colorBackgroundButtonNormalStart">@color/limedSpruceBlueDark</item>
-        <item name="colorBackgroundButtonNormalEnd">@color/limedSpruceBlue</item>
+        <item name="colorOnSurfaceButtonDeleteStart">@color/anzacYellow</item>
+        <item name="colorOnSurfaceButtonDeleteEnd">@color/cinnabarRed</item>
+        <item name="colorOnSurfaceButtonNormalStart">@color/limedSpruceBlueDark</item>
+        <item name="colorOnSurfaceButtonNormalEnd">@color/limedSpruceBlue</item>
 
         <!-- Text fields (on primary) -->
         <item name="colorInputTextField">@color/alabasterWhite</item>
@@ -74,12 +74,12 @@
 
     <style name="WidgetButtonAction">
         <item name="android:background">@drawable/button_action_background</item>
-        <item name="android:textColor">?attr/colorOnBackgroundButtonAction</item>
+        <item name="android:textColor">?attr/colorOnPrimaryButtonActionText</item>
     </style>
 
     <style name="WidgetButtonPicker">
-        <item name="android:background">?attr/colorBackgroundButtonPicker</item>
-        <item name="android:textColor">?attr/colorOnBackgroundButtonPicker</item>
+        <item name="android:background">?attr/colorOnPrimaryButtonPickerBg</item>
+        <item name="android:textColor">?attr/colorOnPrimaryButtonPickerText</item>
     </style>
 
     <style name="WidgetButtonRegister">

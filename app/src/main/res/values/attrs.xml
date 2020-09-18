@@ -4,25 +4,25 @@
     <attr name="colorOnSurfaceSecondary" format="color" />
 
     <!-- Button colors -->
-    <attr name="colorBackgroundButtonAction" format="color" />
-    <attr name="colorOnBackgroundButtonAction" format="color" />
+    <attr name="colorOnPrimaryButtonActionBg" format="color" />
+    <attr name="colorOnPrimaryButtonActionText" format="color" />
 
-    <attr name="colorBackgroundButtonPicker" format="color" />
-    <attr name="colorOnBackgroundButtonPicker" format="color" />
+    <attr name="colorOnPrimaryButtonPickerBg" format="color" />
+    <attr name="colorOnPrimaryButtonPickerText" format="color" />
 
     <!-- Fab colors -->
-    <attr name="colorControlNormalFab" format="color" />
-    <attr name="colorControlActivatedFab" format="color" />
+    <attr name="colorOnPrimaryFabNormal" format="color" />
+    <attr name="colorOnPrimaryFabActivated" format="color" />
 
-    <attr name="colorControlNormalFabMini" format="color" />
-    <attr name="colorControlActivatedFabMini" format="color" />
+    <attr name="colorOnPrimaryFabMiniNormal" format="color" />
+    <attr name="colorOnPrimaryFabMiniActivated" format="color" />
 
     <!-- Button gradients -->
-    <attr name="colorBackgroundButtonDeleteStart" format="color" />
-    <attr name="colorBackgroundButtonDeleteEnd" format="color" />
+    <attr name="colorOnSurfaceButtonDeleteStart" format="color" />
+    <attr name="colorOnSurfaceButtonDeleteEnd" format="color" />
 
-    <attr name="colorBackgroundButtonNormalStart" format="color" />
-    <attr name="colorBackgroundButtonNormalEnd" format="color" />
+    <attr name="colorOnSurfaceButtonNormalStart" format="color" />
+    <attr name="colorOnSurfaceButtonNormalEnd" format="color" />
 
     <!-- Text fields -->
     <attr name="colorInputTextField" format="color" />
