@@ -167,7 +167,7 @@ class EventCreateFragment : Fragment() {
     private fun showImagePicker() {
         Matisse.from(this)
             .choose(MimeType.ofImage())
-            //.theme(R.style.styleMatisseDark)
+            .theme(R.style.Matisse_Dracula)
             .countable(true)
             .maxSelectable(1)
             .gridExpectedSize(resources.getDimensionPixelSize(R.dimen.grid_expected_size))

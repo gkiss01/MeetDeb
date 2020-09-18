@@ -1,5 +1,4 @@
 <resources>
-
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
         <item name="colorPrimary">@color/limedSpruceBlueDark</item>
         <item name="colorOnPrimary">@color/alabasterWhite</item>
@@ -50,9 +49,8 @@
         <item name="android:windowBackground">@drawable/launch_screen</item>
     </style>
 
+    <!-- Material drawer -->
     <style name="Widget.MaterialDrawerStyleCustom" parent="Widget.MaterialDrawerStyle">
-        <item name="materialDrawerInsetForeground">#4000</item>
-
         <item name="materialDrawerBackground">?attr/colorPrimary</item>
         <item name="materialDrawerPrimaryText">?attr/colorOnPrimary</item>
         <item name="materialDrawerPrimaryIcon">?attr/colorOnPrimary</item>
@@ -68,6 +66,7 @@
         <item name="materialDrawerHeaderSelectionSubtext">?attr/colorOnPrimary</item>
     </style>
 
+    <!-- Buttons -->
     <style name="WidgetButtonDynamicBackground">
         <item name="android:background">@null</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
@@ -111,6 +110,7 @@
         <item name="android:textSize">17sp</item>
     </style>
 
+    <!-- Labels -->
     <style name="WidgetLabelEventName">
         <item name="android:background">@color/siroccoGray</item>
         <item name="android:textColor">@color/alabasterWhite</item>
@@ -127,30 +127,7 @@
         <item name="android:textSize">18sp</item>
     </style>
 
-    <!--    <style name="styleMatisseDark" parent="Matisse.Dracula">-->
-    <!--        <item name="colorPrimary">@color/colorPrimary</item>-->
-    <!--        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
-    <!--        <item name="toolbar">@color/colorPrimary</item>-->
-
-    <!--        <item name="album.dropdown.title.color">#FFFFFF</item>-->
-    <!--        <item name="album.dropdown.count.color">#FFFFFF</item>-->
-
-    <!--        <item name="bottomToolbar.bg">#000000</item>-->
-    <!--        <item name="bottomToolbar.preview.textColor">#FFFFFF</item>-->
-    <!--        <item name="bottomToolbar.apply.textColor">#FFFFFF</item>-->
-    <!--        <item name="preview.bottomToolbar.back.textColor">#FFFFFF</item>-->
-    <!--        <item name="preview.bottomToolbar.apply.textColor">#FFFFFF</item>-->
-
-    <!--        <item name="android:listPopupWindowStyle">@style/stylePopup</item>-->
-    <!--        <item name="listPopupWindowStyle">@style/stylePopup</item>-->
-
-    <!--        <item name="capture.textColor">#FFFFFF</item>-->
-    <!--    </style>-->
-
-    <!--    <style name="stylePopup" parent="Widget.AppCompat.ListPopupWindow">-->
-    <!--        <item name="android:popupBackground">@color/colorPrimary</item>-->
-    <!--    </style>-->
-
+    <!-- Text fields -->
     <style name="WidgetInputTextFieldError" parent="TextAppearance.AppCompat">
         <item name="android:textColor">?attr/colorError</item>
         <item name="android:textSize">16sp</item>
