@@ -3,20 +3,27 @@
     <attr name="colorWarning" format="color" />
     <attr name="colorOnSurfaceSecondary" format="color" />
 
+    <!-- Button colors -->
     <attr name="colorBackgroundButtonAction" format="color" />
     <attr name="colorOnBackgroundButtonAction" format="color" />
 
     <attr name="colorBackgroundButtonPicker" format="color" />
     <attr name="colorOnBackgroundButtonPicker" format="color" />
 
+    <!-- Fab colors -->
     <attr name="colorControlNormalFab" format="color" />
     <attr name="colorControlActivatedFab" format="color" />
 
     <attr name="colorControlNormalFabMini" format="color" />
     <attr name="colorControlActivatedFabMini" format="color" />
 
+    <!-- Button gradients -->
     <attr name="colorBackgroundButtonDeleteStart" format="color" />
     <attr name="colorBackgroundButtonDeleteEnd" format="color" />
 
+    <attr name="colorBackgroundButtonNormalStart" format="color" />
+    <attr name="colorBackgroundButtonNormalEnd" format="color" />
+
+    <!-- Text fields -->
     <attr name="colorInputTextField" format="color" />
 </resources>

@@ -1,39 +1,43 @@
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
         <item name="colorPrimary">@color/limedSpruceBlueDark</item>
         <item name="colorOnPrimary">@color/alabasterWhite</item>
         <item name="colorPrimaryVariant">@color/limedSpruceBlue</item>
 
+        <item name="colorPrimaryDark">@color/limedSpruceBlueDark</item>
+        <item name="colorAccent">@color/juniperGreen</item>
+
+        <!-- Surface colors -->
         <item name="colorSurface">@color/alabasterWhiteDark</item>
         <item name="colorOnSurface">@color/tuataraGray</item>
         <item name="colorOnSurfaceSecondary">@color/boulderGray</item>
 
+        <!-- Errors and warnings (on all) -->
         <item name="colorError">@color/cinnabarRed</item>
         <item name="colorWarning">@color/anzacYellow</item>
 
+        <!-- Button colors (on primary) -->
         <item name="colorBackgroundButtonAction">@color/blackGray</item>
         <item name="colorOnBackgroundButtonAction">@color/alabasterWhiteDark</item>
 
         <item name="colorBackgroundButtonPicker">@color/juniperGreen</item>
         <item name="colorOnBackgroundButtonPicker">@color/alabasterWhiteDark</item>
 
+        <!-- Fab colors (on primary) -->
         <item name="colorControlNormalFab">@color/lynchBlue</item>
         <item name="colorControlActivatedFab">@color/lynchBlueDark</item>
-
         <item name="colorControlNormalFabMini">@color/lynchBlue</item>
         <item name="colorControlActivatedFabMini">@color/lynchBlueDark</item>
 
+        <!-- Button gradients (on surface) -->
         <item name="colorBackgroundButtonDeleteStart">@color/anzacYellow</item>
         <item name="colorBackgroundButtonDeleteEnd">@color/cinnabarRed</item>
+        <item name="colorBackgroundButtonNormalStart">@color/limedSpruceBlueDark</item>
+        <item name="colorBackgroundButtonNormalEnd">@color/limedSpruceBlue</item>
 
+        <!-- Text fields (on primary) -->
         <item name="colorInputTextField">@color/alabasterWhite</item>
-
-        <item name="colorPrimaryDark">@color/limedSpruceBlueDark</item>
-        <item name="colorAccent">@color/juniperGreen</item>
 
         <item name="android:fontFamily">@font/muli</item>
         <item name="materialDrawerStyle">@style/Widget.MaterialDrawerStyleCustom</item>
