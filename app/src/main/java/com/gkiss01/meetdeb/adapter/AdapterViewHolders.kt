@@ -110,7 +110,7 @@ class EventViewHolder(private val view: View, private val isAdmin: Boolean): Fas
 
         if (item.accepted) {
             view.eli_acceptButton.hideProgress(R.string.event_accepted)
-            view.eli_acceptButton.setBackgroundResource(R.drawable.event_accepted_button_background)
+            view.eli_acceptButton.setBackgroundResource(R.drawable.event_button_accepted_background)
         }
         else {
             view.eli_acceptButton.hideProgress(R.string.event_not_accepted)
@@ -118,7 +118,7 @@ class EventViewHolder(private val view: View, private val isAdmin: Boolean): Fas
         }
 
         view.eli_anotherDateButton.hideProgress(R.string.event_date_add)
-        view.eli_anotherDateButton.setBackgroundResource(if (item.voted) R.drawable.event_accepted_button_background else 0)
+        view.eli_anotherDateButton.setBackgroundResource(if (item.voted) R.drawable.event_button_accepted_background else 0)
 
         Picasso.get()
             .load("$BASE_URL/images/${event.id}")

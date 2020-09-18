@@ -148,7 +148,7 @@
             android:layout_width="0dp"
             android:layout_height="2dp"
             android:layout_marginTop="30dp"
-            android:background="#b0c5c2"
+            android:background="?attr/colorOnPrimary"
             app:layout_constraintEnd_toEndOf="@id/pf_headerView"
             app:layout_constraintStart_toStartOf="@id/pf_headerView"
             app:layout_constraintTop_toBottomOf="@id/pf_numbers" />
