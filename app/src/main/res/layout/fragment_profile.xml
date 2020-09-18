@@ -44,7 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:textColor="?attr/colorInputTextField"
+            android:textColor="?attr/colorOnPrimary"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="@id/pf_profileImage"
@@ -55,7 +55,7 @@
             android:id="@+id/pf_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="?attr/colorInputTextField"
+            android:textColor="?attr/colorOnPrimary"
             android:textSize="16sp"
             android:textStyle="italic"
             app:layout_constraintEnd_toEndOf="@id/pf_name"
@@ -95,7 +95,7 @@
                     android:id="@+id/pf_createdEvents"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="?attr/colorInputTextField"
+                    android:textColor="?attr/colorOnPrimary"
                     android:textSize="22sp"
                     android:textStyle="bold" />
 
@@ -103,7 +103,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/profile_created"
-                    android:textColor="?attr/colorInputTextField"
+                    android:textColor="?attr/colorOnPrimary"
                     android:textSize="17sp" />
 
                 <View
@@ -124,7 +124,7 @@
                     android:id="@+id/pf_acceptedEvents"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="?attr/colorInputTextField"
+                    android:textColor="?attr/colorOnPrimary"
                     android:textSize="22sp"
                     android:textStyle="bold" />
 
@@ -132,7 +132,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/profile_accepted"
-                    android:textColor="?attr/colorInputTextField"
+                    android:textColor="?attr/colorOnPrimary"
                     android:textSize="17sp" />
 
                 <View
@@ -170,7 +170,7 @@
                 android:enabled="false"
                 android:hint="@string/profile_identifier"
                 android:inputType="text"
-                android:textColor="?attr/colorInputTextField" />
+                android:textColor="?attr/colorOnPrimaryTextField" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
@@ -198,10 +198,10 @@
             android:gravity="center"
             android:includeFontPadding="false"
             android:text="@string/profile_update"
-            android:textColor="?attr/colorInputTextField"
+            android:textColor="?attr/colorOnPrimary"
             android:textSize="17sp"
             app:drawableStartCompat="@drawable/ic_edit_large"
-            app:drawableTint="?attr/colorInputTextField"
+            app:drawableTint="?attr/colorOnPrimary"
             app:layout_constraintBottom_toTopOf="@id/pf_deleteLabel"
             app:layout_constraintStart_toStartOf="@id/pf_headerView" />
 

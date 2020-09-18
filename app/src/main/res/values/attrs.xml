@@ -27,5 +27,6 @@
     <attr name="colorOnSurfaceButtonDynamicBg" format="color" />
 
     <!-- Text fields -->
-    <attr name="colorInputTextField" format="color" />
+    <attr name="colorOnPrimaryTextField" format="color" />
+    <attr name="colorOnSurfaceTextField" format="color" />
 </resources>
