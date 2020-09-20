@@ -114,7 +114,4 @@ dependencies {
 
     //LoadingButton
     implementation 'com.github.razir.progressbutton:progressbutton:1.0.3'
-
-    //SuperBottomSheet
-    implementation 'com.github.andrefrsousa:SuperBottomSheet:1.5.0'
 }
