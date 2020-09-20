@@ -5,13 +5,11 @@ import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.util.Patterns
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
-import com.andrefrsousa.superbottomsheet.SuperBottomSheetFragment
 import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
@@ -22,10 +20,11 @@ import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.Resource
 import com.gkiss01.meetdeb.network.Status
 import com.gkiss01.meetdeb.screens.fragment.hideKeyboard
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.bottomsheet_profile_email.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
-class EmailBottomSheet: SuperBottomSheetFragment() {
+class EmailBottomSheet: BottomSheetDialogFragment() {
     private val viewModelActivityKoin: ActivityViewModel by sharedViewModel()
     private lateinit var email: String
 
@@ -73,11 +72,6 @@ class EmailBottomSheet: SuperBottomSheetFragment() {
             }
         }
     }
-
-    override fun getCornerRadius() = requireContext().resources.getDimension(R.dimen.bottomsheet_corner_radius)
-    override fun getPeekHeight() = TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_DIP, 255F,
-        requireContext().resources.displayMetrics).toInt()
 
     private fun validateEmail(): Boolean {
         val email = bspe_newEmail.editText?.text.toString().trim()

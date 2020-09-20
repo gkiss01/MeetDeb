@@ -4,14 +4,12 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import com.andrefrsousa.superbottomsheet.SuperBottomSheetFragment
 import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
@@ -19,10 +17,11 @@ import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.network.Status
 import com.gkiss01.meetdeb.screens.fragment.SuccessObserver
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.bottomsheet_profile_delete.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
-class DeleteBottomSheet: SuperBottomSheetFragment() {
+class DeleteBottomSheet: BottomSheetDialogFragment() {
     private val viewModelActivityKoin: ActivityViewModel by sharedViewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -70,10 +69,4 @@ class DeleteBottomSheet: SuperBottomSheetFragment() {
             progressColor = Color.BLACK
         }
     }
-
-    override fun getCornerRadius() = requireContext().resources.getDimension(R.dimen.bottomsheet_corner_radius)
-    override fun isSheetCancelableOnTouchOutside() = false
-    override fun getPeekHeight() = TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_DIP, 335F,
-        requireContext().resources.displayMetrics).toInt()
 }

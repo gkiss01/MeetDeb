@@ -4,13 +4,11 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
-import com.andrefrsousa.superbottomsheet.SuperBottomSheetFragment
 import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
@@ -21,10 +19,11 @@ import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.Resource
 import com.gkiss01.meetdeb.network.Status
 import com.gkiss01.meetdeb.screens.fragment.hideKeyboard
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.bottomsheet_profile_password.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
-class PasswordBottomSheet: SuperBottomSheetFragment() {
+class PasswordBottomSheet: BottomSheetDialogFragment() {
     private val viewModelActivityKoin: ActivityViewModel by sharedViewModel()
     private lateinit var password: String
 
@@ -72,11 +71,6 @@ class PasswordBottomSheet: SuperBottomSheetFragment() {
             }
         }
     }
-
-    override fun getCornerRadius() = requireContext().resources.getDimension(R.dimen.bottomsheet_corner_radius)
-    override fun getPeekHeight() = TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_DIP, 255F,
-        requireContext().resources.displayMetrics).toInt()
 
     private fun validatePasswordNew(): Boolean {
         val password = bspp_newPassword.editText?.text.toString().trim()

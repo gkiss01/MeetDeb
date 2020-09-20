@@ -1,4 +1,5 @@
 <resources>
+
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
         <item name="colorPrimary">@color/limedSpruceBlueDark</item>
         <item name="colorOnPrimary">@color/alabasterWhite</item>
@@ -40,13 +41,36 @@
         <item name="colorOnPrimaryTextField">@color/alabasterWhite</item>
         <item name="colorOnSurfaceTextField">@color/tuataraGray</item>
 
-        <item name="android:fontFamily">@font/muli</item>
+        <!-- Material drawer -->
         <item name="materialDrawerStyle">@style/Widget.MaterialDrawerStyleCustom</item>
         <item name="materialDrawerHeaderStyle">@style/Widget.MaterialDrawerHeaderStyleCustom</item>
+
+        <!-- Modal Bottom Sheet -->
+        <item name="bottomSheetDialogTheme">@style/ModalBottomSheetDialog</item>
+
+        <!-- Application -->
+        <item name="android:fontFamily">@font/muli</item>
     </style>
 
     <style name="AppTheme.Launcher">
         <item name="android:windowBackground">@drawable/launch_screen</item>
+    </style>
+
+    <!-- Modal Bottom Sheet -->
+    <style name="ModalBottomSheetDialog" parent="ThemeOverlay.MaterialComponents.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/ModalBottomSheet</item>
+    </style>
+
+    <style name="ModalBottomSheet" parent="Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="shapeAppearanceOverlay">@style/ModalBottomSheetAppearance</item>
+    </style>
+
+    <style name="ModalBottomSheetAppearance" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopRight">20dp</item>
+        <item name="cornerSizeTopLeft">20dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
     </style>
 
     <!-- Material drawer -->
