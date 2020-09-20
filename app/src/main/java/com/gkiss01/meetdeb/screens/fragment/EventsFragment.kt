@@ -20,7 +20,6 @@ import com.gkiss01.meetdeb.data.fastadapter.Event
 import com.gkiss01.meetdeb.data.isAdmin
 import com.gkiss01.meetdeb.network.Resource
 import com.gkiss01.meetdeb.network.Status
-import com.gkiss01.meetdeb.utils.ScrollingViewOnApplyWindowInsetsListener
 import com.gkiss01.meetdeb.viewmodels.EventsViewModel
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
@@ -31,7 +30,6 @@ import com.mikepenz.fastadapter.ui.items.ProgressItem
 import com.mikepenz.itemanimators.AlphaInAnimator
 import kotlinx.android.synthetic.main.fragment_events.*
 import kotlinx.android.synthetic.main.item_event.view.*
-import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -155,11 +153,6 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
 
         fastAdapter.attachDefaultListeners = false
         ef_eventsRecyclerView.adapter = fastAdapter
-
-        val fastScroller = FastScrollerBuilder(ef_eventsRecyclerView).useMd2Style().build()
-        ef_eventsRecyclerView.setOnApplyWindowInsetsListener(
-            ScrollingViewOnApplyWindowInsetsListener(ef_eventsRecyclerView, fastScroller)
-        )
 
         val layoutManager = LinearLayoutManager(requireContext())
         ef_eventsRecyclerView.layoutManager = layoutManager
