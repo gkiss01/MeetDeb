@@ -6,12 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.futuremind.recyclerviewfastscroll.viewprovider.ScrollerViewProvider
 import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.adapter.EventViewHolder
@@ -45,7 +47,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
     private val itemAdapter = ItemAdapter<Event>()
     private val footerAdapter = ItemAdapter<ProgressItem>()
     private val fastScrollerAdapter = FastScrollerAdapter<GenericItem>().wrap(FastAdapter.with(listOf(itemAdapter, footerAdapter)))
-
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -64,7 +66,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         addSliderItems(ef_slider, 1)
         addSliderNavigation()
 
-        viewModelActivityKoin.activeUser.observe(viewLifecycleOwner, Observer {
+        viewModelActivityKoin.activeUser.observe(viewLifecycleOwner, {
             when (it.status) {
                 Status.SUCCESS -> {
                     accountHeaderView.currentProfileName.text = it.data?.name
@@ -135,7 +137,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             }
         }
 
-        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Long>("eventId")?.observe(viewLifecycleOwner, Observer { eventId ->
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Long>("eventId")?.observe(viewLifecycleOwner, { eventId ->
             val itemView = ef_eventsRecyclerView.findViewHolderForAdapterPosition(itemAdapter.getAdapterPosition(eventId)) as? EventViewHolder
             itemView?.showVoteAnimation()
 
@@ -154,18 +156,24 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             viewModelKoin.refreshEvents().observe(viewLifecycleOwner, eventsObserver)
 
         fastScrollerAdapter.fastAdapter?.attachDefaultListeners = false
-        ef_eventsRecyclerView.adapter = fastScrollerAdapter
 
-        val layoutManager = LinearLayoutManager(requireContext())
-        ef_eventsRecyclerView.layoutManager = layoutManager
+        ef_eventsRecyclerView.apply {
+            adapter = fastScrollerAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+            itemAnimator = AlphaInAnimator()
 
-        ef_eventsRecyclerView.setHasFixedSize(true)
-        ef_eventsRecyclerView.setItemViewCacheSize(6)
-        ef_eventsRecyclerView.itemAnimator = AlphaInAnimator()
+            setHasFixedSize(true)
+            setItemViewCacheSize(6)
 
+            addOnScrollListener(object : EndlessRecyclerOnScrollListener(footerAdapter) {
+                override fun onLoadMore(currentPage: Int) {
+                    viewModelKoin.getMoreEvents().observe(viewLifecycleOwner, eventsObserver)
+                }
+            })
+        }
         ef_fastScroller.setRecyclerView(ef_eventsRecyclerView)
 
-        viewModelKoin.event.observe(viewLifecycleOwner, Observer {
+        viewModelKoin.event.observe(viewLifecycleOwner, {
             when (it.status) {
                 Status.SUCCESS -> {
                     it.data?.let { event -> viewModelKoin.updateEventInList(event) }
@@ -183,7 +191,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             }
         })
 
-        viewModelKoin.events.observe(viewLifecycleOwner, Observer {
+        viewModelKoin.events.observe(viewLifecycleOwner, {
             FastAdapterDiffUtil[itemAdapter] = it
             viewModelKoin.eventsIsLoading = false
         })
@@ -202,12 +210,6 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                 R.id.eli_moreButton -> createMoreActionMenu(v, item, deleteObserver, createReportObserver, deleteReportObserver)
             }
         }
-
-        ef_eventsRecyclerView.addOnScrollListener(object : EndlessRecyclerOnScrollListener(footerAdapter) {
-            override fun onLoadMore(currentPage: Int) {
-                viewModelKoin.getMoreEvents().observe(viewLifecycleOwner, eventsObserver)
-            }
-        })
     }
 
     private fun addSliderNavigation() {
