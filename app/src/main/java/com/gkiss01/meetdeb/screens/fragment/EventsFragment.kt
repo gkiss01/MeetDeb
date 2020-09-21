@@ -22,8 +22,6 @@ import com.gkiss01.meetdeb.network.Resource
 import com.gkiss01.meetdeb.network.Status
 import com.gkiss01.meetdeb.utils.FastScrollerAdapter
 import com.gkiss01.meetdeb.viewmodels.EventsViewModel
-import com.mikepenz.fastadapter.FastAdapter
-import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.diff.FastAdapterDiffUtil
 import com.mikepenz.fastadapter.listeners.addClickListener
@@ -44,8 +42,8 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
 
     private val itemAdapter = ItemAdapter<Event>()
     private val footerAdapter = ItemAdapter<ProgressItem>()
-    private val fastScrollerAdapter = FastScrollerAdapter<GenericItem>().wrap(FastAdapter.with(listOf(itemAdapter, footerAdapter)))
-    
+    private val fastScrollerAdapter = FastScrollerAdapter.with(listOf(itemAdapter, footerAdapter))
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -111,7 +109,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                     Toast.makeText(requireContext(), getString(R.string.event_reported), Toast.LENGTH_LONG).show()
                     it.data?.withId?.let { eventId ->
                         viewModelKoin.addEventReportToList(eventId)
-                        fastScrollerAdapter.fastAdapter?.notifyAdapterItemChanged(itemAdapter.getAdapterPosition(eventId))
+                        fastScrollerAdapter.notifyAdapterItemChanged(itemAdapter.getAdapterPosition(eventId))
                     }
                 }
                 Status.ERROR -> Toast.makeText(requireContext(), it.errorMessage, Toast.LENGTH_LONG).show()
@@ -126,7 +124,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                     Toast.makeText(requireContext(), getString(R.string.event_report_removed), Toast.LENGTH_LONG).show()
                     it.data?.withId?.let { eventId ->
                         viewModelKoin.removeEventReportFromList(eventId)
-                        fastScrollerAdapter.fastAdapter?.notifyAdapterItemChanged(itemAdapter.getAdapterPosition(eventId))
+                        fastScrollerAdapter.notifyAdapterItemChanged(itemAdapter.getAdapterPosition(eventId))
                     }
                 }
                 Status.ERROR -> Toast.makeText(requireContext(), it.errorMessage, Toast.LENGTH_LONG).show()
@@ -153,7 +151,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         if (viewModelKoin.events.value?.isEmpty() != false)
             viewModelKoin.refreshEvents().observe(viewLifecycleOwner, eventsObserver)
 
-        fastScrollerAdapter.fastAdapter?.attachDefaultListeners = false
+        fastScrollerAdapter.attachDefaultListeners = false
 
         ef_eventsRecyclerView.apply {
             adapter = fastScrollerAdapter
@@ -179,7 +177,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                 Status.ERROR -> {
                     Toast.makeText(requireContext(), it.errorMessage, Toast.LENGTH_LONG).show()
                     if (viewModelKoin.selectedEvent != Long.MIN_VALUE)
-                        fastScrollerAdapter.fastAdapter?.notifyAdapterItemChanged(itemAdapter.getAdapterPosition(viewModelKoin.selectedEvent))
+                        fastScrollerAdapter.notifyAdapterItemChanged(itemAdapter.getAdapterPosition(viewModelKoin.selectedEvent))
                     viewModelKoin.resetLiveData()
                     viewModelKoin.eventsIsLoading = false
                 }
