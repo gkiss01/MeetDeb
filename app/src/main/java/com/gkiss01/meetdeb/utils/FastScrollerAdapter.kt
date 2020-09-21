@@ -2,14 +2,17 @@ package com.gkiss01.meetdeb.utils
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.futuremind.recyclerviewfastscroll.SectionTitleProvider
+import com.gkiss01.meetdeb.data.fastadapter.Event
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericItem
+import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
+import org.threeten.bp.format.DateTimeFormatter
 
-class FastScrollerAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.ViewHolder>(), SectionTitleProvider {
+class FastScrollerAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.ViewHolder>(), FastScrollRecyclerView.SectionedAdapter {
 
-    override fun getSectionTitle(position: Int): String {
-        return "M"
+    override fun getSectionName(position: Int): String {
+        val event = fastAdapter?.getItem(position) as? Event
+        return event?.date?.format(DateTimeFormatter.ofPattern("yyyy MMM dd")) ?: ""
     }
 
     // REQUIRED CODE FOR WRAPPING

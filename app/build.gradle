@@ -71,7 +71,7 @@ dependencies {
     implementation "com.mikepenz:itemanimators:1.1.0"
 
     //FastScroller for FastAdapter
-    implementation 'com.futuremind.recyclerfastscroll:fastscroll:0.2.5'
+    implementation 'com.simplecityapps:recyclerview-fastscroll:2.0.1'
 
     implementation "com.google.android.material:material:1.2.1"
 

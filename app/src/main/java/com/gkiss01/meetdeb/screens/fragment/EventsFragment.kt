@@ -6,14 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.futuremind.recyclerviewfastscroll.viewprovider.ScrollerViewProvider
 import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.adapter.EventViewHolder
@@ -171,7 +169,6 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                 }
             })
         }
-        ef_fastScroller.setRecyclerView(ef_eventsRecyclerView)
 
         viewModelKoin.event.observe(viewLifecycleOwner, {
             when (it.status) {

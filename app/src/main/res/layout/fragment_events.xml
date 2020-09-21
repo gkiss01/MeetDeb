@@ -17,19 +17,18 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <androidx.recyclerview.widget.RecyclerView
+            <com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
                 android:id="@+id/ef_eventsRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                app:fastScrollAutoHide="true"
+                app:fastScrollAutoHideDelay="1500"
+                app:fastScrollPopupBgColor="?colorSurface"
+                app:fastScrollPopupTextColor="?colorOnSurface"
+                app:fastScrollPopupTextSize="25sp"
+                app:fastScrollThumbColor="?colorSurface"
                 tools:listitem="@layout/item_event" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-        <com.futuremind.recyclerviewfastscroll.FastScroller
-            android:id="@+id/ef_fastScroller"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_alignParentEnd="true"/>
 
         <com.getbase.floatingactionbutton.FloatingActionsMenu
             android:layout_width="wrap_content"
