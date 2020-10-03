@@ -141,7 +141,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             viewModelKoin.updateEvent(eventId)
         })
 
-        ef_addActionButton.setOnClickListener{ findNavController().navigate(R.id.createEventFragment) }
+        ef_addActionButton.setOnClickListener{ findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToCreateEventFragment()) }
 
         ef_swipeRefreshLayout.setOnRefreshListener {
             if (!viewModelKoin.eventsIsLoading) viewModelKoin.refreshEvents().observe(viewLifecycleOwner, eventsObserver)

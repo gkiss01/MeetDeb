@@ -10,7 +10,7 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
-const val BASE_URL = "http://192.168.1.105:8080"
+const val BASE_URL = "http://192.168.1.102:8080"
 const val PAGE_SIZE = 25
 
 val networkModule = module {

@@ -18,6 +18,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
@@ -52,6 +53,8 @@ class EventCreateFragment : Fragment() {
     private val viewModelActivityKoin: ActivityViewModel by sharedViewModel()
     private val viewModelKoin: EventCreateViewModel by viewModel { parametersOf(viewModelActivityKoin.getBasic()) }
 
+    private val safeArgs: EventCreateFragmentArgs by navArgs()
+
     private val REQUEST_CODE_PICK_IMAGE = 1
 
     override fun onCreateView(
@@ -63,12 +66,13 @@ class EventCreateFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val argEvent = requireArguments().getSerializable("event") as Event?
         if (viewModelKoin.type.value == ScreenType.NONE) {
-            if (argEvent != null) {
+            safeArgs.event?.let {
                 viewModelKoin.type.value = ScreenType.UPDATE
-                viewModelKoin.eventLocal = argEvent
-            } else viewModelKoin.type.value = ScreenType.NEW
+                viewModelKoin.eventLocal = it
+            } ?: run {
+                viewModelKoin.type.value = ScreenType.NEW
+            }
         }
 
         binding.event = viewModelKoin.eventLocal
