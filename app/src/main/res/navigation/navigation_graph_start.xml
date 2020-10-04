@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_graph_start"
+    app:startDestination="@id/loadingFragment">
+
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.gkiss01.meetdeb.screens.fragment.RegisterFragment"
+        android:label="RegisterFragment"
+        tools:layout="@layout/fragment_register" />
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.gkiss01.meetdeb.screens.fragment.LoginFragment"
+        android:label="LoginFragment"
+        tools:layout="@layout/fragment_login" />
+    <fragment
+        android:id="@+id/loadingFragment"
+        android:name="com.gkiss01.meetdeb.screens.fragment.LoadingFragment"
+        android:label="LoadingFragment"
+        tools:layout="@layout/fragment_loading" />
+</navigation>

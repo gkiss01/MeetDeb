@@ -21,7 +21,9 @@ class LoadingFragment : Fragment(R.layout.fragment_loading) {
 
         viewModelKoin.activeUser.observe(viewLifecycleOwner, Observer {
             when (it.status) {
-                Status.SUCCESS -> findNavController().navigate(R.id.eventsFragment)
+                Status.SUCCESS -> {
+                    findNavController().setGraph(R.navigation.navigation_graph_main)
+                }
                 Status.ERROR -> {
                     if (it.errorCode != ErrorCodes.USER_DISABLED_OR_NOT_VALID)
                         Toast.makeText(requireContext(), it.errorMessage, Toast.LENGTH_LONG).show()

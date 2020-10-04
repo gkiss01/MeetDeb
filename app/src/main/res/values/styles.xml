@@ -41,12 +41,10 @@
         <item name="colorOnPrimaryTextField">@color/alabasterWhite</item>
         <item name="colorOnSurfaceTextField">@color/tuataraGray</item>
 
-        <!-- Material drawer -->
-        <item name="materialDrawerStyle">@style/Widget.MaterialDrawerStyleCustom</item>
-        <item name="materialDrawerHeaderStyle">@style/Widget.MaterialDrawerHeaderStyleCustom</item>
-
         <!-- Modal Bottom Sheet -->
         <item name="bottomSheetDialogTheme">@style/ModalBottomSheetDialog</item>
+
+        <item name="bottomNavigationStyle">@style/BottomNavigation</item>
 
         <!-- Application -->
         <item name="android:fontFamily">@font/muli</item>
@@ -73,22 +71,8 @@
         <item name="cornerSizeBottomLeft">0dp</item>
     </style>
 
-    <!-- Material drawer -->
-    <style name="Widget.MaterialDrawerStyleCustom" parent="Widget.MaterialDrawerStyle">
-        <item name="materialDrawerBackground">?attr/colorPrimary</item>
-        <item name="materialDrawerPrimaryText">?attr/colorOnPrimary</item>
-        <item name="materialDrawerPrimaryIcon">?attr/colorOnPrimary</item>
-        <item name="materialDrawerSecondaryText">?attr/colorOnPrimary</item>
-        <item name="materialDrawerSecondaryIcon">?attr/colorOnPrimary</item>
-        <item name="materialDrawerDividerColor">?attr/colorOnPrimary</item>
-        <item name="materialDrawerSelectedBackgroundColor">?attr/colorOnPrimary</item>
-    </style>
-
-    <style name="Widget.MaterialDrawerHeaderStyleCustom" parent="Widget.MaterialDrawerHeaderStyle">
-        <item name="materialDrawerCompactStyle">true</item>
-        <item name="materialDrawerHeaderSelectionText">?attr/colorOnPrimary</item>
-        <item name="materialDrawerHeaderSelectionSubtext">?attr/colorOnPrimary</item>
-    </style>
+    <!-- BottomNavigation -->
+    <style name="BottomNavigation" parent="Widget.MaterialComponents.BottomNavigationView" />
 
     <!-- Buttons -->
     <style name="WidgetButtonDynamicBackground">

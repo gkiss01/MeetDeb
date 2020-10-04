@@ -7,10 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import android.widget.Toast
-import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
@@ -44,29 +44,19 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
     private val footerAdapter = ItemAdapter<ProgressItem>()
     private val fastScrollerAdapter = FastScrollerAdapter.with(listOf(itemAdapter, footerAdapter))
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        requireActivity().onBackPressedDispatcher.addCallback(this) {
-            requireActivity().finishAffinity()
-        }
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         viewModelKoin.updateBasic(viewModelActivityKoin.getBasic())
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val accountHeaderView = createSliderHeader(ef_slider)
-        addSliderItems(ef_slider, 1)
-        addSliderNavigation()
+        ef_navigationView.setupWithNavController(findNavController())
 
         viewModelActivityKoin.activeUser.observe(viewLifecycleOwner, {
             when (it.status) {
                 Status.SUCCESS -> {
-                    accountHeaderView.currentProfileName.text = it.data?.name
-                    accountHeaderView.currentProfileEmail.text = it.data?.email
+//                    accountHeaderView.currentProfileName.text = it.data?.name
+//                    accountHeaderView.currentProfileEmail.text = it.data?.email
                 }
                 Status.PENDING -> findNavController().navigate(R.id.registerFragment)
                 else -> Log.e("MeetDebLog_EventsFragment", "User is null...")
@@ -204,19 +194,6 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                 R.id.eli_anotherDateButton -> findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToDatesDialogFragment(item))
                 R.id.eli_moreButton -> createMoreActionMenu(v, item, deleteObserver, createReportObserver, deleteReportObserver)
             }
-        }
-    }
-
-    private fun addSliderNavigation() {
-        ef_slider.onDrawerItemClickListener = { _, item, _ ->
-            when (item.identifier) {
-                2L -> findNavController().navigate(R.id.profileFragment)
-                3L -> {
-                    viewModelActivityKoin.resetUserCredentials()
-                    viewModelActivityKoin.resetLiveData()
-                }
-            }
-            false
         }
     }
 
