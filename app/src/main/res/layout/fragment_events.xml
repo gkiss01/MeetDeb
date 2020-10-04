@@ -7,24 +7,14 @@
     android:background="?attr/colorPrimary"
     android:orientation="vertical">
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/ef_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/Widget.MaterialComponents.Toolbar.Primary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:menu="@menu/action_event_fragment" />
-
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/ef_swipeRefreshLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/ef_navigationView"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ef_toolbar">
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
             android:id="@+id/ef_eventsRecyclerView"
@@ -46,7 +36,7 @@
         app:fab_addButtonColorNormal="?attr/colorOnPrimaryFabNormal"
         app:fab_addButtonColorPressed="?attr/colorOnPrimaryFabActivated"
         app:fab_labelStyle="@style/WidgetButtonAction"
-        app:layout_constraintBottom_toTopOf="@id/ef_navigationView"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
         <com.getbase.floatingactionbutton.FloatingActionButton
@@ -59,13 +49,4 @@
             app:fab_size="mini"
             app:fab_title="@string/event_add_button" />
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/ef_navigationView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/navigation_drawer" />
 </androidx.constraintlayout.widget.ConstraintLayout>

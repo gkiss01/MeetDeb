@@ -2,16 +2,12 @@ package com.gkiss01.meetdeb.screens.fragment
 
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
@@ -45,32 +41,28 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
     private val footerAdapter = ItemAdapter<ProgressItem>()
     private val fastScrollerAdapter = FastScrollerAdapter.with(listOf(itemAdapter, footerAdapter))
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         viewModelKoin.updateBasic(viewModelActivityKoin.getBasic())
+        setHasOptionsMenu(true)
+
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val navController = findNavController()
-        val appBarConfiguration = AppBarConfiguration(setOf(R.id.eventsFragment, R.id.profileFragment))
-        ef_toolbar.setupWithNavController(navController, appBarConfiguration)
-        ef_navigationView.setupWithNavController(navController)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        menu.clear()
+        inflater.inflate(R.menu.action_event_fragment, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
 
-        ef_toolbar.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.action_event_add -> {
-                    findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToEventCreateFragment())
-                    true
-                }
-                else -> false
-            }
+    override fun onOptionsItemSelected(item: MenuItem)= when (item.itemId) {
+        R.id.action_event_add -> {
+            findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToEventCreateFragment())
+            true
         }
+        else -> super.onOptionsItemSelected(item)
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewModelActivityKoin.activeUser.observe(viewLifecycleOwner, {
             when (it.status) {
                 Status.SUCCESS -> {}
