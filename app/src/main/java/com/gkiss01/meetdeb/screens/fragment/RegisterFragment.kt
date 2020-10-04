@@ -9,7 +9,6 @@ import android.util.Patterns
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -26,16 +25,8 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 class RegisterFragment : Fragment(R.layout.fragment_register) {
     private val viewModelKoin: ActivityViewModel by sharedViewModel()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        requireActivity().onBackPressedDispatcher.addCallback(this) {
-            requireActivity().finishAffinity()
-        }
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        rf_alreadyRegistered.setOnClickListener { findNavController().navigate(R.id.loginFragment) }
+        rf_alreadyRegistered.setOnClickListener { findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToLoginFragment()) }
 
         rf_registerButton.attachTextChangeAnimator()
         rf_registerButton.setOnClickListener {
@@ -58,7 +49,7 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
             when (it.status) {
                 Status.SUCCESS -> {
                     rf_registerButton.hideProgress(R.string.done)
-                    Handler().postDelayed({ findNavController().navigate(R.id.loginFragment) }, 500)
+                    Handler().postDelayed({ findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToLoginFragment()) }, 500)
                     viewModelKoin.resetLiveData()
                 }
                 Status.ERROR -> {

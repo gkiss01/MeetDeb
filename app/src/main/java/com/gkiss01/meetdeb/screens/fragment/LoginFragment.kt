@@ -48,7 +48,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             when (it.status) {
                 Status.SUCCESS -> {
                     viewModelKoin.setUserCredentials(email, password)
-                    findNavController().navigate(R.id.eventsFragment)
+                    findNavController().setGraph(R.navigation.navigation_graph_main)
                 }
                 Status.ERROR -> {
                     val errorMessage = if (it.errorCode == ErrorCodes.USER_DISABLED_OR_NOT_VALID) getString(R.string.invalid_credentials) else it.errorMessage

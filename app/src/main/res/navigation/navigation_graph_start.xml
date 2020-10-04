@@ -9,7 +9,13 @@
         android:id="@+id/registerFragment"
         android:name="com.gkiss01.meetdeb.screens.fragment.RegisterFragment"
         android:label="RegisterFragment"
-        tools:layout="@layout/fragment_register" />
+        tools:layout="@layout/fragment_register" >
+        <action
+            android:id="@+id/action_registerFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/loadingFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.gkiss01.meetdeb.screens.fragment.LoginFragment"
@@ -19,5 +25,11 @@
         android:id="@+id/loadingFragment"
         android:name="com.gkiss01.meetdeb.screens.fragment.LoadingFragment"
         android:label="LoadingFragment"
-        tools:layout="@layout/fragment_loading" />
+        tools:layout="@layout/fragment_loading" >
+        <action
+            android:id="@+id/action_loadingFragment_to_registerFragment"
+            app:destination="@id/registerFragment"
+            app:popUpTo="@id/loadingFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>

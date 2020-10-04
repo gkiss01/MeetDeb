@@ -28,7 +28,7 @@ class LoadingFragment : Fragment(R.layout.fragment_loading) {
                     if (it.errorCode != ErrorCodes.USER_DISABLED_OR_NOT_VALID)
                         Toast.makeText(requireContext(), it.errorMessage, Toast.LENGTH_LONG).show()
                     viewModelKoin.resetLiveData()
-                    findNavController().navigate(R.id.registerFragment)
+                    findNavController().navigate(LoadingFragmentDirections.actionLoadingFragmentToRegisterFragment())
                 }
                 Status.LOADING -> Log.d("MeetDebLog_LoadingFragment", "User is loading...")
                 else -> {}
