@@ -54,11 +54,8 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
 
         viewModelActivityKoin.activeUser.observe(viewLifecycleOwner, {
             when (it.status) {
-                Status.SUCCESS -> {
-//                    accountHeaderView.currentProfileName.text = it.data?.name
-//                    accountHeaderView.currentProfileEmail.text = it.data?.email
-                }
-                Status.PENDING -> findNavController().navigate(R.id.registerFragment)
+                Status.SUCCESS -> {}
+                Status.PENDING -> findNavController().setGraph(R.navigation.navigation_graph_start)
                 else -> Log.e("MeetDebLog_EventsFragment", "User is null...")
             }
         })

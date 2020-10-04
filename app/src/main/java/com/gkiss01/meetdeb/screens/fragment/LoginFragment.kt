@@ -7,7 +7,6 @@ import android.util.Patterns
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.hideProgress
@@ -44,7 +43,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             }
         }
 
-        viewModelKoin.activeUser.observe(viewLifecycleOwner, Observer {
+        viewModelKoin.activeUser.observe(viewLifecycleOwner, {
             when (it.status) {
                 Status.SUCCESS -> {
                     viewModelKoin.setUserCredentials(email, password)

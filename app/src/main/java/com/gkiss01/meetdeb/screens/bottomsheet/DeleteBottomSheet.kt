@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.hideProgress
@@ -32,9 +31,9 @@ class DeleteBottomSheet: BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         debsf_cancelButton.setOnClickListener { this.dismiss() }
 
-        viewModelActivityKoin.activeUser.observe(viewLifecycleOwner, Observer {
+        viewModelActivityKoin.activeUser.observe(viewLifecycleOwner, {
             when (it.status) {
-                Status.PENDING -> findNavController().navigate(R.id.registerFragment)
+                Status.PENDING -> findNavController().setGraph(R.navigation.navigation_graph_start)
                 else -> {}
             }
         })

@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
@@ -19,7 +18,7 @@ class LoadingFragment : Fragment(R.layout.fragment_loading) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewModelKoin.getCurrentUser()
 
-        viewModelKoin.activeUser.observe(viewLifecycleOwner, Observer {
+        viewModelKoin.activeUser.observe(viewLifecycleOwner, {
             when (it.status) {
                 Status.SUCCESS -> {
                     findNavController().setGraph(R.navigation.navigation_graph_main)

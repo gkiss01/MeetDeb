@@ -10,7 +10,6 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.hideProgress
@@ -45,7 +44,7 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
             }
         }
 
-        viewModelKoin.activeUser.observe(viewLifecycleOwner, Observer {
+        viewModelKoin.activeUser.observe(viewLifecycleOwner, {
             when (it.status) {
                 Status.SUCCESS -> {
                     rf_registerButton.hideProgress(R.string.done)

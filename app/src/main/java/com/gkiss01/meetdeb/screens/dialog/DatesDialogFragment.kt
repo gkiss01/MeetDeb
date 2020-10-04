@@ -12,7 +12,6 @@ import android.widget.FrameLayout
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -72,7 +71,7 @@ class DatesDialogFragment : DialogFragment() {
             setItemViewCacheSize(12)
         }
 
-        viewModelKoin.dates.observe(viewLifecycleOwner, Observer {
+        viewModelKoin.dates.observe(viewLifecycleOwner, {
             when (it.status) {
                 Status.SUCCESS -> {
                     FastAdapterDiffUtil[itemAdapter] = it.data!!

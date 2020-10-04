@@ -7,7 +7,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.gkiss01.meetdeb.ActivityViewModel
@@ -23,12 +22,9 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         pf_navigationView.setupWithNavController(findNavController())
 
-        viewModelActivityKoin.activeUser.observe(viewLifecycleOwner, Observer {
+        viewModelActivityKoin.activeUser.observe(viewLifecycleOwner, {
             when (it.status) {
                 Status.SUCCESS -> {
-//                    accountHeaderView.currentProfileName.text = it.data?.name
-//                    accountHeaderView.currentProfileEmail.text = it.data?.email
-
                     pf_name.text = it.data?.name
                     pf_email.text = it.data?.email
 
@@ -43,12 +39,12 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                     }
                     else pf_rank.text = getString(R.string.profile_user)
                 }
-                Status.PENDING -> findNavController().navigate(R.id.registerFragment)
+                Status.PENDING -> findNavController().setGraph(R.navigation.navigation_graph_start)
                 else -> Log.e("MeetDebLog_ProfileFragment", "User is null...")
             }
         })
 
-        viewModelActivityKoin.getEventsSummary().observe(viewLifecycleOwner, Observer {
+        viewModelActivityKoin.getEventsSummary().observe(viewLifecycleOwner, {
             when (it.status) {
                 Status.SUCCESS -> {
                     pf_createdEvents.text = it.data?.eventsCreated.toString()
@@ -60,8 +56,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             }
         })
 
-        pf_deleteLabel.setOnClickListener { findNavController().navigate(R.id.deleteBottomSheetFragment) }
-        pf_updateLabel.setOnClickListener { findNavController().navigate(R.id.updateBottomSheetFragment) }
+        pf_deleteLabel.setOnClickListener { findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToDeleteBottomSheetFragment()) }
+        pf_updateLabel.setOnClickListener { findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToUpdateBottomSheetFragment()) }
     }
 
 }

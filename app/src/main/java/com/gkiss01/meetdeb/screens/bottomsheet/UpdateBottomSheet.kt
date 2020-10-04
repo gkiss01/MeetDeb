@@ -18,11 +18,11 @@ class UpdateBottomSheet: BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         bspu_emailButton.setOnClickListener {
             this.dismiss()
-            findNavController().navigate(R.id.emailBottomSheet)
+            findNavController().navigate(UpdateBottomSheetDirections.actionUpdateBottomSheetFragmentToEmailBottomSheet())
         }
         bspu_passwordButton.setOnClickListener {
             this.dismiss()
-            findNavController().navigate(R.id.passwordBottomSheet)
+            findNavController().navigate(UpdateBottomSheetDirections.actionUpdateBottomSheetFragmentToPasswordBottomSheet())
         }
     }
 }

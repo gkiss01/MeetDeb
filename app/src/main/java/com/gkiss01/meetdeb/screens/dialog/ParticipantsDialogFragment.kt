@@ -10,7 +10,6 @@ import android.view.Window
 import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gkiss01.meetdeb.ActivityViewModel
@@ -57,7 +56,7 @@ class ParticipantsDialogFragment : DialogFragment() {
             setItemViewCacheSize(20)
         }
 
-        viewModelKoin.participants.observe(viewLifecycleOwner, Observer {
+        viewModelKoin.participants.observe(viewLifecycleOwner, {
             when (it.status) {
                 Status.SUCCESS -> {
                     FastAdapterDiffUtil[itemAdapter] = it.data!!
