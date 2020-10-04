@@ -10,13 +10,6 @@
     <attr name="colorOnPrimaryButtonPickerBg" format="color" />
     <attr name="colorOnPrimaryButtonPickerText" format="color" />
 
-    <!-- Fab colors -->
-    <attr name="colorOnPrimaryFabNormal" format="color" />
-    <attr name="colorOnPrimaryFabActivated" format="color" />
-
-    <attr name="colorOnPrimaryFabMiniNormal" format="color" />
-    <attr name="colorOnPrimaryFabMiniActivated" format="color" />
-
     <!-- Button gradients -->
     <attr name="colorOnSurfaceButtonDeleteStart" format="color" />
     <attr name="colorOnSurfaceButtonDeleteEnd" format="color" />

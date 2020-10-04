@@ -99,9 +99,6 @@ dependencies {
     //ThreeTenBP
     implementation 'org.threeten:threetenbp:1.4.4'
 
-    //FloatingActionButton
-    implementation 'com.getbase:floatingactionbutton:1.10.1'
-
     //Picasso and Glide
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.github.bumptech.glide:glide:4.11.0'

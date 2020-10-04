@@ -24,12 +24,6 @@
         <item name="colorOnPrimaryButtonPickerBg">@color/juniperGreen</item>
         <item name="colorOnPrimaryButtonPickerText">@color/alabasterWhiteDark</item>
 
-        <!-- Fab colors (on primary) -->
-        <item name="colorOnPrimaryFabNormal">@color/lynchBlue</item>
-        <item name="colorOnPrimaryFabActivated">@color/lynchBlueDark</item>
-        <item name="colorOnPrimaryFabMiniNormal">@color/lynchBlue</item>
-        <item name="colorOnPrimaryFabMiniActivated">@color/lynchBlueDark</item>
-
         <!-- Button gradients (on surface) -->
         <item name="colorOnSurfaceButtonDeleteStart">@color/anzacYellow</item>
         <item name="colorOnSurfaceButtonDeleteEnd">@color/cinnabarRed</item>

@@ -28,25 +28,4 @@
             app:fastScrollThumbColor="?colorSurface"
             tools:listitem="@layout/item_event" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-    <com.getbase.floatingactionbutton.FloatingActionsMenu
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        app:fab_addButtonColorNormal="?attr/colorOnPrimaryFabNormal"
-        app:fab_addButtonColorPressed="?attr/colorOnPrimaryFabActivated"
-        app:fab_labelStyle="@style/WidgetButtonAction"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/ef_addActionButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:fab_colorNormal="?attr/colorOnPrimaryFabMiniNormal"
-            app:fab_colorPressed="?attr/colorOnPrimaryFabMiniActivated"
-            app:fab_icon="@drawable/ic_add"
-            app:fab_size="mini"
-            app:fab_title="@string/event_add_button" />
-    </com.getbase.floatingactionbutton.FloatingActionsMenu>
 </androidx.constraintlayout.widget.ConstraintLayout>
