@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/eventsFragment"
         android:name="com.gkiss01.meetdeb.screens.fragment.EventsFragment"
-        android:label="EventsFragment"
+        android:label="@string/drawer_events"
         tools:layout="@layout/fragment_events">
         <action
             android:id="@+id/action_eventsFragment_to_datesDialogFragment"
@@ -23,7 +23,7 @@
     <fragment
         android:id="@+id/eventCreateFragment"
         android:name="com.gkiss01.meetdeb.screens.fragment.EventCreateFragment"
-        android:label="eventCreateFragment"
+        android:label="@string/drawer_event_create"
         tools:layout="@layout/fragment_event_create">
         <argument
             android:name="event"
@@ -64,8 +64,8 @@
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.gkiss01.meetdeb.screens.fragment.ProfileFragment"
-        android:label="profile_fragment"
-        tools:layout="@layout/fragment_profile" >
+        android:label="@string/drawer_profile"
+        tools:layout="@layout/fragment_profile">
         <action
             android:id="@+id/action_profileFragment_to_deleteBottomSheetFragment"
             app:destination="@id/deleteBottomSheetFragment" />
@@ -82,7 +82,7 @@
         android:id="@+id/updateBottomSheetFragment"
         android:name="com.gkiss01.meetdeb.screens.bottomsheet.UpdateBottomSheet"
         android:label="UpdateBottomSheetFragment"
-        tools:layout="@layout/bottomsheet_profile_update" >
+        tools:layout="@layout/bottomsheet_profile_update">
         <action
             android:id="@+id/action_updateBottomSheetFragment_to_emailBottomSheet"
             app:destination="@id/emailBottomSheet" />

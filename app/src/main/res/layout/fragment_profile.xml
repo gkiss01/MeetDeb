@@ -7,6 +7,15 @@
     android:background="?attr/colorPrimary"
     tools:context=".screens.fragment.ProfileFragment">
 
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/pf_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/Widget.MaterialComponents.Toolbar.Primary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <View
         android:id="@+id/pf_headerView"
         android:layout_width="0dp"
@@ -17,7 +26,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/pf_toolbar"
         app:layout_constraintVertical_bias="0.20" />
 
     <ImageView

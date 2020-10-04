@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gkiss01.meetdeb.ActivityViewModel
@@ -44,13 +45,31 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
     private val footerAdapter = ItemAdapter<ProgressItem>()
     private val fastScrollerAdapter = FastScrollerAdapter.with(listOf(itemAdapter, footerAdapter))
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         viewModelKoin.updateBasic(viewModelActivityKoin.getBasic())
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        ef_navigationView.setupWithNavController(findNavController())
+        val navController = findNavController()
+        val appBarConfiguration = AppBarConfiguration(setOf(R.id.eventsFragment, R.id.profileFragment))
+        ef_toolbar.setupWithNavController(navController, appBarConfiguration)
+        ef_navigationView.setupWithNavController(navController)
+
+        ef_toolbar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.action_event_add -> {
+                    findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToEventCreateFragment())
+                    true
+                }
+                else -> false
+            }
+        }
 
         viewModelActivityKoin.activeUser.observe(viewLifecycleOwner, {
             when (it.status) {
