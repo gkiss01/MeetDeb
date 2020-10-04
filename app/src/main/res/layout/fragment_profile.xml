@@ -167,36 +167,4 @@
             android:inputType="text"
             android:textColor="?attr/colorOnPrimaryTextField" />
     </com.google.android.material.textfield.TextInputLayout>
-
-    <TextView
-        android:id="@+id/pf_updateLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:drawablePadding="14dp"
-        android:gravity="center"
-        android:includeFontPadding="false"
-        android:text="@string/profile_update"
-        android:textColor="?attr/colorOnPrimary"
-        android:textSize="17sp"
-        app:drawableStartCompat="@drawable/ic_edit_large"
-        app:drawableTint="?attr/colorOnPrimary"
-        app:layout_constraintBottom_toTopOf="@id/pf_deleteLabel"
-        app:layout_constraintStart_toStartOf="@id/pf_headerView" />
-
-    <TextView
-        android:id="@+id/pf_deleteLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:drawablePadding="10dp"
-        android:gravity="center"
-        android:includeFontPadding="false"
-        android:text="@string/profile_delete"
-        android:textColor="?attr/colorError"
-        android:textSize="17sp"
-        app:drawableStartCompat="@drawable/ic_delete_large"
-        app:drawableTint="?attr/colorError"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@id/pf_headerView" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -54,7 +54,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem)= when (item.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_event_add -> {
             findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToEventCreateFragment())
             true

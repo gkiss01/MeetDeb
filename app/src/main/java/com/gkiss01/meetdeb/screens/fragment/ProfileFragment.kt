@@ -2,7 +2,7 @@ package com.gkiss01.meetdeb.screens.fragment
 
 import android.os.Bundle
 import android.util.Log
-import android.view.View
+import android.view.*
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -17,6 +17,29 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
     private val viewModelActivityKoin: ActivityViewModel by sharedViewModel()
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        setHasOptionsMenu(true)
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        menu.clear()
+        inflater.inflate(R.menu.action_profile_fragment, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.action_profile_update -> {
+            findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToUpdateBottomSheetFragment())
+            true
+        }
+        R.id.action_profile_delete -> {
+            findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToDeleteBottomSheetFragment())
+            true
+        }
+        else -> super.onOptionsItemSelected(item)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewModelActivityKoin.activeUser.observe(viewLifecycleOwner, {
@@ -52,9 +75,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 else -> {}
             }
         })
-
-        pf_deleteLabel.setOnClickListener { findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToDeleteBottomSheetFragment()) }
-        pf_updateLabel.setOnClickListener { findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToUpdateBottomSheetFragment()) }
     }
 
 }
