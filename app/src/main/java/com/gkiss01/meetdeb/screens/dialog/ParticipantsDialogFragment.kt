@@ -11,10 +11,10 @@ import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
-import com.gkiss01.meetdeb.data.fastadapter.Event
 import com.gkiss01.meetdeb.data.fastadapter.Participant
 import com.gkiss01.meetdeb.network.Status
 import com.gkiss01.meetdeb.viewmodels.ParticipantsViewModel
@@ -35,6 +35,8 @@ class ParticipantsDialogFragment : DialogFragment() {
     private val headerAdapter = ItemAdapter<ProgressItem>()
     private val fastAdapter = FastAdapter.with(listOf(headerAdapter, itemAdapter))
 
+    private val safeArgs: ParticipantsDialogFragmentArgs by navArgs()
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         return inflater.inflate(R.layout.fragment_participants, container, false)
@@ -42,17 +44,18 @@ class ParticipantsDialogFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         if (!viewModelKoin.isEventInitialized()) {
-            viewModelKoin.event = requireArguments().getSerializable("event") as Event
+            viewModelKoin.event = safeArgs.event
             viewModelKoin.getParticipants()
         }
 
         fastAdapter.attachDefaultListeners = false
-        pf_participantsRecyclerView.adapter = fastAdapter
+        pf_participantsRecyclerView.apply {
+            adapter = fastAdapter
+            layoutManager = LinearLayoutManager(context)
+            itemAnimator = null
 
-        pf_participantsRecyclerView.layoutManager = LinearLayoutManager(context)
-
-        pf_participantsRecyclerView.setItemViewCacheSize(20)
-        pf_participantsRecyclerView.itemAnimator = null
+            setItemViewCacheSize(20)
+        }
 
         viewModelKoin.participants.observe(viewLifecycleOwner, Observer {
             when (it.status) {

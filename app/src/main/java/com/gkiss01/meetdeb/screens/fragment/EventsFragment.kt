@@ -141,7 +141,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             viewModelKoin.updateEvent(eventId)
         })
 
-        ef_addActionButton.setOnClickListener{ findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToCreateEventFragment()) }
+        ef_addActionButton.setOnClickListener{ findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToEventCreateFragment()) }
 
         ef_swipeRefreshLayout.setOnRefreshListener {
             if (!viewModelKoin.eventsIsLoading) viewModelKoin.refreshEvents().observe(viewLifecycleOwner, eventsObserver)
@@ -240,7 +240,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                         R.id.report -> viewModelKoin.createReport(event.id).observe(viewLifecycleOwner, createReportObserver)
                         R.id.removeReport -> viewModelKoin.deleteReport(event.id).observe(viewLifecycleOwner, deleteReportObserver)
                         R.id.delete -> viewModelKoin.deleteEvent(event.id).observe(viewLifecycleOwner, deleteObserver)
-                        R.id.update -> findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToCreateEventFragment(event))
+                        R.id.update -> findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToEventCreateFragment(event))
                     }
                     true
                 }

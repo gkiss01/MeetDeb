@@ -20,7 +20,6 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
-import org.threeten.bp.OffsetDateTime
 import java.io.File
 
 enum class ScreenType {
@@ -32,9 +31,11 @@ val createModule = module {
 }
 
 class EventCreateViewModel(private val restClient: RestClient, private val basic: String, private val moshi: Moshi, private val application: Application): ViewModel() {
-    var eventLocal: Event = Event("", OffsetDateTime.now(), "", "")
     var imageUrl: String = ""
-    val type = MutableLiveData<ScreenType>()
+
+    lateinit var eventLocal: Event
+    lateinit var type: ScreenType
+    fun isEventInitialized() = ::eventLocal.isInitialized
 
     private var _event = MutableLiveData<Resource<Event>>()
     val event: LiveData<Resource<Event>>
@@ -50,12 +51,12 @@ class EventCreateViewModel(private val restClient: RestClient, private val basic
             body = MultipartBody.Part.createFormData("file", file.name, requestFile)
         }
 
-        val eventId = if (type.value == ScreenType.NEW) null else eventLocal.id
+        val eventId = if (type == ScreenType.NEW) null else eventLocal.id
         val eventRequest = EventRequest(eventId, eventLocal.name, eventLocal.date, eventLocal.venue, eventLocal.description)
         val json = moshi.adapter(EventRequest::class.java).toJson(eventRequest)
         val eventJson: RequestBody = json.toRequestBody("application/json".toMediaTypeOrNull())
 
-        if (type.value == ScreenType.NEW) createEvent(eventJson, body)
+        if (type == ScreenType.NEW) createEvent(eventJson, body)
         else updateEvent(eventJson)
     }
 
@@ -77,7 +78,4 @@ class EventCreateViewModel(private val restClient: RestClient, private val basic
         _event.postValue(Resource.pending(null))
     }
 
-    init {
-        type.value = ScreenType.NONE
-    }
 }

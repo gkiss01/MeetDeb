@@ -66,16 +66,19 @@ class EventCreateFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        if (viewModelKoin.type.value == ScreenType.NONE) {
+        if (!viewModelKoin.isEventInitialized()) {
             safeArgs.event?.let {
-                viewModelKoin.type.value = ScreenType.UPDATE
                 viewModelKoin.eventLocal = it
+                viewModelKoin.type = ScreenType.UPDATE
             } ?: run {
-                viewModelKoin.type.value = ScreenType.NEW
+                viewModelKoin.eventLocal = Event("", OffsetDateTime.now(), "", "")
+                viewModelKoin.type = ScreenType.NEW
             }
         }
 
         binding.event = viewModelKoin.eventLocal
+        cef_createButton.text = getString(if (viewModelKoin.type == ScreenType.NEW) R.string.event_create_button else R.string.event_more_update)
+
         Picasso.get()
             .load("$BASE_URL/images/${viewModelKoin.eventLocal.id}")
             .placeholder(R.drawable.placeholder)
@@ -102,13 +105,9 @@ class EventCreateFragment : Fragment() {
         }
 
         cef_imageButton.setOnClickListener {
-            if (viewModelKoin.type.value == ScreenType.NEW) requestStoragePermissions()
+            if (viewModelKoin.type == ScreenType.NEW) requestStoragePermissions()
             else Toast.makeText(context, getString(R.string.cannot_update_image), Toast.LENGTH_LONG).show()
         }
-
-        viewModelKoin.type.observe(viewLifecycleOwner, Observer {
-            cef_createButton.text = getString(if (it == ScreenType.NEW) R.string.event_create_button else R.string.event_more_update)
-        })
 
         cef_createButton.attachTextChangeAnimator()
         cef_createButton.setOnClickListener {
@@ -132,7 +131,7 @@ class EventCreateFragment : Fragment() {
                 }
                 Status.ERROR -> {
                     Toast.makeText(requireContext(), it.errorMessage, Toast.LENGTH_LONG).show()
-                    cef_createButton.hideProgress(if (viewModelKoin.type.value == ScreenType.NEW) R.string.event_create_button else R.string.event_more_update)
+                    cef_createButton.hideProgress(if (viewModelKoin.type == ScreenType.NEW) R.string.event_create_button else R.string.event_more_update)
                     viewModelKoin.resetLiveData()
                 }
                 Status.LOADING -> {
@@ -238,7 +237,7 @@ class EventCreateFragment : Fragment() {
 
     private fun showAnimation() {
         cef_createButton.showProgress {
-            buttonTextRes = if (viewModelKoin.type.value == ScreenType.NEW) R.string.event_create_waiting else R.string.event_more_update_waiting
+            buttonTextRes = if (viewModelKoin.type == ScreenType.NEW) R.string.event_create_waiting else R.string.event_more_update_waiting
             progressColor = Color.WHITE
         }
     }

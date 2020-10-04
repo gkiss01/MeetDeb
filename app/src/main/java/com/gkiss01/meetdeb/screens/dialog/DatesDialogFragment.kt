@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
@@ -21,7 +22,6 @@ import com.gkiss01.meetdeb.adapter.DatePickerViewHolder
 import com.gkiss01.meetdeb.adapter.DateViewHolder
 import com.gkiss01.meetdeb.data.fastadapter.Date
 import com.gkiss01.meetdeb.data.fastadapter.DatePickerItem
-import com.gkiss01.meetdeb.data.fastadapter.Event
 import com.gkiss01.meetdeb.data.isAdmin
 import com.gkiss01.meetdeb.network.Status
 import com.gkiss01.meetdeb.screens.fragment.SuccessObserver
@@ -49,6 +49,8 @@ class DatesDialogFragment : DialogFragment() {
     private val footerAdapter = ItemAdapter<DatePickerItem>()
     private val fastAdapter = FastAdapter.with(listOf(headerAdapter, itemAdapter, footerAdapter))
 
+    private val safeArgs: DatesDialogFragmentArgs by navArgs()
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         return inflater.inflate(R.layout.fragment_dates, container, false)
@@ -56,18 +58,19 @@ class DatesDialogFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         if (!viewModelKoin.isEventInitialized()) {
-            viewModelKoin.event = requireArguments().getSerializable("event") as Event
+            viewModelKoin.event = safeArgs.event
             viewModelKoin.getDates()
         }
 
         if (viewModelActivityKoin.activeUser.value?.data?.isAdmin() == false) fastAdapter.attachDefaultListeners = false
-        df_datesRecyclerView.adapter = fastAdapter
-
         val layoutManager = LinearLayoutManager(context)
-        df_datesRecyclerView.layoutManager = layoutManager
+        df_datesRecyclerView.apply {
+            adapter = fastAdapter
+            this.layoutManager = layoutManager
+            itemAnimator = AlphaInAnimator()
 
-        df_datesRecyclerView.setItemViewCacheSize(12)
-        df_datesRecyclerView.itemAnimator = AlphaInAnimator()
+            setItemViewCacheSize(12)
+        }
 
         viewModelKoin.dates.observe(viewLifecycleOwner, Observer {
             when (it.status) {
