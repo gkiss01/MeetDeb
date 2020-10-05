@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.onNavDestinationSelected
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
@@ -54,12 +55,8 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
-        R.id.action_event_add -> {
-            findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToEventCreateFragment())
-            true
-        }
-        else -> super.onOptionsItemSelected(item)
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return item.onNavDestinationSelected(findNavController()) || super.onOptionsItemSelected(item)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

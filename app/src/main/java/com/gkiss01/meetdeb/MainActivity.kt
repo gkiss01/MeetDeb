@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         val navController = findNavController(R.id.main_nav_host_fragment)
         main_navigationView.setupWithNavController(navController)
+        main_navigationView.setOnNavigationItemReselectedListener {  }
 
         val appBarConfiguration = AppBarConfiguration(setOf(R.id.eventsFragment, R.id.profileFragment))
         setSupportActionBar(main_toolbarView)

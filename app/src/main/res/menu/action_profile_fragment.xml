@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_profile_update"
-        android:icon="@drawable/ic_edit_large"
+        android:id="@+id/updateBottomSheetFragment"
+        android:menuCategory="secondary"
         android:title="@string/profile_update"
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/action_profile_delete"
-        android:icon="@drawable/ic_delete_large"
+        android:id="@+id/deleteBottomSheetFragment"
+        android:menuCategory="secondary"
         android:title="@string/profile_delete"
         app:showAsAction="never" />
 </menu>

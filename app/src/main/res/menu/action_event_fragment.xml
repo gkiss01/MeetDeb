@@ -3,8 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_event_add"
+        android:id="@+id/eventCreateFragment"
         android:icon="@drawable/ic_add"
+        android:menuCategory="secondary"
         android:title="@string/event_add_button"
         app:showAsAction="always" />
 </menu>

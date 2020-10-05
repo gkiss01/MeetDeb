@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.onNavDestinationSelected
 import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.isAdmin
@@ -29,16 +30,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
-        R.id.action_profile_update -> {
-            findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToUpdateBottomSheetFragment())
-            true
-        }
-        R.id.action_profile_delete -> {
-            findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToDeleteBottomSheetFragment())
-            true
-        }
-        else -> super.onOptionsItemSelected(item)
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return item.onNavDestinationSelected(findNavController()) || super.onOptionsItemSelected(item)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
