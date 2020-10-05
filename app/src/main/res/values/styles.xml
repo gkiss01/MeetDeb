@@ -38,8 +38,6 @@
         <!-- Modal Bottom Sheet -->
         <item name="bottomSheetDialogTheme">@style/ModalBottomSheetDialog</item>
 
-        <item name="bottomNavigationStyle">@style/BottomNavigation</item>
-
         <!-- Application -->
         <item name="android:fontFamily">@font/muli</item>
     </style>
@@ -64,9 +62,6 @@
         <item name="cornerSizeBottomRight">0dp</item>
         <item name="cornerSizeBottomLeft">0dp</item>
     </style>
-
-    <!-- BottomNavigation -->
-    <style name="BottomNavigation" parent="Widget.MaterialComponents.BottomNavigationView" />
 
     <!-- Buttons -->
     <style name="WidgetButtonDynamicBackground">
