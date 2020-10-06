@@ -128,4 +128,6 @@
     <string name="timeout_error">Időtúllépés!</string>
     <string name="connect_error">Csatlakozási hiba!</string>
     <string name="unknown_error">Valami hiba történt!</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
