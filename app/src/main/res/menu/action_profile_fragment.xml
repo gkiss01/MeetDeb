@@ -13,4 +13,10 @@
         android:menuCategory="secondary"
         android:title="@string/profile_delete"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_logout"
+        android:menuCategory="secondary"
+        android:title="@string/profile_logout"
+        app:showAsAction="never" />
 </menu>

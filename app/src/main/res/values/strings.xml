@@ -81,6 +81,7 @@
     <string name="profile_identifier">Azonosító</string>
     <string name="profile_update">Adatok módosítása</string>
     <string name="profile_delete">Fiók törlése</string>
+    <string name="profile_logout">Kijelentkezés</string>
 
     <string name="profile_delete_title">Figyelem!</string>
     <string name="profile_delete_info">Amennyiben törlöd a fiókod, minden adat véglegesen elveszlik. Ez magába foglalja az általad létrehozott múltbeli és jövőbeli eseményeket, más időpont ajánlásokat és az ezekre történő szavazatokat.</string>

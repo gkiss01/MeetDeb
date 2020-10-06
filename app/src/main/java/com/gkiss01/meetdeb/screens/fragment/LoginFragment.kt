@@ -15,6 +15,7 @@ import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.Status
+import com.gkiss01.meetdeb.utils.mainActivity
 import kotlinx.android.synthetic.main.fragment_login.*
 import okhttp3.Credentials
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -47,7 +48,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             when (it.status) {
                 Status.SUCCESS -> {
                     viewModelKoin.setUserCredentials(email, password)
-                    findNavController().setGraph(R.navigation.navigation_graph_main)
+                    mainActivity?.changeNavGraphToMain()
                 }
                 Status.ERROR -> {
                     val errorMessage = if (it.errorCode == ErrorCodes.USER_DISABLED_OR_NOT_VALID) getString(R.string.invalid_credentials) else it.errorMessage

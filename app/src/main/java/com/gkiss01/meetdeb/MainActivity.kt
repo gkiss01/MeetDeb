@@ -1,6 +1,7 @@
 package com.gkiss01.meetdeb
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -19,9 +20,21 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_start)
     }
 
+    fun changeNavGraphToStart() {
+        setContentView(R.layout.activity_start)
+    }
+
     fun changeNavGraphToMain() {
         setContentView(R.layout.activity_main)
         val navController = findNavController(R.id.main_nav_host_fragment)
+//        navController.addOnDestinationChangedListener { _, destination, _ ->
+//            if(destination.id == R.id.eventCreateFragment) {
+//                main_navigationView.visibility = View.GONE
+//            } else {
+//                main_navigationView.visibility = View.VISIBLE
+//            }
+//        }
+
         main_navigationView.setupWithNavController(navController)
         main_navigationView.setOnNavigationItemReselectedListener {  }
 

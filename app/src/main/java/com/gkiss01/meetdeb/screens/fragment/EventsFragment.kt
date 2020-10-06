@@ -60,14 +60,6 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewModelActivityKoin.activeUser.observe(viewLifecycleOwner, {
-            when (it.status) {
-                Status.SUCCESS -> {}
-                Status.PENDING -> findNavController().setGraph(R.navigation.navigation_graph_start)
-                else -> Log.e("MeetDebLog_EventsFragment", "User is null...")
-            }
-        })
-
         val eventsObserver = EventsObserver {
             when (it.status) {
                 Status.SUCCESS -> {

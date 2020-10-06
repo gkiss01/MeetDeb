@@ -13,6 +13,7 @@ import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.isAdmin
 import com.gkiss01.meetdeb.network.Status
+import com.gkiss01.meetdeb.utils.mainActivity
 import kotlinx.android.synthetic.main.fragment_profile.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
@@ -31,7 +32,16 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return item.onNavDestinationSelected(findNavController()) || super.onOptionsItemSelected(item)
+        return item.onNavDestinationSelected(findNavController()) || handleCustomActions(item) || super.onOptionsItemSelected(item)
+    }
+
+    private fun handleCustomActions(item: MenuItem) = when(item.itemId) {
+        R.id.action_logout -> {
+            viewModelActivityKoin.resetUserCredentials()
+            viewModelActivityKoin.resetLiveData()
+            true
+        }
+        else -> false
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -52,7 +62,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                     }
                     else pf_rank.text = getString(R.string.profile_user)
                 }
-                Status.PENDING -> findNavController().setGraph(R.navigation.navigation_graph_start)
+                Status.PENDING -> mainActivity?.changeNavGraphToStart()
                 else -> Log.e("MeetDebLog_ProfileFragment", "User is null...")
             }
         })
