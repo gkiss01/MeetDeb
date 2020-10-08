@@ -20,6 +20,7 @@ import com.gkiss01.meetdeb.network.Resource
 import com.gkiss01.meetdeb.network.Status
 import com.gkiss01.meetdeb.utils.FastScrollerAdapter
 import com.gkiss01.meetdeb.utils.getNavigationResult
+import com.gkiss01.meetdeb.utils.observeEvent
 import com.gkiss01.meetdeb.viewmodels.EventsViewModel
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.diff.FastAdapterDiffUtil
@@ -91,34 +92,15 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             }
         }
 
-        val createReportObserver = SuccessObserver {
-            when (it.status) {
-                Status.SUCCESS -> {
-                    Toast.makeText(requireContext(), getString(R.string.event_reported), Toast.LENGTH_LONG).show()
-                    it.data?.withId?.let { eventId ->
-                        viewModelKoin.addEventReportToList(eventId)
-                        fastScrollerAdapter.notifyAdapterItemChanged(itemAdapter.getAdapterPosition(eventId))
-                    }
-                }
-                Status.ERROR -> Toast.makeText(requireContext(), it.errorMessage, Toast.LENGTH_LONG).show()
-                Status.LOADING -> Log.d("MeetDebLog_EventsFragment", "Creating event report...")
-                else -> {}
+        viewModelKoin.toastEvent.observeEvent(viewLifecycleOwner) {
+            when (it) {
+                is Int -> Toast.makeText(requireContext(), getString(it), Toast.LENGTH_LONG).show()
+                is String -> Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
             }
         }
 
-        val deleteReportObserver = SuccessObserver {
-            when (it.status) {
-                Status.SUCCESS -> {
-                    Toast.makeText(requireContext(), getString(R.string.event_report_removed), Toast.LENGTH_LONG).show()
-                    it.data?.withId?.let { eventId ->
-                        viewModelKoin.removeEventReportFromList(eventId)
-                        fastScrollerAdapter.notifyAdapterItemChanged(itemAdapter.getAdapterPosition(eventId))
-                    }
-                }
-                Status.ERROR -> Toast.makeText(requireContext(), it.errorMessage, Toast.LENGTH_LONG).show()
-                Status.LOADING -> Log.d("MeetDebLog_EventsFragment", "Deleting event report...")
-                else -> {}
-            }
+        viewModelKoin.updateItemEvent.observeEvent(viewLifecycleOwner) {
+            fastScrollerAdapter.notifyAdapterItemChanged(itemAdapter.getAdapterPosition(it))
         }
 
         ef_swipeRefreshLayout.setOnRefreshListener {
@@ -180,7 +162,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                     viewModelKoin.modifyParticipation(item.id)
                 }
                 R.id.eli_anotherDateButton -> findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToDatesDialogFragment(item))
-                R.id.eli_moreButton -> createMoreActionMenu(v, item, deleteObserver, createReportObserver, deleteReportObserver)
+                R.id.eli_moreButton -> createMoreActionMenu(v, item, deleteObserver)
             }
         }
 
@@ -194,7 +176,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         }
     }
 
-    private fun createMoreActionMenu(view: View, event: Event, deleteObserver: SuccessObserver, createReportObserver: SuccessObserver, deleteReportObserver: SuccessObserver) {
+    private fun createMoreActionMenu(view: View, event: Event, deleteObserver: SuccessObserver) {
         viewModelActivityKoin.activeUser.value?.data?.let {
             PopupMenu(context, view).apply {
                 if (it.isAdmin()) {
@@ -211,8 +193,8 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
 
                 setOnMenuItemClickListener { menu ->
                     when (menu.itemId) {
-                        R.id.report -> viewModelKoin.createReport(event.id).observe(viewLifecycleOwner, createReportObserver)
-                        R.id.removeReport -> viewModelKoin.deleteReport(event.id).observe(viewLifecycleOwner, deleteReportObserver)
+                        R.id.report -> viewModelKoin.createReport(event.id)
+                        R.id.removeReport -> viewModelKoin.deleteReport(event.id)
                         R.id.delete -> viewModelKoin.deleteEvent(event.id).observe(viewLifecycleOwner, deleteObserver)
                         R.id.update -> findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToEventCreateFragment(event))
                     }

@@ -20,7 +20,7 @@
         android:id="@+id/loginFragment"
         android:name="com.gkiss01.meetdeb.screens.fragment.LoginFragment"
         android:label="LoginFragment"
-        tools:layout="@layout/fragment_login" >
+        tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_loginFragment_to_registerFragment"
             app:destination="@id/registerFragment"

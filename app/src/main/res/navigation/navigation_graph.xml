@@ -9,7 +9,7 @@
         android:id="@+id/startFlowFragment"
         android:name="com.gkiss01.meetdeb.screens.flow.StartFlowFragment"
         android:label="fragment_flow_start"
-        tools:layout="@layout/fragment_flow_start" >
+        tools:layout="@layout/fragment_flow_start">
         <action
             android:id="@+id/action_startFlowFragment_to_mainFlowFragment"
             app:destination="@id/mainFlowFragment"
@@ -20,7 +20,7 @@
         android:id="@+id/mainFlowFragment"
         android:name="com.gkiss01.meetdeb.screens.flow.MainFlowFragment"
         android:label="fragment_flow_main"
-        tools:layout="@layout/fragment_flow_main" >
+        tools:layout="@layout/fragment_flow_main">
         <action
             android:id="@+id/action_mainFlowFragment_to_startFlowFragment"
             app:destination="@id/startFlowFragment"

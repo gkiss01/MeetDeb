@@ -1,10 +1,14 @@
 package com.gkiss01.meetdeb.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.*
+import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.fastadapter.Event
 import com.gkiss01.meetdeb.network.PAGE_SIZE
 import com.gkiss01.meetdeb.network.Resource
 import com.gkiss01.meetdeb.network.RestClient
+import com.gkiss01.meetdeb.network.Status
+import com.gkiss01.meetdeb.utils.SingleEvent
 import kotlinx.coroutines.launch
 import org.koin.dsl.module
 
@@ -16,6 +20,14 @@ class EventsViewModel(private val restClient: RestClient, private var basic: Str
     var selectedEvent = Long.MIN_VALUE
     var eventsIsLoading = false
     private var currentPage: Int = 1
+
+    private val _toastEvent = MutableLiveData<SingleEvent<Any>>()
+    val toastEvent: LiveData<SingleEvent<Any>>
+        get() = _toastEvent
+
+    private val _updateItemEvent = MutableLiveData<SingleEvent<Long>>()
+    val updateItemEvent: LiveData<SingleEvent<Long>>
+        get() = _updateItemEvent
 
     private var _event = MutableLiveData<Resource<Event>>()
     val event: LiveData<Resource<Event>>
@@ -65,14 +77,38 @@ class EventsViewModel(private val restClient: RestClient, private var basic: Str
         }
     }
 
-    fun createReport(eventId: Long) = liveData {
-        emit(Resource.loading(null))
-        emit(restClient.createReport(basic, eventId))
+    fun createReport(eventId: Long) {
+        Log.d("MeetDebLog_EventsViewModel", "Creating event report with event ID $eventId ...")
+        viewModelScope.launch {
+            restClient.createReport(basic, eventId).let {
+                when (it.status) {
+                    Status.SUCCESS -> it.data?.withId?.let { eventId ->
+                        addReportToEvent(eventId)
+                        _updateItemEvent.postValue(SingleEvent(eventId))
+                        _toastEvent.postValue(SingleEvent(R.string.event_reported))
+                    }
+                    Status.ERROR -> _toastEvent.postValue(SingleEvent(it.errorMessage))
+                    else -> {}
+                }
+            }
+        }
     }
 
-    fun deleteReport(eventId: Long) = liveData {
-        emit(Resource.loading(null))
-        emit(restClient.deleteReport(basic, eventId))
+    fun deleteReport(eventId: Long) {
+        Log.d("MeetDebLog_EventsViewModel", "Deleting event report with event ID $eventId ...")
+        viewModelScope.launch {
+            restClient.deleteReport(basic, eventId).let {
+                when (it.status) {
+                    Status.SUCCESS -> it.data?.withId?.let { eventId ->
+                        removeReportFromEvent(eventId)
+                        _updateItemEvent.postValue(SingleEvent(eventId))
+                        _toastEvent.postValue(SingleEvent(R.string.event_report_removed))
+                    }
+                    Status.ERROR -> _toastEvent.postValue(SingleEvent(it.errorMessage))
+                    else -> {}
+                }
+            }
+        }
     }
 
     fun resetLiveData() {
@@ -93,11 +129,11 @@ class EventsViewModel(private val restClient: RestClient, private var basic: Str
         _events.postValue(_events.value?.filterNot { it.id == eventId })
     }
 
-    fun addEventReportToList(eventId: Long) {
+    private fun addReportToEvent(eventId: Long) {
         _events.value?.find { it.id == eventId }?.reported = true
     }
 
-    fun removeEventReportFromList(eventId: Long) {
+    private fun removeReportFromEvent(eventId: Long) {
         _events.value?.find { it.id == eventId }?.reported = false
     }
 }
