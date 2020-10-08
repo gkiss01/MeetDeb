@@ -12,7 +12,6 @@ import android.widget.FrameLayout
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gkiss01.meetdeb.ActivityViewModel
@@ -23,7 +22,8 @@ import com.gkiss01.meetdeb.data.fastadapter.Date
 import com.gkiss01.meetdeb.data.fastadapter.DatePickerItem
 import com.gkiss01.meetdeb.data.isAdmin
 import com.gkiss01.meetdeb.network.Status
-import com.gkiss01.meetdeb.screens.fragment.SuccessObserver
+import com.gkiss01.meetdeb.utils.observeEvent
+import com.gkiss01.meetdeb.utils.setNavigationResult
 import com.gkiss01.meetdeb.viewmodels.DatesViewModel
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
@@ -98,13 +98,8 @@ class DatesDialogFragment : DialogFragment() {
             }
         })
 
-        val deleteObserver = SuccessObserver {
-            when (it.status) {
-                Status.SUCCESS -> it.data?.withId?.let { dateId -> viewModelKoin.removeDateFromList(dateId) }
-                Status.ERROR -> Toast.makeText(requireContext(), it.errorMessage, Toast.LENGTH_LONG).show()
-                Status.LOADING -> Log.d("MeetDebLog_DatesDialogFragment", "Deleting date...")
-                else -> {}
-            }
+        viewModelKoin.toastEvent.observeEvent(viewLifecycleOwner) {
+            Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
         }
 
         footerAdapter.add(DatePickerItem())
@@ -138,7 +133,7 @@ class DatesDialogFragment : DialogFragment() {
                     menu.add(0, R.id.delete, 0, R.string.event_more_delete)
 
                     setOnMenuItemClickListener {
-                        if (it.itemId == R.id.delete) viewModelKoin.deleteDate(item.id).observe(viewLifecycleOwner, deleteObserver)
+                        if (it.itemId == R.id.delete) viewModelKoin.deleteDate(item.id)
                         true
                     }
                     show()
@@ -164,7 +159,7 @@ class DatesDialogFragment : DialogFragment() {
         viewModelKoin.dates.value?.data?.let { dates ->
             if ((dates.any { it.accepted } && !viewModelKoin.event.voted) ||
                 (!dates.any { it.accepted } && viewModelKoin.event.voted)) {
-                findNavController().previousBackStackEntry?.savedStateHandle?.set("eventId", viewModelKoin.event.id)
+                setNavigationResult("eventId", viewModelKoin.event.id)
             }
         }
         super.onDismiss(dialog)

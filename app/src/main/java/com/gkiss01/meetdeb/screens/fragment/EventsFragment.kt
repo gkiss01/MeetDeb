@@ -19,6 +19,7 @@ import com.gkiss01.meetdeb.data.isAdmin
 import com.gkiss01.meetdeb.network.Resource
 import com.gkiss01.meetdeb.network.Status
 import com.gkiss01.meetdeb.utils.FastScrollerAdapter
+import com.gkiss01.meetdeb.utils.getNavigationResult
 import com.gkiss01.meetdeb.viewmodels.EventsViewModel
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.diff.FastAdapterDiffUtil
@@ -120,14 +121,6 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             }
         }
 
-        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Long>("eventId")?.observe(viewLifecycleOwner, { eventId ->
-            val itemView = ef_eventsRecyclerView.findViewHolderForAdapterPosition(itemAdapter.getAdapterPosition(eventId)) as? EventViewHolder
-            itemView?.showVoteAnimation()
-
-            viewModelKoin.selectedEvent = eventId
-            viewModelKoin.updateEvent(eventId)
-        })
-
         ef_swipeRefreshLayout.setOnRefreshListener {
             if (!viewModelKoin.eventsIsLoading) viewModelKoin.refreshEvents().observe(viewLifecycleOwner, eventsObserver)
             else ef_swipeRefreshLayout.isRefreshing = false
@@ -189,6 +182,15 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                 R.id.eli_anotherDateButton -> findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToDatesDialogFragment(item))
                 R.id.eli_moreButton -> createMoreActionMenu(v, item, deleteObserver, createReportObserver, deleteReportObserver)
             }
+        }
+
+        //Frissítjük az eventId eseményt, ha a DatesDialogFragment jelzi
+        getNavigationResult<Long>(R.id.eventsFragment, "eventId") {
+            val itemView = ef_eventsRecyclerView.findViewHolderForAdapterPosition(itemAdapter.getAdapterPosition(it)) as? EventViewHolder
+            itemView?.showVoteAnimation()
+
+            viewModelKoin.selectedEvent = it
+            viewModelKoin.updateEvent(it)
         }
     }
 

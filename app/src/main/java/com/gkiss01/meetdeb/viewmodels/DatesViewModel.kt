@@ -1,11 +1,16 @@
 package com.gkiss01.meetdeb.viewmodels
 
-import androidx.lifecycle.*
+import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.gkiss01.meetdeb.data.fastadapter.Date
 import com.gkiss01.meetdeb.data.fastadapter.Event
 import com.gkiss01.meetdeb.network.Resource
 import com.gkiss01.meetdeb.network.RestClient
-import kotlinx.coroutines.Dispatchers
+import com.gkiss01.meetdeb.network.Status
+import com.gkiss01.meetdeb.utils.SingleEvent
 import kotlinx.coroutines.launch
 import org.koin.dsl.module
 import org.threeten.bp.OffsetDateTime
@@ -18,6 +23,10 @@ class DatesViewModel(private val restClient: RestClient, private val basic: Stri
     private var isLoading = false
     lateinit var event: Event
     fun isEventInitialized() = ::event.isInitialized
+
+    private val _toastEvent = MutableLiveData<SingleEvent<String>>()
+    val toastEvent: LiveData<SingleEvent<String>>
+        get() = _toastEvent
 
     private var _dates = MutableLiveData<Resource<List<Date>>>()
     val dates: LiveData<Resource<List<Date>>>
@@ -37,9 +46,17 @@ class DatesViewModel(private val restClient: RestClient, private val basic: Stri
         }
     }
 
-    fun deleteDate(dateId: Long) = liveData {
-        emit(Resource.loading(null))
-        emit(restClient.deleteDate(basic, dateId))
+    fun deleteDate(dateId: Long) {
+        Log.d("MeetDebLog_DatesDialogViewModel", "Deleting date with ID $dateId ...")
+        viewModelScope.launch {
+            restClient.deleteDate(basic, dateId).let {
+                when (it.status) {
+                    Status.SUCCESS -> it.data?.withId?.let { dateId -> removeDateFromList(dateId) }
+                    Status.ERROR -> _toastEvent.postValue(SingleEvent(it.errorMessage))
+                    else -> {}
+                }
+            }
+        }
     }
 
     fun changeVote(dateId: Long) {
@@ -53,7 +70,7 @@ class DatesViewModel(private val restClient: RestClient, private val basic: Stri
 
     fun isLoadingActive() = this.isLoading
 
-    fun removeDateFromList(dateId: Long) {
+    private fun removeDateFromList(dateId: Long) {
         _dates.postValue(Resource.success(_dates.value?.data?.filterNot { it.id == dateId }))
     }
 }
