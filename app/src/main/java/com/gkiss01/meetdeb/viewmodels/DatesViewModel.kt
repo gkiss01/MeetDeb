@@ -37,7 +37,7 @@ class DatesViewModel(private val restClient: RestClient, private val basic: Stri
         }
     }
 
-    fun deleteDate(dateId: Long) = liveData(Dispatchers.IO) {
+    fun deleteDate(dateId: Long) = liveData {
         emit(Resource.loading(null))
         emit(restClient.deleteDate(basic, dateId))
     }

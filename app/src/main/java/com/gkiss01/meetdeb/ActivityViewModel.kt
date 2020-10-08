@@ -49,7 +49,7 @@ class ActivityViewModel(private val moshi: Moshi, private val restClient: RestCl
         }
     }
 
-    fun updateUser(currentPassword: String, email: String?, password: String?) = liveData(Dispatchers.IO) {
+    fun updateUser(currentPassword: String, email: String?, password: String?) = liveData {
         val basic = Credentials.basic(activeUser.value?.data?.email ?: "", currentPassword)
 
         val userRequest = UserRequest(email, password, null)
@@ -60,12 +60,12 @@ class ActivityViewModel(private val moshi: Moshi, private val restClient: RestCl
         emit(restClient.updateUser(basic, user))
     }
 
-    fun deleteUser() = liveData(Dispatchers.IO) {
+    fun deleteUser() = liveData {
         emit(Resource.loading(null))
         emit(restClient.deleteUser(basic))
     }
 
-    fun getEventsSummary() = liveData(Dispatchers.IO) {
+    fun getEventsSummary() = liveData {
         emit(Resource.loading(null))
         emit(restClient.getEventsSummary(basic))
     }

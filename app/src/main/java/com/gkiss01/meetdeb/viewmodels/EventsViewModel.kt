@@ -42,7 +42,7 @@ class EventsViewModel(private val restClient: RestClient, private var basic: Str
         return getEvents(currentPage)
     }
 
-    private fun getEvents(page: Int) = liveData(Dispatchers.IO) {
+    private fun getEvents(page: Int) = liveData {
         emit(Resource.loading(null))
         emit(restClient.getEvents(basic, page))
     }
@@ -54,7 +54,7 @@ class EventsViewModel(private val restClient: RestClient, private var basic: Str
         }
     }
 
-    fun deleteEvent(eventId: Long) = liveData(Dispatchers.IO) {
+    fun deleteEvent(eventId: Long) = liveData {
         emit(Resource.loading(null))
         emit(restClient.deleteEvent(basic, eventId))
     }
@@ -66,12 +66,12 @@ class EventsViewModel(private val restClient: RestClient, private var basic: Str
         }
     }
 
-    fun createReport(eventId: Long) = liveData(Dispatchers.IO) {
+    fun createReport(eventId: Long) = liveData {
         emit(Resource.loading(null))
         emit(restClient.createReport(basic, eventId))
     }
 
-    fun deleteReport(eventId: Long) = liveData(Dispatchers.IO) {
+    fun deleteReport(eventId: Long) = liveData {
         emit(Resource.loading(null))
         emit(restClient.deleteReport(basic, eventId))
     }
