@@ -2,11 +2,15 @@ package com.gkiss01.meetdeb
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import com.gkiss01.meetdeb.data.User
+import com.gkiss01.meetdeb.screens.flow.StartFlowFragmentDirections
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
     private val viewModelKoin: ActivityViewModel by viewModel()
+    private val navController: NavController by lazy { findNavController(R.id.app_nav_host_fragment) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
@@ -15,32 +19,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun changeNavGraphToStart() {
-
+        //navController.popBackStack()
     }
 
     fun changeNavGraphToMain() {
-
-//        val navController = findNavController(R.id.main_nav_host_fragment)
-////        navController.addOnDestinationChangedListener { _, destination, _ ->
-////            if(destination.id == R.id.eventCreateFragment) {
-////                main_navigationView.visibility = View.GONE
-////            } else {
-////                main_navigationView.visibility = View.VISIBLE
-////            }
-////        }
-//
-//        main_navigationView.setupWithNavController(navController)
-//        main_navigationView.setOnNavigationItemReselectedListener {  }
-//
-//        val appBarConfiguration = AppBarConfiguration(setOf(R.id.eventsFragment, R.id.profileFragment))
-//        setSupportActionBar(main_toolbarView)
-//        setupActionBarWithNavController(navController, appBarConfiguration)
+        navController.navigate(StartFlowFragmentDirections.actionStartFlowFragmentToMainFlowFragment())
     }
 
-//    override fun onSupportNavigateUp(): Boolean {
-//        val navController = findNavController(R.id.main_nav_host_fragment)
-//        return navController.navigateUp() || super.onSupportNavigateUp()
-//    }
+    override fun onSupportNavigateUp(): Boolean {
+        val currentFlowFragmentId = navController.currentDestination?.id
+        if (currentFlowFragmentId == R.id.mainFlowFragment) {
+            val navController = findNavController(R.id.main_nav_host_fragment)
+            return navController.navigateUp() || super.onSupportNavigateUp()
+        }
+
+        return super.onSupportNavigateUp()
+    }
 
     companion object {
         lateinit var instance: MainActivity
