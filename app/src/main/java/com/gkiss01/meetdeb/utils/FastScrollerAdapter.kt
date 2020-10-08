@@ -8,7 +8,6 @@ import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
 import org.threeten.bp.format.DateTimeFormatter
 
 class FastScrollerAdapter<Item : GenericItem> : FastAdapter<Item>(), FastScrollRecyclerView.SectionedAdapter {
-
     override fun getSectionName(position: Int): String {
         val event = getItem(position) as? Event
         return event?.date?.format(DateTimeFormatter.ofPattern("yyyy MMM dd")) ?: ""

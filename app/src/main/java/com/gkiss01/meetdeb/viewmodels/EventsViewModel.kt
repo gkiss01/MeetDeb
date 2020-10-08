@@ -17,7 +17,6 @@ val eventsModule = module {
 }
 
 class EventsViewModel(private val restClient: RestClient, private var basic: String) : ViewModel() {
-    var selectedEvent = Long.MIN_VALUE
     var eventsIsLoading = false
     private var currentPage: Int = 1
 
@@ -28,6 +27,14 @@ class EventsViewModel(private val restClient: RestClient, private var basic: Str
     private val _updateItemEvent = MutableLiveData<SingleEvent<Long>>()
     val updateItemEvent: LiveData<SingleEvent<Long>>
         get() = _updateItemEvent
+
+    private val _itemCurrentlyUpdating = MutableLiveData<Long?>()
+    val itemCurrentlyUpdating: LiveData<Long?>
+        get() = _itemCurrentlyUpdating
+
+    private val _showFooterLoader = MutableLiveData<Boolean>()
+    val showFooterLoader: LiveData<Boolean>
+        get() = _showFooterLoader
 
     private var _event = MutableLiveData<Resource<Event>>()
     val event: LiveData<Resource<Event>>
@@ -66,9 +73,20 @@ class EventsViewModel(private val restClient: RestClient, private var basic: Str
     }
 
     fun modifyParticipation(eventId: Long) {
-        _event.postValue(Resource.loading(null))
+        Log.d("MeetDebLog_EventsViewModel", "Modifying participation with event ID $eventId ...")
+        _itemCurrentlyUpdating.postValue(eventId)
         viewModelScope.launch {
-            _event.postValue(restClient.modifyParticipation(basic, eventId))
+            restClient.modifyParticipation(basic, eventId).let {
+                _itemCurrentlyUpdating.postValue(null)
+                when (it.status) {
+                    Status.SUCCESS -> it.data?.let { event -> updateEventInList(event) }
+                    Status.ERROR -> {
+                        _updateItemEvent.postValue(SingleEvent(eventId))
+                        _toastEvent.postValue(SingleEvent(it.errorMessage))
+                    }
+                    else -> {}
+                }
+            }
         }
     }
 
@@ -117,11 +135,6 @@ class EventsViewModel(private val restClient: RestClient, private var basic: Str
                 }
             }
         }
-    }
-
-    fun resetLiveData() {
-        selectedEvent = Long.MIN_VALUE
-        _event.postValue(Resource.pending(null))
     }
 
     fun addEventsToList(events: List<Event>) {
