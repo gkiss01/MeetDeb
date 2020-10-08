@@ -134,15 +134,20 @@ class EventViewHolder(private val view: View, private val isAdmin: Boolean): Fas
         view.eli_anotherDateButton.setBackgroundResource(0)
     }
 
-    fun showJoinAnimation() {
-        view.eli_acceptButton.showProgress {
+    fun manageAnimation(type: Event.UpdatingType) = when(type) {
+        Event.UpdatingType.VOTE -> showVoteAnimation()
+        Event.UpdatingType.PARTICIPATION -> showJoinAnimation()
+    }
+
+    fun showVoteAnimation() {
+        view.eli_anotherDateButton.showProgress {
             buttonTextRes = R.string.event_accept_waiting
             progressColor = Color.parseColor("#485688")
         }
     }
 
-    fun showVoteAnimation() {
-        view.eli_anotherDateButton.showProgress {
+    fun showJoinAnimation() {
+        view.eli_acceptButton.showProgress {
             buttonTextRes = R.string.event_accept_waiting
             progressColor = Color.parseColor("#485688")
         }

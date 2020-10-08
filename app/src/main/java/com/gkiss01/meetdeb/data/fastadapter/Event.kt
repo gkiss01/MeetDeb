@@ -36,4 +36,8 @@ data class Event(
     override fun getViewHolder(v: View): EventViewHolder {
         return EventViewHolder(v, isActiveUserAdmin())
     }
+
+    enum class UpdatingType {
+        VOTE, PARTICIPATION
+    }
 }

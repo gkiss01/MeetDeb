@@ -16,6 +16,8 @@ val eventsModule = module {
     factory { (basic: String) -> EventsViewModel(get(), basic) }
 }
 
+typealias ItemUpdating = Pair<Event.UpdatingType, Long>
+
 class EventsViewModel(private val restClient: RestClient, private var basic: String) : ViewModel() {
     var eventsIsLoading = false
     private var currentPage: Int = 1
@@ -28,17 +30,13 @@ class EventsViewModel(private val restClient: RestClient, private var basic: Str
     val updateItemEvent: LiveData<SingleEvent<Long>>
         get() = _updateItemEvent
 
-    private val _itemCurrentlyUpdating = MutableLiveData<Long?>()
-    val itemCurrentlyUpdating: LiveData<Long?>
+    private val _itemCurrentlyUpdating = MutableLiveData<ItemUpdating?>()
+    val itemCurrentlyUpdating: LiveData<ItemUpdating?>
         get() = _itemCurrentlyUpdating
 
-    private val _showFooterLoader = MutableLiveData<Boolean>()
-    val showFooterLoader: LiveData<Boolean>
-        get() = _showFooterLoader
-
-    private var _event = MutableLiveData<Resource<Event>>()
-    val event: LiveData<Resource<Event>>
-        get() = _event
+//    private val _showFooterLoader = MutableLiveData<Boolean>()
+//    val showFooterLoader: LiveData<Boolean>
+//        get() = _showFooterLoader
 
     private var _events = MutableLiveData<List<Event>>()
     val events: LiveData<List<Event>>
@@ -66,15 +64,26 @@ class EventsViewModel(private val restClient: RestClient, private var basic: Str
     }
 
     fun updateEvent(eventId: Long) {
-        _event.postValue(Resource.loading(null))
+        Log.d("MeetDebLog_EventsViewModel", "Updating event with ID $eventId ...")
+        _itemCurrentlyUpdating.postValue(Pair(Event.UpdatingType.VOTE, eventId))
         viewModelScope.launch {
-            _event.postValue(restClient.getEvent(basic, eventId))
+            restClient.getEvent(basic, eventId).let {
+                _itemCurrentlyUpdating.postValue(null)
+                when (it.status) {
+                    Status.SUCCESS -> it.data?.let { event -> updateEventInList(event) }
+                    Status.ERROR -> {
+                        _updateItemEvent.postValue(SingleEvent(eventId))
+                        _toastEvent.postValue(SingleEvent(it.errorMessage))
+                    }
+                    else -> {}
+                }
+            }
         }
     }
 
     fun modifyParticipation(eventId: Long) {
         Log.d("MeetDebLog_EventsViewModel", "Modifying participation with event ID $eventId ...")
-        _itemCurrentlyUpdating.postValue(eventId)
+        _itemCurrentlyUpdating.postValue(Pair(Event.UpdatingType.PARTICIPATION, eventId))
         viewModelScope.launch {
             restClient.modifyParticipation(basic, eventId).let {
                 _itemCurrentlyUpdating.postValue(null)

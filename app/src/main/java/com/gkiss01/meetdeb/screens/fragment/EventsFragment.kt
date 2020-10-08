@@ -23,6 +23,7 @@ import com.gkiss01.meetdeb.utils.FastScrollerAdapter
 import com.gkiss01.meetdeb.utils.getNavigationResult
 import com.gkiss01.meetdeb.utils.observeEvent
 import com.gkiss01.meetdeb.viewmodels.EventsViewModel
+import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.diff.FastAdapterDiffUtil
 import com.mikepenz.fastadapter.listeners.OnBindViewHolderListenerImpl
@@ -96,29 +97,22 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             fastScrollerAdapter.notifyAdapterItemChanged(itemAdapter.getAdapterPosition(it))
         }
 
-        // Loading megjelenítése az esemény gombjain
+        // Esemény gomb animációk kezelése
         viewModelKoin.itemCurrentlyUpdating.observe(viewLifecycleOwner) {
-            it?.let {
-                getEventViewHolderByPosition(itemAdapter.getAdapterPosition(it))?.showJoinAnimation()
+            it?.let { item ->
+                getEventViewHolderByPosition(itemAdapter.getAdapterPosition(item.second))?.manageAnimation(item.first)
             }
         }
 
-        fastScrollerAdapter.onBindViewHolderListener = object : OnBindViewHolderListenerImpl<Event>() {
+        fastScrollerAdapter.onBindViewHolderListener = object : OnBindViewHolderListenerImpl<GenericItem>() {
             override fun onViewAttachedToWindow(viewHolder: RecyclerView.ViewHolder, position: Int) {
-                viewModelKoin.itemCurrentlyUpdating.value?.let { eventId ->
+                viewModelKoin.itemCurrentlyUpdating.value?.let { item ->
                     (viewHolder as? EventViewHolder)?.let {
-                        if (it.event.id == eventId) it.showJoinAnimation()
+                        if (it.event.id == item.second) it.manageAnimation(item.first)
                     }
                 }
             }
         }
-
-//        viewModelKoin.showFooterLoader.observe(viewLifecycleOwner) {
-//            if (it) {
-//                footerAdapter.clear()
-//                footerAdapter.add(ProgressItem())
-//            }
-//        }
 
         ef_swipeRefreshLayout.setOnRefreshListener {
             if (!viewModelKoin.eventsIsLoading) viewModelKoin.refreshEvents().observe(viewLifecycleOwner, eventsObserver)
@@ -149,7 +143,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             viewModelKoin.eventsIsLoading = false
         })
 
-        itemAdapter.fastAdapter!!.addClickListener( {null}, { vh: EventViewHolder -> listOf<View>(vh.itemView.eli_descButton, vh.itemView.eli_acceptButton, vh.itemView.eli_anotherDateButton, vh.itemView.eli_moreButton) }) { v, position, _, item ->
+        itemAdapter.fastAdapter?.addClickListener( {null}, { vh: EventViewHolder -> listOf<View>(vh.itemView.eli_descButton, vh.itemView.eli_acceptButton, vh.itemView.eli_anotherDateButton, vh.itemView.eli_moreButton) }) { v, _, _, item ->
             when (v.id) {
                 R.id.eli_descButton -> findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToDetailsBottomSheetFragment(item))
                 R.id.eli_acceptButton -> viewModelKoin.modifyParticipation(item.id)
@@ -160,12 +154,8 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
 
         //Frissítjük az eventId eseményt, ha a DatesDialogFragment jelzi
         getNavigationResult<Long>(R.id.eventsFragment, "eventId") {
-            val itemView = ef_eventsRecyclerView.findViewHolderForAdapterPosition(itemAdapter.getAdapterPosition(it)) as? EventViewHolder
-            itemView?.showVoteAnimation()
-
             viewModelKoin.updateEvent(it)
         }
-
     }
 
     private fun getEventViewHolderByPosition(position: Int) = ef_eventsRecyclerView.findViewHolderForAdapterPosition(position) as? EventViewHolder
