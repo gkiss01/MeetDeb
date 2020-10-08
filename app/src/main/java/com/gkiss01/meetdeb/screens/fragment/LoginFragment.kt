@@ -26,7 +26,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     private lateinit var password: String
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        lf_notRegistered.setOnClickListener { findNavController().popBackStack() }
+        lf_notRegistered.setOnClickListener { findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToRegisterFragment()) }
 
         lf_loginButton.attachTextChangeAnimator()
         lf_loginButton.setOnClickListener {

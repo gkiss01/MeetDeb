@@ -30,11 +30,11 @@ class MainFlowFragment : Fragment(R.layout.fragment_flow_main) {
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-
-        mainActivity?.let {
-            it.supportActionBar?.hide()
-        }
-    }
+//    override fun onDestroyView() {
+//        super.onDestroyView()
+//
+//        mainActivity?.let {
+//            it.supportActionBar?.hide()
+//        }
+//    }
 }
