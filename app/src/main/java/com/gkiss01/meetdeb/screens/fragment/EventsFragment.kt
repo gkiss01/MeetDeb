@@ -83,15 +83,6 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             }
         }
 
-        val deleteObserver = SuccessObserver {
-            when (it.status) {
-                Status.SUCCESS -> it.data?.withId?.let { eventId -> viewModelKoin.removeEventFromList(eventId) }
-                Status.ERROR -> Toast.makeText(requireContext(), it.errorMessage, Toast.LENGTH_LONG).show()
-                Status.LOADING -> Log.d("MeetDebLog_EventsFragment", "Deleting event...")
-                else -> {}
-            }
-        }
-
         viewModelKoin.toastEvent.observeEvent(viewLifecycleOwner) {
             when (it) {
                 is Int -> Toast.makeText(requireContext(), getString(it), Toast.LENGTH_LONG).show()
@@ -162,7 +153,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                     viewModelKoin.modifyParticipation(item.id)
                 }
                 R.id.eli_anotherDateButton -> findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToDatesDialogFragment(item))
-                R.id.eli_moreButton -> createMoreActionMenu(v, item, deleteObserver)
+                R.id.eli_moreButton -> createMoreActionMenu(v, item)
             }
         }
 
@@ -176,7 +167,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         }
     }
 
-    private fun createMoreActionMenu(view: View, event: Event, deleteObserver: SuccessObserver) {
+    private fun createMoreActionMenu(view: View, event: Event) {
         viewModelActivityKoin.activeUser.value?.data?.let {
             PopupMenu(context, view).apply {
                 if (it.isAdmin()) {
@@ -195,7 +186,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                     when (menu.itemId) {
                         R.id.report -> viewModelKoin.createReport(event.id)
                         R.id.removeReport -> viewModelKoin.deleteReport(event.id)
-                        R.id.delete -> viewModelKoin.deleteEvent(event.id).observe(viewLifecycleOwner, deleteObserver)
+                        R.id.delete -> viewModelKoin.deleteEvent(event.id)
                         R.id.update -> findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToEventCreateFragment(event))
                     }
                     true

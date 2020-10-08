@@ -65,11 +65,6 @@ class EventsViewModel(private val restClient: RestClient, private var basic: Str
         }
     }
 
-    fun deleteEvent(eventId: Long) = liveData {
-        emit(Resource.loading(null))
-        emit(restClient.deleteEvent(basic, eventId))
-    }
-
     fun modifyParticipation(eventId: Long) {
         _event.postValue(Resource.loading(null))
         viewModelScope.launch {
@@ -111,6 +106,19 @@ class EventsViewModel(private val restClient: RestClient, private var basic: Str
         }
     }
 
+    fun deleteEvent(eventId: Long) {
+        Log.d("MeetDebLog_EventsViewModel", "Deleting event with ID $eventId ...")
+        viewModelScope.launch {
+            restClient.deleteEvent(basic, eventId).let {
+                when (it.status) {
+                    Status.SUCCESS -> it.data?.withId?.let { eventId -> removeEventFromList(eventId) }
+                    Status.ERROR -> _toastEvent.postValue(SingleEvent(it.errorMessage))
+                    else -> {}
+                }
+            }
+        }
+    }
+
     fun resetLiveData() {
         selectedEvent = Long.MIN_VALUE
         _event.postValue(Resource.pending(null))
@@ -125,7 +133,7 @@ class EventsViewModel(private val restClient: RestClient, private var basic: Str
         _events.postValue(_events.value?.map { if (it.id == event.id) event else it })
     }
 
-    fun removeEventFromList(eventId: Long) {
+    private fun removeEventFromList(eventId: Long) {
         _events.postValue(_events.value?.filterNot { it.id == eventId })
     }
 
