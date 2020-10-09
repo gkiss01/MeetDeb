@@ -45,6 +45,7 @@ class EventsViewModel(private val restClient: RestClient, private var basic: Str
     }
 
     fun loadEventsForPage(page: Int) {
+        if (_footerCurrentlyNeeded.value == true) return
         Log.d("MeetDebLog_EventsViewModel", "Events are loading...")
         _footerCurrentlyNeeded.postValue(true)
         viewModelScope.launch {

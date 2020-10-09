@@ -69,6 +69,26 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             }
         }
 
+        ef_eventsRecyclerView.apply {
+            adapter = fastScrollerAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+            itemAnimator = AlphaInAnimator()
+
+            setHasFixedSize(true)
+            setItemViewCacheSize(6)
+            addOnScrollListener(endlessScrollListener)
+        }
+
+        itemAdapter.fastAdapter?.addClickListener( {null}, { vh: EventViewHolder -> listOf<View>(vh.itemView.eli_descButton,
+            vh.itemView.eli_acceptButton, vh.itemView.eli_anotherDateButton, vh.itemView.eli_moreButton) }) { v, _, _, item ->
+            when (v.id) {
+                R.id.eli_descButton -> findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToDetailsBottomSheetFragment(item))
+                R.id.eli_acceptButton -> viewModelKoin.modifyParticipation(item.id)
+                R.id.eli_anotherDateButton -> findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToDatesDialogFragment(item))
+                R.id.eli_moreButton -> createMoreActionMenu(v, item)
+            }
+        }
+
         // Toast üzenet
         viewModelKoin.toastEvent.observeEvent(viewLifecycleOwner) {
             when (it) {
@@ -99,6 +119,10 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             }
         }
 
+        getNavigationResult<Long>(R.id.eventsFragment, "eventId") {
+            viewModelKoin.updateEvent(it)
+        }
+
         // Footer animáció kezelése
         viewModelKoin.footerCurrentlyNeeded.observe(viewLifecycleOwner) {
             if (it) {
@@ -115,37 +139,14 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             FastAdapterDiffUtil[itemAdapter] = it
         })
 
+        // PullToRefresh
         ef_swipeRefreshLayout.setOnRefreshListener {
             if (viewModelKoin.footerCurrentlyNeeded.value == true) ef_swipeRefreshLayout.isRefreshing = false
             else endlessScrollListener.resetPageCount(0)
         }
 
         if (viewModelKoin.events.value?.isEmpty() != false)
-            viewModelKoin.loadEventsForPage(1)
-
-        ef_eventsRecyclerView.apply {
-            adapter = fastScrollerAdapter
-            layoutManager = LinearLayoutManager(requireContext())
-            itemAnimator = AlphaInAnimator()
-
-            setHasFixedSize(true)
-            setItemViewCacheSize(6)
-            addOnScrollListener(endlessScrollListener)
-        }
-
-        itemAdapter.fastAdapter?.addClickListener( {null}, { vh: EventViewHolder -> listOf<View>(vh.itemView.eli_descButton, vh.itemView.eli_acceptButton, vh.itemView.eli_anotherDateButton, vh.itemView.eli_moreButton) }) { v, _, _, item ->
-            when (v.id) {
-                R.id.eli_descButton -> findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToDetailsBottomSheetFragment(item))
-                R.id.eli_acceptButton -> viewModelKoin.modifyParticipation(item.id)
-                R.id.eli_anotherDateButton -> findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToDatesDialogFragment(item))
-                R.id.eli_moreButton -> createMoreActionMenu(v, item)
-            }
-        }
-
-        //Frissítjük az eventId eseményt, ha a DatesDialogFragment jelzi
-        getNavigationResult<Long>(R.id.eventsFragment, "eventId") {
-            viewModelKoin.updateEvent(it)
-        }
+            endlessScrollListener.resetPageCount(0)
     }
 
     private fun getEventViewHolderByPosition(position: Int) = ef_eventsRecyclerView.findViewHolderForAdapterPosition(position) as? EventViewHolder
