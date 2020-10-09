@@ -22,18 +22,15 @@ val activityModule = module {
 class ActivityViewModel(private val moshi: Moshi, private val restClient: RestClient, private val application: Application) : ViewModel() {
     private var username = application.getSavedUsername()
     private var password = application.getSavedPassword()
-    private lateinit var basic: String
 
     private var _activeUser = MutableLiveData<Resource<User>>()
     val activeUser: LiveData<Resource<User>>
         get() = _activeUser
 
-    fun getCurrentUser(basic: String = Credentials.basic(username, password)) {
-        this.basic = basic
-
+    fun getCurrentUser() {
         _activeUser.postValue(Resource.loading(null))
         viewModelScope.launch {
-            _activeUser.postValue(restClient.checkUser(basic))
+            _activeUser.postValue(restClient.checkUser())
         }
     }
 
@@ -61,12 +58,12 @@ class ActivityViewModel(private val moshi: Moshi, private val restClient: RestCl
 
     fun deleteUser() = liveData {
         emit(Resource.loading(null))
-        emit(restClient.deleteUser(basic))
+        emit(restClient.deleteUser())
     }
 
     fun getEventsSummary() = liveData {
         emit(Resource.loading(null))
-        emit(restClient.getEventsSummary(basic))
+        emit(restClient.getEventsSummary())
     }
 
     fun setActiveUser(user: User) {
@@ -76,9 +73,8 @@ class ActivityViewModel(private val moshi: Moshi, private val restClient: RestCl
     fun setUserCredentials(username: String?, password: String?) {
         username?.let { this.username = it }
         password?.let { this.password = it }
-        basic = Credentials.basic(this.username, this.password)
         application.setSavedUser(this.username, this.password)
-        application.setAuthToken(basic)
+        application.setAuthToken(Credentials.basic(this.username, this.password))
     }
 
     fun resetLiveData() {
@@ -88,12 +84,9 @@ class ActivityViewModel(private val moshi: Moshi, private val restClient: RestCl
     fun resetUserCredentials() {
         username = ""
         password = ""
-        basic = ""
         application.setSavedUser("",  "")
         application.setAuthToken()
     }
-
-    fun getBasic() = basic
 }
 
 fun Context.getSavedUsername(default: String = "unknown"): String {

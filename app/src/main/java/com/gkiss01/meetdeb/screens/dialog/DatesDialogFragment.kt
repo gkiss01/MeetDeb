@@ -36,12 +36,11 @@ import kotlinx.android.synthetic.main.item_date.view.*
 import kotlinx.android.synthetic.main.item_date_picker.view.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
 import org.threeten.bp.OffsetDateTime
 
 class DatesDialogFragment : DialogFragment() {
     private val viewModelActivityKoin: ActivityViewModel by sharedViewModel()
-    private val viewModelKoin: DatesViewModel by viewModel { parametersOf(viewModelActivityKoin.getBasic()) }
+    private val viewModelKoin: DatesViewModel by viewModel()
 
     private val itemAdapter = ItemAdapter<Date>()
     private val headerAdapter = ItemAdapter<ProgressItem>()

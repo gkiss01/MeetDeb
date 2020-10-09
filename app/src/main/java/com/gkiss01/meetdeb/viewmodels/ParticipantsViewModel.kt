@@ -12,10 +12,10 @@ import kotlinx.coroutines.launch
 import org.koin.dsl.module
 
 val participantsModule = module {
-    factory { (basic: String) -> ParticipantsViewModel(get(), basic) }
+    factory { ParticipantsViewModel(get()) }
 }
 
-class ParticipantsViewModel(private val restClient: RestClient, private val basic: String) : ViewModel() {
+class ParticipantsViewModel(private val restClient: RestClient) : ViewModel() {
     lateinit var event: Event
     fun isEventInitialized() = ::event.isInitialized
 
@@ -26,7 +26,7 @@ class ParticipantsViewModel(private val restClient: RestClient, private val basi
     fun getParticipants() {
         _participants.postValue(Resource.loading(null))
         viewModelScope.launch {
-            _participants.postValue(restClient.getParticipants(basic, event.id))
+            _participants.postValue(restClient.getParticipants(event.id))
         }
     }
 }

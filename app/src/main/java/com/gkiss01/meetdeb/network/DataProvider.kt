@@ -21,24 +21,24 @@ interface DataProvider {
     suspend fun updateUser(@Header("Authorization") auth: String, @Body user: RequestBody): User
 
     @DELETE("users")
-    suspend fun deleteUser(@Header("Authorization") auth: String): SuccessResponse<Long>
+    suspend fun deleteUser(): SuccessResponse<Long>
 
     @GET("users/me")
-    suspend fun checkUser(@Header("Authorization") auth: String): User
+    suspend fun checkUser(): User
 
     @GET("users/summary/events")
-    suspend fun getEventsSummary(@Header("Authorization") auth: String): EventSummary
+    suspend fun getEventsSummary(): EventSummary
 
     // MARK - Events -
 
     @Multipart
     @POST("events")
-    suspend fun createEvent(@Header("Authorization") auth: String, @Part("event") event: RequestBody,
+    suspend fun createEvent(@Part("event") event: RequestBody,
                                  @Part file: MultipartBody.Part?): Event
 
     @Multipart
     @POST("events/update")
-    suspend fun updateEvent(@Header("Authorization") auth: String, @Part("event") event: RequestBody): Event
+    suspend fun updateEvent(@Part("event") event: RequestBody): Event
 
     @DELETE("events/{eventId}")
     suspend fun deleteEvent(@Path("eventId") eventId: Long): SuccessResponse<Long>
@@ -61,21 +61,21 @@ interface DataProvider {
     suspend fun modifyParticipation(@Path("eventId") eventId: Long): Event
 
     @GET("participants/{eventId}")
-    suspend fun getParticipants(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): List<Participant>
+    suspend fun getParticipants(@Path("eventId") eventId: Long): List<Participant>
 
     // MARK - Dates -
 
     @POST("dates/{eventId}")
-    suspend fun createDate(@Header("Authorization") auth: String, @Path("eventId") eventId: Long, @Query("date") date: OffsetDateTime): List<Date>
+    suspend fun createDate(@Path("eventId") eventId: Long, @Query("date") date: OffsetDateTime): List<Date>
 
     @DELETE("dates/{dateId}")
-    suspend fun deleteDate(@Header("Authorization") auth: String, @Path("dateId") dateId: Long): SuccessResponse<Long>
+    suspend fun deleteDate(@Path("dateId") dateId: Long): SuccessResponse<Long>
 
     @GET("dates/{eventId}")
-    suspend fun getDates(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): List<Date>
+    suspend fun getDates(@Path("eventId") eventId: Long): List<Date>
 
     // MARK - Votes -
 
     @POST("votes/{dateId}")
-    suspend fun changeVote(@Header("Authorization") auth: String, @Path("dateId") dateId: Long): List<Date>
+    suspend fun changeVote(@Path("dateId") dateId: Long): List<Date>
 }

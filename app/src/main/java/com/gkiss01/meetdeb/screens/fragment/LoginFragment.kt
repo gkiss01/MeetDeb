@@ -15,6 +15,7 @@ import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.Status
+import com.gkiss01.meetdeb.setAuthToken
 import com.gkiss01.meetdeb.utils.mainActivity
 import kotlinx.android.synthetic.main.fragment_login.*
 import okhttp3.Credentials
@@ -37,10 +38,11 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                 email = lf_email.editText?.text.toString().trim()
                 password = lf_password.editText?.text.toString().trim()
                 val basic = Credentials.basic(email, password)
+                requireContext().setAuthToken(basic)
 
                 hideKeyboard()
 
-                viewModelKoin.getCurrentUser(basic)
+                viewModelKoin.getCurrentUser()
             }
         }
 

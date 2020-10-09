@@ -16,10 +16,10 @@ import org.koin.dsl.module
 import org.threeten.bp.OffsetDateTime
 
 val datesModule = module {
-    factory { (basic: String) -> DatesViewModel(get(), basic) }
+    factory { DatesViewModel(get()) }
 }
 
-class DatesViewModel(private val restClient: RestClient, private val basic: String) : ViewModel() {
+class DatesViewModel(private val restClient: RestClient) : ViewModel() {
     private var isLoading = false
     lateinit var event: Event
     fun isEventInitialized() = ::event.isInitialized
@@ -35,21 +35,21 @@ class DatesViewModel(private val restClient: RestClient, private val basic: Stri
     fun getDates() {
         _dates.postValue(Resource.loading(null))
         viewModelScope.launch {
-            _dates.postValue(restClient.getDates(basic, event.id))
+            _dates.postValue(restClient.getDates(event.id))
         }
     }
 
     fun createDate(date: OffsetDateTime) {
         _dates.postValue(Resource.loading(null))
         viewModelScope.launch {
-            _dates.postValue(restClient.createDate(basic, event.id, date))
+            _dates.postValue(restClient.createDate(event.id, date))
         }
     }
 
     fun deleteDate(dateId: Long) {
         Log.d("MeetDebLog_DatesDialogViewModel", "Deleting date with ID $dateId ...")
         viewModelScope.launch {
-            restClient.deleteDate(basic, dateId).let {
+            restClient.deleteDate(dateId).let {
                 when (it.status) {
                     Status.SUCCESS -> it.data?.withId?.let { dateId -> removeDateFromList(dateId) }
                     Status.ERROR -> _toastEvent.postValue(SingleEvent(it.errorMessage))
@@ -63,7 +63,7 @@ class DatesViewModel(private val restClient: RestClient, private val basic: Stri
         if (isLoading) return
         isLoading = true
         viewModelScope.launch {
-            _dates.postValue(restClient.changeVote(basic, dateId))
+            _dates.postValue(restClient.changeVote(dateId))
             isLoading = false
         }
     }

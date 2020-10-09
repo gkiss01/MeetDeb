@@ -12,7 +12,6 @@ import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.fastadapter.Participant
 import com.gkiss01.meetdeb.network.Status
@@ -22,13 +21,10 @@ import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.diff.FastAdapterDiffUtil
 import com.mikepenz.fastadapter.ui.items.ProgressItem
 import kotlinx.android.synthetic.main.fragment_participants.*
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
 
 class ParticipantsDialogFragment : DialogFragment() {
-    private val viewModelActivityKoin: ActivityViewModel by sharedViewModel()
-    private val viewModelKoin: ParticipantsViewModel by viewModel { parametersOf(viewModelActivityKoin.getBasic()) }
+    private val viewModelKoin: ParticipantsViewModel by viewModel()
 
     private val itemAdapter = ItemAdapter<Participant>()
     private val headerAdapter = ItemAdapter<ProgressItem>()

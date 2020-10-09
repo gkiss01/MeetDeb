@@ -21,7 +21,6 @@ import androidx.navigation.fragment.navArgs
 import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
-import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.fastadapter.Event
 import com.gkiss01.meetdeb.data.fastadapter.format
@@ -42,16 +41,12 @@ import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
 import com.zhihu.matisse.engine.impl.GlideEngine
 import kotlinx.android.synthetic.main.fragment_event_create.*
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
 import org.threeten.bp.OffsetDateTime
 
 class EventCreateFragment : Fragment() {
     private lateinit var binding: FragmentEventCreateBinding
-    private val viewModelActivityKoin: ActivityViewModel by sharedViewModel()
-    private val viewModelKoin: EventCreateViewModel by viewModel { parametersOf(viewModelActivityKoin.getBasic()) }
-
+    private val viewModelKoin: EventCreateViewModel by viewModel()
     private val safeArgs: EventCreateFragmentArgs by navArgs()
 
     private val REQUEST_CODE_PICK_IMAGE = 1
