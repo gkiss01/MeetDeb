@@ -2,7 +2,7 @@ package com.gkiss01.meetdeb.network
 
 import android.content.Context
 import com.gkiss01.meetdeb.adapter.OffsetDateTimeAdapter
-import com.gkiss01.meetdeb.getAuthToken
+import com.gkiss01.meetdeb.utils.getAuthToken
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.Interceptor

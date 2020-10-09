@@ -15,8 +15,8 @@ import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.Status
-import com.gkiss01.meetdeb.setAuthToken
 import com.gkiss01.meetdeb.utils.mainActivity
+import com.gkiss01.meetdeb.utils.setAuthToken
 import kotlinx.android.synthetic.main.fragment_login.*
 import okhttp3.Credentials
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel

@@ -1,12 +1,14 @@
 package com.gkiss01.meetdeb
 
 import android.app.Application
-import android.content.Context
 import androidx.lifecycle.*
 import com.gkiss01.meetdeb.data.User
 import com.gkiss01.meetdeb.data.request.UserRequest
 import com.gkiss01.meetdeb.network.Resource
 import com.gkiss01.meetdeb.network.RestClient
+import com.gkiss01.meetdeb.utils.CredentialType
+import com.gkiss01.meetdeb.utils.getCurrentCredential
+import com.gkiss01.meetdeb.utils.setAuthToken
 import com.squareup.moshi.Moshi
 import kotlinx.coroutines.launch
 import okhttp3.Credentials
@@ -20,9 +22,6 @@ val activityModule = module {
 }
 
 class ActivityViewModel(private val moshi: Moshi, private val restClient: RestClient, private val application: Application) : ViewModel() {
-    private var username = application.getSavedUsername()
-    private var password = application.getSavedPassword()
-
     private var _activeUser = MutableLiveData<Resource<User>>()
     val activeUser: LiveData<Resource<User>>
         get() = _activeUser
@@ -71,45 +70,17 @@ class ActivityViewModel(private val moshi: Moshi, private val restClient: RestCl
     }
 
     fun setUserCredentials(username: String?, password: String?) {
-        username?.let { this.username = it }
-        password?.let { this.password = it }
-        application.setSavedUser(this.username, this.password)
-        application.setAuthToken(Credentials.basic(this.username, this.password))
+        val usernameSafe = username ?: application.getCurrentCredential(CredentialType.EMAIL)
+        val passwordSafe = password ?: application.getCurrentCredential(CredentialType.PASSWORD)
+        application.setAuthToken(Credentials.basic(usernameSafe, passwordSafe))
+    }
+
+    fun resetUserCredentials() {
+        application.setAuthToken()
     }
 
     fun resetLiveData() {
         _activeUser.postValue(Resource.pending(null))
     }
 
-    fun resetUserCredentials() {
-        username = ""
-        password = ""
-        application.setSavedUser("",  "")
-        application.setAuthToken()
-    }
-}
-
-fun Context.getSavedUsername(default: String = "unknown"): String {
-    val sharedPref = this.getSharedPreferences("BASIC_AUTH_PREFS", Context.MODE_PRIVATE)
-    return sharedPref.getString("OPTION_EMAIL", default)!!
-}
-
-fun Context.getSavedPassword(default: String = "unknown"): String {
-    val sharedPref = this.getSharedPreferences("BASIC_AUTH_PREFS", Context.MODE_PRIVATE)
-    return sharedPref.getString("OPTION_PASSWORD", default)!!
-}
-
-fun Context.setSavedUser(username: String, password: String) {
-    val sharedPref = this.getSharedPreferences("BASIC_AUTH_PREFS", Context.MODE_PRIVATE)
-    sharedPref.edit().putString("OPTION_EMAIL", username).putString("OPTION_PASSWORD", password).apply()
-}
-
-fun Context.getAuthToken(default: String = ""): String {
-    val sharedPref = this.getSharedPreferences("BASIC_AUTH_PREFS", Context.MODE_PRIVATE)
-    return sharedPref.getString("AUTH_TOKEN_BASIC", default)!!
-}
-
-fun Context.setAuthToken(basic: String? = null) {
-    val sharedPref = this.getSharedPreferences("BASIC_AUTH_PREFS", Context.MODE_PRIVATE)
-    sharedPref.edit().putString("AUTH_TOKEN_BASIC", basic).apply()
 }
