@@ -32,22 +32,19 @@ import com.mikepenz.itemanimators.AlphaInAnimator
 import kotlinx.android.synthetic.main.fragment_events.*
 import kotlinx.android.synthetic.main.item_event.view.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.core.parameter.parametersOf
 
 typealias SuccessObserver = Observer<Resource<SuccessResponse<Long>>>
 
 class EventsFragment : Fragment(R.layout.fragment_events) {
     private val viewModelActivityKoin: ActivityViewModel by sharedViewModel()
-    private val viewModelKoin: EventsViewModel by sharedViewModel { parametersOf(viewModelActivityKoin.getBasic()) }
+    private val viewModelKoin: EventsViewModel by sharedViewModel()
 
     private val itemAdapter = ItemAdapter<Event>()
     private val footerAdapter = ItemAdapter<ProgressItem>()
     private val fastScrollerAdapter = FastScrollerAdapter.with(listOf(itemAdapter, footerAdapter))
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        viewModelKoin.updateBasic(viewModelActivityKoin.getBasic())
         setHasOptionsMenu(true)
-
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 

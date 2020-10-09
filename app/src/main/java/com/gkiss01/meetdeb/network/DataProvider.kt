@@ -41,24 +41,24 @@ interface DataProvider {
     suspend fun updateEvent(@Header("Authorization") auth: String, @Part("event") event: RequestBody): Event
 
     @DELETE("events/{eventId}")
-    suspend fun deleteEvent(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): SuccessResponse<Long>
+    suspend fun deleteEvent(@Path("eventId") eventId: Long): SuccessResponse<Long>
 
     @GET("events/{eventId}")
-    suspend fun getEvent(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): Event
+    suspend fun getEvent(@Path("eventId") eventId: Long): Event
 
     @GET("events")
-    suspend fun getEvents(@Header("Authorization") auth: String, @Query("page") page: Int, @Query("page") limit: Int): List<Event>
+    suspend fun getEvents(@Query("page") page: Int, @Query("page") limit: Int): List<Event>
 
     @GET("events/reports/add/{eventId}")
-    suspend fun createReport(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): SuccessResponse<Long>
+    suspend fun createReport(@Path("eventId") eventId: Long): SuccessResponse<Long>
 
     @GET("events/reports/remove/{eventId}")
-    suspend fun deleteReport(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): SuccessResponse<Long>
+    suspend fun deleteReport(@Path("eventId") eventId: Long): SuccessResponse<Long>
 
     // MARK - Participants -
 
     @POST("participants/{eventId}")
-    suspend fun modifyParticipation(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): Event
+    suspend fun modifyParticipation(@Path("eventId") eventId: Long): Event
 
     @GET("participants/{eventId}")
     suspend fun getParticipants(@Header("Authorization") auth: String, @Path("eventId") eventId: Long): List<Participant>

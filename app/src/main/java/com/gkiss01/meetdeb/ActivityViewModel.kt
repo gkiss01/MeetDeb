@@ -78,6 +78,7 @@ class ActivityViewModel(private val moshi: Moshi, private val restClient: RestCl
         password?.let { this.password = it }
         basic = Credentials.basic(this.username, this.password)
         application.setSavedUser(this.username, this.password)
+        application.setAuthToken(basic)
     }
 
     fun resetLiveData() {
@@ -89,6 +90,7 @@ class ActivityViewModel(private val moshi: Moshi, private val restClient: RestCl
         password = ""
         basic = ""
         application.setSavedUser("",  "")
+        application.setAuthToken()
     }
 
     fun getBasic() = basic
@@ -107,4 +109,14 @@ fun Context.getSavedPassword(default: String = "unknown"): String {
 fun Context.setSavedUser(username: String, password: String) {
     val sharedPref = this.getSharedPreferences("BASIC_AUTH_PREFS", Context.MODE_PRIVATE)
     sharedPref.edit().putString("OPTION_EMAIL", username).putString("OPTION_PASSWORD", password).apply()
+}
+
+fun Context.getAuthToken(default: String = ""): String {
+    val sharedPref = this.getSharedPreferences("BASIC_AUTH_PREFS", Context.MODE_PRIVATE)
+    return sharedPref.getString("AUTH_TOKEN_BASIC", default)!!
+}
+
+fun Context.setAuthToken(basic: String? = null) {
+    val sharedPref = this.getSharedPreferences("BASIC_AUTH_PREFS", Context.MODE_PRIVATE)
+    sharedPref.edit().putString("AUTH_TOKEN_BASIC", basic).apply()
 }

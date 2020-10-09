@@ -1,6 +1,8 @@
 package com.gkiss01.meetdeb.network
 
+import android.content.Context
 import com.gkiss01.meetdeb.adapter.OffsetDateTimeAdapter
+import com.gkiss01.meetdeb.getAuthToken
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.Interceptor
@@ -14,15 +16,19 @@ const val BASE_URL = "http://192.168.1.102:8080"
 const val PAGE_SIZE = 25
 
 val networkModule = module {
-    single { provideInterceptor() }
+    single { provideInterceptor(get()) }
     single { provideOkHttpClient(get()) }
     single { provideMoshi() }
     single { provideRetrofit(get(), get()) }
     factory { provideApi(get()) }
 }
 
-fun provideInterceptor(): Interceptor = Interceptor {
-    val request: Request = it.request().newBuilder().addHeader("Accept", "application/json").build()
+fun provideInterceptor(context: Context): Interceptor = Interceptor {
+    val basic = context.getAuthToken()
+    val request: Request = it.request().newBuilder()
+        .addHeader("Accept", "application/json")
+        .addHeader("Authorization", basic)
+        .build()
     it.proceed(request)
 }
 

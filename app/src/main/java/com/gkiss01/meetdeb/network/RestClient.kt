@@ -23,13 +23,13 @@ class RestClient(private val dataProvider: DataProvider, private val resourceHan
 
     suspend fun createEvent(auth: String, event: RequestBody, file: MultipartBody.Part?) = handleRequest(dispatcher) { dataProvider.createEvent(auth, event, file) }
     suspend fun updateEvent(auth: String, event: RequestBody) = handleRequest(dispatcher) { dataProvider.updateEvent(auth, event) }
-    suspend fun deleteEvent(auth: String, eventId: Long) = handleRequest(dispatcher) { dataProvider.deleteEvent(auth, eventId) }
-    suspend fun getEvent(auth: String, eventId: Long) = handleRequest(dispatcher) { dataProvider.getEvent(auth, eventId) }
-    suspend fun getEvents(auth: String, page: Int) = handleRequest(dispatcher) { dataProvider.getEvents(auth, page, PAGE_SIZE) }
-    suspend fun createReport(auth: String, eventId: Long) = handleRequest(dispatcher) { dataProvider.createReport(auth, eventId) }
-    suspend fun deleteReport(auth: String, eventId: Long) = handleRequest(dispatcher) { dataProvider.deleteReport(auth, eventId) }
+    suspend fun deleteEvent(eventId: Long) = handleRequest(dispatcher) { dataProvider.deleteEvent(eventId) }
+    suspend fun getEvent(eventId: Long) = handleRequest(dispatcher) { dataProvider.getEvent(eventId) }
+    suspend fun getEvents(page: Int) = handleRequest(dispatcher) { dataProvider.getEvents(page, PAGE_SIZE) }
+    suspend fun createReport(eventId: Long) = handleRequest(dispatcher) { dataProvider.createReport(eventId) }
+    suspend fun deleteReport(eventId: Long) = handleRequest(dispatcher) { dataProvider.deleteReport(eventId) }
 
-    suspend fun modifyParticipation(auth: String, eventId: Long) = handleRequest(dispatcher) { dataProvider.modifyParticipation(auth, eventId) }
+    suspend fun modifyParticipation(eventId: Long) = handleRequest(dispatcher) { dataProvider.modifyParticipation(eventId) }
     suspend fun getParticipants(auth: String, eventId: Long) = handleRequest(dispatcher) { dataProvider.getParticipants(auth, eventId) }
 
     suspend fun createDate(auth: String, eventId: Long, date: OffsetDateTime) = handleRequest(dispatcher) { dataProvider.createDate(auth, eventId, date) }

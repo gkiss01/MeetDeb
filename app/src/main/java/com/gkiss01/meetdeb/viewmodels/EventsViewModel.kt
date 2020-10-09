@@ -14,12 +14,12 @@ import kotlinx.coroutines.launch
 import org.koin.dsl.module
 
 val eventsModule = module {
-    factory { (basic: String) -> EventsViewModel(get(), basic) }
+    factory { EventsViewModel(get()) }
 }
 
 typealias ItemUpdating = Pair<Event.UpdatingType, Long>
 
-class EventsViewModel(private val restClient: RestClient, private var basic: String) : ViewModel() {
+class EventsViewModel(private val restClient: RestClient) : ViewModel() {
     private val _toastEvent = MutableLiveData<SingleEvent<Any>>()
     val toastEvent: LiveData<SingleEvent<Any>>
         get() = _toastEvent
@@ -43,16 +43,12 @@ class EventsViewModel(private val restClient: RestClient, private var basic: Str
     var lastPage: Int = 0
         private set
 
-    fun updateBasic(basic: String) {
-        this.basic = basic
-    }
-
     fun loadEventsForPage(page: Int) {
         if (_footerCurrentlyNeeded.value == true) return
         Log.d("MeetDebLog_EventsViewModel", "Events are loading...")
         _footerCurrentlyNeeded.postValue(true)
         viewModelScope.launch {
-            restClient.getEvents(basic, page).let {
+            restClient.getEvents(page).let {
                 _footerCurrentlyNeeded.postValue(false)
                 when (it.status) {
                     Status.SUCCESS -> it.data?.let { events -> addEventsToList(events, page) }
@@ -67,7 +63,7 @@ class EventsViewModel(private val restClient: RestClient, private var basic: Str
         Log.d("MeetDebLog_EventsViewModel", "Updating event with ID $eventId ...")
         _itemCurrentlyUpdating.postValue(Pair(Event.UpdatingType.VOTE, eventId))
         viewModelScope.launch {
-            restClient.getEvent(basic, eventId).let {
+            restClient.getEvent(eventId).let {
                 _itemCurrentlyUpdating.postValue(null)
                 when (it.status) {
                     Status.SUCCESS -> it.data?.let { event -> updateEventInList(event) }
@@ -85,7 +81,7 @@ class EventsViewModel(private val restClient: RestClient, private var basic: Str
         Log.d("MeetDebLog_EventsViewModel", "Modifying participation with event ID $eventId ...")
         _itemCurrentlyUpdating.postValue(Pair(Event.UpdatingType.PARTICIPATION, eventId))
         viewModelScope.launch {
-            restClient.modifyParticipation(basic, eventId).let {
+            restClient.modifyParticipation(eventId).let {
                 _itemCurrentlyUpdating.postValue(null)
                 when (it.status) {
                     Status.SUCCESS -> it.data?.let { event -> updateEventInList(event) }
@@ -102,7 +98,7 @@ class EventsViewModel(private val restClient: RestClient, private var basic: Str
     fun createReport(eventId: Long) {
         Log.d("MeetDebLog_EventsViewModel", "Creating event report with event ID $eventId ...")
         viewModelScope.launch {
-            restClient.createReport(basic, eventId).let {
+            restClient.createReport(eventId).let {
                 when (it.status) {
                     Status.SUCCESS -> it.data?.withId?.let { eventId ->
                         addReportToEvent(eventId)
@@ -119,7 +115,7 @@ class EventsViewModel(private val restClient: RestClient, private var basic: Str
     fun deleteReport(eventId: Long) {
         Log.d("MeetDebLog_EventsViewModel", "Deleting event report with event ID $eventId ...")
         viewModelScope.launch {
-            restClient.deleteReport(basic, eventId).let {
+            restClient.deleteReport(eventId).let {
                 when (it.status) {
                     Status.SUCCESS -> it.data?.withId?.let { eventId ->
                         removeReportFromEvent(eventId)
@@ -136,7 +132,7 @@ class EventsViewModel(private val restClient: RestClient, private var basic: Str
     fun deleteEvent(eventId: Long) {
         Log.d("MeetDebLog_EventsViewModel", "Deleting event with ID $eventId ...")
         viewModelScope.launch {
-            restClient.deleteEvent(basic, eventId).let {
+            restClient.deleteEvent(eventId).let {
                 when (it.status) {
                     Status.SUCCESS -> it.data?.withId?.let { eventId -> removeEventFromList(eventId) }
                     Status.ERROR -> _toastEvent.postValue(SingleEvent(it.errorMessage))
