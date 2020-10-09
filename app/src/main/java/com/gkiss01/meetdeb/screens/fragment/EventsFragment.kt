@@ -65,7 +65,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         fastScrollerAdapter.attachDefaultListeners = false
         val endlessScrollListener = object : EndlessRecyclerOnScrollListener(footerAdapter) {
             override fun onLoadMore(currentPage: Int) {
-                viewModelKoin.loadEventsForPage(currentPage + 1)
+                viewModelKoin.loadEventsForPage(if (currentPage == 0) 1 else (viewModelKoin.lastPage + 1))
             }
         }
 

@@ -40,6 +40,9 @@ class EventsViewModel(private val restClient: RestClient, private var basic: Str
     val events: LiveData<List<Event>>
         get() = _events
 
+    var lastPage: Int = 0
+        private set
+
     fun updateBasic(basic: String) {
         this.basic = basic
     }
@@ -146,6 +149,7 @@ class EventsViewModel(private val restClient: RestClient, private var basic: Str
     private fun addEventsToList(events: List<Event>, page: Int) {
         if (page > 1) _events.postValue(_events.value?.union(events)?.toList())
         else _events.postValue(events)
+        if (events.isNotEmpty()) lastPage = page
     }
 
     private fun updateEventInList(event: Event) {
