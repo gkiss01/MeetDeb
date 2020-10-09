@@ -1,7 +1,6 @@
 package com.gkiss01.meetdeb.screens.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.PopupMenu
 import android.widget.Toast
@@ -18,7 +17,6 @@ import com.gkiss01.meetdeb.data.SuccessResponse
 import com.gkiss01.meetdeb.data.fastadapter.Event
 import com.gkiss01.meetdeb.data.isAdmin
 import com.gkiss01.meetdeb.network.Resource
-import com.gkiss01.meetdeb.network.Status
 import com.gkiss01.meetdeb.utils.FastScrollerAdapter
 import com.gkiss01.meetdeb.utils.getNavigationResult
 import com.gkiss01.meetdeb.utils.observeEvent
@@ -37,7 +35,6 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.core.parameter.parametersOf
 
 typealias SuccessObserver = Observer<Resource<SuccessResponse<Long>>>
-typealias EventsObserver = Observer<Resource<List<Event>>>
 
 class EventsFragment : Fragment(R.layout.fragment_events) {
     private val viewModelActivityKoin: ActivityViewModel by sharedViewModel()
@@ -65,27 +62,14 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val eventsObserver = EventsObserver {
-            when (it.status) {
-                Status.SUCCESS -> {
-                    ef_swipeRefreshLayout.isRefreshing = false
-                    footerAdapter.clear()
-                    viewModelKoin.addEventsToList(it.data!!)
-                }
-                Status.ERROR -> {
-                    Toast.makeText(requireContext(), it.errorMessage, Toast.LENGTH_LONG).show()
-                    ef_swipeRefreshLayout.isRefreshing = false
-                    footerAdapter.clear()
-                }
-                Status.LOADING -> {
-                    Log.d("MeetDebLog_EventsFragment", "Events are loading...")
-                    footerAdapter.clear()
-                    footerAdapter.add(ProgressItem())
-                }
-                else -> {}
+        fastScrollerAdapter.attachDefaultListeners = false
+        val endlessScrollListener = object : EndlessRecyclerOnScrollListener(footerAdapter) {
+            override fun onLoadMore(currentPage: Int) {
+                viewModelKoin.loadEventsForPage(currentPage + 1)
             }
         }
 
+        // Toast üzenet
         viewModelKoin.toastEvent.observeEvent(viewLifecycleOwner) {
             when (it) {
                 is Int -> Toast.makeText(requireContext(), getString(it), Toast.LENGTH_LONG).show()
@@ -93,6 +77,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             }
         }
 
+        // Adott lista elem befrissítése
         viewModelKoin.updateItemEvent.observeEvent(viewLifecycleOwner) {
             fastScrollerAdapter.notifyAdapterItemChanged(itemAdapter.getAdapterPosition(it))
         }
@@ -114,15 +99,30 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             }
         }
 
+        // Footer animáció kezelése
+        viewModelKoin.footerCurrentlyNeeded.observe(viewLifecycleOwner) {
+            if (it) {
+                footerAdapter.clear()
+                footerAdapter.add(ProgressItem())
+            } else {
+                ef_swipeRefreshLayout.isRefreshing = false
+                footerAdapter.clear()
+            }
+        }
+
+        // Esemény lista újratöltése
+        viewModelKoin.events.observe(viewLifecycleOwner, {
+            FastAdapterDiffUtil[itemAdapter] = it
+        })
+
         ef_swipeRefreshLayout.setOnRefreshListener {
-            if (!viewModelKoin.eventsIsLoading) viewModelKoin.refreshEvents().observe(viewLifecycleOwner, eventsObserver)
-            else ef_swipeRefreshLayout.isRefreshing = false
+            if (viewModelKoin.footerCurrentlyNeeded.value == true) ef_swipeRefreshLayout.isRefreshing = false
+            else endlessScrollListener.resetPageCount(0)
         }
 
         if (viewModelKoin.events.value?.isEmpty() != false)
-            viewModelKoin.refreshEvents().observe(viewLifecycleOwner, eventsObserver)
+            viewModelKoin.loadEventsForPage(1)
 
-        fastScrollerAdapter.attachDefaultListeners = false
         ef_eventsRecyclerView.apply {
             adapter = fastScrollerAdapter
             layoutManager = LinearLayoutManager(requireContext())
@@ -130,18 +130,8 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
 
             setHasFixedSize(true)
             setItemViewCacheSize(6)
-
-            addOnScrollListener(object : EndlessRecyclerOnScrollListener(footerAdapter) {
-                override fun onLoadMore(currentPage: Int) {
-                    viewModelKoin.getMoreEvents().observe(viewLifecycleOwner, eventsObserver)
-                }
-            })
+            addOnScrollListener(endlessScrollListener)
         }
-
-        viewModelKoin.events.observe(viewLifecycleOwner, {
-            FastAdapterDiffUtil[itemAdapter] = it
-            viewModelKoin.eventsIsLoading = false
-        })
 
         itemAdapter.fastAdapter?.addClickListener( {null}, { vh: EventViewHolder -> listOf<View>(vh.itemView.eli_descButton, vh.itemView.eli_acceptButton, vh.itemView.eli_anotherDateButton, vh.itemView.eli_moreButton) }) { v, _, _, item ->
             when (v.id) {

@@ -1,11 +1,12 @@
 package com.gkiss01.meetdeb.viewmodels
 
 import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.fastadapter.Event
-import com.gkiss01.meetdeb.network.PAGE_SIZE
-import com.gkiss01.meetdeb.network.Resource
 import com.gkiss01.meetdeb.network.RestClient
 import com.gkiss01.meetdeb.network.Status
 import com.gkiss01.meetdeb.utils.SingleEvent
@@ -19,9 +20,6 @@ val eventsModule = module {
 typealias ItemUpdating = Pair<Event.UpdatingType, Long>
 
 class EventsViewModel(private val restClient: RestClient, private var basic: String) : ViewModel() {
-    var eventsIsLoading = false
-    private var currentPage: Int = 1
-
     private val _toastEvent = MutableLiveData<SingleEvent<Any>>()
     val toastEvent: LiveData<SingleEvent<Any>>
         get() = _toastEvent
@@ -34,9 +32,9 @@ class EventsViewModel(private val restClient: RestClient, private var basic: Str
     val itemCurrentlyUpdating: LiveData<ItemUpdating?>
         get() = _itemCurrentlyUpdating
 
-//    private val _showFooterLoader = MutableLiveData<Boolean>()
-//    val showFooterLoader: LiveData<Boolean>
-//        get() = _showFooterLoader
+    private val _footerCurrentlyNeeded = MutableLiveData<Boolean>()
+    val footerCurrentlyNeeded: LiveData<Boolean>
+        get() = _footerCurrentlyNeeded
 
     private var _events = MutableLiveData<List<Event>>()
     val events: LiveData<List<Event>>
@@ -46,21 +44,19 @@ class EventsViewModel(private val restClient: RestClient, private var basic: Str
         this.basic = basic
     }
 
-    fun refreshEvents(): LiveData<Resource<List<Event>>> {
-        currentPage = 1
-        eventsIsLoading = true
-        return getEvents(currentPage)
-    }
-
-    fun getMoreEvents(): LiveData<Resource<List<Event>>> {
-        currentPage = ((_events.value?.size ?: 0) / PAGE_SIZE) + 1
-        eventsIsLoading = true
-        return getEvents(currentPage)
-    }
-
-    private fun getEvents(page: Int) = liveData {
-        emit(Resource.loading(null))
-        emit(restClient.getEvents(basic, page))
+    fun loadEventsForPage(page: Int) {
+        Log.d("MeetDebLog_EventsViewModel", "Events are loading...")
+        _footerCurrentlyNeeded.postValue(true)
+        viewModelScope.launch {
+            restClient.getEvents(basic, page).let {
+                _footerCurrentlyNeeded.postValue(false)
+                when (it.status) {
+                    Status.SUCCESS -> it.data?.let { events -> addEventsToList(events, page) }
+                    Status.ERROR -> _toastEvent.postValue(SingleEvent(it.errorMessage))
+                    else -> {}
+                }
+            }
+        }
     }
 
     fun updateEvent(eventId: Long) {
@@ -146,12 +142,12 @@ class EventsViewModel(private val restClient: RestClient, private var basic: Str
         }
     }
 
-    fun addEventsToList(events: List<Event>) {
-        if (currentPage > 1) _events.value = _events.value?.union(events)?.toList()
-        else _events.value = events
+    private fun addEventsToList(events: List<Event>, page: Int) {
+        if (page > 1) _events.postValue(_events.value?.union(events)?.toList())
+        else _events.postValue(events)
     }
 
-    fun updateEventInList(event: Event) {
+    private fun updateEventInList(event: Event) {
         _events.postValue(_events.value?.map { if (it.id == event.id) event else it })
     }
 
