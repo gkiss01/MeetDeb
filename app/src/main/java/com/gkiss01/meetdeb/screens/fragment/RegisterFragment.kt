@@ -25,7 +25,7 @@ import com.gkiss01.meetdeb.viewmodels.RegisterViewModel
 import kotlinx.android.synthetic.main.fragment_register.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class RegisterFragment : Fragment(R.layout.fragment_register) {
+class RegisterFragment : Fragment() {
     private lateinit var binding: FragmentRegisterBinding
     private val viewModelKoin: RegisterViewModel by viewModel()
 

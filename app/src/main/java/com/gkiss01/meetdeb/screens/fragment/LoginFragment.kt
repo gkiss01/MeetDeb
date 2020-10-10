@@ -2,31 +2,46 @@ package com.gkiss01.meetdeb.screens.fragment
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.util.Patterns
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.hideProgress
+import com.github.razir.progressbutton.isProgressActive
 import com.github.razir.progressbutton.showProgress
-import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
-import com.gkiss01.meetdeb.network.ErrorCodes
-import com.gkiss01.meetdeb.network.Status
+import com.gkiss01.meetdeb.data.request.UserRequest
+import com.gkiss01.meetdeb.databinding.FragmentLoginBinding
 import com.gkiss01.meetdeb.utils.mainActivity
-import com.gkiss01.meetdeb.utils.setAuthToken
+import com.gkiss01.meetdeb.utils.observeEvent
+import com.gkiss01.meetdeb.viewmodels.LoginViewModel
 import kotlinx.android.synthetic.main.fragment_login.*
-import okhttp3.Credentials
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class LoginFragment : Fragment(R.layout.fragment_login) {
-    private val viewModelKoin: ActivityViewModel by sharedViewModel()
-    private lateinit var email: String
-    private lateinit var password: String
+class LoginFragment : Fragment() {
+    private lateinit var binding: FragmentLoginBinding
+    //private val viewModelActivityKoin: ActivityViewModel by sharedViewModel()
+    private val viewModelKoin: LoginViewModel by viewModel()
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?): View? {
+
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_login, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        if (!viewModelKoin.isUserInitialized())
+            viewModelKoin.userLocal = UserRequest()
+
+        binding.user = viewModelKoin.userLocal
+
         lf_notRegistered.setOnClickListener { findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToRegisterFragment()) }
 
         lf_loginButton.attachTextChangeAnimator()
@@ -35,43 +50,36 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             val isValidPassword = validatePassword()
 
             if (isValidEmail && isValidPassword) {
-                email = lf_email.editText?.text.toString().trim()
-                password = lf_password.editText?.text.toString().trim()
-                val basic = Credentials.basic(email, password)
-                requireContext().setAuthToken(basic)
-
                 hideKeyboard()
 
-                viewModelKoin.getCurrentUser()
+                viewModelKoin.loginUser()
             }
         }
 
-        viewModelKoin.activeUser.observe(viewLifecycleOwner, {
-            when (it.status) {
-                Status.SUCCESS -> {
-                    viewModelKoin.setUserCredentials(email, password)
-                    mainActivity?.changeNavGraphToMain()
-                }
-                Status.ERROR -> {
-                    val errorMessage = if (it.errorCode == ErrorCodes.USER_DISABLED_OR_NOT_VALID) getString(R.string.invalid_credentials) else it.errorMessage
-                    Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_LONG).show()
-                    lf_loginButton.hideProgress(R.string.login_title)
-                    viewModelKoin.resetActiveUser()
-                }
-                Status.LOADING -> {
-                    Log.d("MeetDebLog_LoginFragment", "User is loading...")
-                    showAnimation()
-                }
-                else -> {}
+        // Toast üzenet
+        viewModelKoin.toastEvent.observeEvent(viewLifecycleOwner) {
+            when (it) {
+                is Int -> Toast.makeText(requireContext(), getString(it), Toast.LENGTH_LONG).show()
+                is String -> Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
             }
-        })
+        }
+
+        // Felhasználó ellenőrzése
+        viewModelKoin.currentlyLoggingIn.observe(viewLifecycleOwner) {
+            if (it) showAnimation() else hideAnimation()
+        }
+
+        viewModelKoin.operationSuccessful.observeEvent(viewLifecycleOwner) {
+            //viewModelActivityKoin.setCurrentUser(it)
+            mainActivity?.changeNavGraphToMain()
+        }
     }
 
     private fun validateEmail(): Boolean {
-        val email = lf_email.editText?.text.toString().trim()
+        val email = viewModelKoin.userLocal.email?.trim()
 
         return when {
-            email.isEmpty() -> {
+            email.isNullOrEmpty() -> {
                 lf_email.error = getString(R.string.field_required)
                 false
             }
@@ -87,10 +95,10 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     }
 
     private fun validatePassword(): Boolean {
-        val password = lf_password.editText?.text.toString().trim()
+        val password = viewModelKoin.userLocal.password?.trim()
 
         return when {
-            password.isEmpty() -> {
+            password.isNullOrEmpty() -> {
                 lf_password.error = getString(R.string.field_required)
                 false
             }
@@ -110,5 +118,9 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             buttonTextRes = R.string.login_waiting
             progressColor = Color.WHITE
         }
+    }
+
+    private fun hideAnimation() {
+        if (lf_loginButton.isProgressActive()) lf_loginButton.hideProgress(R.string.login_title)
     }
 }

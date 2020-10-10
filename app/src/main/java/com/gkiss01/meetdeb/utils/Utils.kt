@@ -89,4 +89,5 @@ fun Context.getCurrentCredential(type: CredentialType): String {
 enum class CredentialType {
     EMAIL, PASSWORD
 }
+
 fun isActiveUserAdmin() = MainActivity.instance.getActiveUser()!!.isAdmin()

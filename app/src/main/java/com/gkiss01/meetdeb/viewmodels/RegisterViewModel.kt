@@ -15,11 +15,13 @@ import com.squareup.moshi.Moshi
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val startModule = module {
     viewModel { RegisterViewModel(get(), get()) }
+    viewModel { LoginViewModel(get(), androidApplication()) }
 }
 
 class RegisterViewModel(private val restClient: RestClient, private val moshi: Moshi): ViewModel() {
