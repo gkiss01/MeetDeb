@@ -22,6 +22,8 @@ data class Event(
     val accepted: Boolean,
     val voted: Boolean): Serializable, AbstractItem<EventViewHolder>() {
 
+    constructor():
+            this(Long.MIN_VALUE, "", Long.MIN_VALUE, "", OffsetDateTime.now(), "", "", false, 0, false,  false)
     constructor(name: String, date: OffsetDateTime, venue: String, description: String):
             this(Long.MIN_VALUE, "", Long.MIN_VALUE, name, date, venue, description, false, 0, false,  false)
 

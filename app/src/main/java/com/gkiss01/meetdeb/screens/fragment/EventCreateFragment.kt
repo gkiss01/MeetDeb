@@ -5,11 +5,12 @@ import android.app.Activity.RESULT_OK
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,7 +29,7 @@ import com.gkiss01.meetdeb.data.fastadapter.isTimeIn24HourFormat
 import com.gkiss01.meetdeb.data.fastadapter.update
 import com.gkiss01.meetdeb.databinding.FragmentEventCreateBinding
 import com.gkiss01.meetdeb.network.BASE_URL
-import com.gkiss01.meetdeb.network.Status
+import com.gkiss01.meetdeb.utils.observeEvent
 import com.gkiss01.meetdeb.viewmodels.EventCreateViewModel
 import com.gkiss01.meetdeb.viewmodels.ScreenType
 import com.karumi.dexter.Dexter
@@ -65,14 +66,12 @@ class EventCreateFragment : Fragment() {
                 viewModelKoin.eventLocal = it
                 viewModelKoin.type = ScreenType.UPDATE
             } ?: run {
-                viewModelKoin.eventLocal = Event("", OffsetDateTime.now(), "", "")
-                viewModelKoin.type = ScreenType.NEW
+                viewModelKoin.eventLocal = Event()
+                viewModelKoin.type = ScreenType.ADD
             }
         }
 
         binding.event = viewModelKoin.eventLocal
-        cef_createButton.text = getString(if (viewModelKoin.type == ScreenType.NEW) R.string.event_create_button else R.string.event_more_update)
-
         Picasso.get()
             .load("$BASE_URL/images/${viewModelKoin.eventLocal.id}")
             .placeholder(R.drawable.placeholder)
@@ -99,7 +98,7 @@ class EventCreateFragment : Fragment() {
         }
 
         cef_imageButton.setOnClickListener {
-            if (viewModelKoin.type == ScreenType.NEW) requestStoragePermissions()
+            if (viewModelKoin.type == ScreenType.ADD) requestStoragePermissions()
             else Toast.makeText(context, getString(R.string.cannot_update_image), Toast.LENGTH_LONG).show()
         }
 
@@ -117,31 +116,35 @@ class EventCreateFragment : Fragment() {
             }
         }
 
-        viewModelKoin.event.observe(viewLifecycleOwner, {
-            when (it.status) {
-                Status.SUCCESS -> {
-                    cef_createButton.hideProgress(R.string.done)
-                    Handler().postDelayed({ findNavController().popBackStack(R.id.eventsFragment, false) }, 500)
-                }
-                Status.ERROR -> {
-                    Toast.makeText(requireContext(), it.errorMessage, Toast.LENGTH_LONG).show()
-                    cef_createButton.hideProgress(if (viewModelKoin.type == ScreenType.NEW) R.string.event_create_button else R.string.event_more_update)
-                    viewModelKoin.resetLiveData()
-                }
-                Status.LOADING -> {
-                    Log.d("MeetDebLog_EventCreateFragment", "Creating/updating event...")
-                    showAnimation()
-                }
-                else -> {}
+        // Toast üzenet
+        viewModelKoin.toastEvent.observeEvent(viewLifecycleOwner) {
+            when (it) {
+                is Int -> Toast.makeText(requireContext(), getString(it), Toast.LENGTH_LONG).show()
+                is String -> Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
             }
-        })
+        }
+
+        // Események létrehozása és frissítése
+        viewModelKoin.itemCurrentlyAdding.observe(viewLifecycleOwner) {
+            if (it) showAnimation() else hideAnimation()
+        }
+
+        viewModelKoin.operationSuccessful.observeEvent(viewLifecycleOwner) {
+            cef_createButton.isEnabled = false
+            cef_createButton.hideProgress(R.string.done)
+            Handler().postDelayed({ findNavController().popBackStack(R.id.eventsFragment, false) }, 500)
+        }
+
+        viewModelKoin.pickedImageUri.observe(viewLifecycleOwner) {
+            val bmImg: Bitmap = BitmapFactory.decodeFile(it)
+            cef_imagePreview.setImageBitmap(bmImg)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_PICK_IMAGE && resultCode == RESULT_OK) {
-            viewModelKoin.imageUrl = Matisse.obtainPathResult(data)[0]
-            cef_imagePreview.setImageURI(Matisse.obtainResult(data)[0])
+            viewModelKoin.pickedImageUri.value = Matisse.obtainPathResult(data)[0]
         }
     }
 
@@ -231,8 +234,12 @@ class EventCreateFragment : Fragment() {
 
     private fun showAnimation() {
         cef_createButton.showProgress {
-            buttonTextRes = if (viewModelKoin.type == ScreenType.NEW) R.string.event_create_waiting else R.string.event_more_update_waiting
+            buttonTextRes = if (viewModelKoin.type == ScreenType.ADD) R.string.event_create_waiting else R.string.event_more_update_waiting
             progressColor = Color.WHITE
         }
+    }
+
+    private fun hideAnimation() {
+        cef_createButton.hideProgress(if (viewModelKoin.type == ScreenType.ADD) R.string.event_create_button else R.string.event_more_update)
     }
 }

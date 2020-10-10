@@ -1,14 +1,17 @@
 package com.gkiss01.meetdeb.viewmodels
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gkiss01.meetdeb.data.fastadapter.Event
 import com.gkiss01.meetdeb.data.request.EventRequest
-import com.gkiss01.meetdeb.network.Resource
 import com.gkiss01.meetdeb.network.RestClient
+import com.gkiss01.meetdeb.network.Status
+import com.gkiss01.meetdeb.utils.SingleEvent
+import com.gkiss01.meetdeb.utils.VoidEvent
 import com.squareup.moshi.Moshi
 import id.zelory.compressor.Compressor
 import kotlinx.coroutines.launch
@@ -23,7 +26,7 @@ import org.koin.dsl.module
 import java.io.File
 
 enum class ScreenType {
-    NONE, NEW, UPDATE
+    ADD, UPDATE
 }
 
 val createModule = module {
@@ -31,51 +34,79 @@ val createModule = module {
 }
 
 class EventCreateViewModel(private val restClient: RestClient, private val moshi: Moshi, private val application: Application): ViewModel() {
-    var imageUrl: String = ""
-
-    lateinit var eventLocal: Event
     lateinit var type: ScreenType
+    lateinit var eventLocal: Event
     fun isEventInitialized() = ::eventLocal.isInitialized
 
-    private var _event = MutableLiveData<Resource<Event>>()
-    val event: LiveData<Resource<Event>>
-        get() = _event
+    private val _toastEvent = MutableLiveData<SingleEvent<Any>>()
+    val toastEvent: LiveData<SingleEvent<Any>>
+        get() = _toastEvent
+
+    private val _itemCurrentlyAdding = MutableLiveData<Boolean>()
+    val itemCurrentlyAdding: LiveData<Boolean>
+        get() = _itemCurrentlyAdding
+
+    private val _operationSuccessful = MutableLiveData<VoidEvent>()
+    val operationSuccessful: LiveData<VoidEvent>
+        get() = _operationSuccessful
+
+    val pickedImageUri = MutableLiveData<String>()
 
     fun uploadEvent() {
-        val file = File(imageUrl)
-        var body: MultipartBody.Part? = null
-
-        if (file.exists()) {
-            val compressedFile = Compressor(application).compressToFile(file)
-            val requestFile = compressedFile.asRequestBody("image/jpeg".toMediaTypeOrNull())
-            body = MultipartBody.Part.createFormData("file", file.name, requestFile)
-        }
-
-        val eventId = if (type == ScreenType.NEW) null else eventLocal.id
+        if (_itemCurrentlyAdding.value == true) return
+        val eventId = if (type == ScreenType.ADD) null else eventLocal.id
         val eventRequest = EventRequest(eventId, eventLocal.name, eventLocal.date, eventLocal.venue, eventLocal.description)
         val json = moshi.adapter(EventRequest::class.java).toJson(eventRequest)
         val eventJson: RequestBody = json.toRequestBody("application/json".toMediaTypeOrNull())
 
-        if (type == ScreenType.NEW) createEvent(eventJson, body)
+        if (type == ScreenType.ADD) {
+            var body: MultipartBody.Part? = null
+            pickedImageUri.value?.let { uri ->
+                val file = File(uri)
+                if (file.exists()) {
+                    val compressedFile = Compressor(application).compressToFile(file)
+                    val requestFile = compressedFile.asRequestBody("image/jpeg".toMediaTypeOrNull())
+                    body = MultipartBody.Part.createFormData("file", file.name, requestFile)
+                }
+            }
+            createEvent(eventJson, body)
+        }
         else updateEvent(eventJson)
     }
 
     private fun createEvent(event: RequestBody, image: MultipartBody.Part?) {
-        _event.postValue(Resource.loading(null))
+        if (_itemCurrentlyAdding.value == true) return
+        Log.d("MeetDebLog_EventCreateViewModel", "Creating event ...")
+        _itemCurrentlyAdding.postValue(true)
         viewModelScope.launch {
-            _event.postValue(restClient.createEvent(event, image))
+            restClient.createEvent(event, image).let {
+                _itemCurrentlyAdding.postValue(false)
+                when (it.status) {
+                    Status.SUCCESS -> it.data?.let { _operationSuccessful.postValue(VoidEvent()) }
+                    Status.ERROR -> _toastEvent.postValue(SingleEvent(it.errorMessage))
+                    else -> {}
+                }
+            }
         }
     }
 
     private fun updateEvent(event: RequestBody) {
-        _event.postValue(Resource.loading(null))
+        if (_itemCurrentlyAdding.value == true) return
+        Log.d("MeetDebLog_EventCreateViewModel", "Updating event ...")
+        _itemCurrentlyAdding.postValue(true)
         viewModelScope.launch {
-            _event.postValue(restClient.updateEvent(event))
+            restClient.updateEvent(event).let {
+                _itemCurrentlyAdding.postValue(false)
+                when (it.status) {
+                    Status.SUCCESS -> it.data?.let { _operationSuccessful.postValue(VoidEvent()) }
+                    Status.ERROR -> _toastEvent.postValue(SingleEvent(it.errorMessage))
+                    else -> {}
+                }
+            }
         }
     }
 
-    fun resetLiveData() {
-        _event.postValue(Resource.pending(null))
+    init {
+        _itemCurrentlyAdding.value = false
     }
-
 }
