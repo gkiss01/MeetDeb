@@ -69,6 +69,10 @@ class ActivityViewModel(private val moshi: Moshi, private val restClient: RestCl
         _activeUser.postValue(Resource.success(user))
     }
 
+    fun resetActiveUser() {
+        _activeUser.postValue(Resource.pending(null))
+    }
+
     fun setUserCredentials(username: String?, password: String?) {
         val usernameSafe = username ?: application.getCurrentCredential(CredentialType.EMAIL)
         val passwordSafe = password ?: application.getCurrentCredential(CredentialType.PASSWORD)
@@ -77,10 +81,6 @@ class ActivityViewModel(private val moshi: Moshi, private val restClient: RestCl
 
     fun resetUserCredentials() {
         application.setAuthToken()
-    }
-
-    fun resetLiveData() {
-        _activeUser.postValue(Resource.pending(null))
     }
 
 }

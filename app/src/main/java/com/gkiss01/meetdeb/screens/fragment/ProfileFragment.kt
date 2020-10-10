@@ -38,7 +38,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     private fun handleCustomActions(item: MenuItem) = when(item.itemId) {
         R.id.action_logout -> {
             viewModelActivityKoin.resetUserCredentials()
-            viewModelActivityKoin.resetLiveData()
+            viewModelActivityKoin.resetActiveUser()
             true
         }
         else -> false

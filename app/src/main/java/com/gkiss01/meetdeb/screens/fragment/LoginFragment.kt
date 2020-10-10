@@ -56,7 +56,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                     val errorMessage = if (it.errorCode == ErrorCodes.USER_DISABLED_OR_NOT_VALID) getString(R.string.invalid_credentials) else it.errorMessage
                     Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_LONG).show()
                     lf_loginButton.hideProgress(R.string.login_title)
-                    viewModelKoin.resetLiveData()
+                    viewModelKoin.resetActiveUser()
                 }
                 Status.LOADING -> {
                     Log.d("MeetDebLog_LoginFragment", "User is loading...")

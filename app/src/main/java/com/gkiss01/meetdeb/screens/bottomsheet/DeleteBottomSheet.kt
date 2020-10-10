@@ -41,7 +41,7 @@ class DeleteBottomSheet: BottomSheetDialogFragment() {
             when (it.status) {
                 Status.SUCCESS -> {
                     debsf_deleteButton.hideProgress(R.string.done)
-                    Handler().postDelayed({ viewModelActivityKoin.resetLiveData() }, 500)
+                    Handler().postDelayed({ viewModelActivityKoin.resetActiveUser() }, 500)
                 }
                 Status.ERROR -> {
                     Toast.makeText(requireContext(), it.errorMessage, Toast.LENGTH_LONG).show()

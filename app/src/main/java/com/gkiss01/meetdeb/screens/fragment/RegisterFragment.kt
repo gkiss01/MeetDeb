@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.util.Patterns
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -13,16 +12,16 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.hideProgress
+import com.github.razir.progressbutton.isProgressActive
 import com.github.razir.progressbutton.showProgress
-import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
-import com.gkiss01.meetdeb.network.ErrorCodes
-import com.gkiss01.meetdeb.network.Status
+import com.gkiss01.meetdeb.utils.observeEvent
+import com.gkiss01.meetdeb.viewmodels.RegisterViewModel
 import kotlinx.android.synthetic.main.fragment_register.*
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RegisterFragment : Fragment(R.layout.fragment_register) {
-    private val viewModelKoin: ActivityViewModel by sharedViewModel()
+    private val viewModelKoin: RegisterViewModel by viewModel()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         rf_alreadyRegistered.setOnClickListener { findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToLoginFragment()) }
@@ -44,26 +43,24 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
             }
         }
 
-        viewModelKoin.activeUser.observe(viewLifecycleOwner, {
-            when (it.status) {
-                Status.SUCCESS -> {
-                    rf_registerButton.hideProgress(R.string.done)
-                    Handler().postDelayed({ findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToLoginFragment()) }, 500)
-                    viewModelKoin.resetLiveData()
-                }
-                Status.ERROR -> {
-                    if (it.errorCode != ErrorCodes.USER_DISABLED_OR_NOT_VALID)
-                        Toast.makeText(requireContext(), it.errorMessage, Toast.LENGTH_LONG).show()
-                    rf_registerButton.hideProgress(R.string.register_title)
-                    viewModelKoin.resetLiveData()
-                }
-                Status.LOADING -> {
-                    Log.d("MeetDebLog_RegisterFragment", "Creating user...")
-                    showAnimation()
-                }
-                else -> {}
+        // Toast üzenet
+        viewModelKoin.toastEvent.observeEvent(viewLifecycleOwner) {
+            when (it) {
+                is Int -> Toast.makeText(requireContext(), getString(it), Toast.LENGTH_LONG).show()
+                is String -> Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
             }
-        })
+        }
+
+        // Felhasználó létrehozása
+        viewModelKoin.currentlyRegistering.observe(viewLifecycleOwner) {
+            if (it) showAnimation() else hideAnimation()
+        }
+
+        viewModelKoin.operationSuccessful.observeEvent(viewLifecycleOwner) {
+            rf_registerButton.isEnabled = false
+            rf_registerButton.hideProgress(R.string.done)
+            Handler().postDelayed({ findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToLoginFragment()) }, 500)
+        }
     }
 
     private fun validateEmail(): Boolean {
@@ -132,6 +129,10 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
             buttonTextRes = R.string.register_create_waiting
             progressColor = Color.WHITE
         }
+    }
+
+    private fun hideAnimation() {
+        if (rf_registerButton.isProgressActive()) rf_registerButton.hideProgress(R.string.register_title)
     }
 }
 
