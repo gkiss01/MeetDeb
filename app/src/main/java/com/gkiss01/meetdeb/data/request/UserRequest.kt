@@ -1,6 +1,9 @@
 package com.gkiss01.meetdeb.data.request
 
 data class UserRequest(
-    val email: String?,
-    val password: String?,
-    val name: String?)
+    var email: String?,
+    var password: String?,
+    var name: String?) {
+
+    constructor(): this(null, null, null)
+}

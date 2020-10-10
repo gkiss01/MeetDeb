@@ -14,7 +14,6 @@ import com.gkiss01.meetdeb.utils.SingleEvent
 import com.squareup.moshi.Moshi
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -24,6 +23,9 @@ val startModule = module {
 }
 
 class RegisterViewModel(private val restClient: RestClient, private val moshi: Moshi): ViewModel() {
+    lateinit var userLocal: UserRequest
+    fun isUserInitialized() = ::userLocal.isInitialized
+
     private val _toastEvent = MutableLiveData<SingleEvent<Any>>()
     val toastEvent: LiveData<SingleEvent<Any>>
         get() = _toastEvent
@@ -36,17 +38,11 @@ class RegisterViewModel(private val restClient: RestClient, private val moshi: M
     val operationSuccessful: LiveData<SingleEvent<User>>
         get() = _operationSuccessful
 
-    fun createUser(email: String, password: String, name: String) {
-        if (_currentlyRegistering.value == true) return
-        val userRequest = UserRequest(email, password, name)
-        val json = moshi.adapter(UserRequest::class.java).toJson(userRequest)
-        val user = json.toRequestBody("application/json".toMediaTypeOrNull())
-        createUser(user)
-    }
-
-    private fun createUser(user: RequestBody) {
+    fun createUser() {
         if (_currentlyRegistering.value == true) return
         Log.d("MeetDebLog_RegisterViewModel", "Creating user ...")
+        val json = moshi.adapter(UserRequest::class.java).toJson(userLocal)
+        val user = json.toRequestBody("application/json".toMediaTypeOrNull())
         _currentlyRegistering.postValue(true)
         viewModelScope.launch {
             restClient.createUser(user).let {

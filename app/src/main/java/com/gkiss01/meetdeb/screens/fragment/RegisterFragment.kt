@@ -5,9 +5,12 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.util.Patterns
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.github.razir.progressbutton.attachTextChangeAnimator
@@ -15,15 +18,31 @@ import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.isProgressActive
 import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.R
+import com.gkiss01.meetdeb.data.request.UserRequest
+import com.gkiss01.meetdeb.databinding.FragmentRegisterBinding
 import com.gkiss01.meetdeb.utils.observeEvent
 import com.gkiss01.meetdeb.viewmodels.RegisterViewModel
 import kotlinx.android.synthetic.main.fragment_register.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RegisterFragment : Fragment(R.layout.fragment_register) {
+    private lateinit var binding: FragmentRegisterBinding
     private val viewModelKoin: RegisterViewModel by viewModel()
 
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?): View? {
+
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_register, container, false)
+        return binding.root
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        if (!viewModelKoin.isUserInitialized())
+            viewModelKoin.userLocal = UserRequest()
+
+        binding.user = viewModelKoin.userLocal
+
         rf_alreadyRegistered.setOnClickListener { findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToLoginFragment()) }
 
         rf_registerButton.attachTextChangeAnimator()
@@ -33,13 +52,9 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
             val isValidName = validateName()
 
             if (isValidEmail && isValidPassword && isValidName) {
-                val email = rf_email.editText?.text.toString().trim()
-                val password = rf_password.editText?.text.toString().trim()
-                val name = rf_name.editText?.text.toString().trim()
-
                 hideKeyboard()
 
-                viewModelKoin.createUser(email, password, name)
+                viewModelKoin.createUser()
             }
         }
 
@@ -64,10 +79,10 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
     }
 
     private fun validateEmail(): Boolean {
-        val email = rf_email.editText?.text.toString().trim()
+        val email = viewModelKoin.userLocal.email?.trim()
 
         return when {
-            email.isEmpty() -> {
+            email.isNullOrEmpty() -> {
                 rf_email.error = getString(R.string.field_required)
                 false
             }
@@ -83,10 +98,10 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
     }
 
     private fun validatePassword(): Boolean {
-        val password = rf_password.editText?.text.toString().trim()
+        val password = viewModelKoin.userLocal.password?.trim()
 
         return when {
-            password.isEmpty() -> {
+            password.isNullOrEmpty() -> {
                 rf_password.error = getString(R.string.field_required)
                 false
             }
@@ -102,10 +117,10 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
     }
 
     private fun validateName(): Boolean {
-        val name = rf_name.editText?.text.toString().trim()
+        val name = viewModelKoin.userLocal.name?.trim()
 
         return when {
-            name.isEmpty() -> {
+            name.isNullOrEmpty() -> {
                 rf_name.error = getString(R.string.field_required)
                 false
             }

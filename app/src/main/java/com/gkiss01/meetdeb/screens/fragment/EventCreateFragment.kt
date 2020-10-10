@@ -10,7 +10,6 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
-import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -178,7 +177,7 @@ class EventCreateFragment : Fragment() {
 
     private fun validateName(): Boolean {
         return when {
-            TextUtils.isEmpty(viewModelKoin.eventLocal.name) -> {
+            viewModelKoin.eventLocal.name.isEmpty() -> {
                 cef_name.error = getString(R.string.field_required)
                 false
             }
@@ -195,7 +194,7 @@ class EventCreateFragment : Fragment() {
 
     private fun validateDescription(): Boolean {
         return when {
-            TextUtils.isEmpty(viewModelKoin.eventLocal.description) -> {
+            viewModelKoin.eventLocal.description.isEmpty() -> {
                 cef_description.error = getString(R.string.field_required)
                 false
             }
@@ -208,7 +207,7 @@ class EventCreateFragment : Fragment() {
 
     private fun validateVenue(): Boolean {
         return when {
-            TextUtils.isEmpty(viewModelKoin.eventLocal.venue) -> {
+            viewModelKoin.eventLocal.venue.isEmpty() -> {
                 cef_venue.error = getString(R.string.field_required)
                 false
             }
