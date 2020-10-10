@@ -7,9 +7,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gkiss01.meetdeb.data.fastadapter.Date
 import com.gkiss01.meetdeb.data.fastadapter.Event
+import com.gkiss01.meetdeb.data.fastadapter.format
 import com.gkiss01.meetdeb.network.RestClient
 import com.gkiss01.meetdeb.network.Status
 import com.gkiss01.meetdeb.utils.SingleEvent
+import com.gkiss01.meetdeb.utils.VoidEvent
 import kotlinx.coroutines.launch
 import org.koin.dsl.module
 import org.threeten.bp.OffsetDateTime
@@ -38,6 +40,14 @@ class DatesViewModel(private val restClient: RestClient) : ViewModel() {
     val headerCurrentlyNeeded: LiveData<Boolean>
         get() = _headerCurrentlyNeeded
 
+    private val _itemCurrentlyAdding = MutableLiveData<OffsetDateTime?>()
+    val itemCurrentlyAdding: LiveData<OffsetDateTime?>
+        get() = _itemCurrentlyAdding
+
+    private val _collapseFooter = MutableLiveData<VoidEvent>()
+    val collapseFooter: LiveData<VoidEvent>
+        get() = _collapseFooter
+
     private var _dates = MutableLiveData<List<Date>>()
     val dates: LiveData<List<Date>>
         get() = _dates
@@ -59,10 +69,22 @@ class DatesViewModel(private val restClient: RestClient) : ViewModel() {
     }
 
     fun createDate(date: OffsetDateTime) {
-//        _dates.postValue(Resource.loading(null))
-//        viewModelScope.launch {
-//            _dates.postValue(restClient.createDate(event.id, date))
-//        }
+        if (_itemCurrentlyAdding.value != null) return
+        Log.d("MeetDebLog_DatesViewModel", "Creating date ${date.format()} ...")
+        _itemCurrentlyAdding.postValue(date)
+        viewModelScope.launch {
+            restClient.createDate(event.id, date).let {
+                _itemCurrentlyAdding.postValue(null)
+                when (it.status) {
+                    Status.SUCCESS -> it.data?.let { dates ->
+                        _dates.postValue(dates)
+                        _collapseFooter.postValue(VoidEvent())
+                    }
+                    Status.ERROR -> _toastEvent.postValue(SingleEvent(it.errorMessage))
+                    else -> {}
+                }
+            }
+        }
     }
 
     fun deleteDate(dateId: Long) {

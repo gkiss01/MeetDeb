@@ -60,6 +60,10 @@ class DatesDialogFragment : DialogFragment() {
             viewModelKoin.getDates()
         }
 
+        viewModelKoin.itemCurrentlyAdding.value?.let {
+            footerAdapter.add(DatePickerItem(it))
+        } ?: footerAdapter.add(DatePickerItem())
+
         if (viewModelActivityKoin.activeUser.value?.data?.isAdmin() == false) fastAdapter.attachDefaultListeners = false
         val layoutManager = LinearLayoutManager(context)
         df_datesRecyclerView.apply {
@@ -96,11 +100,17 @@ class DatesDialogFragment : DialogFragment() {
         fastAdapter.onBindViewHolderListener = object : OnBindViewHolderListenerImpl<GenericItem>() {
             override fun onViewAttachedToWindow(viewHolder: RecyclerView.ViewHolder, position: Int) {
                 viewModelKoin.itemCurrentlyUpdating.value?.let { item ->
-                    (viewHolder as? DateViewHolder)?.let {
-                        if (it.date.id == item) {
-                            it.setChecked()
-                            it.showAnimation()
+                    (viewHolder as? DateViewHolder)?.let { holder ->
+                        if (holder.date.id == item) {
+                            holder.setChecked()
+                            holder.showAnimation()
                         }
+                    }
+                }
+                viewModelKoin.itemCurrentlyAdding.value?.let {
+                    (viewHolder as? DatePickerViewHolder)?.let { holder ->
+                        holder.expand()
+                        holder.manageAnimation(true)
                     }
                 }
             }
@@ -111,9 +121,16 @@ class DatesDialogFragment : DialogFragment() {
             if (it) {
                 headerAdapter.clear()
                 headerAdapter.add(ProgressItem())
-            } else {
-                headerAdapter.clear()
-            }
+            } else headerAdapter.clear()
+        }
+
+        // Footer animáció kezelése
+        viewModelKoin.itemCurrentlyAdding.observe(viewLifecycleOwner) {
+            getDatePickerViewHolderByPosition(layoutManager.itemCount - 1)?.manageAnimation(it != null)
+        }
+
+        viewModelKoin.collapseFooter.observeEvent(viewLifecycleOwner) {
+            getDatePickerViewHolderByPosition(layoutManager.itemCount - 1)?.close()
         }
 
         // Időpont lista újratöltése
@@ -121,22 +138,10 @@ class DatesDialogFragment : DialogFragment() {
             FastAdapterDiffUtil[itemAdapter] = it
         })
 
-//        viewModelKoin.dates.observe(viewLifecycleOwner, {
-//            when (it.status) {
-//                Status.SUCCESS -> {
-//                    val itemView = df_datesRecyclerView.findViewHolderForAdapterPosition(layoutManager.itemCount - 1) as? DatePickerViewHolder
-//                    itemView?.clearAnimation(true)
-//                }
-//                Status.ERROR -> {
-//
-//                    val itemView = df_datesRecyclerView.findViewHolderForAdapterPosition(layoutManager.itemCount - 1) as? DatePickerViewHolder
-//                    itemView?.clearAnimation(false)
-//
-//                }
-//            }
-//        })
+        itemAdapter.fastAdapter?.addClickListener({ vh: DateViewHolder -> vh.itemView.dli_voteButton }) { _, _, _, item ->
+            if (!item.accepted) viewModelKoin.changeVote(item.id)
+        }
 
-        footerAdapter.add(DatePickerItem())
         footerAdapter.fastAdapter?.addClickListener({ vh: DatePickerViewHolder -> vh.itemView.dlp_createButton }) { _, position, _, item ->
             val itemView = getDatePickerViewHolderByPosition(position)
 
@@ -144,14 +149,8 @@ class DatesDialogFragment : DialogFragment() {
                 itemView?.setError(getString(R.string.future_date_required))
             else {
                 itemView?.setError(null)
-                itemView?.showAnimation()
-
                 viewModelKoin.createDate(item.offsetDateTime)
             }
-        }
-
-        itemAdapter.fastAdapter?.addClickListener({ vh: DateViewHolder -> vh.itemView.dli_voteButton }) { _, _, _, item ->
-            if (!item.accepted) viewModelKoin.changeVote(item.id)
         }
 
         if (viewModelActivityKoin.activeUser.value?.data?.isAdmin() == true) {

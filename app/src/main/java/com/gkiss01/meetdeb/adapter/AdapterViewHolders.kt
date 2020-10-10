@@ -44,20 +44,29 @@ class DatePickerViewHolder(private val view: View): FastAdapter.ViewHolder<DateP
         view.dlp_downArrow.animate().setDuration(200).rotation(if (expanded) 180F else 0F)
     }
 
-    fun showAnimation() {
+    fun manageAnimation(show: Boolean) {
+        if (show) showAnimation() else hideAnimation()
+    }
+
+    private fun showAnimation() {
         view.dlp_createButton.showProgress {
             buttonTextRes = R.string.date_create_waiting
             progressColor = Color.WHITE
         }
     }
 
-    fun clearAnimation(closePicker: Boolean = false) {
+    private fun hideAnimation() {
         view.dlp_createButton.hideProgress(R.string.date_create_button)
-        if (closePicker) {
-            expanded = false
-            view.dlp_subLayout.visibility = View.GONE
-            view.dlp_downArrow.animate().setDuration(200).rotation(0F)
-        }
+    }
+
+    fun close() {
+        expanded = true
+        closeOrExpand()
+    }
+
+    fun expand() {
+        expanded = false
+        closeOrExpand()
     }
 }
 

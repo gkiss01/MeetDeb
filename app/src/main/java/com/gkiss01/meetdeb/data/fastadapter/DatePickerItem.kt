@@ -12,8 +12,8 @@ import kotlinx.android.synthetic.main.item_date_picker.view.*
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.format.DateTimeFormatter
 
-class DatePickerItem: AbstractItem<DatePickerViewHolder>() {
-    var offsetDateTime: OffsetDateTime = OffsetDateTime.now()
+data class DatePickerItem(var offsetDateTime: OffsetDateTime): AbstractItem<DatePickerViewHolder>() {
+    constructor(): this(OffsetDateTime.now())
 
     override val layoutRes: Int
         get() = R.layout.item_date_picker
@@ -27,7 +27,7 @@ class DatePickerItem: AbstractItem<DatePickerViewHolder>() {
         holder.itemView.dlp_headerLayout.setOnClickListener { holder.closeOrExpand() }
 
         holder.itemView.dlp_dateButton.setOnClickListener {
-            val datePickerDialog = DatePickerDialog(context, DatePickerDialog.OnDateSetListener { _, year, monthValue, dayOfMonth ->
+            val datePickerDialog = DatePickerDialog(context, { _, year, monthValue, dayOfMonth ->
                 offsetDateTime = offsetDateTime.update(year, monthValue + 1, dayOfMonth)
                 holder.updateSelectedDate(offsetDateTime)
             }, offsetDateTime.year, offsetDateTime.monthValue - 1, offsetDateTime.dayOfMonth)
@@ -35,7 +35,7 @@ class DatePickerItem: AbstractItem<DatePickerViewHolder>() {
         }
 
         holder.itemView.dlp_timeButton.setOnClickListener {
-            val timePickerDialog = TimePickerDialog(context, TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
+            val timePickerDialog = TimePickerDialog(context, { _, hourOfDay, minute ->
                 offsetDateTime = offsetDateTime.update(hourOfDay, minute)
                 holder.updateSelectedDate(offsetDateTime)
             }, offsetDateTime.hour, offsetDateTime.minute, context.isTimeIn24HourFormat())
