@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gkiss01.meetdeb.data.fastadapter.Date
 import com.gkiss01.meetdeb.data.fastadapter.Event
-import com.gkiss01.meetdeb.network.Resource
 import com.gkiss01.meetdeb.network.RestClient
 import com.gkiss01.meetdeb.network.Status
 import com.gkiss01.meetdeb.utils.SingleEvent
@@ -20,34 +19,54 @@ val datesModule = module {
 }
 
 class DatesViewModel(private val restClient: RestClient) : ViewModel() {
-    private var isLoading = false
     lateinit var event: Event
     fun isEventInitialized() = ::event.isInitialized
 
-    private val _toastEvent = MutableLiveData<SingleEvent<String>>()
-    val toastEvent: LiveData<SingleEvent<String>>
+    private val _toastEvent = MutableLiveData<SingleEvent<Any>>()
+    val toastEvent: LiveData<SingleEvent<Any>>
         get() = _toastEvent
 
-    private var _dates = MutableLiveData<Resource<List<Date>>>()
-    val dates: LiveData<Resource<List<Date>>>
+    private val _updateItemEvent = MutableLiveData<SingleEvent<Long>>()
+    val updateItemEvent: LiveData<SingleEvent<Long>>
+        get() = _updateItemEvent
+
+    private val _itemCurrentlyUpdating = MutableLiveData<Long?>()
+    val itemCurrentlyUpdating: LiveData<Long?>
+        get() = _itemCurrentlyUpdating
+
+    private val _headerCurrentlyNeeded = MutableLiveData<Boolean>()
+    val headerCurrentlyNeeded: LiveData<Boolean>
+        get() = _headerCurrentlyNeeded
+
+    private var _dates = MutableLiveData<List<Date>>()
+    val dates: LiveData<List<Date>>
         get() = _dates
 
     fun getDates() {
-        _dates.postValue(Resource.loading(null))
+        if (_headerCurrentlyNeeded.value == true) return
+        Log.d("MeetDebLog_DatesViewModel", "Dates are loading with event ID ${event.id} ...")
+        _headerCurrentlyNeeded.postValue(true)
         viewModelScope.launch {
-            _dates.postValue(restClient.getDates(event.id))
+            restClient.getDates(event.id).let {
+                _headerCurrentlyNeeded.postValue(false)
+                when (it.status) {
+                    Status.SUCCESS -> it.data?.let { dates -> _dates.postValue(dates) }
+                    Status.ERROR -> _toastEvent.postValue(SingleEvent(it.errorMessage))
+                    else -> {}
+                }
+            }
         }
     }
 
     fun createDate(date: OffsetDateTime) {
-        _dates.postValue(Resource.loading(null))
-        viewModelScope.launch {
-            _dates.postValue(restClient.createDate(event.id, date))
-        }
+//        _dates.postValue(Resource.loading(null))
+//        viewModelScope.launch {
+//            _dates.postValue(restClient.createDate(event.id, date))
+//        }
     }
 
     fun deleteDate(dateId: Long) {
-        Log.d("MeetDebLog_DatesDialogViewModel", "Deleting date with ID $dateId ...")
+        Log.d("MeetDebLog_DatesViewModel", "Deleting date with ID $dateId ...")
         viewModelScope.launch {
             restClient.deleteDate(dateId).let {
                 when (it.status) {
@@ -60,17 +79,28 @@ class DatesViewModel(private val restClient: RestClient) : ViewModel() {
     }
 
     fun changeVote(dateId: Long) {
-        if (isLoading) return
-        isLoading = true
+        _itemCurrentlyUpdating.value?.let {
+            if (it != dateId) _updateItemEvent.postValue(SingleEvent(dateId))
+            return
+        }
+        Log.d("MeetDebLog_DatesViewModel", "Changing vote with date ID $dateId ...")
+        _itemCurrentlyUpdating.postValue(dateId)
         viewModelScope.launch {
-            _dates.postValue(restClient.changeVote(dateId))
-            isLoading = false
+            restClient.changeVote(dateId).let {
+                _itemCurrentlyUpdating.postValue(null)
+                when (it.status) {
+                    Status.SUCCESS -> it.data?.let { dates -> _dates.postValue(dates) }
+                    Status.ERROR -> {
+                        _updateItemEvent.postValue(SingleEvent(dateId))
+                        _toastEvent.postValue(SingleEvent(it.errorMessage))
+                    }
+                    else -> {}
+                }
+            }
         }
     }
 
-    fun isLoadingActive() = this.isLoading
-
     private fun removeDateFromList(dateId: Long) {
-        _dates.postValue(Resource.success(_dates.value?.data?.filterNot { it.id == dateId }))
+        _dates.postValue(_dates.value?.filterNot { it.id == dateId })
     }
 }

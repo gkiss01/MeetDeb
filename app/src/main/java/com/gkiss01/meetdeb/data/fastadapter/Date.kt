@@ -18,6 +18,9 @@ data class Date(
         get() = R.layout.item_date
     override val type: Int
         get() = R.id.dli_layout
+    override var identifier: Long
+        get() = id
+        set(_) {}
 
     override fun getViewHolder(v: View): DateViewHolder {
         return DateViewHolder(v)

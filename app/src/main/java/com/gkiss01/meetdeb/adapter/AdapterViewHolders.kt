@@ -72,7 +72,10 @@ class ParticipantViewHolder(private val view: View): FastAdapter.ViewHolder<Part
 }
 
 class DateViewHolder(private val view: View): FastAdapter.ViewHolder<Date>(view) {
+    lateinit var date: Date
+
     override fun bindView(item: Date, payloads: List<Any>) {
+        date = item
         view.dli_dateValue.text = item.date.format()
         view.dli_votes.text = view.context.getString(R.string.event_votes, item.votes)
         view.dli_voteButton.isChecked = item.accepted
@@ -90,6 +93,10 @@ class DateViewHolder(private val view: View): FastAdapter.ViewHolder<Date>(view)
         view.dli_voteButton.showProgress {
             progressColor = Color.parseColor("#485688")
         }
+    }
+
+    fun setChecked() {
+        view.dli_voteButton.isChecked = true
     }
 
     fun setUnchecked() {

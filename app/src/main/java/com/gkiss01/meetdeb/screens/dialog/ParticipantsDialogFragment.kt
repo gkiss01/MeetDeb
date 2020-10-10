@@ -29,7 +29,7 @@ class ParticipantsDialogFragment : DialogFragment() {
     private val itemAdapter = ItemAdapter<Participant>()
     private val headerAdapter = ItemAdapter<ProgressItem>()
     private val fastAdapter = FastAdapter.with(listOf(headerAdapter, itemAdapter))
-    
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         return inflater.inflate(R.layout.fragment_participants, container, false)
