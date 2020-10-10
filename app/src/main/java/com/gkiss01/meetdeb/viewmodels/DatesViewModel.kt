@@ -13,12 +13,7 @@ import com.gkiss01.meetdeb.network.Status
 import com.gkiss01.meetdeb.utils.SingleEvent
 import com.gkiss01.meetdeb.utils.VoidEvent
 import kotlinx.coroutines.launch
-import org.koin.dsl.module
 import org.threeten.bp.OffsetDateTime
-
-val datesModule = module {
-    factory { DatesViewModel(get()) }
-}
 
 class DatesViewModel(private val restClient: RestClient) : ViewModel() {
     lateinit var event: Event

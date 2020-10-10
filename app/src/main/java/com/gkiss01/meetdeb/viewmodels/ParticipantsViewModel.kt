@@ -11,11 +11,6 @@ import com.gkiss01.meetdeb.network.RestClient
 import com.gkiss01.meetdeb.network.Status
 import com.gkiss01.meetdeb.utils.SingleEvent
 import kotlinx.coroutines.launch
-import org.koin.dsl.module
-
-val participantsModule = module {
-    factory { ParticipantsViewModel(get()) }
-}
 
 class ParticipantsViewModel(private val restClient: RestClient) : ViewModel() {
     lateinit var event: Event

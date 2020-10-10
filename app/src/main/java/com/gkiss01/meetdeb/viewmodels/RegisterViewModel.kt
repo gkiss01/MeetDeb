@@ -19,7 +19,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-val registerModule = module {
+val startModule = module {
     viewModel { RegisterViewModel(get(), get()) }
 }
 

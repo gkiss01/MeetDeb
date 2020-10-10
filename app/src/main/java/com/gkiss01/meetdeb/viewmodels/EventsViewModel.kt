@@ -11,10 +11,14 @@ import com.gkiss01.meetdeb.network.RestClient
 import com.gkiss01.meetdeb.network.Status
 import com.gkiss01.meetdeb.utils.SingleEvent
 import kotlinx.coroutines.launch
+import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module
 
 val eventsModule = module {
     factory { EventsViewModel(get()) }
+    factory { EventCreateViewModel(get(), get(), androidApplication()) }
+    factory { DatesViewModel(get()) }
+    factory { ParticipantsViewModel(get()) }
 }
 
 typealias ItemUpdating = Pair<Event.UpdatingType, Long>

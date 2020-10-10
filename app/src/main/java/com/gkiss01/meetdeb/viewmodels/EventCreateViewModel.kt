@@ -20,17 +20,10 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import org.koin.android.ext.koin.androidApplication
-import org.koin.androidx.viewmodel.dsl.viewModel
-import org.koin.dsl.module
 import java.io.File
 
 enum class ScreenType {
     ADD, UPDATE
-}
-
-val createModule = module {
-    viewModel { EventCreateViewModel(get(), get(), androidApplication()) }
 }
 
 class EventCreateViewModel(private val restClient: RestClient, private val moshi: Moshi, private val application: Application): ViewModel() {
