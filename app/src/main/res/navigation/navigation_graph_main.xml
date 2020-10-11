@@ -72,6 +72,12 @@
         <action
             android:id="@+id/action_profileFragment_to_updateBottomSheetFragment"
             app:destination="@id/updateBottomSheetFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_emailBottomSheet"
+            app:destination="@id/emailBottomSheet" />
+        <action
+            android:id="@+id/action_profileFragment_to_passwordBottomSheet"
+            app:destination="@id/passwordBottomSheet" />
     </fragment>
     <dialog
         android:id="@+id/deleteBottomSheetFragment"
@@ -82,14 +88,7 @@
         android:id="@+id/updateBottomSheetFragment"
         android:name="com.gkiss01.meetdeb.screens.bottomsheet.UpdateBottomSheet"
         android:label="UpdateBottomSheetFragment"
-        tools:layout="@layout/bottomsheet_profile_update">
-        <action
-            android:id="@+id/action_updateBottomSheetFragment_to_emailBottomSheet"
-            app:destination="@id/emailBottomSheet" />
-        <action
-            android:id="@+id/action_updateBottomSheetFragment_to_passwordBottomSheet"
-            app:destination="@id/passwordBottomSheet" />
-    </dialog>
+        tools:layout="@layout/bottomsheet_profile_update"/>
     <dialog
         android:id="@+id/emailBottomSheet"
         android:name="com.gkiss01.meetdeb.screens.bottomsheet.EmailBottomSheet"

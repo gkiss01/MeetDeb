@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.gkiss01.meetdeb.R
+import com.gkiss01.meetdeb.screens.fragment.ProfileFragmentDirections
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.bottomsheet_profile_update.*
 
@@ -17,12 +18,12 @@ class UpdateBottomSheet: BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         bspu_emailButton.setOnClickListener {
-            this.dismiss()
-            findNavController().navigate(UpdateBottomSheetDirections.actionUpdateBottomSheetFragmentToEmailBottomSheet())
+            findNavController().navigateUp()
+            findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToEmailBottomSheet())
         }
         bspu_passwordButton.setOnClickListener {
-            this.dismiss()
-            findNavController().navigate(UpdateBottomSheetDirections.actionUpdateBottomSheetFragmentToPasswordBottomSheet())
+            findNavController().navigateUp()
+            findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToPasswordBottomSheet())
         }
     }
 }
