@@ -14,6 +14,7 @@ import com.github.razir.progressbutton.isProgressActive
 import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
+import com.gkiss01.meetdeb.utils.mainActivity
 import com.gkiss01.meetdeb.utils.observeEvent
 import com.gkiss01.meetdeb.viewmodels.DeleteViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -53,7 +54,10 @@ class DeleteBottomSheet: BottomSheetDialogFragment() {
         viewModelKoin.operationSuccessful.observeEvent(viewLifecycleOwner) {
             debsf_deleteButton.isEnabled = false
             debsf_deleteButton.hideProgress(R.string.done)
-            Handler().postDelayed({ viewModelActivityKoin.resetActiveUser() }, 500)
+            Handler().postDelayed({
+                viewModelActivityKoin.logout()
+                mainActivity?.changeNavGraphToStart()
+            }, 500)
         }
     }
 
