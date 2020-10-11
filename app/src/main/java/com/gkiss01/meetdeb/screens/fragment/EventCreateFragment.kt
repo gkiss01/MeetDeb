@@ -131,7 +131,7 @@ class EventCreateFragment : Fragment() {
         viewModelKoin.operationSuccessful.observeEvent(viewLifecycleOwner) {
             cef_createButton.isEnabled = false
             cef_createButton.hideProgress(R.string.done)
-            Handler().postDelayed({ findNavController().popBackStack(R.id.eventsFragment, false) }, 500)
+            Handler().postDelayed({ findNavController().navigateUp() }, 500)
         }
 
         viewModelKoin.pickedImageUri.observe(viewLifecycleOwner) {

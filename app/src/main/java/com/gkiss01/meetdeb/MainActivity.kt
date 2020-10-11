@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.gkiss01.meetdeb.data.User
-import com.gkiss01.meetdeb.screens.flow.MainFlowFragmentDirections
 import com.gkiss01.meetdeb.screens.flow.StartFlowFragmentDirections
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -20,7 +19,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun changeNavGraphToStart() {
-        navController.navigate(MainFlowFragmentDirections.actionMainFlowFragmentToStartFlowFragment())
+        navController.navigateUp()
     }
 
     fun changeNavGraphToMain() {

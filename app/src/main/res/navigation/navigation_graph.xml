@@ -20,11 +20,5 @@
         android:id="@+id/mainFlowFragment"
         android:name="com.gkiss01.meetdeb.screens.flow.MainFlowFragment"
         android:label="fragment_flow_main"
-        tools:layout="@layout/fragment_flow_main">
-        <action
-            android:id="@+id/action_mainFlowFragment_to_startFlowFragment"
-            app:destination="@id/startFlowFragment"
-            app:popUpTo="@id/startFlowFragment"
-            app:popUpToInclusive="true" />
-    </fragment>
+        tools:layout="@layout/fragment_flow_main"/>
 </navigation>
