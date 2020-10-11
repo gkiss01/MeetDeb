@@ -5,7 +5,6 @@ import android.view.*
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,10 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.adapter.EventViewHolder
-import com.gkiss01.meetdeb.data.SuccessResponse
 import com.gkiss01.meetdeb.data.fastadapter.Event
 import com.gkiss01.meetdeb.data.isAdmin
-import com.gkiss01.meetdeb.network.Resource
 import com.gkiss01.meetdeb.utils.FastScrollerAdapter
 import com.gkiss01.meetdeb.utils.getNavigationResult
 import com.gkiss01.meetdeb.utils.observeEvent
@@ -32,8 +29,6 @@ import com.mikepenz.itemanimators.AlphaInAnimator
 import kotlinx.android.synthetic.main.fragment_events.*
 import kotlinx.android.synthetic.main.item_event.view.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-
-typealias SuccessObserver = Observer<Resource<SuccessResponse<Long>>>
 
 class EventsFragment : Fragment(R.layout.fragment_events) {
     private val viewModelActivityKoin: ActivityViewModel by sharedViewModel()

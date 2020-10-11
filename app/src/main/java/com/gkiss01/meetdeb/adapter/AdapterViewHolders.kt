@@ -107,10 +107,6 @@ class DateViewHolder(private val view: View): FastAdapter.ViewHolder<Date>(view)
     fun setChecked() {
         view.dli_voteButton.isChecked = true
     }
-
-    fun setUnchecked() {
-        view.dli_voteButton.isChecked = false
-    }
 }
 
 class EventViewHolder(private val view: View, private val isAdmin: Boolean): FastAdapter.ViewHolder<Event>(view) {
@@ -155,14 +151,14 @@ class EventViewHolder(private val view: View, private val isAdmin: Boolean): Fas
         Event.UpdatingType.PARTICIPATION -> showJoinAnimation()
     }
 
-    fun showVoteAnimation() {
+    private fun showVoteAnimation() {
         view.eli_anotherDateButton.showProgress {
             buttonTextRes = R.string.event_accept_waiting
             progressColor = Color.parseColor("#485688")
         }
     }
 
-    fun showJoinAnimation() {
+    private fun showJoinAnimation() {
         view.eli_acceptButton.showProgress {
             buttonTextRes = R.string.event_accept_waiting
             progressColor = Color.parseColor("#485688")
