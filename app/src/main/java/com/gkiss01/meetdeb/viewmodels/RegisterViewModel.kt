@@ -22,6 +22,7 @@ import org.koin.dsl.module
 val startModule = module {
     viewModel { RegisterViewModel(get(), get()) }
     viewModel { LoginViewModel(get(), androidApplication()) }
+    viewModel { LoadingViewModel(get()) }
 }
 
 class RegisterViewModel(private val restClient: RestClient, private val moshi: Moshi): ViewModel() {

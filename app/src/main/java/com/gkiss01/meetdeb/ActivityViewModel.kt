@@ -1,7 +1,10 @@
 package com.gkiss01.meetdeb
 
 import android.app.Application
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
 import com.gkiss01.meetdeb.data.User
 import com.gkiss01.meetdeb.data.request.UserRequest
 import com.gkiss01.meetdeb.network.Resource
@@ -10,7 +13,6 @@ import com.gkiss01.meetdeb.utils.CredentialType
 import com.gkiss01.meetdeb.utils.getCurrentCredential
 import com.gkiss01.meetdeb.utils.setAuthToken
 import com.squareup.moshi.Moshi
-import kotlinx.coroutines.launch
 import okhttp3.Credentials
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -25,24 +27,6 @@ class ActivityViewModel(private val moshi: Moshi, private val restClient: RestCl
     private var _activeUser = MutableLiveData<Resource<User>>()
     val activeUser: LiveData<Resource<User>>
         get() = _activeUser
-
-    fun getCurrentUser() {
-        _activeUser.postValue(Resource.loading(null))
-        viewModelScope.launch {
-            _activeUser.postValue(restClient.checkUser())
-        }
-    }
-
-    fun createUser(email: String, password: String, name: String) {
-        val userRequest = UserRequest(email, password, name)
-        val json = moshi.adapter(UserRequest::class.java).toJson(userRequest)
-        val user = json.toRequestBody("application/json".toMediaTypeOrNull())
-
-        _activeUser.postValue(Resource.loading(null))
-        viewModelScope.launch {
-            _activeUser.postValue(restClient.createUser(user))
-        }
-    }
 
     fun updateUser(currentPassword: String, email: String?, password: String?) = liveData {
         val basic = Credentials.basic(activeUser.value?.data?.email ?: "", currentPassword)

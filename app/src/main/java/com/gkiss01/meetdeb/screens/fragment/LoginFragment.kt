@@ -14,6 +14,7 @@ import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.isProgressActive
 import com.github.razir.progressbutton.showProgress
+import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.request.UserRequest
 import com.gkiss01.meetdeb.databinding.FragmentLoginBinding
@@ -21,11 +22,12 @@ import com.gkiss01.meetdeb.utils.mainActivity
 import com.gkiss01.meetdeb.utils.observeEvent
 import com.gkiss01.meetdeb.viewmodels.LoginViewModel
 import kotlinx.android.synthetic.main.fragment_login.*
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginFragment : Fragment() {
     private lateinit var binding: FragmentLoginBinding
-    //private val viewModelActivityKoin: ActivityViewModel by sharedViewModel()
+    private val viewModelActivityKoin: ActivityViewModel by sharedViewModel()
     private val viewModelKoin: LoginViewModel by viewModel()
 
     override fun onCreateView(
@@ -70,7 +72,7 @@ class LoginFragment : Fragment() {
         }
 
         viewModelKoin.operationSuccessful.observeEvent(viewLifecycleOwner) {
-            //viewModelActivityKoin.setCurrentUser(it)
+            viewModelActivityKoin.setActiveUser(it)
             mainActivity?.changeNavGraphToMain()
         }
     }
