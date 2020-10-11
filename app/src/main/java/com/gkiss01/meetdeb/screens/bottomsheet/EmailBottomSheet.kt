@@ -3,59 +3,47 @@ package com.gkiss01.meetdeb.screens.bottomsheet
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.lifecycle.Observer
+import androidx.databinding.DataBindingUtil
+import androidx.navigation.fragment.findNavController
 import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.hideProgress
+import com.github.razir.progressbutton.isProgressActive
 import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
-import com.gkiss01.meetdeb.data.User
-import com.gkiss01.meetdeb.network.ErrorCodes
-import com.gkiss01.meetdeb.network.Resource
-import com.gkiss01.meetdeb.network.Status
+import com.gkiss01.meetdeb.data.request.UserRequest
+import com.gkiss01.meetdeb.databinding.BottomsheetProfileEmailBinding
 import com.gkiss01.meetdeb.screens.fragment.hideKeyboard
+import com.gkiss01.meetdeb.utils.observeEvent
+import com.gkiss01.meetdeb.viewmodels.UpdateViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.bottomsheet_profile_email.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class EmailBottomSheet: BottomSheetDialogFragment() {
+    private lateinit var binding: BottomsheetProfileEmailBinding
     private val viewModelActivityKoin: ActivityViewModel by sharedViewModel()
-    private lateinit var email: String
+    private val viewModelKoin: UpdateViewModel by viewModel()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        super.onCreateView(inflater, container, savedInstanceState)
-        return inflater.inflate(R.layout.bottomsheet_profile_email, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?): View? {
+
+        binding = DataBindingUtil.inflate(inflater, R.layout.bottomsheet_profile_email, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val updateObserver = Observer<Resource<User>> {
-            when (it.status) {
-                Status.SUCCESS -> {
-                    bspe_updateButton.hideProgress(R.string.done)
-                    it.data?.let { user ->
-                        viewModelActivityKoin.setActiveUser(user)
-                        viewModelActivityKoin.setUserCredentials(email, null)
-                    }
-                    Handler().postDelayed({ this.dismiss() }, 500)
-                }
-                Status.ERROR -> {
-                    val errorMessage = if (it.errorCode == ErrorCodes.USER_DISABLED_OR_NOT_VALID) getString(R.string.invalid_current_password) else it.errorMessage
-                    Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_LONG).show()
-                    bspe_updateButton.hideProgress(R.string.profile_email_update)
-                }
-                Status.LOADING -> {
-                    Log.d("MeetDebLog_EmailBottomSheet", "Updating user email...")
-                    showAnimation()
-                }
-                else -> {}
-            }
-        }
+        if (!viewModelKoin.isUserInitialized())
+            viewModelKoin.userLocal = UserRequest()
+
+        binding.user = viewModelKoin.userLocal
 
         bspe_updateButton.attachTextChangeAnimator()
         bspe_updateButton.setOnClickListener {
@@ -63,21 +51,39 @@ class EmailBottomSheet: BottomSheetDialogFragment() {
             val isValidPassword = validatePassword()
 
             if (isValidEmail && isValidPassword) {
-                email = bspe_newEmail.editText?.text.toString().trim()
-                val currentPassword = bspe_oldPassword.editText?.text.toString().trim()
-
                 hideKeyboard()
 
-                viewModelActivityKoin.updateUser(currentPassword, email, null).observe(viewLifecycleOwner, updateObserver)
+                viewModelKoin.updateUser()
             }
+        }
+
+        // Toast üzenet
+        viewModelKoin.toastEvent.observeEvent(viewLifecycleOwner) {
+            when (it) {
+                is Int -> Toast.makeText(requireContext(), getString(it), Toast.LENGTH_LONG).show()
+                is String -> Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
+            }
+        }
+
+        // Felhasználó frissítése
+        viewModelKoin.currentlyUpdating.observe(viewLifecycleOwner) {
+            if (it) showAnimation() else hideAnimation()
+        }
+
+        viewModelKoin.operationSuccessful.observeEvent(viewLifecycleOwner) {
+            bspe_updateButton.isEnabled = false
+            bspe_updateButton.hideProgress(R.string.done)
+            viewModelActivityKoin.setActiveUser(it)
+            viewModelActivityKoin.setUserCredentials(viewModelKoin.userLocal.email, null)
+            Handler().postDelayed({ findNavController().navigateUp() }, 500)
         }
     }
 
     private fun validateEmail(): Boolean {
-        val email = bspe_newEmail.editText?.text.toString().trim()
+        val email = viewModelKoin.userLocal.email?.trim()
 
         return when {
-            email.isEmpty() -> {
+            email.isNullOrEmpty() -> {
                 bspe_newEmail.error = getString(R.string.field_required)
                 false
             }
@@ -93,10 +99,10 @@ class EmailBottomSheet: BottomSheetDialogFragment() {
     }
 
     private fun validatePassword(): Boolean {
-        val password = bspe_oldPassword.editText?.text.toString().trim()
+        val password = viewModelKoin.userLocal.name?.trim()
 
         return when {
-            password.isEmpty() -> {
+            password.isNullOrEmpty() -> {
                 bspe_oldPassword.error = getString(R.string.field_required)
                 false
             }
@@ -116,5 +122,9 @@ class EmailBottomSheet: BottomSheetDialogFragment() {
             buttonTextRes = R.string.profile_email_update_waiting
             progressColor = Color.WHITE
         }
+    }
+
+    private fun hideAnimation() {
+        if (bspe_updateButton.isProgressActive()) bspe_updateButton.hideProgress(R.string.profile_email_update)
     }
 }

@@ -1,32 +1,27 @@
 package com.gkiss01.meetdeb.viewmodels
 
+import android.app.Application
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.User
 import com.gkiss01.meetdeb.data.request.UserRequest
 import com.gkiss01.meetdeb.network.ErrorCodes
 import com.gkiss01.meetdeb.network.RestClient
 import com.gkiss01.meetdeb.network.Status
+import com.gkiss01.meetdeb.utils.CredentialType
 import com.gkiss01.meetdeb.utils.SingleEvent
+import com.gkiss01.meetdeb.utils.getCurrentCredential
 import com.squareup.moshi.Moshi
 import kotlinx.coroutines.launch
+import okhttp3.Credentials
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
-import org.koin.android.ext.koin.androidApplication
-import org.koin.androidx.viewmodel.dsl.viewModel
-import org.koin.dsl.module
 
-val startModule = module {
-    viewModel { RegisterViewModel(get(), get()) }
-    viewModel { LoginViewModel(get(), androidApplication()) }
-    viewModel { LoadingViewModel(get()) }
-    viewModel { UpdateViewModel(get(), get(), androidApplication()) }
-}
-
-class RegisterViewModel(private val restClient: RestClient, private val moshi: Moshi): ViewModel() {
+class UpdateViewModel(private val restClient: RestClient, private val moshi: Moshi, private val application: Application): ViewModel() {
     lateinit var userLocal: UserRequest
     fun isUserInitialized() = ::userLocal.isInitialized
 
@@ -34,28 +29,33 @@ class RegisterViewModel(private val restClient: RestClient, private val moshi: M
     val toastEvent: LiveData<SingleEvent<Any>>
         get() = _toastEvent
 
-    private val _currentlyRegistering = MutableLiveData<Boolean>()
-    val currentlyRegistering: LiveData<Boolean>
-        get() = _currentlyRegistering
+    private val _currentlyUpdating = MutableLiveData<Boolean>()
+    val currentlyUpdating: LiveData<Boolean>
+        get() = _currentlyUpdating
 
     private val _operationSuccessful = MutableLiveData<SingleEvent<User>>()
     val operationSuccessful: LiveData<SingleEvent<User>>
         get() = _operationSuccessful
 
-    fun createUser() {
-        if (_currentlyRegistering.value == true) return
-        Log.d("MeetDebLog_RegisterViewModel", "Creating user ...")
-        val json = moshi.adapter(UserRequest::class.java).toJson(userLocal)
+    fun updateUser() {
+        if (_currentlyUpdating.value == true) return
+        Log.d("MeetDebLog_UpdateViewModel", "Updating user ...")
+        val email = application.getCurrentCredential(CredentialType.EMAIL)
+        val password = userLocal.name ?: ""
+        val basic = Credentials.basic(email, password)
+
+        val userRequest = UserRequest(userLocal.email, userLocal.password, null)
+        val json = moshi.adapter(UserRequest::class.java).toJson(userRequest)
         val user = json.toRequestBody("application/json".toMediaTypeOrNull())
-        _currentlyRegistering.postValue(true)
+        _currentlyUpdating.postValue(true)
         viewModelScope.launch {
-            restClient.createUser(user).let {
-                _currentlyRegistering.postValue(false)
+            restClient.updateUser(basic, user).let {
+                _currentlyUpdating.postValue(false)
                 when (it.status) {
                     Status.SUCCESS -> it.data?.let { user -> _operationSuccessful.postValue(SingleEvent(user)) }
                     Status.ERROR -> {
-                        if (it.errorCode != ErrorCodes.USER_DISABLED_OR_NOT_VALID)
-                            _toastEvent.postValue(SingleEvent(it.errorMessage))
+                        val message = if (it.errorCode == ErrorCodes.USER_DISABLED_OR_NOT_VALID) R.string.invalid_current_password else it.errorMessage
+                        _toastEvent.postValue(SingleEvent(message))
                     }
                     else -> {}
                 }
@@ -64,6 +64,6 @@ class RegisterViewModel(private val restClient: RestClient, private val moshi: M
     }
 
     init {
-        _currentlyRegistering.value = false
+        _currentlyUpdating.value = false
     }
 }

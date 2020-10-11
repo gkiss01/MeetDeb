@@ -1,60 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:padding="16dp"
-    app:layout_behavior="@string/bottom_sheet_behavior">
+    <data>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/profile_email_title"
-        android:textColor="?attr/colorOnSurface"
-        android:textSize="24sp" />
+        <variable
+            name="user"
+            type="com.gkiss01.meetdeb.data.request.UserRequest" />
+    </data>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/bspe_newEmail"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:theme="@style/WidgetInputTextFieldDark">
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="16dp"
+        app:layout_behavior="@string/bottom_sheet_behavior">
 
-        <com.google.android.material.textfield.TextInputEditText
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/profile_email_title"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="24sp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/bspe_newEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_email"
-            android:drawablePadding="5dp"
-            android:drawableTint="?attr/colorOnSurface"
-            android:hint="@string/profile_email_email"
-            android:inputType="textEmailAddress" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_marginTop="12dp"
+            android:theme="@style/WidgetInputTextFieldDark">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/bspe_oldPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/WidgetInputTextFieldDark"
-        app:passwordToggleEnabled="true">
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_email"
+                android:drawablePadding="5dp"
+                android:drawableTint="?attr/colorOnSurface"
+                android:hint="@string/profile_email_email"
+                android:inputType="textEmailAddress"
+                android:text="@={user.email}" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputEditText
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/bspe_oldPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_password"
-            android:drawablePadding="5dp"
-            android:drawableTint="?attr/colorOnSurface"
-            android:hint="@string/profile_email_password"
-            android:inputType="textPassword" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:theme="@style/WidgetInputTextFieldDark"
+            app:passwordToggleEnabled="true">
 
-    <Button
-        android:id="@+id/bspe_updateButton"
-        style="@style/WidgetButtonBottomSheetBase"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_marginTop="24dp"
-        android:text="@string/profile_email_update" />
-</LinearLayout>
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_password"
+                android:drawablePadding="5dp"
+                android:drawableTint="?attr/colorOnSurface"
+                android:hint="@string/profile_email_password"
+                android:inputType="textPassword"
+                android:text="@={user.name}" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/bspe_updateButton"
+            style="@style/WidgetButtonBottomSheetBase"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="24dp"
+            android:text="@string/profile_email_update" />
+    </LinearLayout>
+</layout>
