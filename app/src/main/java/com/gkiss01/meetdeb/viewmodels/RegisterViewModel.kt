@@ -24,6 +24,7 @@ val startModule = module {
     viewModel { LoginViewModel(get(), androidApplication()) }
     viewModel { LoadingViewModel(get()) }
     viewModel { UpdateViewModel(get(), get(), androidApplication()) }
+    viewModel { DeleteViewModel(get()) }
 }
 
 class RegisterViewModel(private val restClient: RestClient, private val moshi: Moshi): ViewModel() {
