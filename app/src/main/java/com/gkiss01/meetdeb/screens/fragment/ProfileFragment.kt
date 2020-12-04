@@ -12,21 +12,27 @@ import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.User
 import com.gkiss01.meetdeb.data.isAdmin
+import com.gkiss01.meetdeb.databinding.FragmentProfileBinding
 import com.gkiss01.meetdeb.network.Status
 import com.gkiss01.meetdeb.utils.mainActivity
 import com.gkiss01.meetdeb.utils.observeEvent
 import com.gkiss01.meetdeb.viewmodels.ProfileViewModel
-import kotlinx.android.synthetic.main.fragment_profile.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
+    private var binding: FragmentProfileBinding? = null
     private val viewModelActivityKoin: ActivityViewModel by sharedViewModel()
     private val viewModelKoin: ProfileViewModel by viewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         setHasOptionsMenu(true)
         return super.onCreateView(inflater, container, savedInstanceState)
+    }
+
+    override fun onDestroyView() {
+        binding = null
+        super.onDestroyView()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -49,6 +55,9 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val binding = FragmentProfileBinding.bind(view)
+        this.binding = binding
+
         viewModelKoin.getEventsSummary()
         viewModelActivityKoin.activeUser.observe(viewLifecycleOwner) {
             when (it.status) {
@@ -67,23 +76,24 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
         // Összefoglaló kezelése
         viewModelKoin.eventsSummary.observe(viewLifecycleOwner) {
-            pf_createdEvents.text = it.eventsCreated.toString()
-            pf_acceptedEvents.text = it.eventsInvolved.toString()
+            binding.createdEventsLabel.text = it.eventsCreated.toString()
+            binding.acceptedEventsLabel.text = it.eventsInvolved.toString()
         }
     }
 
     private fun bindUser(user: User) {
-        pf_name.text = user.name
-        pf_email.text = user.email
-        pf_id.editText?.setText(String.format("%07d", user.id), TextView.BufferType.NORMAL)
+        val binding = this.binding ?: return
+        binding.nameLabel.text = user.name
+        binding.emailLabel.text = user.email
+        binding.idField.editText?.setText(String.format("%07d", user.id), TextView.BufferType.NORMAL)
 
         if (user.isAdmin()) {
             val color = ContextCompat.getColor(requireContext(), R.color.anzacYellow)
 
-            pf_rank.text = getString(R.string.profile_admin)
-            pf_rank.setTextColor(color)
-            pf_profileImage.backgroundTintList = ContextCompat.getColorStateList(requireContext(), R.color.anzacYellow)
+            binding.rankLabel.text = getString(R.string.profile_admin)
+            binding.rankLabel.setTextColor(color)
+            binding.profileImage.backgroundTintList = ContextCompat.getColorStateList(requireContext(), R.color.anzacYellow)
         }
-        else pf_rank.text = getString(R.string.profile_user)
+        else binding.rankLabel.text = getString(R.string.profile_user)
     }
 }

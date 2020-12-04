@@ -8,7 +8,7 @@
     tools:context=".screens.fragment.ProfileFragment">
 
     <View
-        android:id="@+id/pf_headerView"
+        android:id="@+id/headerView"
         android:layout_width="0dp"
         android:layout_height="150dp"
         android:layout_marginStart="16dp"
@@ -21,63 +21,63 @@
         app:layout_constraintVertical_bias="0.20" />
 
     <ImageView
-        android:id="@+id/pf_profileImage"
+        android:id="@+id/profileImage"
         android:layout_width="0dp"
         android:layout_height="110dp"
         android:background="@drawable/profile_background"
         android:backgroundTint="?attr/colorPrimaryVariant"
         android:contentDescription="@string/profile_image_desc"
         android:src="@drawable/profile"
-        app:layout_constraintBottom_toTopOf="@id/pf_headerView"
+        app:layout_constraintBottom_toTopOf="@id/headerView"
         app:layout_constraintDimensionRatio="w,1:1"
-        app:layout_constraintEnd_toEndOf="@id/pf_headerView"
-        app:layout_constraintStart_toStartOf="@id/pf_headerView"
-        app:layout_constraintTop_toTopOf="@id/pf_headerView" />
+        app:layout_constraintEnd_toEndOf="@id/headerView"
+        app:layout_constraintStart_toStartOf="@id/headerView"
+        app:layout_constraintTop_toTopOf="@id/headerView" />
 
     <TextView
-        android:id="@+id/pf_name"
+        android:id="@+id/nameLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAlignment="center"
         android:textColor="?attr/colorOnPrimary"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@id/pf_profileImage"
-        app:layout_constraintStart_toStartOf="@id/pf_profileImage"
-        app:layout_constraintTop_toBottomOf="@id/pf_profileImage" />
+        app:layout_constraintEnd_toEndOf="@id/profileImage"
+        app:layout_constraintStart_toStartOf="@id/profileImage"
+        app:layout_constraintTop_toBottomOf="@id/profileImage" />
 
     <TextView
-        android:id="@+id/pf_email"
+        android:id="@+id/emailLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="?attr/colorOnPrimary"
         android:textSize="16sp"
         android:textStyle="italic"
-        app:layout_constraintEnd_toEndOf="@id/pf_name"
-        app:layout_constraintStart_toStartOf="@id/pf_name"
-        app:layout_constraintTop_toBottomOf="@id/pf_name" />
+        app:layout_constraintEnd_toEndOf="@id/nameLabel"
+        app:layout_constraintStart_toStartOf="@id/nameLabel"
+        app:layout_constraintTop_toBottomOf="@id/nameLabel" />
 
     <TextView
-        android:id="@+id/pf_rank"
+        android:id="@+id/rankLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:textSize="19sp"
-        app:layout_constraintEnd_toEndOf="@id/pf_name"
-        app:layout_constraintStart_toStartOf="@id/pf_name"
-        app:layout_constraintTop_toBottomOf="@id/pf_email" />
+        app:layout_constraintEnd_toEndOf="@id/nameLabel"
+        app:layout_constraintStart_toStartOf="@id/nameLabel"
+        app:layout_constraintTop_toBottomOf="@id/emailLabel" />
 
     <LinearLayout
-        android:id="@+id/pf_numbers"
+        android:id="@+id/summaryView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:baselineAligned="false"
         android:orientation="horizontal"
         android:weightSum="2"
-        app:layout_constraintEnd_toEndOf="@id/pf_headerView"
-        app:layout_constraintStart_toStartOf="@id/pf_headerView"
-        app:layout_constraintTop_toBottomOf="@+id/pf_headerView">
+        app:layout_constraintEnd_toEndOf="@id/headerView"
+        app:layout_constraintStart_toStartOf="@id/headerView"
+        app:layout_constraintTop_toBottomOf="@+id/headerView">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -87,7 +87,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/pf_createdEvents"
+                android:id="@+id/createdEventsLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="?attr/colorOnPrimary"
@@ -116,7 +116,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/pf_acceptedEvents"
+                android:id="@+id/acceptedEventsLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="?attr/colorOnPrimary"
@@ -139,24 +139,24 @@
     </LinearLayout>
 
     <View
-        android:id="@+id/pf_lineView"
+        android:id="@+id/lineView"
         android:layout_width="0dp"
         android:layout_height="2dp"
         android:layout_marginTop="30dp"
         android:background="?attr/colorOnPrimary"
-        app:layout_constraintEnd_toEndOf="@id/pf_headerView"
-        app:layout_constraintStart_toStartOf="@id/pf_headerView"
-        app:layout_constraintTop_toBottomOf="@id/pf_numbers" />
+        app:layout_constraintEnd_toEndOf="@id/headerView"
+        app:layout_constraintStart_toStartOf="@id/headerView"
+        app:layout_constraintTop_toBottomOf="@id/summaryView" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/pf_id"
+        android:id="@+id/idField"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:theme="@style/WidgetInputTextFieldLight"
-        app:layout_constraintEnd_toEndOf="@id/pf_headerView"
-        app:layout_constraintStart_toStartOf="@id/pf_headerView"
-        app:layout_constraintTop_toBottomOf="@id/pf_lineView">
+        app:layout_constraintEnd_toEndOf="@id/headerView"
+        app:layout_constraintStart_toStartOf="@id/headerView"
+        app:layout_constraintTop_toBottomOf="@id/lineView">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"

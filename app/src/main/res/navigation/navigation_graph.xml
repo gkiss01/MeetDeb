@@ -20,5 +20,5 @@
         android:id="@+id/mainFlowFragment"
         android:name="com.gkiss01.meetdeb.screens.flow.MainFlowFragment"
         android:label="fragment_flow_main"
-        tools:layout="@layout/fragment_flow_main"/>
+        tools:layout="@layout/fragment_flow_main" />
 </navigation>

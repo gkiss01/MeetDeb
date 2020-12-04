@@ -14,6 +14,7 @@ import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.adapter.EventViewHolder
 import com.gkiss01.meetdeb.data.fastadapter.Event
 import com.gkiss01.meetdeb.data.isAdmin
+import com.gkiss01.meetdeb.databinding.FragmentEventsBinding
 import com.gkiss01.meetdeb.utils.FastScrollerAdapter
 import com.gkiss01.meetdeb.utils.getNavigationResult
 import com.gkiss01.meetdeb.utils.observeEvent
@@ -26,10 +27,10 @@ import com.mikepenz.fastadapter.listeners.addClickListener
 import com.mikepenz.fastadapter.scroll.EndlessRecyclerOnScrollListener
 import com.mikepenz.fastadapter.ui.items.ProgressItem
 import com.mikepenz.itemanimators.AlphaInAnimator
-import kotlinx.android.synthetic.main.fragment_events.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class EventsFragment : Fragment(R.layout.fragment_events) {
+    private var binding: FragmentEventsBinding? = null
     private val viewModelActivityKoin: ActivityViewModel by sharedViewModel()
     private val viewModelKoin: EventsViewModel by sharedViewModel()
 
@@ -40,6 +41,11 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         setHasOptionsMenu(true)
         return super.onCreateView(inflater, container, savedInstanceState)
+    }
+
+    override fun onDestroyView() {
+        binding = null
+        super.onDestroyView()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -53,6 +59,9 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val binding = FragmentEventsBinding.bind(view)
+        this.binding = binding
+
         fastScrollerAdapter.attachDefaultListeners = false
         val endlessScrollListener = object : EndlessRecyclerOnScrollListener(footerAdapter) {
             override fun onLoadMore(currentPage: Int) {
@@ -60,7 +69,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             }
         }
 
-        ef_eventsRecyclerView.apply {
+        binding.recyclerView.apply {
             adapter = fastScrollerAdapter
             layoutManager = LinearLayoutManager(requireContext())
             itemAnimator = AlphaInAnimator()
@@ -120,7 +129,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                 footerAdapter.clear()
                 footerAdapter.add(ProgressItem())
             } else {
-                ef_swipeRefreshLayout.isRefreshing = false
+                binding.swipeRefreshLayout.isRefreshing = false
                 footerAdapter.clear()
             }
         }
@@ -131,8 +140,8 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         }
 
         // PullToRefresh
-        ef_swipeRefreshLayout.setOnRefreshListener {
-            if (viewModelKoin.footerCurrentlyNeeded.value == true) ef_swipeRefreshLayout.isRefreshing = false
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            if (viewModelKoin.footerCurrentlyNeeded.value == true) binding.swipeRefreshLayout.isRefreshing = false
             else endlessScrollListener.resetPageCount(0)
         }
 
@@ -140,7 +149,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             endlessScrollListener.resetPageCount(0)
     }
 
-    private fun getEventViewHolderByPosition(position: Int) = ef_eventsRecyclerView.findViewHolderForAdapterPosition(position) as? EventViewHolder
+    private fun getEventViewHolderByPosition(position: Int) = binding?.recyclerView?.findViewHolderForAdapterPosition(position) as? EventViewHolder
 
     private fun createMoreActionMenu(view: View, event: Event) {
         viewModelActivityKoin.activeUser.value?.data?.let {
