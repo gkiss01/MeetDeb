@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.hideProgress
@@ -30,15 +29,14 @@ class EmailBottomSheet: BottomSheetDialogFragment() {
     private val viewModelActivityKoin: ActivityViewModel by sharedViewModel()
     private val viewModelKoin: UpdateViewModel by viewModel()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?): View {
-
-        binding = DataBindingUtil.inflate(inflater, R.layout.bottomsheet_profile_email, container, false)
-        return binding.root
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        super.onCreateView(inflater, container, savedInstanceState)
+        return inflater.inflate(R.layout.bottomsheet_profile_email, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        binding = BottomsheetProfileEmailBinding.bind(view)
+
         if (!viewModelKoin.isUserInitialized())
             viewModelKoin.userLocal = UserRequest()
 

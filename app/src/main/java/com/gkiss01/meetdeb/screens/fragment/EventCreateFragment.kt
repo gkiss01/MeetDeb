@@ -9,11 +9,8 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -41,20 +38,14 @@ import com.opensooq.supernova.gligar.GligarPicker
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.threeten.bp.OffsetDateTime
 
-class EventCreateFragment : Fragment() {
+class EventCreateFragment : Fragment(R.layout.fragment_event_create) {
     private lateinit var binding: FragmentEventCreateBinding
     private val viewModelKoin: EventCreateViewModel by viewModel()
     private val safeArgs: EventCreateFragmentArgs by navArgs()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?): View {
-
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_event_create, container, false)
-        return binding.root
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        binding = FragmentEventCreateBinding.bind(view)
+
         if (!viewModelKoin.isEventInitialized()) {
             safeArgs.event?.let {
                 viewModelKoin.eventLocal = it

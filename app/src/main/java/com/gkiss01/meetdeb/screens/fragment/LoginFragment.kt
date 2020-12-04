@@ -3,11 +3,8 @@ package com.gkiss01.meetdeb.screens.fragment
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Patterns
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.github.razir.progressbutton.attachTextChangeAnimator
@@ -24,20 +21,14 @@ import com.gkiss01.meetdeb.viewmodels.LoginViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class LoginFragment : Fragment() {
+class LoginFragment : Fragment(R.layout.fragment_login) {
     private lateinit var binding: FragmentLoginBinding
     private val viewModelActivityKoin: ActivityViewModel by sharedViewModel()
     private val viewModelKoin: LoginViewModel by viewModel()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?): View {
-
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_login, container, false)
-        return binding.root
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        binding = FragmentLoginBinding.bind(view)
+
         if (!viewModelKoin.isUserInitialized())
             viewModelKoin.userLocal = UserRequest()
 
