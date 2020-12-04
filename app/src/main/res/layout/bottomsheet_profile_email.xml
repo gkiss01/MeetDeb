@@ -25,7 +25,7 @@
             android:textSize="24sp" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/bspe_newEmail"
+            android:id="@+id/newEmailField"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
@@ -43,7 +43,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/bspe_oldPassword"
+            android:id="@+id/oldPasswordField"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:theme="@style/WidgetInputTextFieldDark"
@@ -61,7 +61,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
-            android:id="@+id/bspe_updateButton"
+            android:id="@+id/updateButton"
             style="@style/WidgetButtonBottomSheetBase"
             android:layout_width="match_parent"
             android:layout_height="45dp"

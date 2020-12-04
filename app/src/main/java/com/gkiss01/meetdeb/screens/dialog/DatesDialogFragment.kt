@@ -21,6 +21,7 @@ import com.gkiss01.meetdeb.adapter.DateViewHolder
 import com.gkiss01.meetdeb.data.fastadapter.Date
 import com.gkiss01.meetdeb.data.fastadapter.DatePickerItem
 import com.gkiss01.meetdeb.data.isAdmin
+import com.gkiss01.meetdeb.databinding.FragmentDatesBinding
 import com.gkiss01.meetdeb.utils.observeEvent
 import com.gkiss01.meetdeb.utils.setNavigationResult
 import com.gkiss01.meetdeb.viewmodels.DatesViewModel
@@ -32,12 +33,12 @@ import com.mikepenz.fastadapter.listeners.OnBindViewHolderListenerImpl
 import com.mikepenz.fastadapter.listeners.addClickListener
 import com.mikepenz.fastadapter.ui.items.ProgressItem
 import com.mikepenz.itemanimators.AlphaInAnimator
-import kotlinx.android.synthetic.main.fragment_dates.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.threeten.bp.OffsetDateTime
 
 class DatesDialogFragment : DialogFragment() {
+    private var binding: FragmentDatesBinding? = null
     private val viewModelActivityKoin: ActivityViewModel by sharedViewModel()
     private val viewModelKoin: DatesViewModel by viewModel()
     private val safeArgs: DatesDialogFragmentArgs by navArgs()
@@ -52,7 +53,15 @@ class DatesDialogFragment : DialogFragment() {
         return inflater.inflate(R.layout.fragment_dates, container, false)
     }
 
+    override fun onDestroyView() {
+        binding = null
+        super.onDestroyView()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val binding = FragmentDatesBinding.bind(view)
+        this.binding = binding
+
         if (!viewModelKoin.isEventInitialized()) {
             viewModelKoin.event = safeArgs.event
             viewModelKoin.getDates()
@@ -64,7 +73,7 @@ class DatesDialogFragment : DialogFragment() {
 
         if (viewModelActivityKoin.activeUser.value?.data?.isAdmin() == false) fastAdapter.attachDefaultListeners = false
         val layoutManager = LinearLayoutManager(context)
-        df_datesRecyclerView.apply {
+        binding.recyclerView.apply {
             adapter = fastAdapter
             this.layoutManager = layoutManager
             itemAnimator = AlphaInAnimator()
@@ -159,8 +168,8 @@ class DatesDialogFragment : DialogFragment() {
         }
     }
 
-    private fun getDateViewHolderByPosition(position: Int) = df_datesRecyclerView.findViewHolderForAdapterPosition(position) as? DateViewHolder
-    private fun getDatePickerViewHolderByPosition(position: Int) = df_datesRecyclerView.findViewHolderForAdapterPosition(position) as? DatePickerViewHolder
+    private fun getDateViewHolderByPosition(position: Int) = binding?.recyclerView?.findViewHolderForAdapterPosition(position) as? DateViewHolder
+    private fun getDatePickerViewHolderByPosition(position: Int) = binding?.recyclerView?.findViewHolderForAdapterPosition(position) as? DatePickerViewHolder
 
     private fun createMoreActionMenu(view: View, date: Date) {
         viewModelActivityKoin.activeUser.value?.data?.let {

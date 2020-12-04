@@ -26,7 +26,7 @@
         android:textSize="18sp" />
 
     <Button
-        android:id="@+id/bspu_emailButton"
+        android:id="@+id/emailButton"
         style="@style/WidgetButtonBottomSheetBase"
         android:layout_width="match_parent"
         android:layout_height="45dp"
@@ -34,7 +34,7 @@
         android:text="@string/profile_update_email" />
 
     <Button
-        android:id="@+id/bspu_passwordButton"
+        android:id="@+id/passwordButton"
         style="@style/WidgetButtonBottomSheetBase"
         android:layout_width="match_parent"
         android:layout_height="45dp"

@@ -13,16 +13,17 @@ import com.github.razir.progressbutton.isProgressActive
 import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
+import com.gkiss01.meetdeb.databinding.BottomsheetProfileDeleteBinding
 import com.gkiss01.meetdeb.utils.mainActivity
 import com.gkiss01.meetdeb.utils.observeEvent
 import com.gkiss01.meetdeb.utils.runDelayed
 import com.gkiss01.meetdeb.viewmodels.DeleteViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import kotlinx.android.synthetic.main.bottomsheet_profile_delete.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class DeleteBottomSheet: BottomSheetDialogFragment() {
+    private var binding: BottomsheetProfileDeleteBinding? = null
     private val viewModelActivityKoin: ActivityViewModel by sharedViewModel()
     private val viewModelKoin: DeleteViewModel by viewModel()
 
@@ -31,12 +32,20 @@ class DeleteBottomSheet: BottomSheetDialogFragment() {
         return inflater.inflate(R.layout.bottomsheet_profile_delete, container, false)
     }
 
+    override fun onDestroyView() {
+        binding = null
+        super.onDestroyView()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        debsf_deleteButton.attachTextChangeAnimator()
-        debsf_deleteButton.setOnClickListener {
+        val binding = BottomsheetProfileDeleteBinding.bind(view)
+        this.binding = binding
+
+        binding.deleteButton.attachTextChangeAnimator()
+        binding.deleteButton.setOnClickListener {
             viewModelKoin.deleteUser()
         }
-        debsf_cancelButton.setOnClickListener { findNavController().navigateUp() }
+        binding.cancelButton.setOnClickListener { findNavController().navigateUp() }
 
         // Toast üzenet
         viewModelKoin.toastEvent.observeEvent(viewLifecycleOwner) {
@@ -52,8 +61,8 @@ class DeleteBottomSheet: BottomSheetDialogFragment() {
         }
 
         viewModelKoin.operationSuccessful.observeEvent(viewLifecycleOwner) {
-            debsf_deleteButton.isEnabled = false
-            debsf_deleteButton.hideProgress(R.string.done)
+            binding.deleteButton.isEnabled = false
+            binding.deleteButton.hideProgress(R.string.done)
             runDelayed {
                 viewModelActivityKoin.logout()
                 mainActivity?.changeNavGraphToStart()
@@ -62,13 +71,15 @@ class DeleteBottomSheet: BottomSheetDialogFragment() {
     }
 
     private fun showAnimation() {
-        debsf_deleteButton.showProgress {
+        val binding = this.binding ?: return
+        binding.deleteButton.showProgress {
             buttonTextRes = R.string.profile_delete_yes
             progressColor = Color.BLACK
         }
     }
 
     private fun hideAnimation() {
-        if (debsf_deleteButton.isProgressActive()) debsf_deleteButton.hideProgress(R.string.profile_delete_yes)
+        val binding = this.binding ?: return
+        if (binding.deleteButton.isProgressActive()) binding.deleteButton.hideProgress(R.string.profile_delete_yes)
     }
 }

@@ -22,7 +22,6 @@ import com.gkiss01.meetdeb.utils.observeEvent
 import com.gkiss01.meetdeb.utils.runDelayed
 import com.gkiss01.meetdeb.viewmodels.UpdateViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import kotlinx.android.synthetic.main.bottomsheet_profile_email.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -45,8 +44,8 @@ class EmailBottomSheet: BottomSheetDialogFragment() {
 
         binding.user = viewModelKoin.userLocal
 
-        bspe_updateButton.attachTextChangeAnimator()
-        bspe_updateButton.setOnClickListener {
+        binding.updateButton.attachTextChangeAnimator()
+        binding.updateButton.setOnClickListener {
             val isValidEmail = validateEmail()
             val isValidPassword = validatePassword()
 
@@ -71,8 +70,8 @@ class EmailBottomSheet: BottomSheetDialogFragment() {
         }
 
         viewModelKoin.operationSuccessful.observeEvent(viewLifecycleOwner) {
-            bspe_updateButton.isEnabled = false
-            bspe_updateButton.hideProgress(R.string.done)
+            binding.updateButton.isEnabled = false
+            binding.updateButton.hideProgress(R.string.done)
             viewModelActivityKoin.setActiveUser(it)
             viewModelActivityKoin.setUserCredentials(viewModelKoin.userLocal.email, null)
             runDelayed { findNavController().navigateUp() }
@@ -84,15 +83,15 @@ class EmailBottomSheet: BottomSheetDialogFragment() {
 
         return when {
             email.isNullOrEmpty() -> {
-                bspe_newEmail.error = getString(R.string.field_required)
+                binding.newEmailField.error = getString(R.string.field_required)
                 false
             }
             !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
-                bspe_newEmail.error = getString(R.string.invalid_email)
+                binding.newEmailField.error = getString(R.string.invalid_email)
                 false
             }
             else -> {
-                bspe_newEmail.error = null
+                binding.newEmailField.error = null
                 true
             }
         }
@@ -103,28 +102,28 @@ class EmailBottomSheet: BottomSheetDialogFragment() {
 
         return when {
             password.isNullOrEmpty() -> {
-                bspe_oldPassword.error = getString(R.string.field_required)
+                binding.oldPasswordField.error = getString(R.string.field_required)
                 false
             }
             password.length < 8 -> {
-                bspe_oldPassword.error = getString(R.string.min_password_length)
+                binding.oldPasswordField.error = getString(R.string.min_password_length)
                 false
             }
             else -> {
-                bspe_oldPassword.error = null
+                binding.oldPasswordField.error = null
                 true
             }
         }
     }
 
     private fun showAnimation() {
-        bspe_updateButton.showProgress {
+        binding.updateButton.showProgress {
             buttonTextRes = R.string.profile_email_update_waiting
             progressColor = Color.WHITE
         }
     }
 
     private fun hideAnimation() {
-        if (bspe_updateButton.isProgressActive()) bspe_updateButton.hideProgress(R.string.profile_email_update)
+        if (binding.updateButton.isProgressActive()) binding.updateButton.hideProgress(R.string.profile_email_update)
     }
 }

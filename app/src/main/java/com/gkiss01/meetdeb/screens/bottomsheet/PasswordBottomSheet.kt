@@ -21,7 +21,6 @@ import com.gkiss01.meetdeb.utils.observeEvent
 import com.gkiss01.meetdeb.utils.runDelayed
 import com.gkiss01.meetdeb.viewmodels.UpdateViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import kotlinx.android.synthetic.main.bottomsheet_profile_password.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -44,8 +43,8 @@ class PasswordBottomSheet: BottomSheetDialogFragment() {
 
         binding.user = viewModelKoin.userLocal
 
-        bspp_updateButton.attachTextChangeAnimator()
-        bspp_updateButton.setOnClickListener {
+        binding.updateButton.attachTextChangeAnimator()
+        binding.updateButton.setOnClickListener {
             val isValidPasswordNew = validatePasswordNew()
             val isValidPasswordOld = validatePasswordOld()
 
@@ -70,8 +69,8 @@ class PasswordBottomSheet: BottomSheetDialogFragment() {
         }
 
         viewModelKoin.operationSuccessful.observeEvent(viewLifecycleOwner) {
-            bspp_updateButton.isEnabled = false
-            bspp_updateButton.hideProgress(R.string.done)
+            binding.updateButton.isEnabled = false
+            binding.updateButton.hideProgress(R.string.done)
             viewModelActivityKoin.setActiveUser(it)
             viewModelActivityKoin.setUserCredentials(null, viewModelKoin.userLocal.password)
             runDelayed { findNavController().navigateUp() }
@@ -83,15 +82,15 @@ class PasswordBottomSheet: BottomSheetDialogFragment() {
 
         return when {
             password.isNullOrEmpty() -> {
-                bspp_newPassword.error = getString(R.string.field_required)
+                binding.newPasswordField.error = getString(R.string.field_required)
                 false
             }
             password.length < 8 -> {
-                bspp_newPassword.error = getString(R.string.min_password_length)
+                binding.newPasswordField.error = getString(R.string.min_password_length)
                 false
             }
             else -> {
-                bspp_newPassword.error = null
+                binding.newPasswordField.error = null
                 true
             }
         }
@@ -102,28 +101,28 @@ class PasswordBottomSheet: BottomSheetDialogFragment() {
 
         return when {
             password.isNullOrEmpty() -> {
-                bspp_oldPassword.error = getString(R.string.field_required)
+                binding.oldPasswordField.error = getString(R.string.field_required)
                 false
             }
             password.length < 8 -> {
-                bspp_oldPassword.error = getString(R.string.min_password_length)
+                binding.oldPasswordField.error = getString(R.string.min_password_length)
                 false
             }
             else -> {
-                bspp_oldPassword.error = null
+                binding.oldPasswordField.error = null
                 true
             }
         }
     }
 
     private fun showAnimation() {
-        bspp_updateButton.showProgress {
+        binding.updateButton.showProgress {
             buttonTextRes = R.string.profile_email_update_waiting
             progressColor = Color.WHITE
         }
     }
 
     private fun hideAnimation() {
-        if (bspp_updateButton.isProgressActive()) bspp_updateButton.hideProgress(R.string.profile_email_update)
+        if (binding.updateButton.isProgressActive()) binding.updateButton.hideProgress(R.string.profile_email_update)
     }
 }
