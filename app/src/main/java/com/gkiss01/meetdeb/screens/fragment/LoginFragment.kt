@@ -21,7 +21,6 @@ import com.gkiss01.meetdeb.databinding.FragmentLoginBinding
 import com.gkiss01.meetdeb.utils.mainActivity
 import com.gkiss01.meetdeb.utils.observeEvent
 import com.gkiss01.meetdeb.viewmodels.LoginViewModel
-import kotlinx.android.synthetic.main.fragment_login.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -44,10 +43,10 @@ class LoginFragment : Fragment() {
 
         binding.user = viewModelKoin.userLocal
 
-        lf_notRegistered.setOnClickListener { findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToRegisterFragment()) }
+        binding.notRegisteredLabel.setOnClickListener { findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToRegisterFragment()) }
 
-        lf_loginButton.attachTextChangeAnimator()
-        lf_loginButton.setOnClickListener {
+        binding.loginButton.attachTextChangeAnimator()
+        binding.loginButton.setOnClickListener {
             val isValidEmail = validateEmail()
             val isValidPassword = validatePassword()
 
@@ -82,15 +81,15 @@ class LoginFragment : Fragment() {
 
         return when {
             email.isNullOrEmpty() -> {
-                lf_email.error = getString(R.string.field_required)
+                binding.emailField.error = getString(R.string.field_required)
                 false
             }
             !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
-                lf_email.error = getString(R.string.invalid_email)
+                binding.emailField.error = getString(R.string.invalid_email)
                 false
             }
             else -> {
-                lf_email.error = null
+                binding.emailField.error = null
                 true
             }
         }
@@ -101,28 +100,28 @@ class LoginFragment : Fragment() {
 
         return when {
             password.isNullOrEmpty() -> {
-                lf_password.error = getString(R.string.field_required)
+                binding.passwordField.error = getString(R.string.field_required)
                 false
             }
             password.length < 8 -> {
-                lf_password.error = getString(R.string.min_password_length)
+                binding.passwordField.error = getString(R.string.min_password_length)
                 false
             }
             else -> {
-                lf_password.error = null
+                binding.passwordField.error = null
                 true
             }
         }
     }
 
     private fun showAnimation() {
-        lf_loginButton.showProgress {
+        binding.loginButton.showProgress {
             buttonTextRes = R.string.login_waiting
             progressColor = Color.WHITE
         }
     }
 
     private fun hideAnimation() {
-        if (lf_loginButton.isProgressActive()) lf_loginButton.hideProgress(R.string.login_title)
+        if (binding.loginButton.isProgressActive()) binding.loginButton.hideProgress(R.string.login_title)
     }
 }

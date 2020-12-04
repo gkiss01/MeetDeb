@@ -22,7 +22,6 @@ import com.gkiss01.meetdeb.databinding.FragmentRegisterBinding
 import com.gkiss01.meetdeb.utils.observeEvent
 import com.gkiss01.meetdeb.utils.runDelayed
 import com.gkiss01.meetdeb.viewmodels.RegisterViewModel
-import kotlinx.android.synthetic.main.fragment_register.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RegisterFragment : Fragment() {
@@ -43,10 +42,10 @@ class RegisterFragment : Fragment() {
 
         binding.user = viewModelKoin.userLocal
 
-        rf_alreadyRegistered.setOnClickListener { findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToLoginFragment()) }
+        binding.alreadyRegisteredLabel.setOnClickListener { findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToLoginFragment()) }
 
-        rf_registerButton.attachTextChangeAnimator()
-        rf_registerButton.setOnClickListener {
+        binding.registerButton.attachTextChangeAnimator()
+        binding.registerButton.setOnClickListener {
             val isValidEmail = validateEmail()
             val isValidPassword = validatePassword()
             val isValidName = validateName()
@@ -72,8 +71,8 @@ class RegisterFragment : Fragment() {
         }
 
         viewModelKoin.operationSuccessful.observeEvent(viewLifecycleOwner) {
-            rf_registerButton.isEnabled = false
-            rf_registerButton.hideProgress(R.string.done)
+            binding.registerButton.isEnabled = false
+            binding.registerButton.hideProgress(R.string.done)
             runDelayed { findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToLoginFragment()) }
         }
     }
@@ -83,15 +82,15 @@ class RegisterFragment : Fragment() {
 
         return when {
             email.isNullOrEmpty() -> {
-                rf_email.error = getString(R.string.field_required)
+                binding.emailField.error = getString(R.string.field_required)
                 false
             }
             !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
-                rf_email.error = getString(R.string.invalid_email)
+                binding.emailField.error = getString(R.string.invalid_email)
                 false
             }
             else -> {
-                rf_email.error = null
+                binding.emailField.error = null
                 true
             }
         }
@@ -102,15 +101,15 @@ class RegisterFragment : Fragment() {
 
         return when {
             password.isNullOrEmpty() -> {
-                rf_password.error = getString(R.string.field_required)
+                binding.passwordField.error = getString(R.string.field_required)
                 false
             }
             password.length < 8 -> {
-                rf_password.error = getString(R.string.min_password_length)
+                binding.passwordField.error = getString(R.string.min_password_length)
                 false
             }
             else -> {
-                rf_password.error = null
+                binding.passwordField.error = null
                 true
             }
         }
@@ -121,33 +120,33 @@ class RegisterFragment : Fragment() {
 
         return when {
             name.isNullOrEmpty() -> {
-                rf_name.error = getString(R.string.field_required)
+                binding.nameField.error = getString(R.string.field_required)
                 false
             }
             name.length < 4 -> {
-                rf_name.error = getString(R.string.min_name_length)
+                binding.nameField.error = getString(R.string.min_name_length)
                 false
             }
             name.length > 80 -> {
-                rf_name.error = getString(R.string.max_name_length)
+                binding.nameField.error = getString(R.string.max_name_length)
                 false
             }
             else -> {
-                rf_name.error = null
+                binding.nameField.error = null
                 true
             }
         }
     }
 
     private fun showAnimation() {
-        rf_registerButton.showProgress {
+        binding.registerButton.showProgress {
             buttonTextRes = R.string.register_create_waiting
             progressColor = Color.WHITE
         }
     }
 
     private fun hideAnimation() {
-        if (rf_registerButton.isProgressActive()) rf_registerButton.hideProgress(R.string.register_title)
+        if (binding.registerButton.isProgressActive()) binding.registerButton.hideProgress(R.string.register_title)
     }
 }
 

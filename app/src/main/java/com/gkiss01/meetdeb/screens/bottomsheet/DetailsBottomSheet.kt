@@ -8,10 +8,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.fastadapter.format
+import com.gkiss01.meetdeb.databinding.BottomsheetEventDetailsBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import kotlinx.android.synthetic.main.bottomsheet_event_details.*
 
 class DetailsBottomSheet: BottomSheetDialogFragment() {
+    private var binding: BottomsheetEventDetailsBinding? = null
     private val safeArgs: DetailsBottomSheetArgs by navArgs()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -19,15 +20,22 @@ class DetailsBottomSheet: BottomSheetDialogFragment() {
         return inflater.inflate(R.layout.bottomsheet_event_details, container, false)
     }
 
+    override fun onDestroyView() {
+        binding = null
+        super.onDestroyView()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val binding = BottomsheetEventDetailsBinding.bind(view)
+        this.binding = binding
         val event = safeArgs.event
 
-        dfbs_userNameValue.text = event.username
-        dfbs_venueValue.text = event.venue
-        dfbs_dateValue.text = event.date.format()
-        dfbs_descriptionValue.text = event.description
-        dfbs_participants.text = getString(R.string.event_participants, event.participants)
+        binding.usernameLabel.text = event.username
+        binding.venueLabel.text = event.venue
+        binding.dateLabel.text = event.date.format()
+        binding.descriptionLabel.text = event.description
+        binding.participantsLabel.text = getString(R.string.event_participants, event.participants)
 
-        dfbs_participantsCheck.setOnClickListener { findNavController().navigate(DetailsBottomSheetDirections.actionDetailsBottomSheetFragmentToParticipantsDialogFragment(event)) }
+        binding.participantsButton.setOnClickListener { findNavController().navigate(DetailsBottomSheetDirections.actionDetailsBottomSheetFragmentToParticipantsDialogFragment(event)) }
     }
 }
