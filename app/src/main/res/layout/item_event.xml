@@ -9,7 +9,7 @@
     android:layout_marginBottom="25dp">
 
     <TextView
-        android:id="@+id/eli_creatorLabel"
+        android:id="@+id/creatorLabel"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:drawablePadding="5dp"
@@ -18,23 +18,23 @@
         android:textColor="?attr/colorOnPrimary"
         android:textSize="22sp"
         app:drawableStartCompat="@drawable/ic_creator"
-        app:layout_constraintBottom_toBottomOf="@id/eli_moreButton"
-        app:layout_constraintEnd_toStartOf="@id/eli_moreButton"
+        app:layout_constraintBottom_toBottomOf="@id/moreButton"
+        app:layout_constraintEnd_toStartOf="@id/moreButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/eli_moreButton"
+        android:id="@+id/moreButton"
         android:layout_width="40dp"
         android:layout_height="50dp"
         android:contentDescription="@string/event_more_button_desc"
         android:src="@drawable/ic_more"
-        app:layout_constraintBottom_toBottomOf="@id/eli_creatorLabel"
+        app:layout_constraintBottom_toBottomOf="@id/creatorLabel"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/eli_creatorLabel" />
+        app:layout_constraintTop_toTopOf="@id/creatorLabel" />
 
     <ImageView
-        android:id="@+id/eli_eventImage"
+        android:id="@+id/eventImage"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="5dp"
@@ -44,20 +44,20 @@
         android:src="@drawable/placeholder"
         app:layout_constraintDimensionRatio="h,4:3"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/eli_creatorLabel" />
+        app:layout_constraintTop_toBottomOf="@id/creatorLabel" />
 
     <TextView
-        android:id="@+id/eli_eventLabel"
+        android:id="@+id/eventLabel"
         style="@style/WidgetLabelEventName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@id/eli_eventImage"
+        app:layout_constraintBottom_toBottomOf="@id/eventImage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/eli_eventImage" />
+        app:layout_constraintTop_toTopOf="@id/eventImage" />
 
     <Button
-        android:id="@+id/eli_descButton"
+        android:id="@+id/descButton"
         style="@style/WidgetButtonAction"
         android:layout_width="wrap_content"
         android:layout_height="35dp"
@@ -65,35 +65,35 @@
         android:layout_marginEnd="16dp"
         android:text="@string/event_desc_button"
         android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="@id/eli_eventImage"
-        app:layout_constraintTop_toTopOf="@id/eli_eventImage" />
+        app:layout_constraintEnd_toEndOf="@id/eventImage"
+        app:layout_constraintTop_toTopOf="@id/eventImage" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@drawable/event_buttons_background"
         android:padding="10dp"
-        app:layout_constraintTop_toBottomOf="@id/eli_eventImage">
+        app:layout_constraintTop_toBottomOf="@id/eventImage">
 
         <Button
-            android:id="@+id/eli_anotherDateButton"
+            android:id="@+id/anotherDateButton"
             style="@style/WidgetButtonDynamicBackground"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:text="@string/event_date_add"
-            app:layout_constraintEnd_toStartOf="@id/eli_acceptButton"
+            app:layout_constraintEnd_toStartOf="@id/acceptButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/eli_acceptButton"
+            android:id="@+id/acceptButton"
             style="@style/WidgetButtonDynamicBackground"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/eli_anotherDateButton"
+            app:layout_constraintStart_toEndOf="@id/anotherDateButton"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

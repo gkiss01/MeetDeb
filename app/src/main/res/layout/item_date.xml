@@ -13,29 +13,29 @@
     android:padding="7dp">
 
     <TextView
-        android:id="@+id/dli_dateValue"
+        android:id="@+id/dateLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/muli_extrabold"
         android:textColor="?attr/colorOnSurface"
-        app:layout_constraintEnd_toStartOf="@+id/dli_voteButton"
+        app:layout_constraintEnd_toStartOf="@+id/voteButton"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/dli_votes"
+        android:id="@+id/votesLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:textColor="?attr/colorOnSurface"
-        app:layout_constraintEnd_toStartOf="@+id/dli_voteButton"
+        app:layout_constraintEnd_toStartOf="@+id/voteButton"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/dli_dateValue" />
+        app:layout_constraintTop_toBottomOf="@id/dateLabel" />
 
     <RadioButton
-        android:id="@+id/dli_voteButton"
+        android:id="@+id/voteButton"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginStart="10dp"

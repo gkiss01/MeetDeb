@@ -33,8 +33,6 @@ import com.mikepenz.fastadapter.listeners.addClickListener
 import com.mikepenz.fastadapter.ui.items.ProgressItem
 import com.mikepenz.itemanimators.AlphaInAnimator
 import kotlinx.android.synthetic.main.fragment_dates.*
-import kotlinx.android.synthetic.main.item_date.view.*
-import kotlinx.android.synthetic.main.item_date_picker.view.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.threeten.bp.OffsetDateTime
@@ -138,11 +136,11 @@ class DatesDialogFragment : DialogFragment() {
             FastAdapterDiffUtil[itemAdapter] = it
         }
 
-        itemAdapter.fastAdapter?.addClickListener({ vh: DateViewHolder -> vh.itemView.dli_voteButton }) { _, _, _, item ->
+        itemAdapter.fastAdapter?.addClickListener({ vh: DateViewHolder -> vh.binding.voteButton }) { _, _, _, item ->
             if (!item.accepted) viewModelKoin.changeVote(item.id)
         }
 
-        footerAdapter.fastAdapter?.addClickListener({ vh: DatePickerViewHolder -> vh.itemView.dlp_createButton }) { _, position, _, item ->
+        footerAdapter.fastAdapter?.addClickListener({ vh: DatePickerViewHolder -> vh.binding.createButton }) { _, position, _, item ->
             val itemView = getDatePickerViewHolderByPosition(position)
 
             if (item.offsetDateTime.isBefore(OffsetDateTime.now()))

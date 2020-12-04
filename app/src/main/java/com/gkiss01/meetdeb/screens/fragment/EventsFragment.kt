@@ -27,7 +27,6 @@ import com.mikepenz.fastadapter.scroll.EndlessRecyclerOnScrollListener
 import com.mikepenz.fastadapter.ui.items.ProgressItem
 import com.mikepenz.itemanimators.AlphaInAnimator
 import kotlinx.android.synthetic.main.fragment_events.*
-import kotlinx.android.synthetic.main.item_event.view.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class EventsFragment : Fragment(R.layout.fragment_events) {
@@ -71,13 +70,13 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             addOnScrollListener(endlessScrollListener)
         }
 
-        itemAdapter.fastAdapter?.addClickListener( {null}, { vh: EventViewHolder -> listOf<View>(vh.itemView.eli_descButton,
-            vh.itemView.eli_acceptButton, vh.itemView.eli_anotherDateButton, vh.itemView.eli_moreButton) }) { v, _, _, item ->
+        itemAdapter.fastAdapter?.addClickListener( {null}, { vh: EventViewHolder -> listOf(vh.binding.descButton,
+            vh.binding.acceptButton, vh.binding.anotherDateButton, vh.binding.moreButton) }) { v, _, _, item ->
             when (v.id) {
-                R.id.eli_descButton -> findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToDetailsBottomSheetFragment(item))
-                R.id.eli_acceptButton -> viewModelKoin.modifyParticipation(item.id)
-                R.id.eli_anotherDateButton -> findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToDatesDialogFragment(item))
-                R.id.eli_moreButton -> createMoreActionMenu(v, item)
+                R.id.descButton -> findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToDetailsBottomSheetFragment(item))
+                R.id.acceptButton -> viewModelKoin.modifyParticipation(item.id)
+                R.id.anotherDateButton -> findNavController().navigate(EventsFragmentDirections.actionEventsFragmentToDatesDialogFragment(item))
+                R.id.moreButton -> createMoreActionMenu(v, item)
             }
         }
 

@@ -8,14 +8,14 @@
     android:padding="13dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/dlp_headerLayout"
+        android:id="@+id/headerLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/dlp_plusSign"
+            android:id="@+id/plusSign"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:contentDescription="@string/date_add_button_desc"
@@ -30,23 +30,23 @@
             android:text="@string/date_add_button"
             android:textColor="?attr/colorOnPrimary"
             android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="@id/dlp_plusSign"
-            app:layout_constraintStart_toEndOf="@id/dlp_plusSign"
-            app:layout_constraintTop_toTopOf="@id/dlp_plusSign" />
+            app:layout_constraintBottom_toBottomOf="@id/plusSign"
+            app:layout_constraintStart_toEndOf="@id/plusSign"
+            app:layout_constraintTop_toTopOf="@id/plusSign" />
 
         <ImageView
-            android:id="@+id/dlp_downArrow"
+            android:id="@+id/downArrow"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:contentDescription="@string/date_add_button_arrow_desc"
             android:src="@drawable/ic_arrow_down"
-            app:layout_constraintBottom_toBottomOf="@id/dlp_plusSign"
+            app:layout_constraintBottom_toBottomOf="@id/plusSign"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/dlp_plusSign" />
+            app:layout_constraintTop_toTopOf="@id/plusSign" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
-        android:id="@+id/dlp_subLayout"
+        android:id="@+id/subLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -54,10 +54,10 @@
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/dlp_headerLayout">
+        app:layout_constraintTop_toBottomOf="@id/headerLayout">
 
         <TextView
-            android:id="@+id/dlp_dateTitle"
+            android:id="@+id/dateLabel"
             style="@style/WidgetLabelSelectedDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -71,7 +71,7 @@
             android:padding="2dp">
 
             <Button
-                android:id="@+id/dlp_dateButton"
+                android:id="@+id/dateButton"
                 style="@style/WidgetButtonPicker"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
@@ -80,7 +80,7 @@
                 android:text="@string/event_date_set" />
 
             <Button
-                android:id="@+id/dlp_timeButton"
+                android:id="@+id/timeButton"
                 style="@style/WidgetButtonPicker"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
@@ -90,7 +90,7 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/dlp_createButton"
+            android:id="@+id/createButton"
             style="@style/WidgetButtonAction"
             android:layout_width="wrap_content"
             android:layout_height="35dp"

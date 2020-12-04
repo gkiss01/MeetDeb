@@ -7,41 +7,42 @@ import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.fastadapter.*
+import com.gkiss01.meetdeb.databinding.ItemDateBinding
+import com.gkiss01.meetdeb.databinding.ItemDatePickerBinding
+import com.gkiss01.meetdeb.databinding.ItemEventBinding
+import com.gkiss01.meetdeb.databinding.ItemParticipantBinding
 import com.gkiss01.meetdeb.network.BASE_URL
 import com.mikepenz.fastadapter.FastAdapter
-import kotlinx.android.synthetic.main.item_date.view.*
-import kotlinx.android.synthetic.main.item_date_picker.view.*
-import kotlinx.android.synthetic.main.item_event.view.*
-import kotlinx.android.synthetic.main.item_participant.view.*
 import org.threeten.bp.OffsetDateTime
 
 class DatePickerViewHolder(private val view: View): FastAdapter.ViewHolder<DatePickerItem>(view) {
+    val binding = ItemDatePickerBinding.bind(view)
     private var expanded = false
 
     override fun bindView(item: DatePickerItem, payloads: List<Any>) {
         expanded = false
-        view.dlp_subLayout.visibility = View.GONE
+        binding.subLayout.visibility = View.GONE
         updateSelectedDate(item.offsetDateTime)
     }
 
     override fun unbindView(item: DatePickerItem) {
         expanded = false
-        view.dlp_subLayout.visibility = View.GONE
-        view.dlp_dateTitle.text = null
+        binding.subLayout.visibility = View.GONE
+        binding.dateLabel.text = null
     }
 
     fun updateSelectedDate(offsetDateTime: OffsetDateTime) {
-        view.dlp_dateTitle.text = offsetDateTime.format()
+        binding.dateLabel.text = offsetDateTime.format()
     }
 
     fun setError(error: String?) {
-        view.dlp_dateTitle.error = error
+        binding.dateLabel.error = error
     }
 
     fun closeOrExpand() {
         expanded = !expanded
-        view.dlp_subLayout.visibility = if (expanded) View.VISIBLE else View.GONE
-        view.dlp_downArrow.animate().setDuration(200).rotation(if (expanded) 180F else 0F)
+        binding.subLayout.visibility = if (expanded) View.VISIBLE else View.GONE
+        binding.downArrow.animate().setDuration(200).rotation(if (expanded) 180F else 0F)
     }
 
     fun manageAnimation(show: Boolean) {
@@ -49,14 +50,14 @@ class DatePickerViewHolder(private val view: View): FastAdapter.ViewHolder<DateP
     }
 
     private fun showAnimation() {
-        view.dlp_createButton.showProgress {
+        binding.createButton.showProgress {
             buttonTextRes = R.string.date_create_waiting
             progressColor = Color.WHITE
         }
     }
 
     private fun hideAnimation() {
-        view.dlp_createButton.hideProgress(R.string.date_create_button)
+        binding.createButton.hideProgress(R.string.date_create_button)
     }
 
     fun close() {
@@ -71,79 +72,83 @@ class DatePickerViewHolder(private val view: View): FastAdapter.ViewHolder<DateP
 }
 
 class ParticipantViewHolder(private val view: View): FastAdapter.ViewHolder<Participant>(view) {
+    private val binding = ItemParticipantBinding.bind(view)
+
     override fun bindView(item: Participant, payloads: List<Any>) {
-        view.pli_name.text = item.username
+        binding.nameLabel.text = item.username
     }
 
     override fun unbindView(item: Participant) {
-        view.pli_name.text = null
+        binding.nameLabel.text = null
     }
 }
 
 class DateViewHolder(private val view: View): FastAdapter.ViewHolder<Date>(view) {
+    val binding = ItemDateBinding.bind(view)
     lateinit var date: Date
 
     override fun bindView(item: Date, payloads: List<Any>) {
         date = item
-        view.dli_dateValue.text = item.date.format()
-        view.dli_votes.text = view.context.getString(R.string.event_votes, item.votes)
-        view.dli_voteButton.isChecked = item.accepted
+        binding.dateLabel.text = item.date.format()
+        binding.votesLabel.text = view.context.getString(R.string.event_votes, item.votes)
+        binding.voteButton.isChecked = item.accepted
 
-        view.dli_voteButton.hideProgress()
+        binding.voteButton.hideProgress()
     }
 
     override fun unbindView(item: Date) {
-        view.dli_dateValue.text = null
-        view.dli_votes.text = null
-        view.dli_voteButton.isChecked = false
+        binding.dateLabel.text = null
+        binding.votesLabel.text = null
+        binding.voteButton.isChecked = false
     }
 
     fun showAnimation() {
-        view.dli_voteButton.showProgress {
+        binding.voteButton.showProgress {
             progressColor = Color.parseColor("#485688")
         }
     }
 
     fun setChecked() {
-        view.dli_voteButton.isChecked = true
+        binding.voteButton.isChecked = true
     }
 }
 
 class EventViewHolder(private val view: View, private val isAdmin: Boolean): FastAdapter.ViewHolder<Event>(view) {
+    val binding = ItemEventBinding.bind(view)
     lateinit var event: Event
 
     override fun bindView(item: Event, payloads: List<Any>) {
         event = item
-        view.eli_eventLabel.text = item.name
-        view.eli_creatorLabel.text = item.username
+        binding.eventLabel.text = item.name
+        binding.creatorLabel.text = item.username
 
         if (isAdmin)
-            view.eli_creatorLabel.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_creator, 0, if (item.reported) R.drawable.ic_report else 0, 0)
+            binding.creatorLabel.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_creator, 0, if (item.reported) R.drawable.ic_report else 0, 0)
 
         if (item.accepted) {
-            view.eli_acceptButton.hideProgress(R.string.event_accepted)
-            view.eli_acceptButton.setBackgroundResource(R.drawable.event_button_accepted_background)
+            binding.acceptButton.hideProgress(R.string.event_accepted)
+            binding.acceptButton.setBackgroundResource(R.drawable.event_button_accepted_background)
         }
         else {
-            view.eli_acceptButton.hideProgress(R.string.event_not_accepted)
-            view.eli_acceptButton.setBackgroundResource(0)
+            binding.acceptButton.hideProgress(R.string.event_not_accepted)
+            binding.acceptButton.setBackgroundResource(0)
         }
 
-        view.eli_anotherDateButton.hideProgress(R.string.event_date_add)
-        view.eli_anotherDateButton.setBackgroundResource(if (item.voted) R.drawable.event_button_accepted_background else 0)
+        binding.anotherDateButton.hideProgress(R.string.event_date_add)
+        binding.anotherDateButton.setBackgroundResource(if (item.voted) R.drawable.event_button_accepted_background else 0)
 
-        view.eli_eventImage.load("$BASE_URL/images/${event.id}") {
+        binding.eventImage.load("$BASE_URL/images/${event.id}") {
             placeholder(R.drawable.placeholder)
             error(R.drawable.placeholder)
         }
     }
 
     override fun unbindView(item: Event) {
-        view.eli_eventLabel.text = null
-        view.eli_acceptButton.hideProgress(R.string.event_not_accepted)
-        view.eli_acceptButton.setBackgroundResource(0)
-        view.eli_anotherDateButton.hideProgress(R.string.event_date_add)
-        view.eli_anotherDateButton.setBackgroundResource(0)
+        binding.eventLabel.text = null
+        binding.acceptButton.hideProgress(R.string.event_not_accepted)
+        binding.acceptButton.setBackgroundResource(0)
+        binding.anotherDateButton.hideProgress(R.string.event_date_add)
+        binding.anotherDateButton.setBackgroundResource(0)
     }
 
     fun manageAnimation(type: Event.UpdatingType) = when(type) {
@@ -152,14 +157,14 @@ class EventViewHolder(private val view: View, private val isAdmin: Boolean): Fas
     }
 
     private fun showVoteAnimation() {
-        view.eli_anotherDateButton.showProgress {
+        binding.anotherDateButton.showProgress {
             buttonTextRes = R.string.event_accept_waiting
             progressColor = Color.parseColor("#485688")
         }
     }
 
     private fun showJoinAnimation() {
-        view.eli_acceptButton.showProgress {
+        binding.acceptButton.showProgress {
             buttonTextRes = R.string.event_accept_waiting
             progressColor = Color.parseColor("#485688")
         }

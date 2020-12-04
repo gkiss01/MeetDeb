@@ -8,7 +8,6 @@ import android.view.View
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.adapter.DatePickerViewHolder
 import com.mikepenz.fastadapter.items.AbstractItem
-import kotlinx.android.synthetic.main.item_date_picker.view.*
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.format.DateTimeFormatter
 
@@ -24,9 +23,9 @@ data class DatePickerItem(var offsetDateTime: OffsetDateTime): AbstractItem<Date
         super.bindView(holder, payloads)
         val context = holder.itemView.context
 
-        holder.itemView.dlp_headerLayout.setOnClickListener { holder.closeOrExpand() }
+        holder.binding.headerLayout.setOnClickListener { holder.closeOrExpand() }
 
-        holder.itemView.dlp_dateButton.setOnClickListener {
+        holder.binding.dateButton.setOnClickListener {
             val datePickerDialog = DatePickerDialog(context, { _, year, monthValue, dayOfMonth ->
                 offsetDateTime = offsetDateTime.update(year, monthValue + 1, dayOfMonth)
                 holder.updateSelectedDate(offsetDateTime)
@@ -34,7 +33,7 @@ data class DatePickerItem(var offsetDateTime: OffsetDateTime): AbstractItem<Date
             datePickerDialog.show()
         }
 
-        holder.itemView.dlp_timeButton.setOnClickListener {
+        holder.binding.timeButton.setOnClickListener {
             val timePickerDialog = TimePickerDialog(context, { _, hourOfDay, minute ->
                 offsetDateTime = offsetDateTime.update(hourOfDay, minute)
                 holder.updateSelectedDate(offsetDateTime)
