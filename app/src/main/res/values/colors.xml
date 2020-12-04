@@ -16,4 +16,8 @@
     <color name="siroccoGray">#73808080</color>
     <color name="boulderGray">#757575</color>
     <color name="blackGray">#B2000000</color>
+
+    <!-- Gliger -->
+    <color name="toolbar_bg">#37474F</color>
+    <color name="background">#37474F</color>
 </resources>

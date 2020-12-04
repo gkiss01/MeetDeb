@@ -128,4 +128,11 @@
     <string name="timeout_error">Időtúllépés!</string>
     <string name="connect_error">Csatlakozási hiba!</string>
     <string name="unknown_error">Valami hiba történt!</string>
+
+    <!-- Gliger -->
+    <string name="over_limit_msg">Csak egy képet választhatsz!</string>
+    <string name="capture_new_image">Új kép készítése</string>
+    <string name="change_album_text">Más album választása</string>
+    <string name="permission_storage_never_ask">A kép kiválasztást engedélyezd a beállításokban!</string>
+    <string name="all_images">Összes kép</string>
 </resources>

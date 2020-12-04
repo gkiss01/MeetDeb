@@ -36,10 +36,8 @@ import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import com.opensooq.supernova.gligar.GligarPicker
 import com.squareup.picasso.Picasso
-import com.zhihu.matisse.Matisse
-import com.zhihu.matisse.MimeType
-import com.zhihu.matisse.engine.impl.GlideEngine
 import kotlinx.android.synthetic.main.fragment_event_create.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.threeten.bp.OffsetDateTime
@@ -143,7 +141,10 @@ class EventCreateFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_PICK_IMAGE && resultCode == RESULT_OK) {
-            viewModelKoin.pickedImageUri.value = Matisse.obtainPathResult(data)[0]
+            val imagesList = data?.extras?.getStringArray(GligarPicker.IMAGES_RESULT)
+            if (!imagesList.isNullOrEmpty()) {
+                viewModelKoin.pickedImageUri.value = imagesList.first()
+            }
         }
     }
 
@@ -164,15 +165,7 @@ class EventCreateFragment : Fragment() {
     }
 
     private fun showImagePicker() {
-        Matisse.from(this)
-            .choose(MimeType.ofImage())
-            .theme(R.style.Matisse_Dracula)
-            .countable(true)
-            .maxSelectable(1)
-            .gridExpectedSize(resources.getDimensionPixelSize(R.dimen.grid_expected_size))
-            .imageEngine(GlideEngine())
-            .autoHideToolbarOnSingleTap(true)
-            .forResult(REQUEST_CODE_PICK_IMAGE)
+        GligarPicker().requestCode(REQUEST_CODE_PICK_IMAGE).withFragment(this).limit(1).show()
     }
 
     private fun validateName(): Boolean {
