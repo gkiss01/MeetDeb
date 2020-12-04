@@ -134,9 +134,9 @@ class DatesDialogFragment : DialogFragment() {
         }
 
         // Időpont lista újratöltése
-        viewModelKoin.dates.observe(viewLifecycleOwner, {
+        viewModelKoin.dates.observe(viewLifecycleOwner) {
             FastAdapterDiffUtil[itemAdapter] = it
-        })
+        }
 
         itemAdapter.fastAdapter?.addClickListener({ vh: DateViewHolder -> vh.itemView.dli_voteButton }) { _, _, _, item ->
             if (!item.accepted) viewModelKoin.changeVote(item.id)

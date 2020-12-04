@@ -50,12 +50,12 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewModelKoin.getEventsSummary()
-        viewModelActivityKoin.activeUser.observe(viewLifecycleOwner, {
+        viewModelActivityKoin.activeUser.observe(viewLifecycleOwner) {
             when (it.status) {
                 Status.SUCCESS -> it.data?.let { user -> bindUser(user) }
                 else -> {}
             }
-        })
+        }
 
         // Toast üzenet
         viewModelKoin.toastEvent.observeEvent(viewLifecycleOwner) {

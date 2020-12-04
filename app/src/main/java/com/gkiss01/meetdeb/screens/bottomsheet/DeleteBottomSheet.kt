@@ -2,7 +2,6 @@ package com.gkiss01.meetdeb.screens.bottomsheet
 
 import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +15,7 @@ import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.utils.mainActivity
 import com.gkiss01.meetdeb.utils.observeEvent
+import com.gkiss01.meetdeb.utils.runDelayed
 import com.gkiss01.meetdeb.viewmodels.DeleteViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.bottomsheet_profile_delete.*
@@ -54,10 +54,10 @@ class DeleteBottomSheet: BottomSheetDialogFragment() {
         viewModelKoin.operationSuccessful.observeEvent(viewLifecycleOwner) {
             debsf_deleteButton.isEnabled = false
             debsf_deleteButton.hideProgress(R.string.done)
-            Handler().postDelayed({
+            runDelayed {
                 viewModelActivityKoin.logout()
                 mainActivity?.changeNavGraphToStart()
-            }, 500)
+            }
         }
     }
 

@@ -2,7 +2,6 @@ package com.gkiss01.meetdeb.screens.bottomsheet
 
 import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
@@ -20,6 +19,7 @@ import com.gkiss01.meetdeb.data.request.UserRequest
 import com.gkiss01.meetdeb.databinding.BottomsheetProfileEmailBinding
 import com.gkiss01.meetdeb.screens.fragment.hideKeyboard
 import com.gkiss01.meetdeb.utils.observeEvent
+import com.gkiss01.meetdeb.utils.runDelayed
 import com.gkiss01.meetdeb.viewmodels.UpdateViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.bottomsheet_profile_email.*
@@ -75,7 +75,7 @@ class EmailBottomSheet: BottomSheetDialogFragment() {
             bspe_updateButton.hideProgress(R.string.done)
             viewModelActivityKoin.setActiveUser(it)
             viewModelActivityKoin.setUserCredentials(viewModelKoin.userLocal.email, null)
-            Handler().postDelayed({ findNavController().navigateUp() }, 500)
+            runDelayed { findNavController().navigateUp() }
         }
     }
 

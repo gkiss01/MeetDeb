@@ -3,7 +3,6 @@ package com.gkiss01.meetdeb.screens.fragment
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +20,7 @@ import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.request.UserRequest
 import com.gkiss01.meetdeb.databinding.FragmentRegisterBinding
 import com.gkiss01.meetdeb.utils.observeEvent
+import com.gkiss01.meetdeb.utils.runDelayed
 import com.gkiss01.meetdeb.viewmodels.RegisterViewModel
 import kotlinx.android.synthetic.main.fragment_register.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -74,7 +74,7 @@ class RegisterFragment : Fragment() {
         viewModelKoin.operationSuccessful.observeEvent(viewLifecycleOwner) {
             rf_registerButton.isEnabled = false
             rf_registerButton.hideProgress(R.string.done)
-            Handler().postDelayed({ findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToLoginFragment()) }, 500)
+            runDelayed { findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToLoginFragment()) }
         }
     }
 

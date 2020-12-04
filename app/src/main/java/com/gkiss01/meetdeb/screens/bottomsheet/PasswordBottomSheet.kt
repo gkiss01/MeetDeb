@@ -2,7 +2,6 @@ package com.gkiss01.meetdeb.screens.bottomsheet
 
 import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +18,7 @@ import com.gkiss01.meetdeb.data.request.UserRequest
 import com.gkiss01.meetdeb.databinding.BottomsheetProfilePasswordBinding
 import com.gkiss01.meetdeb.screens.fragment.hideKeyboard
 import com.gkiss01.meetdeb.utils.observeEvent
+import com.gkiss01.meetdeb.utils.runDelayed
 import com.gkiss01.meetdeb.viewmodels.UpdateViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.bottomsheet_profile_password.*
@@ -74,7 +74,7 @@ class PasswordBottomSheet: BottomSheetDialogFragment() {
             bspp_updateButton.hideProgress(R.string.done)
             viewModelActivityKoin.setActiveUser(it)
             viewModelActivityKoin.setUserCredentials(null, viewModelKoin.userLocal.password)
-            Handler().postDelayed({ findNavController().navigateUp() }, 500)
+            runDelayed { findNavController().navigateUp() }
         }
     }
 

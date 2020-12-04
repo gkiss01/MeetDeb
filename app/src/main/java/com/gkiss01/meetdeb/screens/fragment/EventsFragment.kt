@@ -127,9 +127,9 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         }
 
         // Esemény lista újratöltése
-        viewModelKoin.events.observe(viewLifecycleOwner, {
+        viewModelKoin.events.observe(viewLifecycleOwner) {
             FastAdapterDiffUtil[itemAdapter] = it
-        })
+        }
 
         // PullToRefresh
         ef_swipeRefreshLayout.setOnRefreshListener {

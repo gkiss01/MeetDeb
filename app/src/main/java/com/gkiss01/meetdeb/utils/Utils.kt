@@ -8,9 +8,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.data.isAdmin
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 val Fragment.mainActivity: MainActivity?
     get() = activity as? MainActivity
@@ -39,11 +42,11 @@ class VoidEvent {
 }
 
 fun <T> LiveData<out SingleEvent<T>>.observeEvent(owner: LifecycleOwner, onEventUnhandled: (T) -> Unit) {
-    observe(owner, { it?.getContentIfNotHandled()?.let(onEventUnhandled) })
+    observe(owner) { it?.getContentIfNotHandled()?.let(onEventUnhandled) }
 }
 
 fun LiveData<out VoidEvent>.observeEvent(owner: LifecycleOwner, onEventUnhandled: () -> Unit) {
-    observe(owner, { if (!it.hasBeenHandled()) onEventUnhandled() })
+    observe(owner) { if (!it.hasBeenHandled()) onEventUnhandled() }
 }
 
 // NavBackStackEntry
@@ -88,6 +91,14 @@ fun Context.getCurrentCredential(type: CredentialType): String {
 
 enum class CredentialType {
     EMAIL, PASSWORD
+}
+
+// Időzítés
+fun Fragment.runDelayed(delay: Long = 500L, actions: () -> Unit) {
+    lifecycleScope.launch {
+        delay(delay)
+        actions()
+    }
 }
 
 fun isActiveUserAdmin() = MainActivity.instance.getActiveUser()!!.isAdmin()

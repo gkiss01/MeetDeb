@@ -9,7 +9,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,6 +29,7 @@ import com.gkiss01.meetdeb.data.fastadapter.update
 import com.gkiss01.meetdeb.databinding.FragmentEventCreateBinding
 import com.gkiss01.meetdeb.network.BASE_URL
 import com.gkiss01.meetdeb.utils.observeEvent
+import com.gkiss01.meetdeb.utils.runDelayed
 import com.gkiss01.meetdeb.viewmodels.EventCreateViewModel
 import com.gkiss01.meetdeb.viewmodels.ScreenType
 import com.karumi.dexter.Dexter
@@ -127,7 +127,7 @@ class EventCreateFragment : Fragment() {
         viewModelKoin.operationSuccessful.observeEvent(viewLifecycleOwner) {
             cef_createButton.isEnabled = false
             cef_createButton.hideProgress(R.string.done)
-            Handler().postDelayed({ findNavController().navigateUp() }, 500)
+            runDelayed { findNavController().navigateUp() }
         }
 
         viewModelKoin.pickedImageUri.observe(viewLifecycleOwner) {

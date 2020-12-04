@@ -69,9 +69,9 @@ class ParticipantsDialogFragment : DialogFragment() {
         }
 
         // Résztvevők lista újratöltése
-        viewModelKoin.participants.observe(viewLifecycleOwner, {
+        viewModelKoin.participants.observe(viewLifecycleOwner) {
             FastAdapterDiffUtil[itemAdapter] = it
-        })
+        }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
