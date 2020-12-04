@@ -5,14 +5,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import org.koin.android.ext.koin.androidApplication
-import org.koin.dsl.module
 import org.threeten.bp.OffsetDateTime
-
-val restModule = module {
-    factory { ResourceHandler(get(), androidApplication()) }
-    factory { RestClient(get(), get()) }
-}
 
 class RestClient(private val dataProvider: DataProvider, private val resourceHandler: ResourceHandler, private val dispatcher: CoroutineDispatcher = Dispatchers.IO) {
     suspend fun createUser(user: RequestBody) = handleRequest(dispatcher) { dataProvider.createUser(user) }

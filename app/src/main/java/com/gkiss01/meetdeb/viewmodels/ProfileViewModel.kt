@@ -26,7 +26,7 @@ class ProfileViewModel(private val restClient: RestClient): ViewModel() {
 
     fun getEventsSummary() {
         if (_currentlyLoading.value == true) return
-        Log.d("MeetDebLog_ProfileViewModel", "Loading events summary ...")
+        Log.d("Logger_ProfileVM", "Loading events summary ...")
         _currentlyLoading.postValue(true)
         viewModelScope.launch {
             restClient.getEventsSummary().let {

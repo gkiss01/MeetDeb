@@ -47,11 +47,9 @@ class EventCreateFragment : Fragment() {
     private val viewModelKoin: EventCreateViewModel by viewModel()
     private val safeArgs: EventCreateFragmentArgs by navArgs()
 
-    private val REQUEST_CODE_PICK_IMAGE = 1
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?): View? {
+        savedInstanceState: Bundle?): View {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_event_create, container, false)
         return binding.root
@@ -233,5 +231,9 @@ class EventCreateFragment : Fragment() {
 
     private fun hideAnimation() {
         cef_createButton.hideProgress(if (viewModelKoin.type == ScreenType.ADD) R.string.event_create_button else R.string.event_more_update)
+    }
+
+    companion object {
+        private const val REQUEST_CODE_PICK_IMAGE = 1
     }
 }

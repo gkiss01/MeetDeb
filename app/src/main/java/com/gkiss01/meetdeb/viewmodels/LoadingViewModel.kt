@@ -32,7 +32,7 @@ class LoadingViewModel(private val restClient: RestClient): ViewModel() {
 
     fun checkUser() {
         if (_currentlyLoggingIn.value == true) return
-        Log.d("MeetDebLog_LoadingViewModel", "Checking user ...")
+        Log.d("Logger_LoadingVM", "Checking user ...")
         _currentlyLoggingIn.postValue(true)
         viewModelScope.launch {
             restClient.checkUser().let {

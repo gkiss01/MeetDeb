@@ -35,7 +35,7 @@ class LoginViewModel(private val restClient: RestClient, private val application
 
     fun loginUser() {
         if (_currentlyLoggingIn.value == true) return
-        Log.d("MeetDebLog_LoginViewModel", "Logging in ...")
+        Log.d("Logger_LoginVM", "Logging in ...")
         userLocal.email?.let { email ->
             userLocal.password?.let { password ->
                 application.setAuthToken(Credentials.basic(email, password))

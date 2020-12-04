@@ -69,7 +69,7 @@ class EventCreateViewModel(private val restClient: RestClient, private val moshi
 
     private fun createEvent(event: RequestBody, image: MultipartBody.Part?) {
         if (_itemCurrentlyAdding.value == true) return
-        Log.d("MeetDebLog_EventCreateViewModel", "Creating event ...")
+        Log.d("Logger_EventCreateVM", "Creating event ...")
         _itemCurrentlyAdding.postValue(true)
         viewModelScope.launch {
             restClient.createEvent(event, image).let {
@@ -85,7 +85,7 @@ class EventCreateViewModel(private val restClient: RestClient, private val moshi
 
     private fun updateEvent(event: RequestBody) {
         if (_itemCurrentlyAdding.value == true) return
-        Log.d("MeetDebLog_EventCreateViewModel", "Updating event ...")
+        Log.d("Logger_EventCreateVM", "Updating event ...")
         _itemCurrentlyAdding.postValue(true)
         viewModelScope.launch {
             restClient.updateEvent(event).let {

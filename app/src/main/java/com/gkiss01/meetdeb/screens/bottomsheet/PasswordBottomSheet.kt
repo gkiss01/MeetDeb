@@ -32,7 +32,7 @@ class PasswordBottomSheet: BottomSheetDialogFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?): View? {
+        savedInstanceState: Bundle?): View {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.bottomsheet_profile_password, container, false)
         return binding.root

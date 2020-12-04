@@ -30,7 +30,7 @@ class ParticipantsViewModel(private val restClient: RestClient) : ViewModel() {
 
     fun getParticipants() {
         if (_headerCurrentlyNeeded.value == true) return
-        Log.d("MeetDebLog_ParticipantsViewModel", "Participants are loading with event ID ${event.id} ...")
+        Log.d("Logger_ParticipantsVM", "Participants are loading with event ID ${event.id} ...")
         _headerCurrentlyNeeded.postValue(true)
         viewModelScope.launch {
             restClient.getParticipants(event.id).let {

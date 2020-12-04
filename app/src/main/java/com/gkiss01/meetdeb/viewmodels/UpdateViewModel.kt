@@ -39,7 +39,7 @@ class UpdateViewModel(private val restClient: RestClient, private val moshi: Mos
 
     fun updateUser() {
         if (_currentlyUpdating.value == true) return
-        Log.d("MeetDebLog_UpdateViewModel", "Updating user ...")
+        Log.d("Logger_UpdateVM", "Updating user ...")
         val email = application.getCurrentCredential(CredentialType.EMAIL)
         val password = userLocal.name ?: ""
         val basic = Credentials.basic(email, password)

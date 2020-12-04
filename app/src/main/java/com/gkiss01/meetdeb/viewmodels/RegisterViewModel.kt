@@ -19,7 +19,7 @@ import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-val startModule = module {
+val profileModule = module {
     viewModel { RegisterViewModel(get(), get()) }
     viewModel { LoginViewModel(get(), androidApplication()) }
     viewModel { LoadingViewModel(get()) }
@@ -46,7 +46,7 @@ class RegisterViewModel(private val restClient: RestClient, private val moshi: M
 
     fun createUser() {
         if (_currentlyRegistering.value == true) return
-        Log.d("MeetDebLog_RegisterViewModel", "Creating user ...")
+        Log.d("Logger_RegisterVM", "Creating user ...")
         val json = moshi.adapter(UserRequest::class.java).toJson(userLocal)
         val user = json.toRequestBody("application/json".toMediaTypeOrNull())
         _currentlyRegistering.postValue(true)
