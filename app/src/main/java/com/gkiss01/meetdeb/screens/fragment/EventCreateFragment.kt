@@ -38,7 +38,6 @@ import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.opensooq.supernova.gligar.GligarPicker
-import kotlinx.android.synthetic.main.fragment_event_create.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.threeten.bp.OffsetDateTime
 
@@ -67,38 +66,38 @@ class EventCreateFragment : Fragment() {
         }
 
         binding.event = viewModelKoin.eventLocal
-        cef_imagePreview.load("$BASE_URL/images/${viewModelKoin.eventLocal.id}") {
+        binding.previewImage.load("$BASE_URL/images/${viewModelKoin.eventLocal.id}") {
             placeholder(R.drawable.placeholder)
             error(R.drawable.placeholder)
         }
 
         val onDateListener = DatePickerDialog.OnDateSetListener { _, year, monthValue, dayOfMonth ->
             viewModelKoin.eventLocal.date = viewModelKoin.eventLocal.date.update(year, monthValue + 1, dayOfMonth)
-            cef_dateTitle.text = viewModelKoin.eventLocal.date.format()
+            binding.dateLabel.text = viewModelKoin.eventLocal.date.format()
         }
 
         val onTimeListener = TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
             viewModelKoin.eventLocal.date = viewModelKoin.eventLocal.date.update(hourOfDay, minute)
-            cef_dateTitle.text = viewModelKoin.eventLocal.date.format()
+            binding.dateLabel.text = viewModelKoin.eventLocal.date.format()
         }
 
-        cef_dateButton.setOnClickListener {
+        binding.dateButton.setOnClickListener {
             val datePickerDialog = DatePickerDialog(requireContext(), onDateListener, viewModelKoin.eventLocal.date.year, viewModelKoin.eventLocal.date.monthValue - 1, viewModelKoin.eventLocal.date.dayOfMonth)
             datePickerDialog.show()
         }
 
-        cef_timeButton.setOnClickListener {
+        binding.timeButton.setOnClickListener {
             val timePickerDialog = TimePickerDialog(context, onTimeListener, viewModelKoin.eventLocal.date.hour, viewModelKoin.eventLocal.date.minute, requireContext().isTimeIn24HourFormat())
             timePickerDialog.show()
         }
 
-        cef_imageButton.setOnClickListener {
+        binding.imageButton.setOnClickListener {
             if (viewModelKoin.type == ScreenType.ADD) requestStoragePermissions()
             else Toast.makeText(context, getString(R.string.cannot_update_image), Toast.LENGTH_LONG).show()
         }
 
-        cef_createButton.attachTextChangeAnimator()
-        cef_createButton.setOnClickListener {
+        binding.createButton.attachTextChangeAnimator()
+        binding.createButton.setOnClickListener {
             val isValidName = validateName()
             val isValidDesc = validateDescription()
             val isValidVenue = validateVenue()
@@ -125,14 +124,14 @@ class EventCreateFragment : Fragment() {
         }
 
         viewModelKoin.operationSuccessful.observeEvent(viewLifecycleOwner) {
-            cef_createButton.isEnabled = false
-            cef_createButton.hideProgress(R.string.done)
+            binding.createButton.isEnabled = false
+            binding.createButton.hideProgress(R.string.done)
             runDelayed { findNavController().navigateUp() }
         }
 
         viewModelKoin.pickedImageUri.observe(viewLifecycleOwner) {
             val bmImg: Bitmap = BitmapFactory.decodeFile(it)
-            cef_imagePreview.setImageBitmap(bmImg)
+            binding.previewImage.setImageBitmap(bmImg)
         }
     }
 
@@ -169,15 +168,15 @@ class EventCreateFragment : Fragment() {
     private fun validateName(): Boolean {
         return when {
             viewModelKoin.eventLocal.name.isEmpty() -> {
-                cef_name.error = getString(R.string.field_required)
+                binding.nameField.error = getString(R.string.field_required)
                 false
             }
             viewModelKoin.eventLocal.name.length > 40 -> {
-                cef_name.error = getString(R.string.max_event_name_length)
+                binding.nameField.error = getString(R.string.max_event_name_length)
                 false
             }
             else -> {
-                cef_name.error = null
+                binding.nameField.error = null
                 true
             }
         }
@@ -186,11 +185,11 @@ class EventCreateFragment : Fragment() {
     private fun validateDescription(): Boolean {
         return when {
             viewModelKoin.eventLocal.description.isEmpty() -> {
-                cef_description.error = getString(R.string.field_required)
+                binding.descriptionField.error = getString(R.string.field_required)
                 false
             }
             else -> {
-                cef_description.error = null
+                binding.descriptionField.error = null
                 true
             }
         }
@@ -199,11 +198,11 @@ class EventCreateFragment : Fragment() {
     private fun validateVenue(): Boolean {
         return when {
             viewModelKoin.eventLocal.venue.isEmpty() -> {
-                cef_venue.error = getString(R.string.field_required)
+                binding.venueField.error = getString(R.string.field_required)
                 false
             }
             else -> {
-                cef_venue.error = null
+                binding.venueField.error = null
                 true
             }
         }
@@ -212,25 +211,25 @@ class EventCreateFragment : Fragment() {
     private fun validateDate(): Boolean {
         return when {
             viewModelKoin.eventLocal.date.isBefore(OffsetDateTime.now()) -> {
-                cef_dateTitle.error = getString(R.string.future_date_required)
+                binding.dateLabel.error = getString(R.string.future_date_required)
                 false
             }
             else -> {
-                cef_dateTitle.error = null
+                binding.dateLabel.error = null
                 true
             }
         }
     }
 
     private fun showAnimation() {
-        cef_createButton.showProgress {
+        binding.createButton.showProgress {
             buttonTextRes = if (viewModelKoin.type == ScreenType.ADD) R.string.event_create_waiting else R.string.event_more_update_waiting
             progressColor = Color.WHITE
         }
     }
 
     private fun hideAnimation() {
-        cef_createButton.hideProgress(if (viewModelKoin.type == ScreenType.ADD) R.string.event_create_button else R.string.event_more_update)
+        binding.createButton.hideProgress(if (viewModelKoin.type == ScreenType.ADD) R.string.event_create_button else R.string.event_more_update)
     }
 
     companion object {
