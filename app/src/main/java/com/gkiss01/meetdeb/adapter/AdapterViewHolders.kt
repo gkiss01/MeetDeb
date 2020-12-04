@@ -2,13 +2,13 @@ package com.gkiss01.meetdeb.adapter
 
 import android.graphics.Color
 import android.view.View
+import coil.load
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.fastadapter.*
 import com.gkiss01.meetdeb.network.BASE_URL
 import com.mikepenz.fastadapter.FastAdapter
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_date.view.*
 import kotlinx.android.synthetic.main.item_date_picker.view.*
 import kotlinx.android.synthetic.main.item_event.view.*
@@ -132,10 +132,10 @@ class EventViewHolder(private val view: View, private val isAdmin: Boolean): Fas
         view.eli_anotherDateButton.hideProgress(R.string.event_date_add)
         view.eli_anotherDateButton.setBackgroundResource(if (item.voted) R.drawable.event_button_accepted_background else 0)
 
-        Picasso.get()
-            .load("$BASE_URL/images/${event.id}")
-            .placeholder(R.drawable.placeholder)
-            .into(view.eli_eventImage)
+        view.eli_eventImage.load("$BASE_URL/images/${event.id}") {
+            placeholder(R.drawable.placeholder)
+            error(R.drawable.placeholder)
+        }
     }
 
     override fun unbindView(item: Event) {

@@ -18,6 +18,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import coil.load
 import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
@@ -37,7 +38,6 @@ import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.opensooq.supernova.gligar.GligarPicker
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_event_create.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.threeten.bp.OffsetDateTime
@@ -69,10 +69,10 @@ class EventCreateFragment : Fragment() {
         }
 
         binding.event = viewModelKoin.eventLocal
-        Picasso.get()
-            .load("$BASE_URL/images/${viewModelKoin.eventLocal.id}")
-            .placeholder(R.drawable.placeholder)
-            .into(cef_imagePreview)
+        cef_imagePreview.load("$BASE_URL/images/${viewModelKoin.eventLocal.id}") {
+            placeholder(R.drawable.placeholder)
+            error(R.drawable.placeholder)
+        }
 
         val onDateListener = DatePickerDialog.OnDateSetListener { _, year, monthValue, dayOfMonth ->
             viewModelKoin.eventLocal.date = viewModelKoin.eventLocal.date.update(year, monthValue + 1, dayOfMonth)
