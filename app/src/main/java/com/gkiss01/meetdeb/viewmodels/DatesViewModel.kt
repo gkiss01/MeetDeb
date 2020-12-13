@@ -7,11 +7,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gkiss01.meetdeb.data.fastadapter.Date
 import com.gkiss01.meetdeb.data.fastadapter.Event
-import com.gkiss01.meetdeb.data.fastadapter.format
 import com.gkiss01.meetdeb.network.RestClient
 import com.gkiss01.meetdeb.network.Status
 import com.gkiss01.meetdeb.utils.SingleEvent
 import com.gkiss01.meetdeb.utils.VoidEvent
+import com.gkiss01.meetdeb.utils.format
 import kotlinx.coroutines.launch
 import org.threeten.bp.OffsetDateTime
 

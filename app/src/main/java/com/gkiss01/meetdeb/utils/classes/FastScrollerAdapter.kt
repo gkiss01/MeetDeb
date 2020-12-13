@@ -1,4 +1,4 @@
-package com.gkiss01.meetdeb.utils
+package com.gkiss01.meetdeb.utils.classes
 
 import com.gkiss01.meetdeb.data.fastadapter.Event
 import com.mikepenz.fastadapter.FastAdapter

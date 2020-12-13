@@ -2,14 +2,13 @@ package com.gkiss01.meetdeb.data.fastadapter
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.content.Context
-import android.text.format.DateFormat
 import android.view.View
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.adapter.DatePickerViewHolder
+import com.gkiss01.meetdeb.utils.isTimeIn24HourFormat
+import com.gkiss01.meetdeb.utils.update
 import com.mikepenz.fastadapter.items.AbstractItem
 import org.threeten.bp.OffsetDateTime
-import org.threeten.bp.format.DateTimeFormatter
 
 data class DatePickerItem(var offsetDateTime: OffsetDateTime): AbstractItem<DatePickerViewHolder>() {
     constructor(): this(OffsetDateTime.now())
@@ -45,13 +44,3 @@ data class DatePickerItem(var offsetDateTime: OffsetDateTime): AbstractItem<Date
     override fun getViewHolder(v: View): DatePickerViewHolder =
         DatePickerViewHolder(v)
 }
-
-fun OffsetDateTime.update(year: Int, monthValue: Int, dayOfMonth: Int): OffsetDateTime = OffsetDateTime.of(year, monthValue, dayOfMonth, this.hour, this.minute,
-    this.second, this.nano, this.offset)
-
-fun OffsetDateTime.update(hourOfDay: Int, minute: Int): OffsetDateTime = OffsetDateTime.of(this.year, this.monthValue, this.dayOfMonth, hourOfDay, minute,
-    this.second, this.nano, this.offset)
-
-fun OffsetDateTime.format(): String = this.format(DateTimeFormatter.ofPattern("EEE, dd MMM yyyy, HH:mm"))
-
-fun Context.isTimeIn24HourFormat() = DateFormat.is24HourFormat(this)

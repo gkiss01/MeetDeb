@@ -20,13 +20,9 @@ import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.fastadapter.Event
-import com.gkiss01.meetdeb.data.fastadapter.format
-import com.gkiss01.meetdeb.data.fastadapter.isTimeIn24HourFormat
-import com.gkiss01.meetdeb.data.fastadapter.update
 import com.gkiss01.meetdeb.databinding.FragmentEventCreateBinding
 import com.gkiss01.meetdeb.network.BASE_URL
-import com.gkiss01.meetdeb.utils.observeEvent
-import com.gkiss01.meetdeb.utils.runDelayed
+import com.gkiss01.meetdeb.utils.*
 import com.gkiss01.meetdeb.viewmodels.EventCreateViewModel
 import com.gkiss01.meetdeb.viewmodels.ScreenType
 import com.karumi.dexter.Dexter

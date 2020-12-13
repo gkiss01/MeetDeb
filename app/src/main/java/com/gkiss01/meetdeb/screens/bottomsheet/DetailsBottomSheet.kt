@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.gkiss01.meetdeb.R
-import com.gkiss01.meetdeb.data.fastadapter.format
 import com.gkiss01.meetdeb.databinding.BottomsheetEventDetailsBinding
+import com.gkiss01.meetdeb.utils.format
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class DetailsBottomSheet: BottomSheetDialogFragment() {

@@ -6,16 +6,20 @@ import coil.load
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.R
-import com.gkiss01.meetdeb.data.fastadapter.*
+import com.gkiss01.meetdeb.data.fastadapter.Date
+import com.gkiss01.meetdeb.data.fastadapter.DatePickerItem
+import com.gkiss01.meetdeb.data.fastadapter.Event
+import com.gkiss01.meetdeb.data.fastadapter.Participant
 import com.gkiss01.meetdeb.databinding.ItemDateBinding
 import com.gkiss01.meetdeb.databinding.ItemDatePickerBinding
 import com.gkiss01.meetdeb.databinding.ItemEventBinding
 import com.gkiss01.meetdeb.databinding.ItemParticipantBinding
 import com.gkiss01.meetdeb.network.BASE_URL
+import com.gkiss01.meetdeb.utils.format
 import com.mikepenz.fastadapter.FastAdapter
 import org.threeten.bp.OffsetDateTime
 
-class DatePickerViewHolder(private val view: View): FastAdapter.ViewHolder<DatePickerItem>(view) {
+class DatePickerViewHolder(view: View): FastAdapter.ViewHolder<DatePickerItem>(view) {
     val binding = ItemDatePickerBinding.bind(view)
     private var expanded = false
 
@@ -71,7 +75,7 @@ class DatePickerViewHolder(private val view: View): FastAdapter.ViewHolder<DateP
     }
 }
 
-class ParticipantViewHolder(private val view: View): FastAdapter.ViewHolder<Participant>(view) {
+class ParticipantViewHolder(view: View): FastAdapter.ViewHolder<Participant>(view) {
     private val binding = ItemParticipantBinding.bind(view)
 
     override fun bindView(item: Participant, payloads: List<Any>) {
@@ -113,7 +117,7 @@ class DateViewHolder(private val view: View): FastAdapter.ViewHolder<Date>(view)
     }
 }
 
-class EventViewHolder(private val view: View, private val isAdmin: Boolean): FastAdapter.ViewHolder<Event>(view) {
+class EventViewHolder(view: View, private val isAdmin: Boolean): FastAdapter.ViewHolder<Event>(view) {
     val binding = ItemEventBinding.bind(view)
     lateinit var event: Event
 

@@ -4,7 +4,7 @@
 
     <data>
 
-        <import type="com.gkiss01.meetdeb.data.fastadapter.DatePickerItemKt" />
+        <import type="com.gkiss01.meetdeb.utils.DateTimeExtensionsKt" />
 
         <variable
             name="event"
@@ -69,7 +69,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
-                    android:text="@{DatePickerItemKt.format(event.date)}" />
+                    android:text="@{DateTimeExtensionsKt.format(event.date)}" />
 
                 <LinearLayout
                     android:layout_width="match_parent"

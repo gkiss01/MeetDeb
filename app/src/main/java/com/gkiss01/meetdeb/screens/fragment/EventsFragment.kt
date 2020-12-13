@@ -15,7 +15,7 @@ import com.gkiss01.meetdeb.adapter.EventViewHolder
 import com.gkiss01.meetdeb.data.fastadapter.Event
 import com.gkiss01.meetdeb.data.isAdmin
 import com.gkiss01.meetdeb.databinding.FragmentEventsBinding
-import com.gkiss01.meetdeb.utils.FastScrollerAdapter
+import com.gkiss01.meetdeb.utils.classes.FastScrollerAdapter
 import com.gkiss01.meetdeb.utils.getNavigationResult
 import com.gkiss01.meetdeb.utils.observeEvent
 import com.gkiss01.meetdeb.viewmodels.EventsViewModel
