@@ -1,5 +1,8 @@
-package com.gkiss01.meetdeb.network
+package com.gkiss01.meetdeb.network.api
 
+import com.gkiss01.meetdeb.network.common.PAGE_SIZE
+import com.gkiss01.meetdeb.network.common.Resource
+import com.gkiss01.meetdeb.network.common.ResourceHandler
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

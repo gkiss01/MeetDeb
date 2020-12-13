@@ -1,6 +1,8 @@
-package com.gkiss01.meetdeb.network
+package com.gkiss01.meetdeb.network.common
 
 import android.content.Context
+import com.gkiss01.meetdeb.network.api.DataProvider
+import com.gkiss01.meetdeb.network.api.RestClient
 import com.gkiss01.meetdeb.utils.classes.OffsetDateTimeAdapter
 import com.gkiss01.meetdeb.utils.getAuthToken
 import com.squareup.moshi.Moshi

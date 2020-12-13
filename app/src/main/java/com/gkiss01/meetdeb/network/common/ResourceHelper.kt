@@ -1,4 +1,4 @@
-package com.gkiss01.meetdeb.network
+package com.gkiss01.meetdeb.network.common
 
 import android.app.Application
 import com.gkiss01.meetdeb.R

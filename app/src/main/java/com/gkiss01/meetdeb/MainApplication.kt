@@ -1,7 +1,7 @@
 package com.gkiss01.meetdeb
 
 import android.app.Application
-import com.gkiss01.meetdeb.network.networkModule
+import com.gkiss01.meetdeb.network.common.networkModule
 import com.gkiss01.meetdeb.viewmodels.eventsModule
 import com.gkiss01.meetdeb.viewmodels.profileModule
 import org.koin.android.ext.koin.androidContext

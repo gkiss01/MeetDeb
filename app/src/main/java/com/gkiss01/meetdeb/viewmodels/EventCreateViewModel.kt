@@ -8,8 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gkiss01.meetdeb.data.fastadapter.Event
 import com.gkiss01.meetdeb.data.request.EventRequest
-import com.gkiss01.meetdeb.network.RestClient
-import com.gkiss01.meetdeb.network.Status
+import com.gkiss01.meetdeb.network.api.RestClient
+import com.gkiss01.meetdeb.network.common.Status
 import com.gkiss01.meetdeb.utils.SingleEvent
 import com.gkiss01.meetdeb.utils.VoidEvent
 import com.squareup.moshi.Moshi

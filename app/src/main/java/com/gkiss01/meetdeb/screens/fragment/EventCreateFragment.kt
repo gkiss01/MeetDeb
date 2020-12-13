@@ -21,7 +21,7 @@ import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.fastadapter.Event
 import com.gkiss01.meetdeb.databinding.FragmentEventCreateBinding
-import com.gkiss01.meetdeb.network.BASE_URL
+import com.gkiss01.meetdeb.network.common.BASE_URL
 import com.gkiss01.meetdeb.utils.*
 import com.gkiss01.meetdeb.viewmodels.EventCreateViewModel
 import com.gkiss01.meetdeb.viewmodels.ScreenType

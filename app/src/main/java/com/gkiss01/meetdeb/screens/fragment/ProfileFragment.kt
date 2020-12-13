@@ -13,7 +13,7 @@ import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.User
 import com.gkiss01.meetdeb.data.isAdmin
 import com.gkiss01.meetdeb.databinding.FragmentProfileBinding
-import com.gkiss01.meetdeb.network.Status
+import com.gkiss01.meetdeb.network.common.Status
 import com.gkiss01.meetdeb.utils.mainActivity
 import com.gkiss01.meetdeb.utils.observeEvent
 import com.gkiss01.meetdeb.viewmodels.ProfileViewModel

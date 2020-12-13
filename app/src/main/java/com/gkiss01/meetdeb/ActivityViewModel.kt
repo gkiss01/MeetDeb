@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.gkiss01.meetdeb.data.User
-import com.gkiss01.meetdeb.network.Resource
+import com.gkiss01.meetdeb.network.common.Resource
 import com.gkiss01.meetdeb.utils.CredentialType
 import com.gkiss01.meetdeb.utils.getCurrentCredential
 import com.gkiss01.meetdeb.utils.setAuthToken

@@ -1,4 +1,4 @@
-package com.gkiss01.meetdeb.network
+package com.gkiss01.meetdeb.network.api
 
 import com.gkiss01.meetdeb.data.SuccessResponse
 import com.gkiss01.meetdeb.data.User

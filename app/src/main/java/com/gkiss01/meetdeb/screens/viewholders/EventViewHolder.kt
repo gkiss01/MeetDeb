@@ -8,7 +8,7 @@ import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.fastadapter.Event
 import com.gkiss01.meetdeb.databinding.ItemEventBinding
-import com.gkiss01.meetdeb.network.BASE_URL
+import com.gkiss01.meetdeb.network.common.BASE_URL
 import com.mikepenz.fastadapter.FastAdapter
 
 class EventViewHolder(view: View, private val isAdmin: Boolean): FastAdapter.ViewHolder<Event>(view) {

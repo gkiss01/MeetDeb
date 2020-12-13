@@ -6,8 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gkiss01.meetdeb.data.response.EventSummary
-import com.gkiss01.meetdeb.network.RestClient
-import com.gkiss01.meetdeb.network.Status
+import com.gkiss01.meetdeb.network.api.RestClient
+import com.gkiss01.meetdeb.network.common.Status
 import com.gkiss01.meetdeb.utils.SingleEvent
 import kotlinx.coroutines.launch
 
