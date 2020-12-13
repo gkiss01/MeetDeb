@@ -1,4 +1,4 @@
-package com.gkiss01.meetdeb.data.request
+package com.gkiss01.meetdeb.data.remote.request
 
 import com.gkiss01.meetdeb.utils.classes.OffsetDateTimeCustom
 import org.threeten.bp.OffsetDateTime

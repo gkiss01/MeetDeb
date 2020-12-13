@@ -28,7 +28,7 @@
         <argument
             android:name="event"
             android:defaultValue="@null"
-            app:argType="com.gkiss01.meetdeb.data.fastadapter.Event"
+            app:argType="com.gkiss01.meetdeb.data.remote.response.Event"
             app:nullable="true" />
     </fragment>
     <dialog
@@ -38,7 +38,7 @@
         tools:layout="@layout/fragment_dates">
         <argument
             android:name="event"
-            app:argType="com.gkiss01.meetdeb.data.fastadapter.Event" />
+            app:argType="com.gkiss01.meetdeb.data.remote.response.Event" />
     </dialog>
     <dialog
         android:id="@+id/detailsBottomSheetFragment"
@@ -47,7 +47,7 @@
         tools:layout="@layout/bottomsheet_event_details">
         <argument
             android:name="event"
-            app:argType="com.gkiss01.meetdeb.data.fastadapter.Event" />
+            app:argType="com.gkiss01.meetdeb.data.remote.response.Event" />
         <action
             android:id="@+id/action_detailsBottomSheetFragment_to_participantsDialogFragment"
             app:destination="@id/participantsDialogFragment" />
@@ -59,7 +59,7 @@
         tools:layout="@layout/fragment_participants">
         <argument
             android:name="event"
-            app:argType="com.gkiss01.meetdeb.data.fastadapter.Event" />
+            app:argType="com.gkiss01.meetdeb.data.remote.response.Event" />
     </dialog>
     <fragment
         android:id="@+id/profileFragment"

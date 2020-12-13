@@ -1,4 +1,4 @@
-package com.gkiss01.meetdeb.data
+package com.gkiss01.meetdeb.data.remote.response
 
 enum class Role {
     ROLE_CLIENT, ROLE_ADMIN

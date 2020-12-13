@@ -19,7 +19,7 @@ import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.R
-import com.gkiss01.meetdeb.data.fastadapter.Event
+import com.gkiss01.meetdeb.data.remote.response.Event
 import com.gkiss01.meetdeb.databinding.FragmentEventCreateBinding
 import com.gkiss01.meetdeb.network.common.BASE_URL
 import com.gkiss01.meetdeb.utils.*

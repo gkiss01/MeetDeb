@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gkiss01.meetdeb.R
-import com.gkiss01.meetdeb.data.fastadapter.Event
+import com.gkiss01.meetdeb.data.remote.response.Event
 import com.gkiss01.meetdeb.network.api.RestClient
 import com.gkiss01.meetdeb.network.common.Status
 import com.gkiss01.meetdeb.utils.SingleEvent

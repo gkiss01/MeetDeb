@@ -1,4 +1,4 @@
-package com.gkiss01.meetdeb.data.fastadapter
+package com.gkiss01.meetdeb.data.local
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog

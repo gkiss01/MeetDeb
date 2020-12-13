@@ -5,7 +5,7 @@ import android.view.View
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.R
-import com.gkiss01.meetdeb.data.fastadapter.Date
+import com.gkiss01.meetdeb.data.remote.response.Date
 import com.gkiss01.meetdeb.databinding.ItemDateBinding
 import com.gkiss01.meetdeb.utils.format
 import com.mikepenz.fastadapter.FastAdapter

@@ -5,8 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gkiss01.meetdeb.data.User
-import com.gkiss01.meetdeb.data.request.UserRequest
+import com.gkiss01.meetdeb.data.remote.request.UserRequest
+import com.gkiss01.meetdeb.data.remote.response.User
 import com.gkiss01.meetdeb.network.api.RestClient
 import com.gkiss01.meetdeb.network.common.ErrorCodes
 import com.gkiss01.meetdeb.network.common.Status

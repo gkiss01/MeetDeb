@@ -10,8 +10,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.onNavDestinationSelected
 import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
-import com.gkiss01.meetdeb.data.User
-import com.gkiss01.meetdeb.data.isAdmin
+import com.gkiss01.meetdeb.data.remote.response.User
+import com.gkiss01.meetdeb.data.remote.response.isAdmin
 import com.gkiss01.meetdeb.databinding.FragmentProfileBinding
 import com.gkiss01.meetdeb.network.common.Status
 import com.gkiss01.meetdeb.utils.mainActivity

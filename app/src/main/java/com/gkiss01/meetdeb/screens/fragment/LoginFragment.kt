@@ -13,7 +13,7 @@ import com.github.razir.progressbutton.isProgressActive
 import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
-import com.gkiss01.meetdeb.data.request.UserRequest
+import com.gkiss01.meetdeb.data.remote.request.UserRequest
 import com.gkiss01.meetdeb.databinding.FragmentLoginBinding
 import com.gkiss01.meetdeb.utils.mainActivity
 import com.gkiss01.meetdeb.utils.observeEvent

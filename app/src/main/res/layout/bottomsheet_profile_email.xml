@@ -6,7 +6,7 @@
 
         <variable
             name="user"
-            type="com.gkiss01.meetdeb.data.request.UserRequest" />
+            type="com.gkiss01.meetdeb.data.remote.request.UserRequest" />
     </data>
 
     <LinearLayout

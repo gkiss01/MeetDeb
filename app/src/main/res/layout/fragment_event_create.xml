@@ -8,7 +8,7 @@
 
         <variable
             name="event"
-            type="com.gkiss01.meetdeb.data.fastadapter.Event" />
+            type="com.gkiss01.meetdeb.data.remote.response.Event" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

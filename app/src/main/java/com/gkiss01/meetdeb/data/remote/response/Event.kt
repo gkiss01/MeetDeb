@@ -1,9 +1,8 @@
-package com.gkiss01.meetdeb.data.fastadapter
+package com.gkiss01.meetdeb.data.remote.response
 
 import android.view.View
 import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
-import com.gkiss01.meetdeb.data.isAdmin
 import com.gkiss01.meetdeb.screens.viewholders.EventViewHolder
 import com.gkiss01.meetdeb.utils.classes.OffsetDateTimeCustom
 import com.mikepenz.fastadapter.items.AbstractItem

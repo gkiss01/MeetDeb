@@ -2,7 +2,7 @@ package com.gkiss01.meetdeb.network.common
 
 import android.app.Application
 import com.gkiss01.meetdeb.R
-import com.gkiss01.meetdeb.data.ErrorResponse
+import com.gkiss01.meetdeb.data.remote.response.ErrorResponse
 import com.squareup.moshi.Moshi
 import retrofit2.HttpException
 import java.net.ConnectException

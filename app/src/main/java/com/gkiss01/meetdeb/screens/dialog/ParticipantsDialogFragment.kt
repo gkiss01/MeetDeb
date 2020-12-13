@@ -12,7 +12,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gkiss01.meetdeb.R
-import com.gkiss01.meetdeb.data.fastadapter.Participant
+import com.gkiss01.meetdeb.data.remote.response.Participant
 import com.gkiss01.meetdeb.databinding.FragmentParticipantsBinding
 import com.gkiss01.meetdeb.utils.observeEvent
 import com.gkiss01.meetdeb.viewmodels.ParticipantsViewModel

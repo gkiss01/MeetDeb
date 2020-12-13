@@ -1,4 +1,4 @@
-package com.gkiss01.meetdeb.data.response
+package com.gkiss01.meetdeb.data.remote.response
 
 data class EventSummary(
     val userId: Long,

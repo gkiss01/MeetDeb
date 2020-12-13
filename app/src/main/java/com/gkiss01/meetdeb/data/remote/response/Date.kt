@@ -1,4 +1,4 @@
-package com.gkiss01.meetdeb.data.fastadapter
+package com.gkiss01.meetdeb.data.remote.response
 
 import android.view.View
 import com.gkiss01.meetdeb.R

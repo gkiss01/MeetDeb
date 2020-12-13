@@ -1,7 +1,7 @@
 package com.gkiss01.meetdeb.screens.viewholders
 
 import android.view.View
-import com.gkiss01.meetdeb.data.fastadapter.Participant
+import com.gkiss01.meetdeb.data.remote.response.Participant
 import com.gkiss01.meetdeb.databinding.ItemParticipantBinding
 import com.mikepenz.fastadapter.FastAdapter
 

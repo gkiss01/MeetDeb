@@ -1,11 +1,6 @@
 package com.gkiss01.meetdeb.network.api
 
-import com.gkiss01.meetdeb.data.SuccessResponse
-import com.gkiss01.meetdeb.data.User
-import com.gkiss01.meetdeb.data.fastadapter.Date
-import com.gkiss01.meetdeb.data.fastadapter.Event
-import com.gkiss01.meetdeb.data.fastadapter.Participant
-import com.gkiss01.meetdeb.data.response.EventSummary
+import com.gkiss01.meetdeb.data.remote.response.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.threeten.bp.OffsetDateTime
