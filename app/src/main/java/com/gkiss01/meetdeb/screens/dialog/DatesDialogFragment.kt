@@ -16,12 +16,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
-import com.gkiss01.meetdeb.adapter.DatePickerViewHolder
-import com.gkiss01.meetdeb.adapter.DateViewHolder
 import com.gkiss01.meetdeb.data.fastadapter.Date
 import com.gkiss01.meetdeb.data.fastadapter.DatePickerItem
 import com.gkiss01.meetdeb.data.isAdmin
 import com.gkiss01.meetdeb.databinding.FragmentDatesBinding
+import com.gkiss01.meetdeb.screens.viewholders.DatePickerViewHolder
+import com.gkiss01.meetdeb.screens.viewholders.DateViewHolder
 import com.gkiss01.meetdeb.utils.observeEvent
 import com.gkiss01.meetdeb.utils.setNavigationResult
 import com.gkiss01.meetdeb.viewmodels.DatesViewModel

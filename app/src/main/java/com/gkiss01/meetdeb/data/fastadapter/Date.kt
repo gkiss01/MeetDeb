@@ -2,7 +2,7 @@ package com.gkiss01.meetdeb.data.fastadapter
 
 import android.view.View
 import com.gkiss01.meetdeb.R
-import com.gkiss01.meetdeb.adapter.DateViewHolder
+import com.gkiss01.meetdeb.screens.viewholders.DateViewHolder
 import com.gkiss01.meetdeb.utils.classes.OffsetDateTimeCustom
 import com.mikepenz.fastadapter.items.AbstractItem
 import org.threeten.bp.OffsetDateTime

@@ -4,7 +4,7 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.view.View
 import com.gkiss01.meetdeb.R
-import com.gkiss01.meetdeb.adapter.DatePickerViewHolder
+import com.gkiss01.meetdeb.screens.viewholders.DatePickerViewHolder
 import com.gkiss01.meetdeb.utils.isTimeIn24HourFormat
 import com.gkiss01.meetdeb.utils.update
 import com.mikepenz.fastadapter.items.AbstractItem

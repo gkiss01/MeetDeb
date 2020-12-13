@@ -2,7 +2,7 @@ package com.gkiss01.meetdeb.data.fastadapter
 
 import android.view.View
 import com.gkiss01.meetdeb.R
-import com.gkiss01.meetdeb.adapter.ParticipantViewHolder
+import com.gkiss01.meetdeb.screens.viewholders.ParticipantViewHolder
 import com.mikepenz.fastadapter.items.AbstractItem
 
 data class Participant(
