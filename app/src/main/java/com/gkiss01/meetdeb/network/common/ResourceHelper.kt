@@ -8,13 +8,6 @@ import retrofit2.HttpException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 
-enum class Status {
-    SUCCESS,
-    ERROR,
-    LOADING,
-    PENDING
-}
-
 enum class ErrorCodes {
     USER_DISABLED_OR_NOT_VALID,
     ACCESS_DENIED,
@@ -63,6 +56,13 @@ data class Resource<out T>(val status: Status, val data: T?, val errorCode: Erro
         fun <T> pending(data: T?): Resource<T> {
             return Resource(Status.PENDING, data, null, null)
         }
+    }
+
+    enum class Status {
+        SUCCESS,
+        ERROR,
+        LOADING,
+        PENDING
     }
 }
 

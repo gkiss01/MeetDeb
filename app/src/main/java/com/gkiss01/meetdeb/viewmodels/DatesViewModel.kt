@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.gkiss01.meetdeb.data.remote.response.Date
 import com.gkiss01.meetdeb.data.remote.response.Event
 import com.gkiss01.meetdeb.network.api.RestClient
-import com.gkiss01.meetdeb.network.common.Status
+import com.gkiss01.meetdeb.network.common.Resource.Status
 import com.gkiss01.meetdeb.utils.SingleEvent
 import com.gkiss01.meetdeb.utils.VoidEvent
 import com.gkiss01.meetdeb.utils.format

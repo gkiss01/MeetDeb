@@ -11,7 +11,7 @@ import com.gkiss01.meetdeb.data.remote.request.UserRequest
 import com.gkiss01.meetdeb.data.remote.response.User
 import com.gkiss01.meetdeb.network.api.RestClient
 import com.gkiss01.meetdeb.network.common.ErrorCodes
-import com.gkiss01.meetdeb.network.common.Status
+import com.gkiss01.meetdeb.network.common.Resource.Status
 import com.gkiss01.meetdeb.utils.SingleEvent
 import com.gkiss01.meetdeb.utils.setAuthToken
 import kotlinx.coroutines.launch
