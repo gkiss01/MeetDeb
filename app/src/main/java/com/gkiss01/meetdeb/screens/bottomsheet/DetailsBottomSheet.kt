@@ -12,7 +12,8 @@ import com.gkiss01.meetdeb.utils.format
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class DetailsBottomSheet: BottomSheetDialogFragment() {
-    private var binding: BottomsheetEventDetailsBinding? = null
+    private var _binding: BottomsheetEventDetailsBinding? = null
+    private val binding get() = _binding!!
     private val safeArgs: DetailsBottomSheetArgs by navArgs()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -20,14 +21,10 @@ class DetailsBottomSheet: BottomSheetDialogFragment() {
         return inflater.inflate(R.layout.bottomsheet_event_details, container, false)
     }
 
-    override fun onDestroyView() {
-        binding = null
-        super.onDestroyView()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val binding = BottomsheetEventDetailsBinding.bind(view)
-        this.binding = binding
+        super.onViewCreated(view, savedInstanceState)
+        _binding = BottomsheetEventDetailsBinding.bind(view)
+
         val event = safeArgs.event
 
         binding.usernameLabel.text = event.username
@@ -37,5 +34,10 @@ class DetailsBottomSheet: BottomSheetDialogFragment() {
         binding.participantsLabel.text = getString(R.string.event_participants, event.participants)
 
         binding.participantsButton.setOnClickListener { findNavController().navigate(DetailsBottomSheetDirections.actionDetailsBottomSheetFragmentToParticipantsDialogFragment(event)) }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

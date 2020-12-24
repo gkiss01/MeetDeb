@@ -23,7 +23,8 @@ import com.mikepenz.fastadapter.ui.items.ProgressItem
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ParticipantsDialogFragment : DialogFragment() {
-    private var binding: FragmentParticipantsBinding? = null
+    private var _binding: FragmentParticipantsBinding? = null
+    private val binding get() = _binding!!
     private val viewModelKoin: ParticipantsViewModel by viewModel()
     private val safeArgs: ParticipantsDialogFragmentArgs by navArgs()
 
@@ -36,14 +37,9 @@ class ParticipantsDialogFragment : DialogFragment() {
         return inflater.inflate(R.layout.fragment_participants, container, false)
     }
 
-    override fun onDestroyView() {
-        binding = null
-        super.onDestroyView()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val binding = FragmentParticipantsBinding.bind(view)
-        this.binding = binding
+        super.onViewCreated(view, savedInstanceState)
+        _binding = FragmentParticipantsBinding.bind(view)
 
         if (!viewModelKoin.isEventInitialized()) {
             viewModelKoin.event = safeArgs.event
@@ -81,6 +77,11 @@ class ParticipantsDialogFragment : DialogFragment() {
         viewModelKoin.participants.observe(viewLifecycleOwner) {
             FastAdapterDiffUtil[itemAdapter] = it
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

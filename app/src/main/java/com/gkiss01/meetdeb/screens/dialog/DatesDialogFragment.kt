@@ -38,7 +38,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.threeten.bp.OffsetDateTime
 
 class DatesDialogFragment : DialogFragment() {
-    private var binding: FragmentDatesBinding? = null
+    private var _binding: FragmentDatesBinding? = null
+    private val binding get() = _binding!!
     private val viewModelActivityKoin: ActivityViewModel by sharedViewModel()
     private val viewModelKoin: DatesViewModel by viewModel()
     private val safeArgs: DatesDialogFragmentArgs by navArgs()
@@ -53,14 +54,9 @@ class DatesDialogFragment : DialogFragment() {
         return inflater.inflate(R.layout.fragment_dates, container, false)
     }
 
-    override fun onDestroyView() {
-        binding = null
-        super.onDestroyView()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val binding = FragmentDatesBinding.bind(view)
-        this.binding = binding
+        super.onViewCreated(view, savedInstanceState)
+        _binding = FragmentDatesBinding.bind(view)
 
         if (!viewModelKoin.isEventInitialized()) {
             viewModelKoin.event = safeArgs.event
@@ -168,8 +164,13 @@ class DatesDialogFragment : DialogFragment() {
         }
     }
 
-    private fun getDateViewHolderByPosition(position: Int) = binding?.recyclerView?.findViewHolderForAdapterPosition(position) as? DateViewHolder
-    private fun getDatePickerViewHolderByPosition(position: Int) = binding?.recyclerView?.findViewHolderForAdapterPosition(position) as? DatePickerViewHolder
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    private fun getDateViewHolderByPosition(position: Int) = binding.recyclerView.findViewHolderForAdapterPosition(position) as? DateViewHolder
+    private fun getDatePickerViewHolderByPosition(position: Int) = binding.recyclerView.findViewHolderForAdapterPosition(position) as? DatePickerViewHolder
 
     private fun createMoreActionMenu(view: View, date: Date) {
         viewModelActivityKoin.activeUser.value?.data?.let {

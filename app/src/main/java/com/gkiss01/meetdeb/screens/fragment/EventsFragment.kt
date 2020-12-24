@@ -30,7 +30,8 @@ import com.mikepenz.itemanimators.AlphaInAnimator
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class EventsFragment : Fragment(R.layout.fragment_events) {
-    private var binding: FragmentEventsBinding? = null
+    private var _binding: FragmentEventsBinding? = null
+    private val binding get() = _binding!!
     private val viewModelActivityKoin: ActivityViewModel by sharedViewModel()
     private val viewModelKoin: EventsViewModel by sharedViewModel()
 
@@ -41,11 +42,6 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         setHasOptionsMenu(true)
         return super.onCreateView(inflater, container, savedInstanceState)
-    }
-
-    override fun onDestroyView() {
-        binding = null
-        super.onDestroyView()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -59,8 +55,8 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val binding = FragmentEventsBinding.bind(view)
-        this.binding = binding
+        super.onViewCreated(view, savedInstanceState)
+        _binding = FragmentEventsBinding.bind(view)
 
         fastScrollerAdapter.attachDefaultListeners = false
         val endlessScrollListener = object : EndlessRecyclerOnScrollListener(footerAdapter) {
@@ -149,7 +145,12 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             endlessScrollListener.resetPageCount(0)
     }
 
-    private fun getEventViewHolderByPosition(position: Int) = binding?.recyclerView?.findViewHolderForAdapterPosition(position) as? EventViewHolder
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    private fun getEventViewHolderByPosition(position: Int) = binding.recyclerView.findViewHolderForAdapterPosition(position) as? EventViewHolder
 
     private fun createMoreActionMenu(view: View, event: Event) {
         viewModelActivityKoin.activeUser.value?.data?.let {

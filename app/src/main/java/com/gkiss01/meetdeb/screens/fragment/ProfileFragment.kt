@@ -21,18 +21,14 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
-    private var binding: FragmentProfileBinding? = null
+    private var _binding: FragmentProfileBinding? = null
+    private val binding get() = _binding!!
     private val viewModelActivityKoin: ActivityViewModel by sharedViewModel()
     private val viewModelKoin: ProfileViewModel by viewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         setHasOptionsMenu(true)
         return super.onCreateView(inflater, container, savedInstanceState)
-    }
-
-    override fun onDestroyView() {
-        binding = null
-        super.onDestroyView()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -55,8 +51,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val binding = FragmentProfileBinding.bind(view)
-        this.binding = binding
+        super.onViewCreated(view, savedInstanceState)
+        _binding = FragmentProfileBinding.bind(view)
 
         viewModelKoin.getEventsSummary()
         viewModelActivityKoin.activeUser.observe(viewLifecycleOwner) {
@@ -81,8 +77,12 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     private fun bindUser(user: User) {
-        val binding = this.binding ?: return
         binding.nameLabel.text = user.name
         binding.emailLabel.text = user.email
         binding.idField.editText?.setText(String.format("%07d", user.id), TextView.BufferType.NORMAL)

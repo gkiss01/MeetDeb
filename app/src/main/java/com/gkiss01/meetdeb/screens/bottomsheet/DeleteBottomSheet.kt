@@ -23,7 +23,8 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class DeleteBottomSheet: BottomSheetDialogFragment() {
-    private var binding: BottomsheetProfileDeleteBinding? = null
+    private var _binding: BottomsheetProfileDeleteBinding? = null
+    private val binding get() = _binding!!
     private val viewModelActivityKoin: ActivityViewModel by sharedViewModel()
     private val viewModelKoin: DeleteViewModel by viewModel()
 
@@ -32,14 +33,9 @@ class DeleteBottomSheet: BottomSheetDialogFragment() {
         return inflater.inflate(R.layout.bottomsheet_profile_delete, container, false)
     }
 
-    override fun onDestroyView() {
-        binding = null
-        super.onDestroyView()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val binding = BottomsheetProfileDeleteBinding.bind(view)
-        this.binding = binding
+        super.onViewCreated(view, savedInstanceState)
+        _binding = BottomsheetProfileDeleteBinding.bind(view)
 
         binding.deleteButton.attachTextChangeAnimator()
         binding.deleteButton.setOnClickListener {
@@ -70,8 +66,12 @@ class DeleteBottomSheet: BottomSheetDialogFragment() {
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     private fun showAnimation() {
-        val binding = this.binding ?: return
         binding.deleteButton.showProgress {
             buttonTextRes = R.string.profile_delete_yes
             progressColor = Color.BLACK
@@ -79,7 +79,6 @@ class DeleteBottomSheet: BottomSheetDialogFragment() {
     }
 
     private fun hideAnimation() {
-        val binding = this.binding ?: return
         if (binding.deleteButton.isProgressActive()) binding.deleteButton.hideProgress(R.string.profile_delete_yes)
     }
 }
