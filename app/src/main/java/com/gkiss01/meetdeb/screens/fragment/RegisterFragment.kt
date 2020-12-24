@@ -1,11 +1,9 @@
 package com.gkiss01.meetdeb.screens.fragment
 
-import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Patterns
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -16,6 +14,7 @@ import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.remote.request.UserRequest
 import com.gkiss01.meetdeb.databinding.FragmentRegisterBinding
+import com.gkiss01.meetdeb.utils.hideKeyboard
 import com.gkiss01.meetdeb.utils.observeEvent
 import com.gkiss01.meetdeb.utils.runDelayed
 import com.gkiss01.meetdeb.viewmodels.RegisterViewModel
@@ -139,9 +138,4 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
     private fun hideAnimation() {
         if (binding.registerButton.isProgressActive()) binding.registerButton.hideProgress(R.string.register_title)
     }
-}
-
-fun Fragment.hideKeyboard() {
-    val inputMethodManager = this.requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-    inputMethodManager.hideSoftInputFromWindow(this.view?.windowToken, 0)
 }

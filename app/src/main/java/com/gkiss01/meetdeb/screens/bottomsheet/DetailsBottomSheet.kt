@@ -8,7 +8,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.databinding.BottomsheetEventDetailsBinding
-import com.gkiss01.meetdeb.utils.format
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class DetailsBottomSheet: BottomSheetDialogFragment() {
@@ -25,15 +24,8 @@ class DetailsBottomSheet: BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         _binding = BottomsheetEventDetailsBinding.bind(view)
 
-        val event = safeArgs.event
-
-        binding.usernameLabel.text = event.username
-        binding.venueLabel.text = event.venue
-        binding.dateLabel.text = event.date.format()
-        binding.descriptionLabel.text = event.description
-        binding.participantsLabel.text = getString(R.string.event_participants, event.participants)
-
-        binding.participantsButton.setOnClickListener { findNavController().navigate(DetailsBottomSheetDirections.actionDetailsBottomSheetFragmentToParticipantsDialogFragment(event)) }
+        binding.event = safeArgs.event
+        binding.participantsButton.setOnClickListener { findNavController().navigate(DetailsBottomSheetDirections.actionDetailsBottomSheetFragmentToParticipantsDialogFragment(safeArgs.event)) }
     }
 
     override fun onDestroyView() {

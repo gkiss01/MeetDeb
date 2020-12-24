@@ -16,7 +16,7 @@ import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.remote.request.UserRequest
 import com.gkiss01.meetdeb.databinding.BottomsheetProfileEmailBinding
-import com.gkiss01.meetdeb.screens.fragment.hideKeyboard
+import com.gkiss01.meetdeb.utils.hideKeyboard
 import com.gkiss01.meetdeb.utils.observeEvent
 import com.gkiss01.meetdeb.utils.runDelayed
 import com.gkiss01.meetdeb.viewmodels.UpdateViewModel
