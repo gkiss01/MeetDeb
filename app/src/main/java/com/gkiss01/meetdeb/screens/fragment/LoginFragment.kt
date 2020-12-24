@@ -23,12 +23,15 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginFragment : Fragment(R.layout.fragment_login) {
-    private lateinit var binding: FragmentLoginBinding
+    private var _binding: FragmentLoginBinding? = null
+    private val binding get() = _binding!!
+
     private val viewModelActivityKoin: ActivityViewModel by sharedViewModel()
     private val viewModelKoin: LoginViewModel by viewModel()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding = FragmentLoginBinding.bind(view)
+        super.onViewCreated(view, savedInstanceState)
+        _binding = FragmentLoginBinding.bind(view)
 
         if (!viewModelKoin.isUserInitialized())
             viewModelKoin.userLocal = UserRequest()
@@ -66,6 +69,11 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             viewModelActivityKoin.setActiveUser(it)
             mainActivity?.changeNavGraphToMain()
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun validateEmail(): Boolean {

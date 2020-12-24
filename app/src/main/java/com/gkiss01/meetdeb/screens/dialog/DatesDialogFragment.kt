@@ -40,8 +40,10 @@ import org.threeten.bp.OffsetDateTime
 class DatesDialogFragment : DialogFragment() {
     private var _binding: FragmentDatesBinding? = null
     private val binding get() = _binding!!
+
     private val viewModelActivityKoin: ActivityViewModel by sharedViewModel()
     private val viewModelKoin: DatesViewModel by viewModel()
+
     private val safeArgs: DatesDialogFragmentArgs by navArgs()
 
     private val itemAdapter = ItemAdapter<Date>()

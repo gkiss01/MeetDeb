@@ -35,12 +35,16 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.threeten.bp.OffsetDateTime
 
 class EventCreateFragment : Fragment(R.layout.fragment_event_create) {
-    private lateinit var binding: FragmentEventCreateBinding
+    private var _binding: FragmentEventCreateBinding? = null
+    private val binding get() = _binding!!
+
     private val viewModelKoin: EventCreateViewModel by viewModel()
+
     private val safeArgs: EventCreateFragmentArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding = FragmentEventCreateBinding.bind(view)
+        super.onViewCreated(view, savedInstanceState)
+        _binding = FragmentEventCreateBinding.bind(view)
 
         if (!viewModelKoin.isEventInitialized()) {
             safeArgs.event?.let {
@@ -120,6 +124,11 @@ class EventCreateFragment : Fragment(R.layout.fragment_event_create) {
             val bmImg: Bitmap = BitmapFactory.decodeFile(it)
             binding.previewImage.setImageBitmap(bmImg)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

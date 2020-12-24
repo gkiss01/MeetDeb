@@ -25,7 +25,9 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class EmailBottomSheet: BottomSheetDialogFragment() {
-    private lateinit var binding: BottomsheetProfileEmailBinding
+    private var _binding: BottomsheetProfileEmailBinding? = null
+    private val binding get() = _binding!!
+
     private val viewModelActivityKoin: ActivityViewModel by sharedViewModel()
     private val viewModelKoin: UpdateViewModel by viewModel()
 
@@ -35,7 +37,8 @@ class EmailBottomSheet: BottomSheetDialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding = BottomsheetProfileEmailBinding.bind(view)
+        super.onViewCreated(view, savedInstanceState)
+        _binding = BottomsheetProfileEmailBinding.bind(view)
 
         if (!viewModelKoin.isUserInitialized())
             viewModelKoin.userLocal = UserRequest()
@@ -74,6 +77,11 @@ class EmailBottomSheet: BottomSheetDialogFragment() {
             viewModelActivityKoin.setUserCredentials(viewModelKoin.userLocal.email, null)
             runDelayed { findNavController().navigateUp() }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun validateEmail(): Boolean {

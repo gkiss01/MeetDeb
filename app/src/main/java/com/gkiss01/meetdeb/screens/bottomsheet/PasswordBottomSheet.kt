@@ -24,7 +24,9 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PasswordBottomSheet: BottomSheetDialogFragment() {
-    private lateinit var binding: BottomsheetProfilePasswordBinding
+    private var _binding: BottomsheetProfilePasswordBinding? = null
+    private val binding get() = _binding!!
+
     private val viewModelActivityKoin: ActivityViewModel by sharedViewModel()
     private val viewModelKoin: UpdateViewModel by viewModel()
 
@@ -34,7 +36,8 @@ class PasswordBottomSheet: BottomSheetDialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding = BottomsheetProfilePasswordBinding.bind(view)
+        super.onViewCreated(view, savedInstanceState)
+        _binding = BottomsheetProfilePasswordBinding.bind(view)
 
         if (!viewModelKoin.isUserInitialized())
             viewModelKoin.userLocal = UserRequest()
@@ -73,6 +76,11 @@ class PasswordBottomSheet: BottomSheetDialogFragment() {
             viewModelActivityKoin.setUserCredentials(null, viewModelKoin.userLocal.password)
             runDelayed { findNavController().navigateUp() }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun validatePasswordNew(): Boolean {

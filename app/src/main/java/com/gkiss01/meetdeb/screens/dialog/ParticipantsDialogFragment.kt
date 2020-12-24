@@ -25,7 +25,9 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class ParticipantsDialogFragment : DialogFragment() {
     private var _binding: FragmentParticipantsBinding? = null
     private val binding get() = _binding!!
+
     private val viewModelKoin: ParticipantsViewModel by viewModel()
+
     private val safeArgs: ParticipantsDialogFragmentArgs by navArgs()
 
     private val itemAdapter = ItemAdapter<Participant>()

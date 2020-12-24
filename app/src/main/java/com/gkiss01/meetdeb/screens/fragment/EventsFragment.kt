@@ -32,6 +32,7 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 class EventsFragment : Fragment(R.layout.fragment_events) {
     private var _binding: FragmentEventsBinding? = null
     private val binding get() = _binding!!
+
     private val viewModelActivityKoin: ActivityViewModel by sharedViewModel()
     private val viewModelKoin: EventsViewModel by sharedViewModel()
 

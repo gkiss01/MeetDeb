@@ -21,11 +21,14 @@ import com.gkiss01.meetdeb.viewmodels.RegisterViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RegisterFragment : Fragment(R.layout.fragment_register) {
-    private lateinit var binding: FragmentRegisterBinding
+    private var _binding: FragmentRegisterBinding? = null
+    private val binding get() = _binding!!
+
     private val viewModelKoin: RegisterViewModel by viewModel()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding = FragmentRegisterBinding.bind(view)
+        super.onViewCreated(view, savedInstanceState)
+        _binding = FragmentRegisterBinding.bind(view)
 
         if (!viewModelKoin.isUserInitialized())
             viewModelKoin.userLocal = UserRequest()
@@ -65,6 +68,11 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
             binding.registerButton.hideProgress(R.string.done)
             runDelayed { findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToLoginFragment()) }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun validateEmail(): Boolean {

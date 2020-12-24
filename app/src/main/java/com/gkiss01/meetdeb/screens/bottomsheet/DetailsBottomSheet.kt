@@ -13,6 +13,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 class DetailsBottomSheet: BottomSheetDialogFragment() {
     private var _binding: BottomsheetEventDetailsBinding? = null
     private val binding get() = _binding!!
+
     private val safeArgs: DetailsBottomSheetArgs by navArgs()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

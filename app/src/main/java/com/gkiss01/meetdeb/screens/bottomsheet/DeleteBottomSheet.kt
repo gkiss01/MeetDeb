@@ -25,6 +25,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class DeleteBottomSheet: BottomSheetDialogFragment() {
     private var _binding: BottomsheetProfileDeleteBinding? = null
     private val binding get() = _binding!!
+
     private val viewModelActivityKoin: ActivityViewModel by sharedViewModel()
     private val viewModelKoin: DeleteViewModel by viewModel()
 
