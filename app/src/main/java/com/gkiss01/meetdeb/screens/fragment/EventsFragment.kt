@@ -46,7 +46,6 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        menu.clear()
         inflater.inflate(R.menu.action_event_fragment, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }

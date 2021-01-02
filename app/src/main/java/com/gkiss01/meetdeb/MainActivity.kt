@@ -10,7 +10,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
     private val viewModelKoin: ActivityViewModel by viewModel()
-    private val navController: NavController by lazy { findNavController(R.id.app_nav_host_fragment) }
+    private val appNavController: NavController by lazy { findNavController(R.id.app_nav_host_fragment) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
@@ -19,20 +19,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun changeNavGraphToStart() {
-        navController.navigateUp()
+        appNavController.navigateUp()
     }
 
     fun changeNavGraphToMain() {
-        navController.navigate(StartFlowFragmentDirections.actionStartFlowFragmentToMainFlowFragment())
+        appNavController.navigate(StartFlowFragmentDirections.actionStartFlowFragmentToMainFlowFragment())
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        val currentFlowFragmentId = navController.currentDestination?.id
+        val currentFlowFragmentId = appNavController.currentDestination?.id
         if (currentFlowFragmentId == R.id.mainFlowFragment) {
-            val navController = findNavController(R.id.main_nav_host_fragment)
-            return navController.navigateUp() || super.onSupportNavigateUp()
+            val mainNavController = findNavController(R.id.main_nav_host_fragment)
+            return mainNavController.navigateUp() || super.onSupportNavigateUp()
         }
-
         return super.onSupportNavigateUp()
     }
 

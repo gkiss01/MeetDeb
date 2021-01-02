@@ -16,7 +16,7 @@ class MainFlowFragment : Fragment(R.layout.fragment_flow_main) {
     private var _binding: FragmentFlowMainBinding? = null
     private val binding get() = _binding!!
 
-    private val navController: NavController? by lazy { childFragmentManager.findFragmentById(R.id.main_nav_host_fragment)?.findNavController() }
+    private val mainNavController: NavController? by lazy { childFragmentManager.findFragmentById(R.id.main_nav_host_fragment)?.findNavController() }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -31,7 +31,7 @@ class MainFlowFragment : Fragment(R.layout.fragment_flow_main) {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        navController?.let {
+        mainNavController?.let {
             binding.mainNavigationView.setupWithNavController(it)
             binding.mainNavigationView.setOnNavigationItemReselectedListener {  }
 

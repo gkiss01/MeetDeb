@@ -33,7 +33,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        menu.clear()
         inflater.inflate(R.menu.action_profile_fragment, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
