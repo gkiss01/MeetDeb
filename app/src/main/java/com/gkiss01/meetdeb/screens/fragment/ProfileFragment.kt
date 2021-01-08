@@ -2,18 +2,14 @@ package com.gkiss01.meetdeb.screens.fragment
 
 import android.os.Bundle
 import android.view.*
-import android.widget.TextView
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.onNavDestinationSelected
 import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.remote.response.User
-import com.gkiss01.meetdeb.data.remote.response.isAdmin
 import com.gkiss01.meetdeb.databinding.FragmentProfileBinding
-import com.gkiss01.meetdeb.network.common.Resource.Status
 import com.gkiss01.meetdeb.utils.mainActivity
 import com.gkiss01.meetdeb.utils.observeEvent
 import com.gkiss01.meetdeb.viewmodels.ProfileViewModel
@@ -54,13 +50,9 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentProfileBinding.bind(view)
 
+        binding.user = viewModelActivityKoin.activeUser.value?.data ?: User()
+
         viewModelKoin.getEventsSummary()
-        viewModelActivityKoin.activeUser.observe(viewLifecycleOwner) {
-            when (it.status) {
-                Status.SUCCESS -> it.data?.let { user -> bindUser(user) }
-                else -> {}
-            }
-        }
 
         // Toast üzenet
         viewModelKoin.toastEvent.observeEvent(viewLifecycleOwner) {
@@ -80,20 +72,5 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    private fun bindUser(user: User) {
-        binding.nameLabel.text = user.name
-        binding.emailLabel.text = user.email
-        binding.idField.editText?.setText(String.format("%07d", user.id), TextView.BufferType.NORMAL)
-
-        if (user.isAdmin()) {
-            val color = ContextCompat.getColor(requireContext(), R.color.anzacYellow)
-
-            binding.rankLabel.text = getString(R.string.profile_admin)
-            binding.rankLabel.setTextColor(color)
-            binding.profileImage.backgroundTintList = ContextCompat.getColorStateList(requireContext(), R.color.anzacYellow)
-        }
-        else binding.rankLabel.text = getString(R.string.profile_user)
     }
 }

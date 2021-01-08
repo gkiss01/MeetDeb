@@ -1,170 +1,186 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?attr/colorPrimary"
-    tools:context=".screens.fragment.ProfileFragment">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <View
-        android:id="@+id/headerView"
-        android:layout_width="0dp"
-        android:layout_height="150dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:background="?attr/colorPrimaryVariant"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.20" />
+    <data>
 
-    <ImageView
-        android:id="@+id/profileImage"
-        android:layout_width="0dp"
-        android:layout_height="110dp"
-        android:background="@drawable/profile_background"
-        android:backgroundTint="?attr/colorPrimaryVariant"
-        android:contentDescription="@string/profile_image_desc"
-        android:src="@drawable/profile"
-        app:layout_constraintBottom_toTopOf="@id/headerView"
-        app:layout_constraintDimensionRatio="w,1:1"
-        app:layout_constraintEnd_toEndOf="@id/headerView"
-        app:layout_constraintStart_toStartOf="@id/headerView"
-        app:layout_constraintTop_toTopOf="@id/headerView" />
+        <import type="com.gkiss01.meetdeb.data.remote.response.UserKt" />
 
-    <TextView
-        android:id="@+id/nameLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:textColor="?attr/colorOnPrimary"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@id/profileImage"
-        app:layout_constraintStart_toStartOf="@id/profileImage"
-        app:layout_constraintTop_toBottomOf="@id/profileImage" />
+        <variable
+            name="user"
+            type="com.gkiss01.meetdeb.data.remote.response.User" />
+    </data>
 
-    <TextView
-        android:id="@+id/emailLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="?attr/colorOnPrimary"
-        android:textSize="16sp"
-        android:textStyle="italic"
-        app:layout_constraintEnd_toEndOf="@id/nameLabel"
-        app:layout_constraintStart_toStartOf="@id/nameLabel"
-        app:layout_constraintTop_toBottomOf="@id/nameLabel" />
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/colorPrimary"
+        tools:context=".screens.fragment.ProfileFragment">
 
-    <TextView
-        android:id="@+id/rankLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textSize="19sp"
-        app:layout_constraintEnd_toEndOf="@id/nameLabel"
-        app:layout_constraintStart_toStartOf="@id/nameLabel"
-        app:layout_constraintTop_toBottomOf="@id/emailLabel" />
+        <View
+            android:id="@+id/headerView"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="?attr/colorPrimaryVariant"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.20" />
 
-    <LinearLayout
-        android:id="@+id/summaryView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:baselineAligned="false"
-        android:orientation="horizontal"
-        android:weightSum="2"
-        app:layout_constraintEnd_toEndOf="@id/headerView"
-        app:layout_constraintStart_toStartOf="@id/headerView"
-        app:layout_constraintTop_toBottomOf="@+id/headerView">
+        <ImageView
+            android:id="@+id/profileImage"
+            android:layout_width="0dp"
+            android:layout_height="110dp"
+            android:background="@drawable/profile_background"
+            android:backgroundTint="@{UserKt.isAdmin(user) ? @color/anzacYellow : @color/limedSpruceBlue}"
+            android:contentDescription="@string/profile_image_desc"
+            android:src="@drawable/profile"
+            app:layout_constraintBottom_toTopOf="@id/headerView"
+            app:layout_constraintDimensionRatio="w,1:1"
+            app:layout_constraintEnd_toEndOf="@id/headerView"
+            app:layout_constraintStart_toStartOf="@id/headerView"
+            app:layout_constraintTop_toTopOf="@id/headerView" />
+
+        <TextView
+            android:id="@+id/nameLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{user.name}"
+            android:textAlignment="center"
+            android:textColor="?attr/colorOnPrimary"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@id/profileImage"
+            app:layout_constraintStart_toStartOf="@id/profileImage"
+            app:layout_constraintTop_toBottomOf="@id/profileImage" />
+
+        <TextView
+            android:id="@+id/emailLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{user.email}"
+            android:textColor="?attr/colorOnPrimary"
+            android:textSize="16sp"
+            android:textStyle="italic"
+            app:layout_constraintEnd_toEndOf="@id/nameLabel"
+            app:layout_constraintStart_toStartOf="@id/nameLabel"
+            app:layout_constraintTop_toBottomOf="@id/nameLabel" />
+
+        <TextView
+            android:id="@+id/rankLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@{UserKt.isAdmin(user) ? @string/profile_admin : @string/profile_user}"
+            android:textColor="@{UserKt.isAdmin(user) ? @color/anzacYellow : @color/alabasterWhite}"
+            android:textSize="19sp"
+            app:layout_constraintEnd_toEndOf="@id/nameLabel"
+            app:layout_constraintStart_toStartOf="@id/nameLabel"
+            app:layout_constraintTop_toBottomOf="@id/emailLabel" />
 
         <LinearLayout
+            android:id="@+id/summaryView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:layout_marginTop="24dp"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            app:layout_constraintEnd_toEndOf="@id/headerView"
+            app:layout_constraintStart_toStartOf="@id/headerView"
+            app:layout_constraintTop_toBottomOf="@+id/headerView">
 
-            <TextView
-                android:id="@+id/createdEventsLabel"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textColor="?attr/colorOnPrimary"
-                android:textSize="22sp"
-                android:textStyle="bold" />
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/createdEventsLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?attr/colorOnPrimary"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/profile_created"
+                    android:textColor="?attr/colorOnPrimary"
+                    android:textSize="17sp" />
+
+                <View
+                    android:layout_width="70dp"
+                    android:layout_height="10dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/profile_line_background" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/profile_created"
-                android:textColor="?attr/colorOnPrimary"
-                android:textSize="17sp" />
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
 
-            <View
-                android:layout_width="70dp"
-                android:layout_height="10dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/profile_line_background" />
+                <TextView
+                    android:id="@+id/acceptedEventsLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?attr/colorOnPrimary"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/profile_accepted"
+                    android:textColor="?attr/colorOnPrimary"
+                    android:textSize="17sp" />
+
+                <View
+                    android:layout_width="70dp"
+                    android:layout_height="10dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/profile_line_background" />
+            </LinearLayout>
         </LinearLayout>
 
-        <LinearLayout
+        <View
+            android:id="@+id/lineView"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:layout_marginTop="30dp"
+            android:background="?attr/colorOnPrimary"
+            app:layout_constraintEnd_toEndOf="@id/headerView"
+            app:layout_constraintStart_toStartOf="@id/headerView"
+            app:layout_constraintTop_toBottomOf="@id/summaryView" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/idField"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:layout_marginTop="10dp"
+            android:theme="@style/WidgetInputTextFieldLight"
+            app:layout_constraintEnd_toEndOf="@id/headerView"
+            app:layout_constraintStart_toStartOf="@id/headerView"
+            app:layout_constraintTop_toBottomOf="@id/lineView">
 
-            <TextView
-                android:id="@+id/acceptedEventsLabel"
-                android:layout_width="wrap_content"
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="?attr/colorOnPrimary"
-                android:textSize="22sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/profile_accepted"
-                android:textColor="?attr/colorOnPrimary"
-                android:textSize="17sp" />
-
-            <View
-                android:layout_width="70dp"
-                android:layout_height="10dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/profile_line_background" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <View
-        android:id="@+id/lineView"
-        android:layout_width="0dp"
-        android:layout_height="2dp"
-        android:layout_marginTop="30dp"
-        android:background="?attr/colorOnPrimary"
-        app:layout_constraintEnd_toEndOf="@id/headerView"
-        app:layout_constraintStart_toStartOf="@id/headerView"
-        app:layout_constraintTop_toBottomOf="@id/summaryView" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/idField"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:theme="@style/WidgetInputTextFieldLight"
-        app:layout_constraintEnd_toEndOf="@id/headerView"
-        app:layout_constraintStart_toStartOf="@id/headerView"
-        app:layout_constraintTop_toBottomOf="@id/lineView">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            android:enabled="false"
-            android:hint="@string/profile_identifier"
-            android:inputType="text"
-            android:textColor="?attr/colorOnPrimaryTextField" />
-    </com.google.android.material.textfield.TextInputLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+                android:background="@null"
+                android:enabled="false"
+                android:hint="@string/profile_identifier"
+                android:inputType="text"
+                android:text='@{String.format("%07d", user.id)}'
+                android:textColor="?attr/colorOnPrimaryTextField" />
+        </com.google.android.material.textfield.TextInputLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -100,10 +100,10 @@
 
             <TextView
                 android:id="@+id/participantsLabel"
-                setParticipants="@{event.participants}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/muli_extrabold"
+                android:text="@{@string/event_participants(event.participants)}"
                 android:textColor="?attr/colorOnSurface" />
 
             <TextView

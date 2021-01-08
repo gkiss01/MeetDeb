@@ -7,6 +7,8 @@ data class User(
     val enabled: Boolean,
     val roles: Set<Role>) {
 
+    constructor(): this(Long.MIN_VALUE, "", "", false, setOf())
+
     enum class Role {
         ROLE_CLIENT, ROLE_ADMIN
     }
