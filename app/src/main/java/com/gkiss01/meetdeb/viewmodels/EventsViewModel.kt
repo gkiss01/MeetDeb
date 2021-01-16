@@ -57,7 +57,6 @@ class EventsViewModel(private val restClient: RestClient) : ViewModel() {
                 when (it.status) {
                     Status.SUCCESS -> it.data?.let { events -> addEventsToList(events, page) }
                     Status.ERROR -> _toastEvent.postValue(SingleEvent(it.errorMessage))
-                    else -> {}
                 }
             }
         }
@@ -75,7 +74,6 @@ class EventsViewModel(private val restClient: RestClient) : ViewModel() {
                         _updateItemEvent.postValue(SingleEvent(eventId))
                         _toastEvent.postValue(SingleEvent(it.errorMessage))
                     }
-                    else -> {}
                 }
             }
         }
@@ -93,7 +91,6 @@ class EventsViewModel(private val restClient: RestClient) : ViewModel() {
                         _updateItemEvent.postValue(SingleEvent(eventId))
                         _toastEvent.postValue(SingleEvent(it.errorMessage))
                     }
-                    else -> {}
                 }
             }
         }
@@ -110,7 +107,6 @@ class EventsViewModel(private val restClient: RestClient) : ViewModel() {
                         _toastEvent.postValue(SingleEvent(R.string.event_reported))
                     }
                     Status.ERROR -> _toastEvent.postValue(SingleEvent(it.errorMessage))
-                    else -> {}
                 }
             }
         }
@@ -127,7 +123,6 @@ class EventsViewModel(private val restClient: RestClient) : ViewModel() {
                         _toastEvent.postValue(SingleEvent(R.string.event_report_removed))
                     }
                     Status.ERROR -> _toastEvent.postValue(SingleEvent(it.errorMessage))
-                    else -> {}
                 }
             }
         }
@@ -140,7 +135,6 @@ class EventsViewModel(private val restClient: RestClient) : ViewModel() {
                 when (it.status) {
                     Status.SUCCESS -> it.data?.withId?.let { eventId -> removeEventFromList(eventId) }
                     Status.ERROR -> _toastEvent.postValue(SingleEvent(it.errorMessage))
-                    else -> {}
                 }
             }
         }

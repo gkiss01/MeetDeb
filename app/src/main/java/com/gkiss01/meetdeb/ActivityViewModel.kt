@@ -27,7 +27,7 @@ class ActivityViewModel(private val application: Application) : ViewModel() {
     }
 
     private fun resetActiveUser() {
-        _activeUser.postValue(Resource.pending(null))
+        _activeUser.postValue(null)
     }
 
     fun setUserCredentials(username: String?, password: String?) {

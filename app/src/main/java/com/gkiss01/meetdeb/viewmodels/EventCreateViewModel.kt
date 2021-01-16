@@ -77,7 +77,6 @@ class EventCreateViewModel(private val restClient: RestClient, private val moshi
                 when (it.status) {
                     Status.SUCCESS -> it.data?.let { _operationSuccessful.postValue(VoidEvent()) }
                     Status.ERROR -> _toastEvent.postValue(SingleEvent(it.errorMessage))
-                    else -> {}
                 }
             }
         }
@@ -93,7 +92,6 @@ class EventCreateViewModel(private val restClient: RestClient, private val moshi
                 when (it.status) {
                     Status.SUCCESS -> it.data?.let { _operationSuccessful.postValue(VoidEvent()) }
                     Status.ERROR -> _toastEvent.postValue(SingleEvent(it.errorMessage))
-                    else -> {}
                 }
             }
         }

@@ -34,7 +34,6 @@ class ProfileViewModel(private val restClient: RestClient): ViewModel() {
                 when (it.status) {
                     Status.SUCCESS -> it.data?.let { summary -> _eventsSummary.postValue(summary) }
                     Status.ERROR -> _toastEvent.postValue(SingleEvent(it.errorMessage))
-                    else -> {}
                 }
             }
         }

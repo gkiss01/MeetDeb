@@ -34,7 +34,6 @@ class DeleteViewModel(private val restClient: RestClient): ViewModel() {
                 when (it.status) {
                     Status.SUCCESS -> it.data?.let { _operationSuccessful.postValue(VoidEvent()) }
                     Status.ERROR -> _toastEvent.postValue(SingleEvent(it.errorMessage))
-                    else -> {}
                 }
             }
         }

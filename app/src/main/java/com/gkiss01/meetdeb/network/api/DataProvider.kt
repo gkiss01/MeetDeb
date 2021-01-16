@@ -28,8 +28,7 @@ interface DataProvider {
 
     @Multipart
     @POST("events")
-    suspend fun createEvent(@Part("event") event: RequestBody,
-                                 @Part file: MultipartBody.Part?): Event
+    suspend fun createEvent(@Part("event") event: RequestBody, @Part file: MultipartBody.Part?): Event
 
     @Multipart
     @POST("events/update")

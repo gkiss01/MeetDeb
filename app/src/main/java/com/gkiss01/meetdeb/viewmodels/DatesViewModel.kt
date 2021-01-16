@@ -57,7 +57,6 @@ class DatesViewModel(private val restClient: RestClient) : ViewModel() {
                 when (it.status) {
                     Status.SUCCESS -> it.data?.let { dates -> _dates.postValue(dates) }
                     Status.ERROR -> _toastEvent.postValue(SingleEvent(it.errorMessage))
-                    else -> {}
                 }
             }
         }
@@ -76,7 +75,6 @@ class DatesViewModel(private val restClient: RestClient) : ViewModel() {
                         _collapseFooter.postValue(VoidEvent())
                     }
                     Status.ERROR -> _toastEvent.postValue(SingleEvent(it.errorMessage))
-                    else -> {}
                 }
             }
         }
@@ -89,7 +87,6 @@ class DatesViewModel(private val restClient: RestClient) : ViewModel() {
                 when (it.status) {
                     Status.SUCCESS -> it.data?.withId?.let { dateId -> removeDateFromList(dateId) }
                     Status.ERROR -> _toastEvent.postValue(SingleEvent(it.errorMessage))
-                    else -> {}
                 }
             }
         }
@@ -111,7 +108,6 @@ class DatesViewModel(private val restClient: RestClient) : ViewModel() {
                         _updateItemEvent.postValue(SingleEvent(dateId))
                         _toastEvent.postValue(SingleEvent(it.errorMessage))
                     }
-                    else -> {}
                 }
             }
         }
