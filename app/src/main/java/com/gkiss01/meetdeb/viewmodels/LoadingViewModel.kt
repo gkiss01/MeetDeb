@@ -11,6 +11,7 @@ import com.gkiss01.meetdeb.network.common.Resource.ErrorCode
 import com.gkiss01.meetdeb.network.common.Resource.Status
 import com.gkiss01.meetdeb.utils.SingleEvent
 import com.gkiss01.meetdeb.utils.VoidEvent
+import com.gkiss01.meetdeb.utils.postEvent
 import kotlinx.coroutines.launch
 
 class LoadingViewModel(private val restClient: RestClient): ViewModel() {
@@ -38,11 +39,11 @@ class LoadingViewModel(private val restClient: RestClient): ViewModel() {
             restClient.checkUser().let {
                 //_currentlyLoggingIn.postValue(false)
                 when (it.status) {
-                    Status.SUCCESS -> it.data?.let { user -> _operationSuccessful.postValue(SingleEvent(user)) }
+                    Status.SUCCESS -> it.data?.let { user -> _operationSuccessful.postEvent(user) }
                     Status.ERROR -> {
-                        _operationUnsuccessful.postValue(VoidEvent())
+                        _operationUnsuccessful.postEvent()
                         if (it.errorCode != ErrorCode.USER_DISABLED_OR_NOT_VALID)
-                            _toastEvent.postValue(SingleEvent(it.errorMessage))
+                            _toastEvent.postEvent(it.errorMessage)
                     }
                 }
             }

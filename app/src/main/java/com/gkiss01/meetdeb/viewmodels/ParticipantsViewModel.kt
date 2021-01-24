@@ -10,6 +10,7 @@ import com.gkiss01.meetdeb.data.remote.response.Participant
 import com.gkiss01.meetdeb.network.api.RestClient
 import com.gkiss01.meetdeb.network.common.Resource.Status
 import com.gkiss01.meetdeb.utils.SingleEvent
+import com.gkiss01.meetdeb.utils.postEvent
 import kotlinx.coroutines.launch
 
 class ParticipantsViewModel(private val restClient: RestClient) : ViewModel() {
@@ -37,7 +38,7 @@ class ParticipantsViewModel(private val restClient: RestClient) : ViewModel() {
                 _headerCurrentlyNeeded.postValue(false)
                 when (it.status) {
                     Status.SUCCESS -> it.data?.let { participants -> _participants.postValue(participants) }
-                    Status.ERROR -> _toastEvent.postValue(SingleEvent(it.errorMessage))
+                    Status.ERROR -> _toastEvent.postEvent(it.errorMessage)
                 }
             }
         }

@@ -13,6 +13,7 @@ import com.gkiss01.meetdeb.network.api.RestClient
 import com.gkiss01.meetdeb.network.common.Resource.ErrorCode
 import com.gkiss01.meetdeb.network.common.Resource.Status
 import com.gkiss01.meetdeb.utils.SingleEvent
+import com.gkiss01.meetdeb.utils.postEvent
 import com.gkiss01.meetdeb.utils.setAuthToken
 import kotlinx.coroutines.launch
 import okhttp3.Credentials
@@ -46,10 +47,10 @@ class LoginViewModel(private val restClient: RestClient, private val application
             restClient.checkUser().let {
                 _currentlyLoggingIn.postValue(false)
                 when (it.status) {
-                    Status.SUCCESS -> it.data?.let { user -> _operationSuccessful.postValue(SingleEvent(user)) }
+                    Status.SUCCESS -> it.data?.let { user -> _operationSuccessful.postEvent(user) }
                     Status.ERROR -> {
                         val message = if (it.errorCode == ErrorCode.USER_DISABLED_OR_NOT_VALID) R.string.invalid_credentials else it.errorMessage
-                        _toastEvent.postValue(SingleEvent(message))
+                        _toastEvent.postEvent(message)
                     }
                 }
             }

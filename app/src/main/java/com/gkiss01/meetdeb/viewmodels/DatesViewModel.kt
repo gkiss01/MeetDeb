@@ -12,6 +12,7 @@ import com.gkiss01.meetdeb.network.common.Resource.Status
 import com.gkiss01.meetdeb.utils.SingleEvent
 import com.gkiss01.meetdeb.utils.VoidEvent
 import com.gkiss01.meetdeb.utils.format
+import com.gkiss01.meetdeb.utils.postEvent
 import kotlinx.coroutines.launch
 import org.threeten.bp.OffsetDateTime
 
@@ -56,7 +57,7 @@ class DatesViewModel(private val restClient: RestClient) : ViewModel() {
                 _headerCurrentlyNeeded.postValue(false)
                 when (it.status) {
                     Status.SUCCESS -> it.data?.let { dates -> _dates.postValue(dates) }
-                    Status.ERROR -> _toastEvent.postValue(SingleEvent(it.errorMessage))
+                    Status.ERROR -> _toastEvent.postEvent(it.errorMessage)
                 }
             }
         }
@@ -72,9 +73,9 @@ class DatesViewModel(private val restClient: RestClient) : ViewModel() {
                 when (it.status) {
                     Status.SUCCESS -> it.data?.let { dates ->
                         _dates.postValue(dates)
-                        _collapseFooter.postValue(VoidEvent())
+                        _collapseFooter.postEvent()
                     }
-                    Status.ERROR -> _toastEvent.postValue(SingleEvent(it.errorMessage))
+                    Status.ERROR -> _toastEvent.postEvent(it.errorMessage)
                 }
             }
         }
@@ -86,7 +87,7 @@ class DatesViewModel(private val restClient: RestClient) : ViewModel() {
             restClient.deleteDate(dateId).let {
                 when (it.status) {
                     Status.SUCCESS -> it.data?.withId?.let { dateId -> removeDateFromList(dateId) }
-                    Status.ERROR -> _toastEvent.postValue(SingleEvent(it.errorMessage))
+                    Status.ERROR -> _toastEvent.postEvent(it.errorMessage)
                 }
             }
         }
@@ -94,7 +95,7 @@ class DatesViewModel(private val restClient: RestClient) : ViewModel() {
 
     fun changeVote(dateId: Long) {
         _itemCurrentlyUpdating.value?.let {
-            if (it != dateId) _updateItemEvent.postValue(SingleEvent(dateId))
+            if (it != dateId) _updateItemEvent.postEvent(dateId)
             return
         }
         Log.d("Logger_DatesVM", "Changing vote with date ID $dateId ...")
@@ -105,8 +106,8 @@ class DatesViewModel(private val restClient: RestClient) : ViewModel() {
                 when (it.status) {
                     Status.SUCCESS -> it.data?.let { dates -> _dates.postValue(dates) }
                     Status.ERROR -> {
-                        _updateItemEvent.postValue(SingleEvent(dateId))
-                        _toastEvent.postValue(SingleEvent(it.errorMessage))
+                        _updateItemEvent.postEvent(dateId)
+                        _toastEvent.postEvent(it.errorMessage)
                     }
                 }
             }

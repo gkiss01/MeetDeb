@@ -15,6 +15,7 @@ import com.gkiss01.meetdeb.network.common.Resource.Status
 import com.gkiss01.meetdeb.utils.CredentialType
 import com.gkiss01.meetdeb.utils.SingleEvent
 import com.gkiss01.meetdeb.utils.getCurrentCredential
+import com.gkiss01.meetdeb.utils.postEvent
 import com.squareup.moshi.Moshi
 import kotlinx.coroutines.launch
 import okhttp3.Credentials
@@ -52,10 +53,10 @@ class UpdateViewModel(private val restClient: RestClient, private val moshi: Mos
             restClient.updateUser(basic, user).let {
                 _currentlyUpdating.postValue(false)
                 when (it.status) {
-                    Status.SUCCESS -> it.data?.let { user -> _operationSuccessful.postValue(SingleEvent(user)) }
+                    Status.SUCCESS -> it.data?.let { user -> _operationSuccessful.postEvent(user) }
                     Status.ERROR -> {
                         val message = if (it.errorCode == ErrorCode.USER_DISABLED_OR_NOT_VALID) R.string.invalid_current_password else it.errorMessage
-                        _toastEvent.postValue(SingleEvent(message))
+                        _toastEvent.postEvent(message)
                     }
                 }
             }

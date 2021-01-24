@@ -10,6 +10,7 @@ import com.gkiss01.meetdeb.data.remote.response.Event
 import com.gkiss01.meetdeb.network.api.RestClient
 import com.gkiss01.meetdeb.network.common.Resource.Status
 import com.gkiss01.meetdeb.utils.SingleEvent
+import com.gkiss01.meetdeb.utils.postEvent
 import kotlinx.coroutines.launch
 import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -57,7 +58,7 @@ class EventsViewModel(private val restClient: RestClient) : ViewModel() {
                 _footerCurrentlyNeeded.postValue(false)
                 when (it.status) {
                     Status.SUCCESS -> it.data?.let { events -> addEventsToList(events, page) }
-                    Status.ERROR -> _toastEvent.postValue(SingleEvent(it.errorMessage))
+                    Status.ERROR -> _toastEvent.postEvent(it.errorMessage)
                 }
             }
         }
@@ -72,8 +73,8 @@ class EventsViewModel(private val restClient: RestClient) : ViewModel() {
                 when (it.status) {
                     Status.SUCCESS -> it.data?.let { event -> updateEventInList(event) }
                     Status.ERROR -> {
-                        _updateItemEvent.postValue(SingleEvent(eventId))
-                        _toastEvent.postValue(SingleEvent(it.errorMessage))
+                        _updateItemEvent.postEvent(eventId)
+                        _toastEvent.postEvent(it.errorMessage)
                     }
                 }
             }
@@ -89,8 +90,8 @@ class EventsViewModel(private val restClient: RestClient) : ViewModel() {
                 when (it.status) {
                     Status.SUCCESS -> it.data?.let { event -> updateEventInList(event) }
                     Status.ERROR -> {
-                        _updateItemEvent.postValue(SingleEvent(eventId))
-                        _toastEvent.postValue(SingleEvent(it.errorMessage))
+                        _updateItemEvent.postEvent(eventId)
+                        _toastEvent.postEvent(it.errorMessage)
                     }
                 }
             }
@@ -104,10 +105,10 @@ class EventsViewModel(private val restClient: RestClient) : ViewModel() {
                 when (it.status) {
                     Status.SUCCESS -> it.data?.withId?.let { eventId ->
                         addReportToEvent(eventId)
-                        _updateItemEvent.postValue(SingleEvent(eventId))
-                        _toastEvent.postValue(SingleEvent(R.string.event_reported))
+                        _updateItemEvent.postEvent(eventId)
+                        _toastEvent.postEvent(R.string.event_reported)
                     }
-                    Status.ERROR -> _toastEvent.postValue(SingleEvent(it.errorMessage))
+                    Status.ERROR -> _toastEvent.postEvent(it.errorMessage)
                 }
             }
         }
@@ -120,10 +121,10 @@ class EventsViewModel(private val restClient: RestClient) : ViewModel() {
                 when (it.status) {
                     Status.SUCCESS -> it.data?.withId?.let { eventId ->
                         removeReportFromEvent(eventId)
-                        _updateItemEvent.postValue(SingleEvent(eventId))
-                        _toastEvent.postValue(SingleEvent(R.string.event_report_removed))
+                        _updateItemEvent.postEvent(eventId)
+                        _toastEvent.postEvent(R.string.event_report_removed)
                     }
-                    Status.ERROR -> _toastEvent.postValue(SingleEvent(it.errorMessage))
+                    Status.ERROR -> _toastEvent.postEvent(it.errorMessage)
                 }
             }
         }
@@ -135,7 +136,7 @@ class EventsViewModel(private val restClient: RestClient) : ViewModel() {
             restClient.deleteEvent(eventId).let {
                 when (it.status) {
                     Status.SUCCESS -> it.data?.withId?.let { eventId -> removeEventFromList(eventId) }
-                    Status.ERROR -> _toastEvent.postValue(SingleEvent(it.errorMessage))
+                    Status.ERROR -> _toastEvent.postEvent(it.errorMessage)
                 }
             }
         }

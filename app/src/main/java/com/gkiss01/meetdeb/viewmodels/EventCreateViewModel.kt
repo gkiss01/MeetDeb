@@ -12,6 +12,7 @@ import com.gkiss01.meetdeb.network.api.RestClient
 import com.gkiss01.meetdeb.network.common.Resource.Status
 import com.gkiss01.meetdeb.utils.SingleEvent
 import com.gkiss01.meetdeb.utils.VoidEvent
+import com.gkiss01.meetdeb.utils.postEvent
 import com.squareup.moshi.Moshi
 import id.zelory.compressor.Compressor
 import kotlinx.coroutines.launch
@@ -75,8 +76,8 @@ class EventCreateViewModel(private val restClient: RestClient, private val moshi
             restClient.createEvent(event, image).let {
                 _itemCurrentlyAdding.postValue(false)
                 when (it.status) {
-                    Status.SUCCESS -> it.data?.let { _operationSuccessful.postValue(VoidEvent()) }
-                    Status.ERROR -> _toastEvent.postValue(SingleEvent(it.errorMessage))
+                    Status.SUCCESS -> it.data?.let { _operationSuccessful.postEvent() }
+                    Status.ERROR -> _toastEvent.postEvent(it.errorMessage)
                 }
             }
         }
@@ -90,8 +91,8 @@ class EventCreateViewModel(private val restClient: RestClient, private val moshi
             restClient.updateEvent(event).let {
                 _itemCurrentlyAdding.postValue(false)
                 when (it.status) {
-                    Status.SUCCESS -> it.data?.let { _operationSuccessful.postValue(VoidEvent()) }
-                    Status.ERROR -> _toastEvent.postValue(SingleEvent(it.errorMessage))
+                    Status.SUCCESS -> it.data?.let { _operationSuccessful.postEvent() }
+                    Status.ERROR -> _toastEvent.postEvent(it.errorMessage)
                 }
             }
         }

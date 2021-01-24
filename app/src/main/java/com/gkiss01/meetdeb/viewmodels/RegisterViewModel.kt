@@ -11,6 +11,7 @@ import com.gkiss01.meetdeb.network.api.RestClient
 import com.gkiss01.meetdeb.network.common.Resource.ErrorCode
 import com.gkiss01.meetdeb.network.common.Resource.Status
 import com.gkiss01.meetdeb.utils.SingleEvent
+import com.gkiss01.meetdeb.utils.postEvent
 import com.squareup.moshi.Moshi
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -54,10 +55,10 @@ class RegisterViewModel(private val restClient: RestClient, private val moshi: M
             restClient.createUser(user).let {
                 _currentlyRegistering.postValue(false)
                 when (it.status) {
-                    Status.SUCCESS -> it.data?.let { user -> _operationSuccessful.postValue(SingleEvent(user)) }
+                    Status.SUCCESS -> it.data?.let { user -> _operationSuccessful.postEvent(user) }
                     Status.ERROR -> {
                         if (it.errorCode != ErrorCode.USER_DISABLED_OR_NOT_VALID)
-                            _toastEvent.postValue(SingleEvent(it.errorMessage))
+                            _toastEvent.postEvent(it.errorMessage)
                     }
                 }
             }
