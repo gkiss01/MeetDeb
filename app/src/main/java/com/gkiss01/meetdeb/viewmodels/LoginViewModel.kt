@@ -10,7 +10,7 @@ import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.remote.request.UserRequest
 import com.gkiss01.meetdeb.data.remote.response.User
 import com.gkiss01.meetdeb.network.api.RestClient
-import com.gkiss01.meetdeb.network.common.Resource.ErrorCode
+import com.gkiss01.meetdeb.network.common.Error.ErrorCode
 import com.gkiss01.meetdeb.network.common.Resource.Status
 import com.gkiss01.meetdeb.utils.SingleEvent
 import com.gkiss01.meetdeb.utils.postEvent
@@ -49,7 +49,7 @@ class LoginViewModel(private val restClient: RestClient, private val application
                 when (it.status) {
                     Status.SUCCESS -> it.data?.let { user -> _operationSuccessful.postEvent(user) }
                     Status.ERROR -> {
-                        val message = if (it.errorCode == ErrorCode.USER_DISABLED_OR_NOT_VALID) R.string.invalid_credentials else it.errorMessage
+                        val message = if (it.error?.code == ErrorCode.USER_DISABLED_OR_NOT_VALID) R.string.invalid_credentials else it.error?.localizedDescription
                         _toastEvent.postEvent(message)
                     }
                 }

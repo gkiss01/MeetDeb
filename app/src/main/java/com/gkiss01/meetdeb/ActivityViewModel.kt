@@ -10,12 +10,11 @@ import com.gkiss01.meetdeb.utils.CredentialType
 import com.gkiss01.meetdeb.utils.getCurrentCredential
 import com.gkiss01.meetdeb.utils.setAuthToken
 import okhttp3.Credentials
-import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val activityModule = module {
-    viewModel { ActivityViewModel(androidApplication()) }
+    viewModel { ActivityViewModel(get()) }
 }
 
 class ActivityViewModel(private val application: Application) : ViewModel() {

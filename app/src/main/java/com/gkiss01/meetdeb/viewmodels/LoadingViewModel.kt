@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gkiss01.meetdeb.data.remote.response.User
 import com.gkiss01.meetdeb.network.api.RestClient
-import com.gkiss01.meetdeb.network.common.Resource.ErrorCode
+import com.gkiss01.meetdeb.network.common.Error.ErrorCode
 import com.gkiss01.meetdeb.network.common.Resource.Status
 import com.gkiss01.meetdeb.utils.SingleEvent
 import com.gkiss01.meetdeb.utils.VoidEvent
@@ -42,8 +42,8 @@ class LoadingViewModel(private val restClient: RestClient): ViewModel() {
                     Status.SUCCESS -> it.data?.let { user -> _operationSuccessful.postEvent(user) }
                     Status.ERROR -> {
                         _operationUnsuccessful.postEvent()
-                        if (it.errorCode != ErrorCode.USER_DISABLED_OR_NOT_VALID)
-                            _toastEvent.postEvent(it.errorMessage)
+                        if (it.error?.code != ErrorCode.USER_DISABLED_OR_NOT_VALID)
+                            _toastEvent.postEvent(it.error?.localizedDescription)
                     }
                 }
             }

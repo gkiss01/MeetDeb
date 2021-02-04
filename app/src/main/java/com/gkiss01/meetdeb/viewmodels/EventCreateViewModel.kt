@@ -77,7 +77,7 @@ class EventCreateViewModel(private val restClient: RestClient, private val moshi
                 _itemCurrentlyAdding.postValue(false)
                 when (it.status) {
                     Status.SUCCESS -> it.data?.let { _operationSuccessful.postEvent() }
-                    Status.ERROR -> _toastEvent.postEvent(it.errorMessage)
+                    Status.ERROR -> _toastEvent.postEvent(it.error?.localizedDescription)
                 }
             }
         }
@@ -92,7 +92,7 @@ class EventCreateViewModel(private val restClient: RestClient, private val moshi
                 _itemCurrentlyAdding.postValue(false)
                 when (it.status) {
                     Status.SUCCESS -> it.data?.let { _operationSuccessful.postEvent() }
-                    Status.ERROR -> _toastEvent.postEvent(it.errorMessage)
+                    Status.ERROR -> _toastEvent.postEvent(it.error?.localizedDescription)
                 }
             }
         }

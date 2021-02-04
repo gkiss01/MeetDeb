@@ -4,27 +4,13 @@ import android.app.Application
 import android.content.Context
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.remote.response.ErrorResponse
-import com.gkiss01.meetdeb.network.common.Resource.ErrorCode
+import com.gkiss01.meetdeb.network.common.Error.ErrorCode
 import com.squareup.moshi.Moshi
 import retrofit2.HttpException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 
-data class Resource<out T>(val status: Status, val data: T?, val errorCode: ErrorCode?, val errorMessage: String?) {
-    companion object {
-        fun <T> success(data: T?): Resource<T> {
-            return Resource(Status.SUCCESS, data, null, null)
-        }
-
-        fun <T> error(code: ErrorCode, msg: String, data: T?): Resource<T> {
-            return Resource(Status.ERROR, data, code, msg)
-        }
-    }
-
-    enum class Status {
-        SUCCESS,
-        ERROR
-    }
+data class Error(val code: ErrorCode, val localizedDescription: String?) {
 
     enum class ErrorCode {
         USER_DISABLED_OR_NOT_VALID,
@@ -86,6 +72,23 @@ data class Resource<out T>(val status: Status, val data: T?, val errorCode: Erro
     }
 }
 
+data class Resource<out T>(val status: Status, val data: T?, val error: Error?) {
+    companion object {
+        fun <T> success(data: T?): Resource<T> {
+            return Resource(Status.SUCCESS, data, null)
+        }
+
+        fun <T> error(error: Error?, data: T? = null): Resource<T> {
+            return Resource(Status.ERROR, data, error)
+        }
+    }
+
+    enum class Status {
+        SUCCESS,
+        ERROR
+    }
+}
+
 open class ResourceHandler(private val moshi: Moshi, private val application: Application) {
     fun <T : Any> handleSuccess(data: T): Resource<T> {
         return Resource.success(data)
@@ -95,12 +98,12 @@ open class ResourceHandler(private val moshi: Moshi, private val application: Ap
         return when (e) {
             is HttpException -> {
                 val errorResponse = convertErrorBody(e)
-                val (errorCode, errorMessage) = convertErrorMessage(errorResponse, e.code() >= 500)
-                Resource.error(errorCode, errorMessage, null)
+                val error = errorResponse?.asError(application, e.code() >= 500)
+                Resource.error(error, null)
             }
-            is SocketTimeoutException -> Resource.error(ErrorCode.TIMEOUT, ErrorCode.TIMEOUT.getDescription(application), null)
-            is ConnectException -> Resource.error(ErrorCode.CONNECT, ErrorCode.CONNECT.getDescription(application), null)
-            else -> Resource.error(ErrorCode.UNKNOWN, ErrorCode.UNKNOWN.getDescription(application), null)
+            is SocketTimeoutException -> Resource.error(Error(ErrorCode.TIMEOUT, ErrorCode.TIMEOUT.getDescription(application)))
+            is ConnectException -> Resource.error(Error(ErrorCode.CONNECT, ErrorCode.CONNECT.getDescription(application)))
+            else -> Resource.error(Error(ErrorCode.UNKNOWN, ErrorCode.UNKNOWN.getDescription(application)))
         }
     }
 
@@ -112,21 +115,5 @@ open class ResourceHandler(private val moshi: Moshi, private val application: Ap
         } catch (exception: Exception) {
             null
         }
-    }
-
-    private fun convertErrorMessage(errorResponse: ErrorResponse?, isServerError: Boolean = false): Pair<ErrorCode, String> {
-        val errorCode = errorResponse?.errorCode ?: ErrorCode.UNKNOWN
-        var errorMessage = errorCode.getDescription(application)
-
-        errorResponse?.errors?.let {
-            errorMessage = ""
-            it.forEachIndexed { index, e  ->
-                errorMessage = errorMessage.plus(if (index == 0) "" else "\n").plus(e)
-            }
-        }
-
-        if (isServerError)
-            errorMessage = "[Server error]\n".plus(errorMessage)
-        return Pair(errorCode, errorMessage)
     }
 }

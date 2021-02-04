@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.gkiss01.meetdeb.data.remote.request.UserRequest
 import com.gkiss01.meetdeb.data.remote.response.User
 import com.gkiss01.meetdeb.network.api.RestClient
-import com.gkiss01.meetdeb.network.common.Resource.ErrorCode
+import com.gkiss01.meetdeb.network.common.Error.ErrorCode
 import com.gkiss01.meetdeb.network.common.Resource.Status
 import com.gkiss01.meetdeb.utils.SingleEvent
 import com.gkiss01.meetdeb.utils.postEvent
@@ -16,15 +16,14 @@ import com.squareup.moshi.Moshi
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
-import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val profileModule = module {
     viewModel { RegisterViewModel(get(), get()) }
-    viewModel { LoginViewModel(get(), androidApplication()) }
+    viewModel { LoginViewModel(get(), get()) }
     viewModel { LoadingViewModel(get()) }
-    viewModel { UpdateViewModel(get(), get(), androidApplication()) }
+    viewModel { UpdateViewModel(get(), get(), get()) }
     viewModel { DeleteViewModel(get()) }
     viewModel { ProfileViewModel(get()) }
 }
@@ -57,8 +56,8 @@ class RegisterViewModel(private val restClient: RestClient, private val moshi: M
                 when (it.status) {
                     Status.SUCCESS -> it.data?.let { user -> _operationSuccessful.postEvent(user) }
                     Status.ERROR -> {
-                        if (it.errorCode != ErrorCode.USER_DISABLED_OR_NOT_VALID)
-                            _toastEvent.postEvent(it.errorMessage)
+                        if (it.error?.code != ErrorCode.USER_DISABLED_OR_NOT_VALID)
+                            _toastEvent.postEvent(it.error?.localizedDescription)
                     }
                 }
             }

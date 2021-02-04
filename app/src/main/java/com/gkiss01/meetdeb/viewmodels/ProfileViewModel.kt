@@ -34,7 +34,7 @@ class ProfileViewModel(private val restClient: RestClient): ViewModel() {
                 _currentlyLoading.postValue(false)
                 when (it.status) {
                     Status.SUCCESS -> it.data?.let { summary -> _eventsSummary.postValue(summary) }
-                    Status.ERROR -> _toastEvent.postEvent(it.errorMessage)
+                    Status.ERROR -> _toastEvent.postEvent(it.error?.localizedDescription)
                 }
             }
         }

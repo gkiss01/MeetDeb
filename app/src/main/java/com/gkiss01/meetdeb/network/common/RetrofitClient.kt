@@ -10,12 +10,11 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
-const val BASE_URL = "http://192.168.0.102:8080"
+const val BASE_URL = "http://192.168.0.101:8080"
 const val PAGE_SIZE = 25
 
 val networkModule = module {
@@ -24,7 +23,7 @@ val networkModule = module {
     single { provideMoshi() }
     single { provideRetrofit(get(), get()) }
     factory { provideApi(get()) }
-    factory { ResourceHandler(get(), androidApplication()) }
+    factory { ResourceHandler(get(), get()) }
     factory { RestClient(get(), get()) }
 }
 
@@ -37,14 +36,18 @@ fun provideInterceptor(context: Context): Interceptor = Interceptor {
     it.proceed(request)
 }
 
-fun provideOkHttpClient(interceptor: Interceptor): OkHttpClient = OkHttpClient.Builder().addInterceptor(interceptor).build()
+fun provideOkHttpClient(interceptor: Interceptor): OkHttpClient = OkHttpClient.Builder()
+    .addInterceptor(interceptor)
+    .build()
 
 fun provideMoshi(): Moshi = Moshi.Builder()
     .add(OffsetDateTimeAdapter())
     .add(KotlinJsonAdapterFactory())
     .build()
 
-fun provideRetrofit(okHttpClient: OkHttpClient, moshi: Moshi): Retrofit = Retrofit.Builder().baseUrl(BASE_URL).client(okHttpClient)
+fun provideRetrofit(okHttpClient: OkHttpClient, moshi: Moshi): Retrofit = Retrofit.Builder()
+    .baseUrl(BASE_URL)
+    .client(okHttpClient)
     .addConverterFactory(MoshiConverterFactory.create(moshi))
     .build()
 

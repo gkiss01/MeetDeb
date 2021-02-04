@@ -12,13 +12,12 @@ import com.gkiss01.meetdeb.network.common.Resource.Status
 import com.gkiss01.meetdeb.utils.SingleEvent
 import com.gkiss01.meetdeb.utils.postEvent
 import kotlinx.coroutines.launch
-import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val eventsModule = module {
     viewModel { EventsViewModel(get()) }
-    viewModel { EventCreateViewModel(get(), get(), androidApplication()) }
+    viewModel { EventCreateViewModel(get(), get(), get()) }
     viewModel { DatesViewModel(get()) }
     viewModel { ParticipantsViewModel(get()) }
 }
@@ -58,7 +57,7 @@ class EventsViewModel(private val restClient: RestClient) : ViewModel() {
                 _footerCurrentlyNeeded.postValue(false)
                 when (it.status) {
                     Status.SUCCESS -> it.data?.let { events -> addEventsToList(events, page) }
-                    Status.ERROR -> _toastEvent.postEvent(it.errorMessage)
+                    Status.ERROR -> _toastEvent.postEvent(it.error?.localizedDescription)
                 }
             }
         }
@@ -74,7 +73,7 @@ class EventsViewModel(private val restClient: RestClient) : ViewModel() {
                     Status.SUCCESS -> it.data?.let { event -> updateEventInList(event) }
                     Status.ERROR -> {
                         _updateItemEvent.postEvent(eventId)
-                        _toastEvent.postEvent(it.errorMessage)
+                        _toastEvent.postEvent(it.error?.localizedDescription)
                     }
                 }
             }
@@ -91,7 +90,7 @@ class EventsViewModel(private val restClient: RestClient) : ViewModel() {
                     Status.SUCCESS -> it.data?.let { event -> updateEventInList(event) }
                     Status.ERROR -> {
                         _updateItemEvent.postEvent(eventId)
-                        _toastEvent.postEvent(it.errorMessage)
+                        _toastEvent.postEvent(it.error?.localizedDescription)
                     }
                 }
             }
@@ -108,7 +107,7 @@ class EventsViewModel(private val restClient: RestClient) : ViewModel() {
                         _updateItemEvent.postEvent(eventId)
                         _toastEvent.postEvent(R.string.event_reported)
                     }
-                    Status.ERROR -> _toastEvent.postEvent(it.errorMessage)
+                    Status.ERROR -> _toastEvent.postEvent(it.error?.localizedDescription)
                 }
             }
         }
@@ -124,7 +123,7 @@ class EventsViewModel(private val restClient: RestClient) : ViewModel() {
                         _updateItemEvent.postEvent(eventId)
                         _toastEvent.postEvent(R.string.event_report_removed)
                     }
-                    Status.ERROR -> _toastEvent.postEvent(it.errorMessage)
+                    Status.ERROR -> _toastEvent.postEvent(it.error?.localizedDescription)
                 }
             }
         }
@@ -136,7 +135,7 @@ class EventsViewModel(private val restClient: RestClient) : ViewModel() {
             restClient.deleteEvent(eventId).let {
                 when (it.status) {
                     Status.SUCCESS -> it.data?.withId?.let { eventId -> removeEventFromList(eventId) }
-                    Status.ERROR -> _toastEvent.postEvent(it.errorMessage)
+                    Status.ERROR -> _toastEvent.postEvent(it.error?.localizedDescription)
                 }
             }
         }

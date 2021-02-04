@@ -38,7 +38,7 @@ class ParticipantsViewModel(private val restClient: RestClient) : ViewModel() {
                 _headerCurrentlyNeeded.postValue(false)
                 when (it.status) {
                     Status.SUCCESS -> it.data?.let { participants -> _participants.postValue(participants) }
-                    Status.ERROR -> _toastEvent.postEvent(it.errorMessage)
+                    Status.ERROR -> _toastEvent.postEvent(it.error?.localizedDescription)
                 }
             }
         }

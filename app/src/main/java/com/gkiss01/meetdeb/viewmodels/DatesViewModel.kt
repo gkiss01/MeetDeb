@@ -57,7 +57,7 @@ class DatesViewModel(private val restClient: RestClient) : ViewModel() {
                 _headerCurrentlyNeeded.postValue(false)
                 when (it.status) {
                     Status.SUCCESS -> it.data?.let { dates -> _dates.postValue(dates) }
-                    Status.ERROR -> _toastEvent.postEvent(it.errorMessage)
+                    Status.ERROR -> _toastEvent.postEvent(it.error?.localizedDescription)
                 }
             }
         }
@@ -75,7 +75,7 @@ class DatesViewModel(private val restClient: RestClient) : ViewModel() {
                         _dates.postValue(dates)
                         _collapseFooter.postEvent()
                     }
-                    Status.ERROR -> _toastEvent.postEvent(it.errorMessage)
+                    Status.ERROR -> _toastEvent.postEvent(it.error?.localizedDescription)
                 }
             }
         }
@@ -87,7 +87,7 @@ class DatesViewModel(private val restClient: RestClient) : ViewModel() {
             restClient.deleteDate(dateId).let {
                 when (it.status) {
                     Status.SUCCESS -> it.data?.withId?.let { dateId -> removeDateFromList(dateId) }
-                    Status.ERROR -> _toastEvent.postEvent(it.errorMessage)
+                    Status.ERROR -> _toastEvent.postEvent(it.error?.localizedDescription)
                 }
             }
         }
@@ -107,7 +107,7 @@ class DatesViewModel(private val restClient: RestClient) : ViewModel() {
                     Status.SUCCESS -> it.data?.let { dates -> _dates.postValue(dates) }
                     Status.ERROR -> {
                         _updateItemEvent.postEvent(dateId)
-                        _toastEvent.postEvent(it.errorMessage)
+                        _toastEvent.postEvent(it.error?.localizedDescription)
                     }
                 }
             }
