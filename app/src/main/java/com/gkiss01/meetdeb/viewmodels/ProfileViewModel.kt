@@ -18,8 +18,6 @@ class ProfileViewModel(private val restClient: RestClient): ViewModel() {
         get() = _toastEvent
 
     private val _currentlyLoading = MutableLiveData<Boolean>()
-    val currentlyLoading: LiveData<Boolean>
-        get() = _currentlyLoading
 
     private val _eventsSummary = MutableLiveData<EventSummary>()
     val eventsSummary: LiveData<EventSummary>
@@ -27,8 +25,9 @@ class ProfileViewModel(private val restClient: RestClient): ViewModel() {
 
     fun getEventsSummary() {
         if (_currentlyLoading.value == true) return
-        Log.d("Logger_ProfileVM", "Loading events summary ...")
         _currentlyLoading.postValue(true)
+        Log.d("Logger_ProfileVM", "Loading events summary ...")
+
         viewModelScope.launch {
             restClient.getEventsSummary().let {
                 _currentlyLoading.postValue(false)

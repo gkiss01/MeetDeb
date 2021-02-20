@@ -42,7 +42,7 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
             if (isValidEmail && isValidPassword && isValidName) {
                 hideKeyboard()
 
-                viewModelKoin.createUser()
+                viewModelKoin.registerUser()
             }
         }
 

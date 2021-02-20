@@ -27,8 +27,9 @@ class DeleteViewModel(private val restClient: RestClient): ViewModel() {
 
     fun deleteUser() {
         if (_currentlyDeleting.value == true) return
-        Log.d("Logger_DeleteVM", "Deleting user ...")
         _currentlyDeleting.postValue(true)
+        Log.d("Logger_DeleteVM", "Deleting user ...")
+
         viewModelScope.launch {
             restClient.deleteUser().let {
                 _currentlyDeleting.postValue(false)

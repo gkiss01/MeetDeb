@@ -20,8 +20,6 @@ class LoadingViewModel(private val restClient: RestClient): ViewModel() {
         get() = _toastEvent
 
     private val _currentlyLoggingIn = MutableLiveData<Boolean>()
-    val currentlyLoggingIn: LiveData<Boolean>
-        get() = _currentlyLoggingIn
 
     private val _operationSuccessful = MutableLiveData<SingleEvent<User>>()
     val operationSuccessful: LiveData<SingleEvent<User>>
@@ -33,11 +31,12 @@ class LoadingViewModel(private val restClient: RestClient): ViewModel() {
 
     fun checkUser() {
         if (_currentlyLoggingIn.value == true) return
-        Log.d("Logger_LoadingVM", "Checking user ...")
         _currentlyLoggingIn.postValue(true)
+        Log.d("Logger_LoadingVM", "Checking user ...")
+
         viewModelScope.launch {
             restClient.checkUser().let {
-                //_currentlyLoggingIn.postValue(false)
+                _currentlyLoggingIn.postValue(false)
                 when (it.status) {
                     Status.SUCCESS -> it.data?.let { user -> _operationSuccessful.postEvent(user) }
                     Status.ERROR -> {

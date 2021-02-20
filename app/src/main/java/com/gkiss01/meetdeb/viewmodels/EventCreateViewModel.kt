@@ -48,30 +48,16 @@ class EventCreateViewModel(private val restClient: RestClient, private val moshi
 
     fun uploadEvent() {
         if (_itemCurrentlyAdding.value == true) return
-        val eventId = if (type == ScreenType.NEW) null else eventLocal.id
-        val eventRequest = EventRequest(eventId, eventLocal.name, eventLocal.date, eventLocal.venue, eventLocal.description)
-        val json = moshi.adapter(EventRequest::class.java).toJson(eventRequest)
-        val eventJson: RequestBody = json.toRequestBody("application/json".toMediaTypeOrNull())
-
-        if (type == ScreenType.NEW) {
-            var body: MultipartBody.Part? = null
-            pickedImageUri.value?.let { uri ->
-                val file = File(uri)
-                if (file.exists()) {
-                    val compressedFile = Compressor(application).compressToFile(file)
-                    val requestFile = compressedFile.asRequestBody("image/jpeg".toMediaTypeOrNull())
-                    body = MultipartBody.Part.createFormData("file", file.name, requestFile)
-                }
-            }
-            createEvent(eventJson, body)
-        }
-        else updateEvent(eventJson)
+        val event = prepareEvent()
+        if (type == ScreenType.NEW) createEvent(event, prepareImage())
+        else updateEvent(event)
     }
 
     private fun createEvent(event: RequestBody, image: MultipartBody.Part?) {
         if (_itemCurrentlyAdding.value == true) return
-        Log.d("Logger_EventCreateVM", "Creating event ...")
         _itemCurrentlyAdding.postValue(true)
+        Log.d("Logger_EventCreateVM", "Creating event ...")
+
         viewModelScope.launch {
             restClient.createEvent(event, image).let {
                 _itemCurrentlyAdding.postValue(false)
@@ -85,8 +71,9 @@ class EventCreateViewModel(private val restClient: RestClient, private val moshi
 
     private fun updateEvent(event: RequestBody) {
         if (_itemCurrentlyAdding.value == true) return
-        Log.d("Logger_EventCreateVM", "Updating event ...")
         _itemCurrentlyAdding.postValue(true)
+        Log.d("Logger_EventCreateVM", "Updating event ...")
+
         viewModelScope.launch {
             restClient.updateEvent(event).let {
                 _itemCurrentlyAdding.postValue(false)
@@ -96,6 +83,25 @@ class EventCreateViewModel(private val restClient: RestClient, private val moshi
                 }
             }
         }
+    }
+
+    private fun prepareEvent(): RequestBody {
+        val eventId = if (type == ScreenType.NEW) null else eventLocal.id
+        val eventRequest = EventRequest(eventId, eventLocal.name, eventLocal.date, eventLocal.venue, eventLocal.description)
+        val json = moshi.adapter(EventRequest::class.java).toJson(eventRequest)
+        return json.toRequestBody("application/json".toMediaTypeOrNull())
+    }
+
+    private fun prepareImage(): MultipartBody.Part? {
+        pickedImageUri.value?.let { uri ->
+            val file = File(uri)
+            if (file.exists()) {
+                val compressedFile = Compressor(application).compressToFile(file)
+                val requestFile = compressedFile.asRequestBody("image/jpeg".toMediaTypeOrNull())
+                return MultipartBody.Part.createFormData("file", file.name, requestFile)
+            }
+        }
+        return null
     }
 
     init {

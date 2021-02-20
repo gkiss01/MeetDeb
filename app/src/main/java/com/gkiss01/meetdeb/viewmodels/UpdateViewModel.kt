@@ -20,6 +20,7 @@ import com.squareup.moshi.Moshi
 import kotlinx.coroutines.launch
 import okhttp3.Credentials
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 
 class UpdateViewModel(private val restClient: RestClient, private val moshi: Moshi, private val application: Application): ViewModel() {
@@ -40,15 +41,14 @@ class UpdateViewModel(private val restClient: RestClient, private val moshi: Mos
 
     fun updateUser() {
         if (_currentlyUpdating.value == true) return
-        Log.d("Logger_UpdateVM", "Updating user ...")
-        val email = application.getCurrentCredential(CredentialType.EMAIL)
-        val password = userLocal.name ?: ""
-        val basic = Credentials.basic(email, password)
+        updateUser(getAuthToken(), prepareUser())
+    }
 
-        val userRequest = UserRequest(userLocal.email, userLocal.password, null)
-        val json = moshi.adapter(UserRequest::class.java).toJson(userRequest)
-        val user = json.toRequestBody("application/json".toMediaTypeOrNull())
+    private fun updateUser(basic: String, user: RequestBody) {
+        if (_currentlyUpdating.value == true) return
         _currentlyUpdating.postValue(true)
+        Log.d("Logger_UpdateVM", "Updating user ...")
+
         viewModelScope.launch {
             restClient.updateUser(basic, user).let {
                 _currentlyUpdating.postValue(false)
@@ -61,6 +61,18 @@ class UpdateViewModel(private val restClient: RestClient, private val moshi: Mos
                 }
             }
         }
+    }
+
+    private fun getAuthToken(): String {
+        val email = application.getCurrentCredential(CredentialType.EMAIL)
+        val password = userLocal.name ?: ""
+        return Credentials.basic(email, password)
+    }
+
+    private fun prepareUser(): RequestBody {
+        val userRequest = UserRequest(userLocal.email, userLocal.password, null)
+        val json = moshi.adapter(UserRequest::class.java).toJson(userRequest)
+        return json.toRequestBody("application/json".toMediaTypeOrNull())
     }
 
     init {

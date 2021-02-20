@@ -50,8 +50,9 @@ class DatesViewModel(private val restClient: RestClient) : ViewModel() {
 
     fun getDates() {
         if (_headerCurrentlyNeeded.value == true) return
-        Log.d("Logger_DatesVM", "Dates are loading with event ID ${event.id} ...")
         _headerCurrentlyNeeded.postValue(true)
+        Log.d("Logger_DatesVM", "Dates are loading with event ID ${event.id} ...")
+
         viewModelScope.launch {
             restClient.getDates(event.id).let {
                 _headerCurrentlyNeeded.postValue(false)
@@ -65,8 +66,9 @@ class DatesViewModel(private val restClient: RestClient) : ViewModel() {
 
     fun createDate(date: OffsetDateTime) {
         if (_itemCurrentlyAdding.value != null) return
-        Log.d("Logger_DatesVM", "Creating date ${date.format()} ...")
         _itemCurrentlyAdding.postValue(date)
+        Log.d("Logger_DatesVM", "Creating date ${date.format()} ...")
+
         viewModelScope.launch {
             restClient.createDate(event.id, date).let {
                 _itemCurrentlyAdding.postValue(null)
@@ -83,6 +85,7 @@ class DatesViewModel(private val restClient: RestClient) : ViewModel() {
 
     fun deleteDate(dateId: Long) {
         Log.d("Logger_DatesVM", "Deleting date with ID $dateId ...")
+
         viewModelScope.launch {
             restClient.deleteDate(dateId).let {
                 when (it.status) {
@@ -98,8 +101,9 @@ class DatesViewModel(private val restClient: RestClient) : ViewModel() {
             if (it != dateId) _updateItemEvent.postEvent(dateId)
             return
         }
-        Log.d("Logger_DatesVM", "Changing vote with date ID $dateId ...")
         _itemCurrentlyUpdating.postValue(dateId)
+        Log.d("Logger_DatesVM", "Changing vote with date ID $dateId ...")
+
         viewModelScope.launch {
             restClient.changeVote(dateId).let {
                 _itemCurrentlyUpdating.postValue(null)

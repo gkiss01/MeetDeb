@@ -36,13 +36,15 @@ class LoginViewModel(private val restClient: RestClient, private val application
 
     fun loginUser() {
         if (_currentlyLoggingIn.value == true) return
-        Log.d("Logger_LoginVM", "Logging in ...")
-        userLocal.email?.let { email ->
-            userLocal.password?.let { password ->
-                application.setAuthToken(Credentials.basic(email, password))
-            }
-        }
+        updateAuthToken()
+        checkUser()
+    }
+
+    private fun checkUser() {
+        if (_currentlyLoggingIn.value == true) return
         _currentlyLoggingIn.postValue(true)
+        Log.d("Logger_LoginVM", "Logging in ...")
+
         viewModelScope.launch {
             restClient.checkUser().let {
                 _currentlyLoggingIn.postValue(false)
@@ -53,6 +55,14 @@ class LoginViewModel(private val restClient: RestClient, private val application
                         _toastEvent.postEvent(message)
                     }
                 }
+            }
+        }
+    }
+
+    private fun updateAuthToken() {
+        userLocal.email?.let { email ->
+            userLocal.password?.let { password ->
+                application.setAuthToken(Credentials.basic(email, password))
             }
         }
     }

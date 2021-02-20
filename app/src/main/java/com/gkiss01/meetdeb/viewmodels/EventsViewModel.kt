@@ -50,8 +50,9 @@ class EventsViewModel(private val restClient: RestClient) : ViewModel() {
 
     fun loadEventsForPage(page: Int) {
         if (_footerCurrentlyNeeded.value == true) return
-        Log.d("Logger_EventsVM", "Events are loading...")
         _footerCurrentlyNeeded.postValue(true)
+        Log.d("Logger_EventsVM", "Events are loading...")
+
         viewModelScope.launch {
             restClient.getEvents(page).let {
                 _footerCurrentlyNeeded.postValue(false)
@@ -64,8 +65,10 @@ class EventsViewModel(private val restClient: RestClient) : ViewModel() {
     }
 
     fun updateEvent(eventId: Long) {
-        Log.d("Logger_EventsVM", "Updating event with ID $eventId ...")
+        if (_itemCurrentlyUpdating.value != null) return
         _itemCurrentlyUpdating.postValue(Pair(Event.UpdatingType.VOTE, eventId))
+        Log.d("Logger_EventsVM", "Updating event with ID $eventId ...")
+
         viewModelScope.launch {
             restClient.getEvent(eventId).let {
                 _itemCurrentlyUpdating.postValue(null)
@@ -81,8 +84,10 @@ class EventsViewModel(private val restClient: RestClient) : ViewModel() {
     }
 
     fun modifyParticipation(eventId: Long) {
-        Log.d("Logger_EventsVM", "Modifying participation with event ID $eventId ...")
+        if (_itemCurrentlyUpdating.value != null) return
         _itemCurrentlyUpdating.postValue(Pair(Event.UpdatingType.PARTICIPATION, eventId))
+        Log.d("Logger_EventsVM", "Modifying participation with event ID $eventId ...")
+
         viewModelScope.launch {
             restClient.modifyParticipation(eventId).let {
                 _itemCurrentlyUpdating.postValue(null)
@@ -99,6 +104,7 @@ class EventsViewModel(private val restClient: RestClient) : ViewModel() {
 
     fun createReport(eventId: Long) {
         Log.d("Logger_EventsVM", "Creating event report with event ID $eventId ...")
+
         viewModelScope.launch {
             restClient.createReport(eventId).let {
                 when (it.status) {
@@ -115,6 +121,7 @@ class EventsViewModel(private val restClient: RestClient) : ViewModel() {
 
     fun deleteReport(eventId: Long) {
         Log.d("Logger_EventsVM", "Deleting event report with event ID $eventId ...")
+
         viewModelScope.launch {
             restClient.deleteReport(eventId).let {
                 when (it.status) {
@@ -131,6 +138,7 @@ class EventsViewModel(private val restClient: RestClient) : ViewModel() {
 
     fun deleteEvent(eventId: Long) {
         Log.d("Logger_EventsVM", "Deleting event with ID $eventId ...")
+
         viewModelScope.launch {
             restClient.deleteEvent(eventId).let {
                 when (it.status) {
