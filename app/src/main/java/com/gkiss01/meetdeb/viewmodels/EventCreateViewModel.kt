@@ -24,7 +24,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 
 enum class ScreenType {
-    ADD, UPDATE
+    NEW, UPDATE
 }
 
 class EventCreateViewModel(private val restClient: RestClient, private val moshi: Moshi, private val application: Application): ViewModel() {
@@ -48,12 +48,12 @@ class EventCreateViewModel(private val restClient: RestClient, private val moshi
 
     fun uploadEvent() {
         if (_itemCurrentlyAdding.value == true) return
-        val eventId = if (type == ScreenType.ADD) null else eventLocal.id
+        val eventId = if (type == ScreenType.NEW) null else eventLocal.id
         val eventRequest = EventRequest(eventId, eventLocal.name, eventLocal.date, eventLocal.venue, eventLocal.description)
         val json = moshi.adapter(EventRequest::class.java).toJson(eventRequest)
         val eventJson: RequestBody = json.toRequestBody("application/json".toMediaTypeOrNull())
 
-        if (type == ScreenType.ADD) {
+        if (type == ScreenType.NEW) {
             var body: MultipartBody.Part? = null
             pickedImageUri.value?.let { uri ->
                 val file = File(uri)

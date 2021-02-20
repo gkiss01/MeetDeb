@@ -19,8 +19,8 @@ import kotlinx.coroutines.launch
 import okhttp3.Credentials
 
 class LoginViewModel(private val restClient: RestClient, private val application: Application): ViewModel() {
-    lateinit var userLocal: UserRequest
-    fun isUserInitialized() = ::userLocal.isInitialized
+    var userLocal: UserRequest = UserRequest()
+        private set
 
     private val _toastEvent = MutableLiveData<SingleEvent<Any>>()
     val toastEvent: LiveData<SingleEvent<Any>>

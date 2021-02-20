@@ -27,14 +27,18 @@ import com.mikepenz.fastadapter.listeners.addClickListener
 import com.mikepenz.fastadapter.scroll.EndlessRecyclerOnScrollListener
 import com.mikepenz.fastadapter.ui.items.ProgressItem
 import com.mikepenz.itemanimators.AlphaInAnimator
+import org.koin.androidx.viewmodel.ViewModelOwner.Companion.from
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class EventsFragment : Fragment(R.layout.fragment_events) {
     private var _binding: FragmentEventsBinding? = null
     private val binding get() = _binding!!
 
     private val viewModelActivityKoin: ActivityViewModel by sharedViewModel()
-    private val viewModelKoin: EventsViewModel by sharedViewModel()
+    private val viewModelKoin: EventsViewModel by viewModel(owner = {
+        from(findNavController().getViewModelStoreOwner(R.id.navigation_graph_main))
+    })
 
     private val itemAdapter = ItemAdapter<Event>()
     private val footerAdapter = ItemAdapter<ProgressItem>()

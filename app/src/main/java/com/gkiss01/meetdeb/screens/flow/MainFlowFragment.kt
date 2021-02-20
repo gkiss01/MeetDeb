@@ -21,15 +21,6 @@ class MainFlowFragment : Fragment(R.layout.fragment_flow_main) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentFlowMainBinding.bind(view)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
 
         mainNavController?.let {
             binding.mainNavigationView.setupWithNavController(it)
@@ -41,5 +32,10 @@ class MainFlowFragment : Fragment(R.layout.fragment_flow_main) {
                 setupActionBarWithNavController(it, appBarConfiguration)
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

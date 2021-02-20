@@ -13,7 +13,6 @@ import com.github.razir.progressbutton.isProgressActive
 import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
-import com.gkiss01.meetdeb.data.remote.request.UserRequest
 import com.gkiss01.meetdeb.databinding.FragmentLoginBinding
 import com.gkiss01.meetdeb.utils.hideKeyboard
 import com.gkiss01.meetdeb.utils.mainActivity
@@ -32,9 +31,6 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentLoginBinding.bind(view)
-
-        if (!viewModelKoin.isUserInitialized())
-            viewModelKoin.userLocal = UserRequest()
 
         binding.user = viewModelKoin.userLocal
 

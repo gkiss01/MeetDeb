@@ -77,8 +77,8 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2"
 
     //Koin
-    implementation 'org.koin:koin-android:2.1.6'
-    implementation "org.koin:koin-androidx-viewmodel:2.1.6"
+    implementation 'org.koin:koin-android:2.2.2'
+    implementation "org.koin:koin-androidx-viewmodel:2.2.2"
 
     //OkHttp3 (OkHttp4)
     implementation 'com.squareup.okhttp3:okhttp:4.9.0'

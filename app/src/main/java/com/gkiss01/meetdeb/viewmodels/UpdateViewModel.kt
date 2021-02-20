@@ -23,8 +23,8 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 
 class UpdateViewModel(private val restClient: RestClient, private val moshi: Moshi, private val application: Application): ViewModel() {
-    lateinit var userLocal: UserRequest
-    fun isUserInitialized() = ::userLocal.isInitialized
+    var userLocal: UserRequest = UserRequest()
+        private set
 
     private val _toastEvent = MutableLiveData<SingleEvent<Any>>()
     val toastEvent: LiveData<SingleEvent<Any>>

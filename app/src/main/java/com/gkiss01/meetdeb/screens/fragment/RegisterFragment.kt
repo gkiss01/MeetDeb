@@ -12,7 +12,6 @@ import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.isProgressActive
 import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.R
-import com.gkiss01.meetdeb.data.remote.request.UserRequest
 import com.gkiss01.meetdeb.databinding.FragmentRegisterBinding
 import com.gkiss01.meetdeb.utils.hideKeyboard
 import com.gkiss01.meetdeb.utils.observeEvent
@@ -29,9 +28,6 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentRegisterBinding.bind(view)
-
-        if (!viewModelKoin.isUserInitialized())
-            viewModelKoin.userLocal = UserRequest()
 
         binding.user = viewModelKoin.userLocal
 

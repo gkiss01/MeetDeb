@@ -29,8 +29,8 @@ val profileModule = module {
 }
 
 class RegisterViewModel(private val restClient: RestClient, private val moshi: Moshi): ViewModel() {
-    lateinit var userLocal: UserRequest
-    fun isUserInitialized() = ::userLocal.isInitialized
+    var userLocal: UserRequest = UserRequest()
+        private set
 
     private val _toastEvent = MutableLiveData<SingleEvent<Any>>()
     val toastEvent: LiveData<SingleEvent<Any>>

@@ -52,7 +52,7 @@ class EventCreateFragment : Fragment(R.layout.fragment_event_create) {
                 viewModelKoin.type = ScreenType.UPDATE
             } ?: run {
                 viewModelKoin.eventLocal = Event()
-                viewModelKoin.type = ScreenType.ADD
+                viewModelKoin.type = ScreenType.NEW
             }
         }
 
@@ -83,7 +83,7 @@ class EventCreateFragment : Fragment(R.layout.fragment_event_create) {
         }
 
         binding.imageButton.setOnClickListener {
-            if (viewModelKoin.type == ScreenType.ADD) requestStoragePermissions()
+            if (viewModelKoin.type == ScreenType.NEW) requestStoragePermissions()
             else Toast.makeText(context, getString(R.string.cannot_update_image), Toast.LENGTH_LONG).show()
         }
 
@@ -219,13 +219,13 @@ class EventCreateFragment : Fragment(R.layout.fragment_event_create) {
 
     private fun showAnimation() {
         binding.createButton.showProgress {
-            buttonTextRes = if (viewModelKoin.type == ScreenType.ADD) R.string.event_create_waiting else R.string.event_more_update_waiting
+            buttonTextRes = if (viewModelKoin.type == ScreenType.NEW) R.string.event_create_waiting else R.string.event_more_update_waiting
             progressColor = Color.WHITE
         }
     }
 
     private fun hideAnimation() {
-        binding.createButton.hideProgress(if (viewModelKoin.type == ScreenType.ADD) R.string.event_create_button else R.string.event_more_update)
+        binding.createButton.hideProgress(if (viewModelKoin.type == ScreenType.NEW) R.string.event_create_button else R.string.event_more_update)
     }
 
     companion object {
