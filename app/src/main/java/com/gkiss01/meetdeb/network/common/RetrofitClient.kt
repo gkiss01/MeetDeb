@@ -9,12 +9,11 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.Request
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
-const val BASE_URL = "http://192.168.0.104:8080"
+const val BASE_URL = "http://192.168.0.103:8080"
 const val PAGE_SIZE = 25
 
 val networkModule = module {
@@ -29,11 +28,9 @@ val networkModule = module {
 
 fun provideInterceptor(context: Context): Interceptor = Interceptor {
     val basic = context.getAuthToken()
-    val request: Request = it.request().newBuilder()
-        .addHeader("Accept", "application/json")
-        .addHeader("Authorization", basic)
-        .build()
-    it.proceed(request)
+    val request = it.request().newBuilder().addHeader("Accept", "application/json")
+    if (basic.isNotEmpty()) request.addHeader("Authorization", basic)
+    it.proceed(request.build())
 }
 
 fun provideOkHttpClient(interceptor: Interceptor): OkHttpClient = OkHttpClient.Builder()
