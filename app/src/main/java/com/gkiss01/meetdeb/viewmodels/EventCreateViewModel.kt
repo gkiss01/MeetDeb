@@ -93,15 +93,13 @@ class EventCreateViewModel(private val restClient: RestClient, private val moshi
     }
 
     private fun prepareImage(): MultipartBody.Part? {
-        pickedImageUri.value?.let { uri ->
-            val file = File(uri)
-            if (file.exists()) {
-                val compressedFile = Compressor(application).compressToFile(file)
-                val requestFile = compressedFile.asRequestBody("image/jpeg".toMediaTypeOrNull())
-                return MultipartBody.Part.createFormData("file", file.name, requestFile)
-            }
-        }
-        return null
+        val imageUri = pickedImageUri.value ?: return null
+        val file = File(imageUri)
+        if (!file.exists()) return null
+
+        val compressedFile = Compressor(application).compressToFile(file)
+        val requestFile = compressedFile.asRequestBody("image/jpeg".toMediaTypeOrNull())
+        return MultipartBody.Part.createFormData("file", file.name, requestFile)
     }
 
     init {

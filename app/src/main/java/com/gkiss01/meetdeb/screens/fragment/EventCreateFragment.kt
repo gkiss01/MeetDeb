@@ -5,8 +5,6 @@ import android.app.Activity.RESULT_OK
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
@@ -33,6 +31,7 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.opensooq.supernova.gligar.GligarPicker
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.threeten.bp.OffsetDateTime
+import java.io.File
 
 class EventCreateFragment : Fragment(R.layout.fragment_event_create) {
     private var _binding: FragmentEventCreateBinding? = null
@@ -57,9 +56,13 @@ class EventCreateFragment : Fragment(R.layout.fragment_event_create) {
         }
 
         binding.event = viewModelKoin.eventLocal
-        binding.previewImage.load("$BASE_URL/images/${viewModelKoin.eventLocal.id}") {
-            placeholder(R.drawable.placeholder)
-            error(R.drawable.placeholder)
+        binding.previewImage.load(R.drawable.placeholder)
+        if (viewModelKoin.type == ScreenType.UPDATE) {
+            binding.previewImage.load("$BASE_URL/images/${viewModelKoin.eventLocal.id}")
+        } else {
+            viewModelKoin.pickedImageUri.observe(viewLifecycleOwner) {
+                binding.previewImage.load(File(it))
+            }
         }
 
         val onDateListener = DatePickerDialog.OnDateSetListener { _, year, monthValue, dayOfMonth ->
@@ -73,12 +76,14 @@ class EventCreateFragment : Fragment(R.layout.fragment_event_create) {
         }
 
         binding.dateButton.setOnClickListener {
-            val datePickerDialog = DatePickerDialog(requireContext(), onDateListener, viewModelKoin.eventLocal.date.year, viewModelKoin.eventLocal.date.monthValue - 1, viewModelKoin.eventLocal.date.dayOfMonth)
+            val date = viewModelKoin.eventLocal.date
+            val datePickerDialog = DatePickerDialog(requireContext(), onDateListener, date.year, date.monthValue - 1, date.dayOfMonth)
             datePickerDialog.show()
         }
 
         binding.timeButton.setOnClickListener {
-            val timePickerDialog = TimePickerDialog(context, onTimeListener, viewModelKoin.eventLocal.date.hour, viewModelKoin.eventLocal.date.minute, requireContext().isTimeIn24HourFormat())
+            val date = viewModelKoin.eventLocal.date
+            val timePickerDialog = TimePickerDialog(requireContext(), onTimeListener, date.hour, date.minute, requireContext().isTimeIn24HourFormat())
             timePickerDialog.show()
         }
 
@@ -118,11 +123,6 @@ class EventCreateFragment : Fragment(R.layout.fragment_event_create) {
             binding.createButton.isEnabled = false
             binding.createButton.hideProgress(R.string.done)
             runDelayed { findNavController().navigateUp() }
-        }
-
-        viewModelKoin.pickedImageUri.observe(viewLifecycleOwner) {
-            val bmImg: Bitmap = BitmapFactory.decodeFile(it)
-            binding.previewImage.setImageBitmap(bmImg)
         }
     }
 
