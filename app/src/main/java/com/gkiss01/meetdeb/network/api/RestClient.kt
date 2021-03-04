@@ -17,8 +17,8 @@ class RestClient(private val dataProvider: DataProvider, private val resourceHan
     suspend fun checkUser() = handleRequest(dispatcher) { dataProvider.checkUser() }
     suspend fun getEventsSummary() = handleRequest(dispatcher) { dataProvider.getEventsSummary() }
 
-    suspend fun createEvent(event: RequestBody, file: MultipartBody.Part?) = handleRequest(dispatcher) { dataProvider.createEvent(event, file) }
-    suspend fun updateEvent(event: RequestBody) = handleRequest(dispatcher) { dataProvider.updateEvent(event) }
+    suspend fun createEvent(event: MultipartBody.Part, image: MultipartBody.Part?) = handleRequest(dispatcher) { dataProvider.createEvent(event, image) }
+    suspend fun updateEvent(event: MultipartBody.Part, image: MultipartBody.Part?) = handleRequest(dispatcher) { dataProvider.updateEvent(event, image) }
     suspend fun deleteEvent(eventId: Long) = handleRequest(dispatcher) { dataProvider.deleteEvent(eventId) }
     suspend fun getEvent(eventId: Long) = handleRequest(dispatcher) { dataProvider.getEvent(eventId) }
     suspend fun getEvents(page: Int) = handleRequest(dispatcher) { dataProvider.getEvents(page, PAGE_SIZE) }

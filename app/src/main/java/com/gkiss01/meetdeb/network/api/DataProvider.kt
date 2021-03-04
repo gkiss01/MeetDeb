@@ -28,11 +28,11 @@ interface DataProvider {
 
     @Multipart
     @POST("events")
-    suspend fun createEvent(@Part("event") event: RequestBody, @Part file: MultipartBody.Part?): Event
+    suspend fun createEvent(@Part event: MultipartBody.Part, @Part image: MultipartBody.Part?): Event
 
     @Multipart
     @POST("events/update")
-    suspend fun updateEvent(@Part("event") event: RequestBody): Event
+    suspend fun updateEvent(@Part event: MultipartBody.Part, @Part image: MultipartBody.Part?): Event
 
     @DELETE("events/{eventId}")
     suspend fun deleteEvent(@Path("eventId") eventId: Long): SuccessResponse<Long>

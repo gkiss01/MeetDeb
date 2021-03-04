@@ -3,6 +3,7 @@ package com.gkiss01.meetdeb.data.remote.response
 import android.view.View
 import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
+import com.gkiss01.meetdeb.data.remote.request.EventRequest
 import com.gkiss01.meetdeb.screens.viewholders.EventViewHolder
 import com.gkiss01.meetdeb.utils.classes.OffsetDateTimeCustom
 import com.mikepenz.fastadapter.items.AbstractItem
@@ -42,5 +43,9 @@ data class Event(
 
     enum class UpdatingType {
         VOTE, PARTICIPATION
+    }
+
+    fun asRequest(): EventRequest {
+        return EventRequest(id, name, date, venue, description)
     }
 }

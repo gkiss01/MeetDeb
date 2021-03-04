@@ -18,7 +18,6 @@ import id.zelory.compressor.Compressor
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
@@ -31,6 +30,7 @@ class EventCreateViewModel(private val restClient: RestClient, private val moshi
     lateinit var type: ScreenType
     lateinit var eventLocal: Event
     fun isEventInitialized() = ::eventLocal.isInitialized
+    val pickedImageUri = MutableLiveData<String>()
 
     private val _toastEvent = MutableLiveData<SingleEvent<Any>>()
     val toastEvent: LiveData<SingleEvent<Any>>
@@ -44,8 +44,6 @@ class EventCreateViewModel(private val restClient: RestClient, private val moshi
     val operationSuccessful: LiveData<VoidEvent>
         get() = _operationSuccessful
 
-    val pickedImageUri = MutableLiveData<String>()
-
     fun uploadEvent() {
         if (_itemCurrentlyAdding.value == true) return
         val event = prepareEvent()
@@ -53,7 +51,7 @@ class EventCreateViewModel(private val restClient: RestClient, private val moshi
         else updateEvent(event)
     }
 
-    private fun createEvent(event: RequestBody, image: MultipartBody.Part?) {
+    private fun createEvent(event: MultipartBody.Part, image: MultipartBody.Part?) {
         if (_itemCurrentlyAdding.value == true) return
         _itemCurrentlyAdding.postValue(true)
         Log.d("Logger_EventCreateVM", "Creating event ...")
@@ -69,13 +67,13 @@ class EventCreateViewModel(private val restClient: RestClient, private val moshi
         }
     }
 
-    private fun updateEvent(event: RequestBody) {
+    private fun updateEvent(event: MultipartBody.Part) {
         if (_itemCurrentlyAdding.value == true) return
         _itemCurrentlyAdding.postValue(true)
         Log.d("Logger_EventCreateVM", "Updating event ...")
 
         viewModelScope.launch {
-            restClient.updateEvent(event).let {
+            restClient.updateEvent(event, null).let {
                 _itemCurrentlyAdding.postValue(false)
                 when (it.status) {
                     Status.SUCCESS -> it.data?.let { _operationSuccessful.postEvent() }
@@ -85,11 +83,10 @@ class EventCreateViewModel(private val restClient: RestClient, private val moshi
         }
     }
 
-    private fun prepareEvent(): RequestBody {
-        val eventId = if (type == ScreenType.NEW) null else eventLocal.id
-        val eventRequest = EventRequest(eventId, eventLocal.name, eventLocal.date, eventLocal.venue, eventLocal.description)
-        val json = moshi.adapter(EventRequest::class.java).toJson(eventRequest)
-        return json.toRequestBody("application/json".toMediaTypeOrNull())
+    private fun prepareEvent(): MultipartBody.Part {
+        val json = moshi.adapter(EventRequest::class.java).toJson(eventLocal.asRequest())
+        val requestBody = json.toRequestBody("application/json".toMediaTypeOrNull())
+        return MultipartBody.Part.createFormData("event", null, requestBody)
     }
 
     private fun prepareImage(): MultipartBody.Part? {
@@ -98,8 +95,8 @@ class EventCreateViewModel(private val restClient: RestClient, private val moshi
         if (!file.exists()) return null
 
         val compressedFile = Compressor(application).compressToFile(file)
-        val requestFile = compressedFile.asRequestBody("image/jpeg".toMediaTypeOrNull())
-        return MultipartBody.Part.createFormData("file", file.name, requestFile)
+        val requestBody = compressedFile.asRequestBody("image/jpeg".toMediaTypeOrNull())
+        return MultipartBody.Part.createFormData("file", file.name, requestBody)
     }
 
     init {

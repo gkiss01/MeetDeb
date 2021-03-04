@@ -56,10 +56,13 @@ class EventCreateFragment : Fragment(R.layout.fragment_event_create) {
         }
 
         binding.event = viewModelKoin.eventLocal
-        binding.previewImage.load(R.drawable.placeholder)
         if (viewModelKoin.type == ScreenType.UPDATE) {
-            binding.previewImage.load("$BASE_URL/images/${viewModelKoin.eventLocal.id}")
+            binding.previewImage.load("$BASE_URL/images/${viewModelKoin.eventLocal.id}") {
+                placeholder(R.drawable.placeholder)
+                error(R.drawable.placeholder)
+            }
         } else {
+            binding.previewImage.load(R.drawable.placeholder)
             viewModelKoin.pickedImageUri.observe(viewLifecycleOwner) {
                 binding.previewImage.load(File(it))
             }
