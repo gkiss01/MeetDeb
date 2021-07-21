@@ -5,6 +5,7 @@ import android.app.Activity.RESULT_OK
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
@@ -161,7 +162,8 @@ class EventCreateFragment : Fragment(R.layout.fragment_event_create) {
     }
 
     private fun showImagePicker() {
-        GligarPicker().requestCode(REQUEST_CODE_PICK_IMAGE).withFragment(this).limit(1).show()
+        val disableCamera = !requireContext().packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)
+        GligarPicker().requestCode(REQUEST_CODE_PICK_IMAGE).withFragment(this).limit(1).disableCamera(disableCamera).show()
     }
 
     private fun validateName(): Boolean {
