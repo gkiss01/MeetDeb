@@ -30,6 +30,10 @@ class MainFlowFragment : Fragment(R.layout.fragment_flow_main) {
                 val appBarConfiguration = AppBarConfiguration(setOf(R.id.eventsFragment, R.id.profileFragment))
                 setSupportActionBar(binding.mainToolbarView)
                 setupActionBarWithNavController(it, appBarConfiguration)
+
+                binding.mainToolbarView.setNavigationOnClickListener {
+                    onBackPressed()
+                }
             }
         }
     }

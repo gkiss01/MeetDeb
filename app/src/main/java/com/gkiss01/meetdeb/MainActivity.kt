@@ -19,20 +19,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun changeNavGraphToStart() {
+        if (appNavController.currentDestination?.id == R.id.startFlowFragment) return
         appNavController.navigateUp()
     }
 
     fun changeNavGraphToMain() {
+        if (appNavController.currentDestination?.id == R.id.mainFlowFragment) return
         appNavController.navigate(StartFlowFragmentDirections.actionStartFlowFragmentToMainFlowFragment())
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        val currentFlowFragmentId = appNavController.currentDestination?.id
-        if (currentFlowFragmentId == R.id.mainFlowFragment) {
-            val mainNavController = findNavController(R.id.main_nav_host_fragment)
-            return mainNavController.navigateUp() || super.onSupportNavigateUp()
-        }
-        return super.onSupportNavigateUp()
     }
 
     companion object {
