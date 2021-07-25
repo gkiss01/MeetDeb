@@ -2,6 +2,7 @@ package com.gkiss01.meetdeb.utils
 
 import android.content.Context
 import android.util.Base64
+import androidx.core.content.edit
 
 enum class CredentialType {
     EMAIL, PASSWORD
@@ -9,12 +10,12 @@ enum class CredentialType {
 
 fun Context.getAuthToken(default: String = ""): String {
     val sharedPref = this.getSharedPreferences("BASIC_AUTH_PREFS", Context.MODE_PRIVATE)
-    return sharedPref.getString("AUTH_TOKEN_BASIC", default)!!
+    return sharedPref.getString("AUTH_TOKEN_BASIC", default) ?: default
 }
 
 fun Context.setAuthToken(basic: String? = null) {
     val sharedPref = this.getSharedPreferences("BASIC_AUTH_PREFS", Context.MODE_PRIVATE)
-    sharedPref.edit().putString("AUTH_TOKEN_BASIC", basic).apply()
+    sharedPref.edit { putString("AUTH_TOKEN_BASIC", basic) }
 }
 
 fun Context.getCurrentCredential(type: CredentialType): String {
