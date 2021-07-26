@@ -11,7 +11,6 @@ import java.net.ConnectException
 import java.net.SocketTimeoutException
 
 data class Error(val code: ErrorCode, val localizedDescription: String?) {
-
     enum class ErrorCode {
         USER_DISABLED_OR_NOT_VALID,
         ACCESS_DENIED,
@@ -73,6 +72,11 @@ data class Error(val code: ErrorCode, val localizedDescription: String?) {
 }
 
 data class Resource<out T>(val status: Status, val data: T?, val error: Error?) {
+    enum class Status {
+        SUCCESS,
+        ERROR
+    }
+
     companion object {
         fun <T> success(data: T?): Resource<T> {
             return Resource(Status.SUCCESS, data, null)
@@ -81,11 +85,6 @@ data class Resource<out T>(val status: Status, val data: T?, val error: Error?) 
         fun <T> error(error: Error?, data: T? = null): Resource<T> {
             return Resource(Status.ERROR, data, error)
         }
-    }
-
-    enum class Status {
-        SUCCESS,
-        ERROR
     }
 }
 
