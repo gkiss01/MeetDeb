@@ -6,7 +6,7 @@ import okhttp3.RequestBody
 import org.threeten.bp.OffsetDateTime
 import retrofit2.http.*
 
-interface DataProvider {
+interface MeetDebService {
     // MARK - Users -
 
     @POST("users")

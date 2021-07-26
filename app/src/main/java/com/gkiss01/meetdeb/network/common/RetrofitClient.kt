@@ -1,7 +1,7 @@
 package com.gkiss01.meetdeb.network.common
 
 import android.content.Context
-import com.gkiss01.meetdeb.network.api.DataProvider
+import com.gkiss01.meetdeb.network.api.MeetDebService
 import com.gkiss01.meetdeb.network.api.RestClient
 import com.gkiss01.meetdeb.utils.classes.OffsetDateTimeAdapter
 import com.gkiss01.meetdeb.utils.getAuthToken
@@ -48,4 +48,4 @@ fun provideRetrofit(okHttpClient: OkHttpClient, moshi: Moshi): Retrofit = Retrof
     .addConverterFactory(MoshiConverterFactory.create(moshi))
     .build()
 
-fun provideApi(retrofit: Retrofit): DataProvider = retrofit.create(DataProvider::class.java)
+fun provideApi(retrofit: Retrofit): MeetDebService = retrofit.create(MeetDebService::class.java)
