@@ -38,7 +38,7 @@ data class Event(
     override fun getViewHolder(v: View) = EventViewHolder(v,  MainActivity.instance.getActiveUser()?.isAdmin() ?: false)
 
     enum class UpdatingType {
-        VOTE, PARTICIPATION
+        VOTE, PARTICIPATION, NONE
     }
 
     fun asRequest(): EventRequest {

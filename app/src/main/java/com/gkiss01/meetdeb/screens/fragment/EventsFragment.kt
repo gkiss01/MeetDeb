@@ -27,7 +27,6 @@ import com.mikepenz.fastadapter.listeners.OnBindViewHolderListenerImpl
 import com.mikepenz.fastadapter.listeners.addClickListener
 import com.mikepenz.fastadapter.scroll.EndlessRecyclerOnScrollListener
 import com.mikepenz.fastadapter.ui.items.ProgressItem
-import com.mikepenz.itemanimators.AlphaInAnimator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -77,7 +76,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         binding.recyclerView.apply {
             adapter = fastScrollerAdapter
             layoutManager = LinearLayoutManager(requireContext())
-            itemAnimator = AlphaInAnimator()
+            itemAnimator = null // AlphaInAnimator()
 
             setHasFixedSize(true)
             setItemViewCacheSize(6)
@@ -110,17 +109,14 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         // Esemény gomb animációk kezelése
         viewModelKoin.itemCurrentlyUpdating.observe(viewLifecycleOwner) {
             it?.let { item ->
-                getEventViewHolderByPosition(itemAdapter.getAdapterPosition(item.second))?.manageAnimation(item.first)
+                fastScrollerAdapter.notifyItemChanged(itemAdapter.getAdapterPosition(item.second))
             }
         }
 
         fastScrollerAdapter.onBindViewHolderListener = object : OnBindViewHolderListenerImpl<GenericItem>() {
-            override fun onViewAttachedToWindow(viewHolder: RecyclerView.ViewHolder, position: Int) {
-                viewModelKoin.itemCurrentlyUpdating.value?.let { item ->
-                    (viewHolder as? EventViewHolder)?.let {
-                        if (it.event.id == item.second) it.manageAnimation(item.first)
-                    }
-                }
+            override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int, payloads: List<Any>) {
+                val additionalPayload = listOfNotNull(viewModelKoin.itemCurrentlyUpdating.value)
+                super.onBindViewHolder(viewHolder, position, payloads + additionalPayload)
             }
         }
 
@@ -159,8 +155,6 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         super.onDestroyView()
         _binding = null
     }
-
-    private fun getEventViewHolderByPosition(position: Int) = binding.recyclerView.findViewHolderForAdapterPosition(position) as? EventViewHolder
 
     private fun createMoreActionMenu(view: View, event: Event) {
         viewModelActivityKoin.activeUser.value?.data?.let {

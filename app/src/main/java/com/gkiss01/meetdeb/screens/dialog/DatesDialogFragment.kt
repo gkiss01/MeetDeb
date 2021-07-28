@@ -108,6 +108,7 @@ class DatesDialogFragment : DialogFragment() {
 
         fastAdapter.onBindViewHolderListener = object : OnBindViewHolderListenerImpl<GenericItem>() {
             override fun onViewAttachedToWindow(viewHolder: RecyclerView.ViewHolder, position: Int) {
+                super.onViewAttachedToWindow(viewHolder, position)
                 viewModelKoin.itemCurrentlyUpdating.value?.let { item ->
                     (viewHolder as? DateViewHolder)?.let { holder ->
                         if (holder.date.id == item) {
