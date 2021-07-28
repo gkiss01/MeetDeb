@@ -9,6 +9,7 @@ import android.view.Window
 import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gkiss01.meetdeb.R
@@ -20,6 +21,9 @@ import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.diff.FastAdapterDiffUtil
 import com.mikepenz.fastadapter.ui.items.ProgressItem
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ParticipantsDialogFragment : DialogFragment() {
@@ -76,7 +80,12 @@ class ParticipantsDialogFragment : DialogFragment() {
 
         // Résztvevők lista újratöltése
         viewModelKoin.participants.observe(viewLifecycleOwner) {
-            FastAdapterDiffUtil[itemAdapter] = it
+            lifecycleScope.launch {
+                val result = withContext(Dispatchers.IO) {
+                    FastAdapterDiffUtil.calculateDiff(itemAdapter, it)
+                }
+                FastAdapterDiffUtil[itemAdapter] = result
+            }
         }
     }
 

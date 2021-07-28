@@ -11,6 +11,7 @@ import android.widget.FrameLayout
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -33,6 +34,9 @@ import com.mikepenz.fastadapter.listeners.OnBindViewHolderListenerImpl
 import com.mikepenz.fastadapter.listeners.addClickListener
 import com.mikepenz.fastadapter.ui.items.ProgressItem
 import com.mikepenz.itemanimators.AlphaInAnimator
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.threeten.bp.OffsetDateTime
@@ -140,7 +144,12 @@ class DatesDialogFragment : DialogFragment() {
 
         // Időpont lista újratöltése
         viewModelKoin.dates.observe(viewLifecycleOwner) {
-            FastAdapterDiffUtil[itemAdapter] = it
+            lifecycleScope.launch {
+                val result = withContext(Dispatchers.IO) {
+                    FastAdapterDiffUtil.calculateDiff(itemAdapter, it)
+                }
+                FastAdapterDiffUtil[itemAdapter] = result
+            }
         }
 
         itemAdapter.fastAdapter?.addClickListener({ vh: DateViewHolder -> vh.binding.voteButton }) { _, _, _, item ->

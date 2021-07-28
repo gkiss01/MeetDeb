@@ -12,5 +12,8 @@ data class Participant(
 
     override val layoutRes get() = R.layout.item_participant
     override val type get() = R.id.pli_layout
+    override var identifier: Long
+        get() = userId
+        set(_) {}
     override fun getViewHolder(v: View) = ParticipantViewHolder(v)
 }
