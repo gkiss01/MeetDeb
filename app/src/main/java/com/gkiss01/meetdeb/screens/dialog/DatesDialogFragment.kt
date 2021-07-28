@@ -99,24 +99,18 @@ class DatesDialogFragment : DialogFragment() {
         // Időpont gomb animációk kezelése
         viewModelKoin.itemCurrentlyUpdating.observe(viewLifecycleOwner) {
             it?.let { item ->
-                getDateViewHolderByPosition(itemAdapter.getAdapterPosition(item))?.let { holder ->
-                    holder.setChecked()
-                    holder.showAnimation()
-                }
+                fastAdapter.notifyAdapterItemChanged(itemAdapter.getAdapterPosition(item.second))
             }
         }
 
         fastAdapter.onBindViewHolderListener = object : OnBindViewHolderListenerImpl<GenericItem>() {
+            override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int, payloads: List<Any>) {
+                val additionalPayload = listOfNotNull(viewModelKoin.itemCurrentlyUpdating.value)
+                super.onBindViewHolder(viewHolder, position, payloads + additionalPayload)
+            }
+
             override fun onViewAttachedToWindow(viewHolder: RecyclerView.ViewHolder, position: Int) {
                 super.onViewAttachedToWindow(viewHolder, position)
-                viewModelKoin.itemCurrentlyUpdating.value?.let { item ->
-                    (viewHolder as? DateViewHolder)?.let { holder ->
-                        if (holder.date.id == item) {
-                            holder.setChecked()
-                            holder.showAnimation()
-                        }
-                    }
-                }
                 viewModelKoin.itemCurrentlyAdding.value?.let {
                     (viewHolder as? DatePickerViewHolder)?.let { holder ->
                         holder.expand()
@@ -179,7 +173,6 @@ class DatesDialogFragment : DialogFragment() {
         _binding = null
     }
 
-    private fun getDateViewHolderByPosition(position: Int) = binding.recyclerView.findViewHolderForAdapterPosition(position) as? DateViewHolder
     private fun getDatePickerViewHolderByPosition(position: Int) = binding.recyclerView.findViewHolderForAdapterPosition(position) as? DatePickerViewHolder
 
     private fun createMoreActionMenu(view: View, date: Date) {

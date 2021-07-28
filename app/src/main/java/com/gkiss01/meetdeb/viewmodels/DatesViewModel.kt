@@ -28,8 +28,8 @@ class DatesViewModel(private val restClient: RestClient) : ViewModel() {
     val updateItemEvent: LiveData<SingleEvent<Long>>
         get() = _updateItemEvent
 
-    private val _itemCurrentlyUpdating = MutableLiveData<Long?>()
-    val itemCurrentlyUpdating: LiveData<Long?>
+    private val _itemCurrentlyUpdating = MutableLiveData<ItemUpdating?>()
+    val itemCurrentlyUpdating: LiveData<ItemUpdating?>
         get() = _itemCurrentlyUpdating
 
     private val _headerCurrentlyNeeded = MutableLiveData<Boolean>()
@@ -98,10 +98,10 @@ class DatesViewModel(private val restClient: RestClient) : ViewModel() {
 
     fun changeVote(dateId: Long) {
         _itemCurrentlyUpdating.value?.let {
-            if (it != dateId) _updateItemEvent.postEvent(dateId)
+            if (it.second != dateId) _updateItemEvent.postEvent(dateId)
             return
         }
-        _itemCurrentlyUpdating.postValue(dateId)
+        _itemCurrentlyUpdating.postValue(ItemUpdating(Event.UpdatingType.NONE, dateId))
         Log.d("Logger_DatesVM", "Changing vote with date ID $dateId ...")
 
         viewModelScope.launch {
