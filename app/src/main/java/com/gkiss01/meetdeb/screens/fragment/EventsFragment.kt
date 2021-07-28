@@ -42,7 +42,9 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
 
     private val itemAdapter = ItemAdapter<Event>()
     private val footerAdapter = ItemAdapter<ProgressItem>()
-    private val fastScrollerAdapter = FastScrollerAdapter.with(listOf(itemAdapter, footerAdapter))
+    private val fastScrollerAdapter = FastScrollerAdapter.with(listOf(itemAdapter, footerAdapter)).apply {
+        attachDefaultListeners = false
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         setHasOptionsMenu(true)
@@ -62,7 +64,6 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentEventsBinding.bind(view)
 
-        fastScrollerAdapter.attachDefaultListeners = false
         val endlessScrollListener = object : EndlessRecyclerOnScrollListener(footerAdapter) {
             override fun onLoadMore(currentPage: Int) {
                 viewModelKoin.loadEventsForPage(if (currentPage == 0) 1 else (viewModelKoin.lastPage + 1))

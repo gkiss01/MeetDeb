@@ -29,17 +29,13 @@ data class Event(
     constructor(name: String, date: OffsetDateTime, venue: String, description: String):
             this(Long.MIN_VALUE, "", Long.MIN_VALUE, name, date, venue, description, false, 0, false,  false)
 
-    override val layoutRes: Int
-        get() = R.layout.item_event
-    override val type: Int
-        get() = R.id.eli_layout
+    override val layoutRes get() = R.layout.item_event
+    override val type get() = R.id.eli_layout
     override var identifier: Long
         get() = id
         set(_) {}
 
-    override fun getViewHolder(v: View): EventViewHolder {
-        return EventViewHolder(v,  MainActivity.instance.getActiveUser()?.isAdmin() ?: false)
-    }
+    override fun getViewHolder(v: View) = EventViewHolder(v,  MainActivity.instance.getActiveUser()?.isAdmin() ?: false)
 
     enum class UpdatingType {
         VOTE, PARTICIPATION

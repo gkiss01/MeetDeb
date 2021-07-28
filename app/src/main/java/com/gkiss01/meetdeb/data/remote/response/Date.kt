@@ -15,16 +15,11 @@ data class Date(
     val votes: Int,
     val accepted: Boolean): AbstractItem<DateViewHolder>() {
 
-    override val layoutRes: Int
-        get() = R.layout.item_date
-    override val type: Int
-        get() = R.id.dli_layout
+    override val layoutRes get() = R.layout.item_date
+    override val type get() = R.id.dli_layout
     override var identifier: Long
         get() = id
         set(_) {}
 
-    override fun getViewHolder(v: View): DateViewHolder {
-        return DateViewHolder(v)
-    }
-
+    override fun getViewHolder(v: View) = DateViewHolder(v)
 }

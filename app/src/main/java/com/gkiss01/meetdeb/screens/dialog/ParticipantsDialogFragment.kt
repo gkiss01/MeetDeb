@@ -32,7 +32,7 @@ class ParticipantsDialogFragment : DialogFragment() {
 
     private val itemAdapter = ItemAdapter<Participant>()
     private val headerAdapter = ItemAdapter<ProgressItem>()
-    private val fastAdapter = FastAdapter.with(listOf(headerAdapter, itemAdapter))
+    private val fastAdapter = FastAdapter.with(listOf(headerAdapter, itemAdapter)).apply { attachDefaultListeners = false }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
@@ -48,7 +48,6 @@ class ParticipantsDialogFragment : DialogFragment() {
             viewModelKoin.getParticipants()
         }
 
-        fastAdapter.attachDefaultListeners = false
         binding.recyclerView.apply {
             adapter = fastAdapter
             layoutManager = LinearLayoutManager(context)
