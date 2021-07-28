@@ -130,13 +130,9 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
 
         // Footer animáció kezelése
         viewModelKoin.footerCurrentlyNeeded.observe(viewLifecycleOwner) {
-            if (it) {
-                footerAdapter.clear()
-                footerAdapter.add(ProgressItem())
-            } else {
-                binding.swipeRefreshLayout.isRefreshing = false
-                footerAdapter.clear()
-            }
+            footerAdapter.clear()
+            if (it) footerAdapter.add(ProgressItem())
+            else binding.swipeRefreshLayout.isRefreshing = false
         }
 
         // Esemény lista újratöltése

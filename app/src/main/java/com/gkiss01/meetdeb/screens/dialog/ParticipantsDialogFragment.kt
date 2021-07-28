@@ -70,12 +70,8 @@ class ParticipantsDialogFragment : DialogFragment() {
 
         // Header animáció kezelése
         viewModelKoin.headerCurrentlyNeeded.observe(viewLifecycleOwner) {
-            if (it) {
-                headerAdapter.clear()
-                headerAdapter.add(ProgressItem())
-            } else {
-                headerAdapter.clear()
-            }
+            headerAdapter.clear()
+            if (it) headerAdapter.add(ProgressItem())
         }
 
         // Résztvevők lista újratöltése
