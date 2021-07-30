@@ -17,11 +17,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
-import com.gkiss01.meetdeb.data.local.DatePickerItem
+import com.gkiss01.meetdeb.data.local.DatePickingItem
 import com.gkiss01.meetdeb.data.remote.response.Date
 import com.gkiss01.meetdeb.data.remote.response.isAdmin
 import com.gkiss01.meetdeb.databinding.FragmentDatesBinding
-import com.gkiss01.meetdeb.screens.viewholders.DatePickerViewHolder
 import com.gkiss01.meetdeb.screens.viewholders.DateViewHolder
 import com.gkiss01.meetdeb.utils.observeEvent
 import com.gkiss01.meetdeb.utils.setNavigationResult
@@ -29,6 +28,7 @@ import com.gkiss01.meetdeb.viewmodels.DatesViewModel
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.adapters.ItemAdapter
+import com.mikepenz.fastadapter.binding.BindingViewHolder
 import com.mikepenz.fastadapter.diff.FastAdapterDiffUtil
 import com.mikepenz.fastadapter.listeners.OnBindViewHolderListenerImpl
 import com.mikepenz.fastadapter.listeners.addClickListener
@@ -39,7 +39,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.threeten.bp.OffsetDateTime
 
 class DatesDialogFragment : DialogFragment() {
     private var _binding: FragmentDatesBinding? = null
@@ -52,7 +51,11 @@ class DatesDialogFragment : DialogFragment() {
 
     private val itemAdapter = ItemAdapter<Date>()
     private val headerAdapter = ItemAdapter<ProgressItem>()
-    private val footerAdapter = ItemAdapter<DatePickerItem>()
+    private val footerAdapter = ItemAdapter<DatePickingItem>().apply {
+        add(DatePickingItem {
+            viewModelKoin.createDate(it)
+        })
+    }
     private val fastAdapter = FastAdapter.with(listOf(headerAdapter, itemAdapter, footerAdapter))
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -68,10 +71,6 @@ class DatesDialogFragment : DialogFragment() {
             viewModelKoin.event = safeArgs.event
             viewModelKoin.getDates()
         }
-
-        viewModelKoin.itemCurrentlyAdding.value?.let {
-            footerAdapter.add(DatePickerItem(it))
-        } ?: footerAdapter.add(DatePickerItem())
 
         if (viewModelActivityKoin.activeUser.value?.data?.isAdmin() == false) fastAdapter.attachDefaultListeners = false
         val layoutManager = LinearLayoutManager(context)
@@ -105,18 +104,16 @@ class DatesDialogFragment : DialogFragment() {
 
         fastAdapter.onBindViewHolderListener = object : OnBindViewHolderListenerImpl<GenericItem>() {
             override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int, payloads: List<Any>) {
-                val additionalPayload = listOfNotNull(viewModelKoin.itemCurrentlyUpdating.value)
-                super.onBindViewHolder(viewHolder, position, payloads + additionalPayload)
-            }
-
-            override fun onViewAttachedToWindow(viewHolder: RecyclerView.ViewHolder, position: Int) {
-                super.onViewAttachedToWindow(viewHolder, position)
-                viewModelKoin.itemCurrentlyAdding.value?.let {
-                    (viewHolder as? DatePickerViewHolder)?.let { holder ->
-                        holder.expand()
-                        holder.manageAnimation(true)
+                val additionalPayload = when(viewHolder) {
+                    is DateViewHolder -> listOfNotNull(viewModelKoin.itemCurrentlyUpdating.value)
+                    is BindingViewHolder<*> -> {
+                        val payload = if (viewModelKoin.collapseFooter.value?.hasBeenHandled() == false)
+                            DatePickingItem.REQUEST_CLOSE_PICKER else null
+                        listOfNotNull(viewModelKoin.itemCurrentlyAdding.value, payload)
                     }
+                    else -> emptyList()
                 }
+                super.onBindViewHolder(viewHolder, position, payloads + additionalPayload)
             }
         }
 
@@ -128,11 +125,11 @@ class DatesDialogFragment : DialogFragment() {
 
         // Footer animáció kezelése
         viewModelKoin.itemCurrentlyAdding.observe(viewLifecycleOwner) {
-            getDatePickerViewHolderByPosition(layoutManager.itemCount - 1)?.manageAnimation(it != null)
+            fastAdapter.notifyItemChanged(fastAdapter.itemCount - 1)
         }
 
         viewModelKoin.collapseFooter.observeEvent(viewLifecycleOwner) {
-            getDatePickerViewHolderByPosition(layoutManager.itemCount - 1)?.close()
+            fastAdapter.notifyItemChanged(fastAdapter.itemCount - 1)
         }
 
         // Időpont lista újratöltése
@@ -149,17 +146,6 @@ class DatesDialogFragment : DialogFragment() {
             if (!item.accepted) viewModelKoin.changeVote(item.id)
         }
 
-        footerAdapter.fastAdapter?.addClickListener({ vh: DatePickerViewHolder -> vh.binding.createButton }) { _, position, _, item ->
-            val itemView = getDatePickerViewHolderByPosition(position)
-
-            if (item.offsetDateTime.isBefore(OffsetDateTime.now()))
-                itemView?.setError(getString(R.string.future_date_required))
-            else {
-                itemView?.setError(null)
-                viewModelKoin.createDate(item.offsetDateTime)
-            }
-        }
-
         if (viewModelActivityKoin.activeUser.value?.data?.isAdmin() == true) {
             itemAdapter.fastAdapter?.onLongClickListener = { itemView, _, item, _ ->
                 createMoreActionMenu(itemView, item)
@@ -172,8 +158,6 @@ class DatesDialogFragment : DialogFragment() {
         super.onDestroyView()
         _binding = null
     }
-
-    private fun getDatePickerViewHolderByPosition(position: Int) = binding.recyclerView.findViewHolderForAdapterPosition(position) as? DatePickerViewHolder
 
     private fun createMoreActionMenu(view: View, date: Date) {
         viewModelActivityKoin.activeUser.value?.data?.let {

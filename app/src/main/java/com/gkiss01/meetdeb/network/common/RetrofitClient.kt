@@ -12,8 +12,9 @@ import okhttp3.OkHttpClient
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.util.concurrent.TimeUnit
 
-const val BASE_URL = "http://192.168.43.31:8080"
+const val BASE_URL = "http://192.168.0.104:8080"
 const val PAGE_SIZE = 25
 
 val networkModule = module {
@@ -35,6 +36,9 @@ fun provideInterceptor(context: Context): Interceptor = Interceptor {
 
 fun provideOkHttpClient(interceptor: Interceptor): OkHttpClient = OkHttpClient.Builder()
     .addInterceptor(interceptor)
+    .connectTimeout(5, TimeUnit.MINUTES)
+    .readTimeout(5, TimeUnit.MINUTES)
+    .writeTimeout(5, TimeUnit.MINUTES)
     .build()
 
 fun provideMoshi(): Moshi = Moshi.Builder()

@@ -66,6 +66,7 @@ dependencies {
     implementation "com.mikepenz:fastadapter-extensions-diff:5.3.4"
     implementation "com.mikepenz:fastadapter-extensions-ui:5.3.4"
     implementation "com.mikepenz:fastadapter-extensions-scroll:5.3.4"
+    implementation "com.mikepenz:fastadapter-extensions-binding:5.3.4"
     implementation "com.mikepenz:itemanimators:1.1.0"
 
     //FastScroller for FastAdapter
