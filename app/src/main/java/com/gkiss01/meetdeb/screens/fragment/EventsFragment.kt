@@ -76,11 +76,56 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         binding.recyclerView.apply {
             adapter = fastScrollerAdapter
             layoutManager = LinearLayoutManager(requireContext())
-            itemAnimator = null // AlphaInAnimator()
+            itemAnimator = null
 
             setHasFixedSize(true)
             setItemViewCacheSize(6)
             addOnScrollListener(endlessScrollListener)
+        }
+
+        // Toast üzenet
+        viewModelKoin.toastEvent.observeEvent(viewLifecycleOwner) {
+            when (it) {
+                is Int -> Toast.makeText(requireContext(), getString(it), Toast.LENGTH_LONG).show()
+                is String -> Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
+            }
+        }
+
+        // Esemény gomb animációk kezelése
+        viewModelKoin.itemCurrentlyUpdating.observe(viewLifecycleOwner) {
+            it?.let { item ->
+                fastScrollerAdapter.notifyItemChanged(itemAdapter.getAdapterPosition(item.second))
+            }
+        }
+
+        // Adott lista elem befrissítése
+        viewModelKoin.updateItemEvent.observeEvent(viewLifecycleOwner) {
+            fastScrollerAdapter.notifyAdapterItemChanged(itemAdapter.getAdapterPosition(it))
+        }
+
+        // ViewHolder frissítési csomagok összeállítása
+        fastScrollerAdapter.onBindViewHolderListener = object : OnBindViewHolderListenerImpl<GenericItem>() {
+            override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int, payloads: List<Any>) {
+                val additionalPayload = listOfNotNull(viewModelKoin.itemCurrentlyUpdating.value)
+                super.onBindViewHolder(viewHolder, position, payloads + additionalPayload)
+            }
+        }
+
+        // Esemény lista újratöltése
+        viewModelKoin.events.observe(viewLifecycleOwner) {
+            lifecycleScope.launch {
+                val result = withContext(Dispatchers.IO) {
+                    FastAdapterDiffUtil.calculateDiff(itemAdapter, it)
+                }
+                FastAdapterDiffUtil[itemAdapter] = result
+            }
+        }
+
+        // Footer animáció kezelése
+        viewModelKoin.footerCurrentlyNeeded.observe(viewLifecycleOwner) {
+            footerAdapter.clear()
+            if (it) footerAdapter.add(ProgressItem())
+            else binding.swipeRefreshLayout.isRefreshing = false
         }
 
         itemAdapter.fastAdapter?.addClickListener( {null}, { vh: EventViewHolder -> listOf(vh.binding.descButton,
@@ -93,52 +138,8 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             }
         }
 
-        // Toast üzenet
-        viewModelKoin.toastEvent.observeEvent(viewLifecycleOwner) {
-            when (it) {
-                is Int -> Toast.makeText(requireContext(), getString(it), Toast.LENGTH_LONG).show()
-                is String -> Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
-            }
-        }
-
-        // Adott lista elem befrissítése
-        viewModelKoin.updateItemEvent.observeEvent(viewLifecycleOwner) {
-            fastScrollerAdapter.notifyAdapterItemChanged(itemAdapter.getAdapterPosition(it))
-        }
-
-        // Esemény gomb animációk kezelése
-        viewModelKoin.itemCurrentlyUpdating.observe(viewLifecycleOwner) {
-            it?.let { item ->
-                fastScrollerAdapter.notifyItemChanged(itemAdapter.getAdapterPosition(item.second))
-            }
-        }
-
-        fastScrollerAdapter.onBindViewHolderListener = object : OnBindViewHolderListenerImpl<GenericItem>() {
-            override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int, payloads: List<Any>) {
-                val additionalPayload = listOfNotNull(viewModelKoin.itemCurrentlyUpdating.value)
-                super.onBindViewHolder(viewHolder, position, payloads + additionalPayload)
-            }
-        }
-
         getNavigationResult<Long>(R.id.eventsFragment, "eventId") {
             viewModelKoin.updateEvent(it)
-        }
-
-        // Footer animáció kezelése
-        viewModelKoin.footerCurrentlyNeeded.observe(viewLifecycleOwner) {
-            footerAdapter.clear()
-            if (it) footerAdapter.add(ProgressItem())
-            else binding.swipeRefreshLayout.isRefreshing = false
-        }
-
-        // Esemény lista újratöltése
-        viewModelKoin.events.observe(viewLifecycleOwner) {
-            lifecycleScope.launch {
-                val result = withContext(Dispatchers.IO) {
-                    FastAdapterDiffUtil.calculateDiff(itemAdapter, it)
-                }
-                FastAdapterDiffUtil[itemAdapter] = result
-            }
         }
 
         // PullToRefresh

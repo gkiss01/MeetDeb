@@ -90,9 +90,10 @@ class DatesDialogFragment : DialogFragment() {
             }
         }
 
-        // Adott lista elem befrissítése
-        viewModelKoin.updateItemEvent.observeEvent(viewLifecycleOwner) {
-            fastAdapter.notifyAdapterItemChanged(itemAdapter.getAdapterPosition(it))
+        // Header animáció kezelése
+        viewModelKoin.headerCurrentlyNeeded.observe(viewLifecycleOwner) {
+            headerAdapter.clear()
+            if (it) headerAdapter.add(ProgressItem())
         }
 
         // Időpont gomb animációk kezelése
@@ -102,6 +103,22 @@ class DatesDialogFragment : DialogFragment() {
             }
         }
 
+        // Adott lista elem befrissítése
+        viewModelKoin.updateItemEvent.observeEvent(viewLifecycleOwner) {
+            fastAdapter.notifyAdapterItemChanged(itemAdapter.getAdapterPosition(it))
+        }
+
+        // Dátum hozzáadó animáció kezelése
+        viewModelKoin.itemCurrentlyAdding.observe(viewLifecycleOwner) {
+            fastAdapter.notifyItemChanged(fastAdapter.itemCount - 1)
+        }
+
+        // Dátum hozzáadó összecsukása
+        viewModelKoin.collapseFooter.observeEvent(viewLifecycleOwner) {
+            fastAdapter.notifyItemChanged(fastAdapter.itemCount - 1)
+        }
+
+        // ViewHolder frissítési csomagok összeállítása
         fastAdapter.onBindViewHolderListener = object : OnBindViewHolderListenerImpl<GenericItem>() {
             override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int, payloads: List<Any>) {
                 val additionalPayload = when(viewHolder) {
@@ -115,21 +132,6 @@ class DatesDialogFragment : DialogFragment() {
                 }
                 super.onBindViewHolder(viewHolder, position, payloads + additionalPayload)
             }
-        }
-
-        // Header animáció kezelése
-        viewModelKoin.headerCurrentlyNeeded.observe(viewLifecycleOwner) {
-            headerAdapter.clear()
-            if (it) headerAdapter.add(ProgressItem())
-        }
-
-        // Footer animáció kezelése
-        viewModelKoin.itemCurrentlyAdding.observe(viewLifecycleOwner) {
-            fastAdapter.notifyItemChanged(fastAdapter.itemCount - 1)
-        }
-
-        viewModelKoin.collapseFooter.observeEvent(viewLifecycleOwner) {
-            fastAdapter.notifyItemChanged(fastAdapter.itemCount - 1)
         }
 
         // Időpont lista újratöltése
