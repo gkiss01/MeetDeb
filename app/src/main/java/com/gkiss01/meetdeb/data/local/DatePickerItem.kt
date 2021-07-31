@@ -16,7 +16,7 @@ import com.gkiss01.meetdeb.utils.update
 import com.mikepenz.fastadapter.binding.AbstractBindingItem
 import org.threeten.bp.OffsetDateTime
 
-class DatePickingItem(private val onClickedCreate: ((OffsetDateTime) -> Unit)? = null): AbstractBindingItem<ItemDatePickerBinding>() {
+class DatePickerItem(private val onClickedCreate: ((OffsetDateTime) -> Unit)? = null): AbstractBindingItem<ItemDatePickerBinding>() {
     private var offsetDateTime: OffsetDateTime = OffsetDateTime.now()
 
     private lateinit var binding: ItemDatePickerBinding

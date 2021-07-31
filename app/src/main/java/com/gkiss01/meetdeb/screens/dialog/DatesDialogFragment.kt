@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.gkiss01.meetdeb.ActivityViewModel
 import com.gkiss01.meetdeb.R
-import com.gkiss01.meetdeb.data.local.DatePickingItem
+import com.gkiss01.meetdeb.data.local.DatePickerItem
 import com.gkiss01.meetdeb.data.remote.response.Date
 import com.gkiss01.meetdeb.data.remote.response.isAdmin
 import com.gkiss01.meetdeb.databinding.FragmentDatesBinding
@@ -51,8 +51,8 @@ class DatesDialogFragment : DialogFragment() {
 
     private val itemAdapter = ItemAdapter<Date>()
     private val headerAdapter = ItemAdapter<ProgressItem>()
-    private val footerAdapter = ItemAdapter<DatePickingItem>().apply {
-        add(DatePickingItem {
+    private val footerAdapter = ItemAdapter<DatePickerItem>().apply {
+        add(DatePickerItem {
             viewModelKoin.createDate(it)
         })
     }
@@ -110,12 +110,12 @@ class DatesDialogFragment : DialogFragment() {
 
         // Dátum hozzáadó animáció kezelése
         viewModelKoin.itemCurrentlyAdding.observe(viewLifecycleOwner) {
-            fastAdapter.notifyItemChanged(fastAdapter.itemCount - 1)
+            fastAdapter.notifyAdapterItemChanged(fastAdapter.itemCount - 1)
         }
 
         // Dátum hozzáadó összecsukása
         viewModelKoin.collapseFooter.observeEvent(viewLifecycleOwner) {
-            fastAdapter.notifyItemChanged(fastAdapter.itemCount - 1)
+            fastAdapter.notifyAdapterItemChanged(fastAdapter.itemCount - 1)
         }
 
         // ViewHolder frissítési csomagok összeállítása
@@ -125,7 +125,7 @@ class DatesDialogFragment : DialogFragment() {
                     is DateViewHolder -> listOfNotNull(viewModelKoin.itemCurrentlyUpdating.value)
                     is BindingViewHolder<*> -> {
                         val payload = if (viewModelKoin.collapseFooter.value?.hasBeenHandled() == false)
-                            DatePickingItem.REQUEST_CLOSE_PICKER else null
+                            DatePickerItem.REQUEST_CLOSE_PICKER else null
                         listOfNotNull(viewModelKoin.itemCurrentlyAdding.value, payload)
                     }
                     else -> emptyList()

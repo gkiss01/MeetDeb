@@ -5,6 +5,8 @@ import android.view.*
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.onNavDestinationSelected
@@ -80,7 +82,13 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
 
             setHasFixedSize(true)
             setItemViewCacheSize(6)
+
             addOnScrollListener(endlessScrollListener)
+            viewLifecycleOwner.lifecycle.addObserver(LifecycleEventObserver { _, event ->
+                if (event == Lifecycle.Event.ON_DESTROY) {
+                    removeOnScrollListener(endlessScrollListener)
+                }
+            })
         }
 
         // Toast üzenet
@@ -94,7 +102,7 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         // Esemény gomb animációk kezelése
         viewModelKoin.itemCurrentlyUpdating.observe(viewLifecycleOwner) {
             it?.let { item ->
-                fastScrollerAdapter.notifyItemChanged(itemAdapter.getAdapterPosition(item.second))
+                fastScrollerAdapter.notifyAdapterItemChanged(itemAdapter.getAdapterPosition(item.second))
             }
         }
 
