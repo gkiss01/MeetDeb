@@ -73,10 +73,9 @@ class DatesDialogFragment : DialogFragment() {
         }
 
         if (viewModelActivityKoin.activeUser.value?.data?.isAdmin() == false) fastAdapter.attachDefaultListeners = false
-        val layoutManager = LinearLayoutManager(context)
         binding.recyclerView.apply {
             adapter = fastAdapter
-            this.layoutManager = layoutManager
+            layoutManager = LinearLayoutManager(context)
             itemAnimator = AlphaInAnimator()
 
             setItemViewCacheSize(12)
