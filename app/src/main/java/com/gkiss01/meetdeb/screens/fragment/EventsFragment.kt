@@ -5,8 +5,6 @@ import android.view.*
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.onNavDestinationSelected
@@ -18,6 +16,7 @@ import com.gkiss01.meetdeb.data.remote.response.Event
 import com.gkiss01.meetdeb.data.remote.response.isAdmin
 import com.gkiss01.meetdeb.databinding.FragmentEventsBinding
 import com.gkiss01.meetdeb.screens.viewholders.EventViewHolder
+import com.gkiss01.meetdeb.utils.addOnScrollListener
 import com.gkiss01.meetdeb.utils.classes.FastScrollerAdapter
 import com.gkiss01.meetdeb.utils.getNavigationResult
 import com.gkiss01.meetdeb.utils.observeEvent
@@ -51,6 +50,12 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         attachDefaultListeners = false
     }
 
+    private val endlessScrollListener = object : EndlessRecyclerOnScrollListener(footerAdapter) {
+        override fun onLoadMore(currentPage: Int) {
+            viewModelKoin.loadEventsForPage(if (currentPage == 0) 1 else (viewModelKoin.lastPage + 1))
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         setHasOptionsMenu(true)
         return super.onCreateView(inflater, container, savedInstanceState)
@@ -69,26 +74,15 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentEventsBinding.bind(view)
 
-        val endlessScrollListener = object : EndlessRecyclerOnScrollListener(footerAdapter) {
-            override fun onLoadMore(currentPage: Int) {
-                viewModelKoin.loadEventsForPage(if (currentPage == 0) 1 else (viewModelKoin.lastPage + 1))
-            }
-        }
-
         binding.recyclerView.apply {
             adapter = fastScrollerAdapter
-            layoutManager = LinearLayoutManager(requireContext())
+            layoutManager = LinearLayoutManager(context)
             itemAnimator = null
 
             setHasFixedSize(true)
             setItemViewCacheSize(6)
 
-            addOnScrollListener(endlessScrollListener)
-            viewLifecycleOwner.lifecycle.addObserver(LifecycleEventObserver { _, event ->
-                if (event == Lifecycle.Event.ON_DESTROY) {
-                    removeOnScrollListener(endlessScrollListener)
-                }
-            })
+            addOnScrollListener(viewLifecycleOwner, endlessScrollListener)
         }
 
         // Toast üzenet
