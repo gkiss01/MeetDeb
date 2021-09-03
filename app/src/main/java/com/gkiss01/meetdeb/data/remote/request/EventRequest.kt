@@ -1,6 +1,6 @@
 package com.gkiss01.meetdeb.data.remote.request
 
-import com.gkiss01.meetdeb.utils.classes.OffsetDateTimeCustom
+import com.gkiss01.meetdeb.utils.OffsetDateTimeCustom
 import org.threeten.bp.OffsetDateTime
 
 data class EventRequest(

@@ -4,7 +4,7 @@ import com.gkiss01.meetdeb.network.api.MeetDebService
 import com.gkiss01.meetdeb.network.api.RestClient
 import com.gkiss01.meetdeb.utils.AuthManager
 import com.gkiss01.meetdeb.utils.Constants
-import com.gkiss01.meetdeb.utils.classes.OffsetDateTimeAdapter
+import com.gkiss01.meetdeb.utils.OffsetDateTimeAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.Interceptor

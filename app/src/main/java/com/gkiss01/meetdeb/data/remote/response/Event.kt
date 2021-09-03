@@ -5,7 +5,7 @@ import com.gkiss01.meetdeb.MainActivity
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.remote.request.EventRequest
 import com.gkiss01.meetdeb.screens.viewholders.EventViewHolder
-import com.gkiss01.meetdeb.utils.classes.OffsetDateTimeCustom
+import com.gkiss01.meetdeb.utils.OffsetDateTimeCustom
 import com.mikepenz.fastadapter.items.AbstractItem
 import org.threeten.bp.OffsetDateTime
 import java.io.Serializable

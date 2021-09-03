@@ -1,4 +1,4 @@
-package com.gkiss01.meetdeb.utils.classes
+package com.gkiss01.meetdeb.utils
 
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.JsonQualifier
