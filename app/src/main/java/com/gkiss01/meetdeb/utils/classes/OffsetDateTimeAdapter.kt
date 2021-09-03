@@ -9,15 +9,11 @@ import org.threeten.bp.OffsetDateTime
 @JsonQualifier
 annotation class OffsetDateTimeCustom
 
-internal class OffsetDateTimeAdapter {
+class OffsetDateTimeAdapter {
     @ToJson
-    fun toJson(@OffsetDateTimeCustom date: OffsetDateTime): String {
-        return date.toString()
-    }
+    fun toJson(@OffsetDateTimeCustom date: OffsetDateTime): String = date.toString()
 
     @FromJson
     @OffsetDateTimeCustom
-    fun fromJson(date: String): OffsetDateTime {
-        return OffsetDateTime.parse(date)
-    }
+    fun fromJson(date: String): OffsetDateTime = OffsetDateTime.parse(date)
 }
