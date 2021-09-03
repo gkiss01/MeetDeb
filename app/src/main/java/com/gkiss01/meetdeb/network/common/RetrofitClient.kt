@@ -3,6 +3,7 @@ package com.gkiss01.meetdeb.network.common
 import android.content.Context
 import com.gkiss01.meetdeb.network.api.MeetDebService
 import com.gkiss01.meetdeb.network.api.RestClient
+import com.gkiss01.meetdeb.utils.Constants
 import com.gkiss01.meetdeb.utils.classes.OffsetDateTimeAdapter
 import com.gkiss01.meetdeb.utils.getAuthToken
 import com.squareup.moshi.Moshi
@@ -13,9 +14,6 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
-
-const val BASE_URL = "http://192.168.0.102:8080"
-const val PAGE_SIZE = 25
 
 val networkModule = module {
     single { provideInterceptor(get()) }
@@ -36,9 +34,9 @@ fun provideInterceptor(context: Context): Interceptor = Interceptor {
 
 fun provideOkHttpClient(interceptor: Interceptor): OkHttpClient = OkHttpClient.Builder()
     .addInterceptor(interceptor)
-    .connectTimeout(5, TimeUnit.MINUTES)
-    .readTimeout(5, TimeUnit.MINUTES)
-    .writeTimeout(5, TimeUnit.MINUTES)
+    .connectTimeout(1, TimeUnit.MINUTES)
+    .readTimeout(1, TimeUnit.MINUTES)
+    .writeTimeout(1, TimeUnit.MINUTES)
     .build()
 
 fun provideMoshi(): Moshi = Moshi.Builder()
@@ -47,7 +45,7 @@ fun provideMoshi(): Moshi = Moshi.Builder()
     .build()
 
 fun provideRetrofit(okHttpClient: OkHttpClient, moshi: Moshi): Retrofit = Retrofit.Builder()
-    .baseUrl(BASE_URL)
+    .baseUrl(Constants.BASE_URL)
     .client(okHttpClient)
     .addConverterFactory(MoshiConverterFactory.create(moshi))
     .build()

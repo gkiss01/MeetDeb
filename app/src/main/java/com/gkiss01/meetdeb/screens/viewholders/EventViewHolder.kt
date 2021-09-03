@@ -8,7 +8,7 @@ import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.remote.response.Event
 import com.gkiss01.meetdeb.databinding.ItemEventBinding
-import com.gkiss01.meetdeb.network.common.BASE_URL
+import com.gkiss01.meetdeb.utils.Constants
 import com.gkiss01.meetdeb.viewmodels.ItemUpdating
 import com.mikepenz.fastadapter.FastAdapter
 
@@ -19,7 +19,7 @@ class EventViewHolder(view: View, private val isAdmin: Boolean): FastAdapter.Vie
         binding.eventLabel.text = item.name
         binding.creatorLabel.text = item.username
 
-        binding.eventImage.load("$BASE_URL/images/${item.id}") {
+        binding.eventImage.load("${Constants.BASE_URL}/images/${item.id}") {
             placeholder(R.drawable.placeholder)
             error(R.drawable.placeholder)
         }

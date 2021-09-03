@@ -20,8 +20,8 @@ import com.github.razir.progressbutton.showProgress
 import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.remote.response.Event
 import com.gkiss01.meetdeb.databinding.FragmentEventCreateBinding
-import com.gkiss01.meetdeb.network.common.BASE_URL
 import com.gkiss01.meetdeb.utils.*
+import com.gkiss01.meetdeb.utils.Constants
 import com.gkiss01.meetdeb.viewmodels.EventCreateViewModel
 import com.gkiss01.meetdeb.viewmodels.ScreenType
 import com.karumi.dexter.Dexter
@@ -58,7 +58,7 @@ class EventCreateFragment : Fragment(R.layout.fragment_event_create) {
 
         binding.event = viewModelKoin.eventLocal
         if (viewModelKoin.type == ScreenType.UPDATE) {
-            binding.previewImage.load("$BASE_URL/images/${viewModelKoin.eventLocal.id}") {
+            binding.previewImage.load("${Constants.BASE_URL}/images/${viewModelKoin.eventLocal.id}") {
                 placeholder(R.drawable.placeholder)
                 error(R.drawable.placeholder)
             }

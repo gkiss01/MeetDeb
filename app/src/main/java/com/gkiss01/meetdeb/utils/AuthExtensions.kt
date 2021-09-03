@@ -9,13 +9,13 @@ enum class CredentialType {
 }
 
 fun Context.getAuthToken(default: String = ""): String {
-    val sharedPref = this.getSharedPreferences("BASIC_AUTH_PREFS", Context.MODE_PRIVATE)
-    return sharedPref.getString("AUTH_TOKEN_BASIC", default) ?: default
+    val sharedPref = this.getSharedPreferences(Constants.PREFERENCES_FILE_NAME, Context.MODE_PRIVATE)
+    return sharedPref.getString(Constants.PREFERENCES_KEY_AUTH_TOKEN, default) ?: default
 }
 
 fun Context.setAuthToken(basic: String? = null) {
-    val sharedPref = this.getSharedPreferences("BASIC_AUTH_PREFS", Context.MODE_PRIVATE)
-    sharedPref.edit { putString("AUTH_TOKEN_BASIC", basic) }
+    val sharedPref = this.getSharedPreferences(Constants.PREFERENCES_FILE_NAME, Context.MODE_PRIVATE)
+    sharedPref.edit { putString(Constants.PREFERENCES_KEY_AUTH_TOKEN, basic) }
 }
 
 fun Context.getCurrentCredential(type: CredentialType): String {

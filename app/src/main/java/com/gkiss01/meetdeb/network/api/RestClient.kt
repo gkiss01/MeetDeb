@@ -1,7 +1,7 @@
 package com.gkiss01.meetdeb.network.api
 
 import com.gkiss01.meetdeb.network.common.NetworkHandler
-import com.gkiss01.meetdeb.network.common.PAGE_SIZE
+import com.gkiss01.meetdeb.utils.Constants
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.threeten.bp.OffsetDateTime
@@ -17,7 +17,7 @@ class RestClient(private val meetDebService: MeetDebService, private val network
     suspend fun updateEvent(event: MultipartBody.Part, image: MultipartBody.Part?) = networkHandler.safeApiCall { meetDebService.updateEvent(event, image) }
     suspend fun deleteEvent(eventId: Long) = networkHandler.safeApiCall { meetDebService.deleteEvent(eventId) }
     suspend fun getEvent(eventId: Long) = networkHandler.safeApiCall { meetDebService.getEvent(eventId) }
-    suspend fun getEvents(page: Int) = networkHandler.safeApiCall { meetDebService.getEvents(page, PAGE_SIZE) }
+    suspend fun getEvents(page: Int) = networkHandler.safeApiCall { meetDebService.getEvents(page, Constants.PAGING_PAGE_SIZE) }
     suspend fun createReport(eventId: Long) = networkHandler.safeApiCall { meetDebService.createReport(eventId) }
     suspend fun deleteReport(eventId: Long) = networkHandler.safeApiCall { meetDebService.deleteReport(eventId) }
 
