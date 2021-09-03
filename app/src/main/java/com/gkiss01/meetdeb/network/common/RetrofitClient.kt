@@ -14,7 +14,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 
-const val BASE_URL = "http://192.168.0.103:8080"
+const val BASE_URL = "http://192.168.0.102:8080"
 const val PAGE_SIZE = 25
 
 val networkModule = module {
@@ -23,7 +23,7 @@ val networkModule = module {
     single { provideMoshi() }
     single { provideRetrofit(get(), get()) }
     factory { provideApi(get()) }
-    factory { ResourceHandler(get(), get()) }
+    factory { NetworkHandler(get(), get()) }
     factory { RestClient(get(), get()) }
 }
 

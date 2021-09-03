@@ -10,7 +10,7 @@ import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.remote.request.UserRequest
 import com.gkiss01.meetdeb.data.remote.response.User
 import com.gkiss01.meetdeb.network.api.RestClient
-import com.gkiss01.meetdeb.network.common.Error.ErrorCode
+import com.gkiss01.meetdeb.network.common.ErrorCode
 import com.gkiss01.meetdeb.network.common.Resource.Status
 import com.gkiss01.meetdeb.utils.CredentialType
 import com.gkiss01.meetdeb.utils.SingleEvent
