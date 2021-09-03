@@ -1,6 +1,5 @@
 package com.gkiss01.meetdeb.viewmodels
 
-import android.app.Application
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -12,13 +11,13 @@ import com.gkiss01.meetdeb.data.remote.response.User
 import com.gkiss01.meetdeb.network.api.RestClient
 import com.gkiss01.meetdeb.network.common.ErrorCode
 import com.gkiss01.meetdeb.network.common.Resource.Status
+import com.gkiss01.meetdeb.utils.AuthManager
 import com.gkiss01.meetdeb.utils.SingleEvent
 import com.gkiss01.meetdeb.utils.postEvent
-import com.gkiss01.meetdeb.utils.setAuthToken
 import kotlinx.coroutines.launch
 import okhttp3.Credentials
 
-class LoginViewModel(private val restClient: RestClient, private val application: Application): ViewModel() {
+class LoginViewModel(private val restClient: RestClient, private val authManager: AuthManager): ViewModel() {
     var userLocal: UserRequest = UserRequest()
         private set
 
@@ -62,7 +61,7 @@ class LoginViewModel(private val restClient: RestClient, private val application
     private fun updateAuthToken() {
         userLocal.email?.let { email ->
             userLocal.password?.let { password ->
-                application.setAuthToken(Credentials.basic(email, password))
+                authManager.setAuthToken(Credentials.basic(email, password))
             }
         }
     }

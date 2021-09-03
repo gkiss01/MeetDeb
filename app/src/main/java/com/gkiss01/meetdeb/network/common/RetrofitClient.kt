@@ -1,11 +1,10 @@
 package com.gkiss01.meetdeb.network.common
 
-import android.content.Context
 import com.gkiss01.meetdeb.network.api.MeetDebService
 import com.gkiss01.meetdeb.network.api.RestClient
+import com.gkiss01.meetdeb.utils.AuthManager
 import com.gkiss01.meetdeb.utils.Constants
 import com.gkiss01.meetdeb.utils.classes.OffsetDateTimeAdapter
-import com.gkiss01.meetdeb.utils.getAuthToken
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.Interceptor
@@ -25,10 +24,11 @@ val networkModule = module {
     factory { RestClient(get(), get()) }
 }
 
-fun provideInterceptor(context: Context): Interceptor = Interceptor {
-    val basic = context.getAuthToken()
+fun provideInterceptor(authManager: AuthManager): Interceptor = Interceptor {
     val request = it.request().newBuilder().addHeader("Accept", "application/json")
-    if (basic.isNotEmpty()) request.addHeader("Authorization", basic)
+    authManager.getAuthToken().let { basic ->
+        if (basic.isNotEmpty()) request.addHeader("Authorization", basic)
+    }
     it.proceed(request.build())
 }
 

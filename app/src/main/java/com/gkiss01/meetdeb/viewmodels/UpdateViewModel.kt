@@ -1,6 +1,5 @@
 package com.gkiss01.meetdeb.viewmodels
 
-import android.app.Application
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -12,9 +11,8 @@ import com.gkiss01.meetdeb.data.remote.response.User
 import com.gkiss01.meetdeb.network.api.RestClient
 import com.gkiss01.meetdeb.network.common.ErrorCode
 import com.gkiss01.meetdeb.network.common.Resource.Status
-import com.gkiss01.meetdeb.utils.CredentialType
+import com.gkiss01.meetdeb.utils.AuthManager
 import com.gkiss01.meetdeb.utils.SingleEvent
-import com.gkiss01.meetdeb.utils.getCurrentCredential
 import com.gkiss01.meetdeb.utils.postEvent
 import com.squareup.moshi.Moshi
 import kotlinx.coroutines.launch
@@ -23,7 +21,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 
-class UpdateViewModel(private val restClient: RestClient, private val moshi: Moshi, private val application: Application): ViewModel() {
+class UpdateViewModel(private val restClient: RestClient, private val moshi: Moshi, private val authManager: AuthManager): ViewModel() {
     var userLocal: UserRequest = UserRequest()
         private set
 
@@ -64,7 +62,7 @@ class UpdateViewModel(private val restClient: RestClient, private val moshi: Mos
     }
 
     private fun getAuthToken(): String {
-        val email = application.getCurrentCredential(CredentialType.EMAIL)
+        val email = authManager.getCredential(AuthManager.CredentialType.EMAIL) ?: ""
         val password = userLocal.name ?: ""
         return Credentials.basic(email, password)
     }

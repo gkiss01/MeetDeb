@@ -1,14 +1,11 @@
 package com.gkiss01.meetdeb
 
-import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.gkiss01.meetdeb.data.remote.response.User
 import com.gkiss01.meetdeb.network.common.Resource
-import com.gkiss01.meetdeb.utils.CredentialType
-import com.gkiss01.meetdeb.utils.getCurrentCredential
-import com.gkiss01.meetdeb.utils.setAuthToken
+import com.gkiss01.meetdeb.utils.AuthManager
 import okhttp3.Credentials
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -17,7 +14,7 @@ val activityModule = module {
     viewModel { ActivityViewModel(get()) }
 }
 
-class ActivityViewModel(private val application: Application) : ViewModel() {
+class ActivityViewModel(private val authManager: AuthManager) : ViewModel() {
     private var _activeUser = MutableLiveData<Resource<User>>()
     val activeUser: LiveData<Resource<User>>
         get() = _activeUser
@@ -31,13 +28,13 @@ class ActivityViewModel(private val application: Application) : ViewModel() {
     }
 
     fun setUserCredentials(username: String?, password: String?) {
-        val usernameSafe = username ?: application.getCurrentCredential(CredentialType.EMAIL)
-        val passwordSafe = password ?: application.getCurrentCredential(CredentialType.PASSWORD)
-        application.setAuthToken(Credentials.basic(usernameSafe, passwordSafe))
+        val usernameSafe = username ?: authManager.getCredential(AuthManager.CredentialType.EMAIL) ?: ""
+        val passwordSafe = password ?: authManager.getCredential(AuthManager.CredentialType.PASSWORD) ?: ""
+        authManager.setAuthToken(Credentials.basic(usernameSafe, passwordSafe))
     }
 
     private fun resetUserCredentials() {
-        application.setAuthToken()
+        authManager.setAuthToken(null)
     }
 
     fun logout() {
