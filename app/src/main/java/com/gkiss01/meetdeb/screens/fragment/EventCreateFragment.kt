@@ -21,7 +21,6 @@ import com.gkiss01.meetdeb.R
 import com.gkiss01.meetdeb.data.remote.response.Event
 import com.gkiss01.meetdeb.databinding.FragmentEventCreateBinding
 import com.gkiss01.meetdeb.utils.*
-import com.gkiss01.meetdeb.utils.Constants
 import com.gkiss01.meetdeb.viewmodels.EventCreateViewModel
 import com.gkiss01.meetdeb.viewmodels.ScreenType
 import com.karumi.dexter.Dexter
@@ -92,7 +91,7 @@ class EventCreateFragment : Fragment(R.layout.fragment_event_create) {
         }
 
         binding.imageButton.setOnClickListener {
-            if (viewModelKoin.type == ScreenType.NEW) requestStoragePermissions()
+            if (viewModelKoin.type == ScreenType.NEW) requestImagePickerPermissions()
             else Toast.makeText(context, getString(R.string.cannot_update_image), Toast.LENGTH_LONG).show()
         }
 
@@ -145,20 +144,21 @@ class EventCreateFragment : Fragment(R.layout.fragment_event_create) {
         }
     }
 
-    private fun requestStoragePermissions() {
-        Dexter.withContext(activity)
-            .withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            .withListener(object: MultiplePermissionsListener {
-                override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
-                    report?.let {
-                        if(it.areAllPermissionsGranted()) showImagePicker()
-                    }
-                }
-                override fun onPermissionRationaleShouldBeShown(permissions: MutableList<PermissionRequest>?, token: PermissionToken?) {
-                    token?.continuePermissionRequest()
-                }
-            })
-            .check()
+    private fun requestImagePickerPermissions() {
+        val permissions = listOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+
+        Dexter
+        .withContext(context)
+        .withPermissions(permissions)
+        .withListener(object: MultiplePermissionsListener {
+            override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
+                if (report != null && report.areAllPermissionsGranted()) showImagePicker()
+            }
+            override fun onPermissionRationaleShouldBeShown(permissions: MutableList<PermissionRequest>?, token: PermissionToken?) {
+                token?.continuePermissionRequest()
+            }
+        })
+        .check()
     }
 
     private fun showImagePicker() {
