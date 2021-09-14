@@ -52,6 +52,7 @@ class LoginViewModel(private val restClient: RestClient, private val authManager
                     Status.ERROR -> {
                         val message = if (it.error?.code == ErrorCode.USER_DISABLED_OR_NOT_VALID) R.string.invalid_credentials else it.error?.localizedDescription
                         _toastEvent.postEvent(message)
+                        authManager.setAuthToken(null)
                     }
                 }
             }
