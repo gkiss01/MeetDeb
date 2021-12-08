@@ -1,11 +1,8 @@
 package com.gkiss01.meetdeb.screens.fragment
 
-import android.Manifest
-import android.app.Activity.RESULT_OK
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
@@ -14,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import coil.load
+import com.aminography.choosephotohelper.ChoosePhotoHelper
 import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
@@ -23,12 +21,6 @@ import com.gkiss01.meetdeb.databinding.FragmentEventCreateBinding
 import com.gkiss01.meetdeb.utils.*
 import com.gkiss01.meetdeb.viewmodels.EventCreateViewModel
 import com.gkiss01.meetdeb.viewmodels.ScreenType
-import com.karumi.dexter.Dexter
-import com.karumi.dexter.MultiplePermissionsReport
-import com.karumi.dexter.PermissionToken
-import com.karumi.dexter.listener.PermissionRequest
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener
-import com.opensooq.supernova.gligar.GligarPicker
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.threeten.bp.OffsetDateTime
 import java.io.File
@@ -41,9 +33,18 @@ class EventCreateFragment : Fragment(R.layout.fragment_event_create) {
 
     private val safeArgs: EventCreateFragmentArgs by navArgs()
 
+    private lateinit var choosePhotoHelper: ChoosePhotoHelper
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentEventCreateBinding.bind(view)
+
+        choosePhotoHelper = ChoosePhotoHelper.with(this)
+            .asFilePath()
+            .withState(savedInstanceState)
+            .build {
+                viewModelKoin.pickedImageUri.value = it
+            }
 
         if (!viewModelKoin.isEventInitialized()) {
             safeArgs.event?.let {
@@ -64,7 +65,8 @@ class EventCreateFragment : Fragment(R.layout.fragment_event_create) {
         } else {
             binding.previewImage.load(R.drawable.placeholder)
             viewModelKoin.pickedImageUri.observe(viewLifecycleOwner) {
-                binding.previewImage.load(File(it))
+                if (it != null) binding.previewImage.load(File(it))
+                else binding.previewImage.load(R.drawable.placeholder)
             }
         }
 
@@ -91,7 +93,7 @@ class EventCreateFragment : Fragment(R.layout.fragment_event_create) {
         }
 
         binding.imageButton.setOnClickListener {
-            if (viewModelKoin.type == ScreenType.NEW) requestImagePickerPermissions()
+            if (viewModelKoin.type == ScreenType.NEW) choosePhotoHelper.showChooser()
             else Toast.makeText(context, getString(R.string.cannot_update_image), Toast.LENGTH_LONG).show()
         }
 
@@ -136,34 +138,17 @@ class EventCreateFragment : Fragment(R.layout.fragment_event_create) {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CODE_PICK_IMAGE && resultCode == RESULT_OK) {
-            val imagesList = data?.extras?.getStringArray(GligarPicker.IMAGES_RESULT)
-            if (!imagesList.isNullOrEmpty()) {
-                viewModelKoin.pickedImageUri.value = imagesList.first()
-            }
-        }
+        choosePhotoHelper.onActivityResult(requestCode, resultCode, data)
     }
 
-    private fun requestImagePickerPermissions() {
-        val permissions = listOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-
-        Dexter
-        .withContext(context)
-        .withPermissions(permissions)
-        .withListener(object: MultiplePermissionsListener {
-            override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
-                if (report != null && report.areAllPermissionsGranted()) showImagePicker()
-            }
-            override fun onPermissionRationaleShouldBeShown(permissions: MutableList<PermissionRequest>?, token: PermissionToken?) {
-                token?.continuePermissionRequest()
-            }
-        })
-        .check()
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        choosePhotoHelper.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
-    private fun showImagePicker() {
-        val disableCamera = !requireContext().packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)
-        GligarPicker().requestCode(REQUEST_CODE_PICK_IMAGE).withFragment(this).limit(1).disableCamera(disableCamera).show()
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        choosePhotoHelper.onSaveInstanceState(outState)
     }
 
     private fun validateName(): Boolean {

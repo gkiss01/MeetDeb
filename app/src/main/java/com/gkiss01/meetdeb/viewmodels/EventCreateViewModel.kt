@@ -30,7 +30,7 @@ class EventCreateViewModel(private val restClient: RestClient, private val moshi
     lateinit var type: ScreenType
     lateinit var eventLocal: Event
     fun isEventInitialized() = ::eventLocal.isInitialized
-    val pickedImageUri = MutableLiveData<String>()
+    val pickedImageUri = MutableLiveData<String?>()
 
     private val _toastEvent = MutableLiveData<SingleEvent<Any>>()
     val toastEvent: LiveData<SingleEvent<Any>>
